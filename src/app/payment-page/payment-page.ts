@@ -29,8 +29,9 @@ export class PaymentPage implements OnInit {
 snackbar = inject(SnackbarService);
   isBrowser = isPlatformBrowser(this.platformId);
 
-  planName = '';
-  planPrice = '';
+ planName = '';
+planCode = '';
+planPrice = '';
   planDuration = '';
   profileId = '';
   profileName = '';
@@ -42,8 +43,9 @@ snackbar = inject(SnackbarService);
   dbPlans: DbPlanRow[] = [];
 
   ngOnInit(): void {
-    this.planName = this.route.snapshot.queryParamMap.get('planName') || '';
-    this.planPrice = this.route.snapshot.queryParamMap.get('planPrice') || '';
+   this.planName = this.route.snapshot.queryParamMap.get('planName') || '';
+this.planCode = this.route.snapshot.queryParamMap.get('planCode') || '';
+this.planPrice = this.route.snapshot.queryParamMap.get('planPrice') || '';
     this.planDuration = this.route.snapshot.queryParamMap.get('planDuration') || '';
     this.profileId = this.route.snapshot.queryParamMap.get('profileId') || '';
     this.profileName = this.route.snapshot.queryParamMap.get('profileName') || '';
@@ -59,8 +61,10 @@ snackbar = inject(SnackbarService);
       const rawUser = localStorage.getItem('matrimony_user');
       if (rawUser) {
         const parsed = JSON.parse(rawUser);
-        if (parsed?.user_id) return String(parsed.user_id);
-      }
+if (parsed?.user_id) {
+  console.log('APP USER ID:', parsed.user_id);
+  return String(parsed.user_id);
+}      }
     } catch (error) {
       console.error('Error reading matrimony_user:', error);
     }
@@ -99,22 +103,20 @@ snackbar = inject(SnackbarService);
     }
   }
 
-  private getDbPlanByName(planName: string): DbPlanRow | undefined {
-    const normalizedName = this.normalize(planName);
-    const normalizedCode = normalizedName.replace(/\s+/g, '_');
+ private getDbPlanByName(planName: string): DbPlanRow | undefined {
+  const normalizedName = this.normalize(planName);
+  const normalizedCode = this.normalize(this.planCode);
 
-    return this.dbPlans.find((p) => {
-      const dbName = this.normalize(p.plan_name);
-      const dbCode = this.normalize(p.plan_code);
+  return this.dbPlans.find((p) => {
+    const dbName = this.normalize(p.plan_name);
+    const dbCode = this.normalize(p.plan_code);
 
-      return (
-        dbName === normalizedName ||
-        dbCode === normalizedCode ||
-        dbCode === `tm_${normalizedCode}` ||
-        dbCode === `tm${normalizedCode}`
-      );
-    });
-  }
+    return (
+      dbCode === normalizedCode ||
+      dbName === normalizedName
+    );
+  });
+}
 
   getPlanLimit(planName: string): number {
     const dbPlan = this.getDbPlanByName(planName);
@@ -178,7 +180,21 @@ snackbar = inject(SnackbarService);
       });
       return;
     }
+const { data: appUser, error: appUserError } = await supabase
+  .from('app_users')
+  .select('user_id')
+  .eq('user_id', userId)
+  .maybeSingle();
 
+if (appUserError) {
+  this.snackbar.error(appUserError.message);
+  return;
+}
+
+if (!appUser) {
+  this.snackbar.error('User account not found. Please logout and login again.');
+  return;
+}
     const dbPlan = this.getDbPlanByName(this.planName);
 
     if (!dbPlan?.plan_id) {
