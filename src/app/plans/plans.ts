@@ -120,7 +120,8 @@ export class Plans implements OnInit {
     //   }
     // },
     {
-      name: { en: 'TM Classic', ta: 'TM கிளாசிக்' },
+  code: 'TM_CLASSIC',
+  name: { en: 'TM Classic', ta: 'TM கிளாசிக்' },
       price: '₹1999',
       duration: { en: '/ 6 Months', ta: '/ 6 மாதங்கள்' },
       validity: { en: 'Validity: 6 Months', ta: 'செல்லுபடியாகும் காலம்: 6 மாதங்கள்' },
@@ -140,8 +141,9 @@ export class Plans implements OnInit {
         ]
       }
     },
-    {
-      name: { en: 'TM Premium', ta: 'TM பிரீமியம்' },
+   {
+  code: 'TM_PREMIUM',
+  name: { en: 'TM Premium', ta: 'TM பிரீமியம்' },
       price: '₹2999',
       duration: { en: '/ 9 Months', ta: '/ 9 மாதங்கள்' },
       validity: { en: 'Validity: 9 Months', ta: 'செல்லுபடியாகும் காலம்: 9 மாதங்கள்' },
@@ -161,8 +163,9 @@ export class Plans implements OnInit {
         ]
       }
     },
-    {
-      name: { en: 'TM Elite', ta: 'TM எலீட்' },
+{
+  code: 'TM_ELITE',
+  name: { en: 'TM Elite', ta: 'TM எலீட்' },
       price: '₹3999',
       duration: { en: '/ 12 Months', ta: '/ 12 மாதங்கள்' },
       validity: { en: 'Validity: 12 Months', ta: 'செல்லுபடியாகும் காலம்: 12 மாதங்கள்' },
@@ -352,15 +355,17 @@ export class Plans implements OnInit {
       return;
     }
 
-    const planName = this.getText(plan.name);
-    const planPrice = plan.price || '';
-    const planDuration = this.getText(plan.duration);
+   const planName = this.getText(plan.name);
+const planCode = plan.code || '';
+const planPrice = plan.price || '';
+const planDuration = this.getText(plan.duration);
 
     this.router.navigate(['/payment'], {
-      queryParams: {
-        planName,
-        planPrice,
-        planDuration,
+    queryParams: {
+  planName,
+  planCode,
+  planPrice,
+  planDuration,
         from: this.fromPage || '',
         profileId: this.lockedProfileId || '',
         profileName: this.lockedProfileName || ''
