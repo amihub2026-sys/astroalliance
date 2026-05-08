@@ -1,0 +1,310 @@
+<section class="hero" [class.tamil-mode]="currentLang === 'ta'">
+  <div
+    class="hero-slide"
+    [class.active]="currentSlide === 0"
+    style="background-image: url('/assets/caro-02.jpg');"
+  >
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">
+        {{ t.hero[0].title1 }} <span>{{ t.hero[0].title2 }}</span>
+      </h1>
+      <div class="hero-buttons">
+        <!-- <button class="primary-btn" (click)="showForm('register')">{{ t.hero[0].register }}</button>
+        <button class="secondary-btn" (click)="showForm('login')">{{ t.hero[0].login }}</button>
+        <button class="match-btn" (click)="showForm('match')">{{ t.hero[0].match }}</button> -->
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="hero-slide"
+    [class.active]="currentSlide === 1"
+    style="background-image: url('/assets/caro-01.jpg');"
+  >
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">
+        {{ t.hero[1].title1 }} <span>{{ t.hero[1].title2 }}</span>
+      </h1>
+      <div class="hero-buttons">
+        <!-- <button class="primary-btn" (click)="showForm('register')">{{ t.hero[1].register }}</button>
+        <button class="secondary-btn" (click)="showForm('login')">{{ t.hero[1].login }}</button>
+        <button class="match-btn" (click)="showForm('match')">{{ t.hero[1].match }}</button> -->
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="hero-slide"
+    [class.active]="currentSlide === 2"
+    style="background-image: url('/assets/caro-06.jpg');"
+  >
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">
+        {{ t.hero[2].title1 }} <span>{{ t.hero[2].title2 }}</span>
+      </h1>
+      <div class="hero-buttons">
+        <!-- <button class="primary-btn" (click)="showForm('register')">{{ t.hero[2].register }}</button>
+        <button class="secondary-btn" (click)="showForm('login')">{{ t.hero[2].login }}</button>
+        <button class="match-btn" (click)="showForm('match')">{{ t.hero[2].match }}</button> -->
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="hero-slide"
+    [class.active]="currentSlide === 3"
+    style="background-image: url('/assets/caro-05.jpg');"
+  >
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">
+        {{ t.hero[3].title1 }} <span>{{ t.hero[3].title2 }}</span>
+      </h1>
+      <div class="hero-buttons">
+        <!-- <button class="primary-btn" (click)="showForm('register')">{{ t.hero[3].register }}</button>
+        <button class="secondary-btn" (click)="showForm('login')">{{ t.hero[3].login }}</button>
+        <button class="match-btn" (click)="showForm('match')">{{ t.hero[3].match }}</button> -->
+      </div>
+    </div>
+  </div>
+
+  <button class="carousel-arrow prev" (click)="prevSlide()" type="button">&#10094;</button>
+  <button class="carousel-arrow next" (click)="nextSlide()" type="button">&#10095;</button>
+
+  <div class="carousel-dots">
+    <span class="dot" [class.active]="currentSlide === 0" (click)="goToSlide(0)"></span>
+    <span class="dot" [class.active]="currentSlide === 1" (click)="goToSlide(1)"></span>
+    <span class="dot" [class.active]="currentSlide === 2" (click)="goToSlide(2)"></span>
+    <span class="dot" [class.active]="currentSlide === 3" (click)="goToSlide(3)"></span>
+  </div>
+</section>
+
+<div class="form-overlay" *ngIf="activeForm !== 'none'">
+  <div class="form-popup" [class.tamil-popup]="currentLang === 'ta'">
+    <button class="close-btn" (click)="closeForm()" type="button">×</button>
+
+    <div *ngIf="activeForm === 'register'">
+      <h2>{{ t.popup.registerTitle }}</h2>
+
+      <div class="form-group">
+        <label>{{ t.popup.name }}</label>
+        <input type="text" [placeholder]="t.popup.namePlaceholder" />
+      </div>
+
+      <div class="form-group">
+        <label>{{ t.popup.email }}</label>
+        <input type="email" [placeholder]="t.popup.emailPlaceholder" />
+      </div>
+
+      <div class="form-group">
+        <label>{{ t.popup.password }}</label>
+        <input type="password" [placeholder]="t.popup.passwordPlaceholderRegister" />
+      </div>
+
+      <button class="popup-btn" type="button">{{ t.popup.registerBtn }}</button>
+    </div>
+
+    <div *ngIf="activeForm === 'login'">
+      <h2>{{ t.popup.loginTitle }}</h2>
+
+      <div class="form-group">
+        <label>{{ t.popup.email }}</label>
+        <input type="email" [placeholder]="t.popup.emailPlaceholder" />
+      </div>
+
+      <div class="form-group">
+        <label>{{ t.popup.password }}</label>
+        <input type="password" [placeholder]="t.popup.passwordPlaceholderLogin" />
+      </div>
+
+      <button class="popup-btn" type="button">{{ t.popup.loginBtn }}</button>
+    </div>
+
+    <div *ngIf="activeForm === 'match'">
+      <h2>{{ t.popup.matchTitle }}</h2>
+
+      <div class="form-group">
+        <label>{{ t.popup.searchingFor }}</label>
+        <select>
+          <option>{{ t.popup.select }}</option>
+          <option>{{ t.popup.self }}</option>
+          <option>{{ t.popup.son }}</option>
+          <option>{{ t.popup.daughter }}</option>
+          <option>{{ t.popup.brother }}</option>
+          <option>{{ t.popup.sister }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>{{ t.popup.lookingFor }}</label>
+        <select>
+          <option>{{ t.popup.select }}</option>
+          <option>{{ t.popup.bride }}</option>
+          <option>{{ t.popup.groom }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>{{ t.popup.ageFrom }}</label>
+        <select>
+          <option>18</option>
+          <option>21</option>
+          <option>25</option>
+          <option>28</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>{{ t.popup.ageTo }}</label>
+        <select>
+          <option>25</option>
+          <option>28</option>
+          <option>30</option>
+          <option>35</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>{{ t.popup.religion }}</label>
+        <select>
+          <option>{{ t.popup.selectReligion }}</option>
+          <option>{{ t.popup.christian }}</option>
+          <option>{{ t.popup.hindu }}</option>
+          <option>{{ t.popup.muslim }}</option>
+        </select>
+      </div>
+
+      <button class="popup-btn" type="button">{{ t.popup.searchBtn }}</button>
+    </div>
+  </div>
+</div>
+
+<section class="features reveal" [class.tamil-section]="currentLang === 'ta'">
+  <div class="features-bg-shape features-bg-shape-1"></div>
+  <div class="features-bg-shape features-bg-shape-2"></div>
+
+  <div class="section-header reveal">
+    <p>{{ t.features.mini }}</p>
+    <h2>{{ t.features.title }}</h2>
+  </div>
+
+  <div class="feature-grid">
+    <div
+      class="feature-card reveal"
+      *ngFor="let item of t.features.items; let i = index"
+      [class.card-verified]="i === 0"
+      [class.card-secure]="i === 1"
+      [class.card-match]="i === 2"
+    >
+      <div class="feature-card-inner">
+        <div class="feature-top-line"></div>
+
+        <div class="icon-wrap">
+          <div class="icon-ring"></div>
+          <div class="icon">{{ item.icon }}</div>
+        </div>
+
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.text }}</p>
+
+        <div class="feature-bottom-glow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="welcome reveal" [class.tamil-section]="currentLang === 'ta'">
+  <div class="welcome-slider reveal">
+    <div
+      class="welcome-track"
+      [style.transform]="'translateX(-' + (welcomeCurrentSlide * 100) + '%)'"
+    >
+      <div class="welcome-slide">
+        <img src="assets/caro-01.jpg" alt="Welcome slide 1" />
+      </div>
+      <div class="welcome-slide">
+        <img src="assets/caro-02.jpg" alt="Welcome slide 2" />
+      </div>
+      <div class="welcome-slide">
+        <img src="assets/caro-05.jpg" alt="Welcome slide 3" />
+      </div>
+      <div class="welcome-slide">
+        <img src="assets/caro-06.jpg" alt="Welcome slide 4" />
+      </div>
+    </div>
+  </div>
+
+  <div class="welcome-right reveal">
+    <p class="mini-title">{{ t.welcome.mini }}</p>
+    <h2>{{ t.welcome.title }}</h2>
+    <p class="welcome-text">{{ t.welcome.text }}</p>
+
+    <div class="stats">
+      <div class="stat-box reveal" *ngFor="let stat of t.welcome.stats">
+        <h3>{{ stat.value }}</h3>
+        <span>{{ stat.label }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="moments-section reveal" [class.tamil-section]="currentLang === 'ta'">
+  <div class="section-header reveal">
+    <p>{{ t.moments.mini }}</p>
+    <h2>{{ t.moments.title }}</h2>
+  </div>
+
+  <div class="moments-timeline">
+    <div class="timeline-line"></div>
+
+    <div
+      class="moment-row reveal"
+      *ngFor="let step of t.moments.steps; let i = index"
+      [class.left]="i % 2 === 0"
+      [class.right]="i % 2 === 1"
+    >
+      <div class="moment-card">
+      <div class="moment-number">
+  <img
+    *ngIf="i === 0"
+    src="assets/step-create-profile.png"
+    class="timeline-img"
+  />
+  <img
+    *ngIf="i === 1"
+    src="assets/step-discover-matches.png"
+    class="timeline-img"
+  />
+  <img
+    *ngIf="i === 2"
+    src="assets/step-send-interest.png"
+    class="timeline-img"
+  />
+  <img
+    *ngIf="i === 3"
+    src="assets/step-couple.png"
+    class="timeline-img"
+  />
+</div>
+
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.text }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta reveal" [class.tamil-section]="currentLang === 'ta'">
+  <div class="cta-box">
+    <div class="cta-content">
+      <h2>{{ t.cta.title }}</h2>
+      <!-- <p>{{ t.cta.text }}</p> -->
+      <button class="cta-btn" type="button" (click)="goToRegister()">
+        {{ t.cta.button }}
+      </button>
+    </div>
+  </div>
+</section>

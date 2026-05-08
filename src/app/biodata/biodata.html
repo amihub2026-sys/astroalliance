@@ -1,0 +1,1024 @@
+<div class="biodata-page">
+  <div class="biodata-container">
+
+    <div class="top-banner">
+      <div>
+        <h1>{{ tr.banner.title }}</h1>
+        <p>{{ tr.banner.subtitle }}</p>
+      </div>
+      <div class="banner-badge">{{ tr.banner.badge }}</div>
+    </div>
+
+<form (submit)="onSubmit($event)" #biodataForm="ngForm">
+      <!-- PROFILE IMAGE -->
+      <div class="section-card profile-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.profilePhoto }}</h2>
+          <p>{{ tr.sections.profilePhotoSub }}</p>
+        </div>
+
+        <div class="profile-upload-box">
+          <div class="profile-preview">
+            <img
+              *ngIf="profilePreviewUrl; else emptyProfile"
+              [src]="profilePreviewUrl"
+              alt="Profile Preview"
+            />
+            <ng-template #emptyProfile>
+              <div class="empty-avatar">{{ tr.labels.uploadPhoto }}</div>
+            </ng-template>
+          </div>
+
+          <div class="profile-actions">
+            <label class="upload-btn">
+              {{ tr.labels.chooseImage }}
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onProfileImageChange($event)"
+                hidden
+              />
+            </label>
+
+            <button
+              type="button"
+              class="remove-btn"
+              *ngIf="profilePreviewUrl"
+              (click)="removeProfileImage()"
+            >
+              {{ tr.labels.remove }}
+            </button>
+
+            <span class="upload-note">{{ tr.labels.uploadNote }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADDITIONAL IMAGES + VIDEO -->
+      <div class="section-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.gallery }}</h2>
+          <p>{{ tr.sections.gallerySub }}</p>
+        </div>
+
+        <div class="media-upload-wrap">
+          <div class="media-actions">
+            <label class="upload-btn">
+              {{ tr.labels.chooseImages }}
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                (change)="onAdditionalImagesChange($event)"
+                hidden
+              />
+            </label>
+
+            <label class="upload-btn">
+              {{ tr.labels.chooseVideo }}
+              <input
+                type="file"
+                accept="video/*"
+                (change)="onVideoChange($event)"
+                hidden
+              />
+            </label>
+
+            <button
+              type="button"
+              class="remove-btn"
+              *ngIf="additionalImages.length > 0"
+              (click)="clearAdditionalImages()"
+            >
+              {{ tr.labels.removeAll }}
+            </button>
+
+            <button
+              type="button"
+              class="remove-btn"
+              *ngIf="selectedVideo"
+              (click)="removeVideo()"
+            >
+              {{ tr.labels.remove }}
+            </button>
+
+            <span class="upload-note">{{ tr.labels.imageNote }}</span>
+            <span class="upload-note">{{ tr.labels.videoNote }}</span>
+          </div>
+
+          <div class="media-preview-grid" *ngIf="additionalImagePreviews.length > 0">
+            <div class="media-thumb" *ngFor="let img of additionalImagePreviews; let i = index">
+              <img [src]="img" alt="Additional Image" />
+              <button type="button" class="thumb-remove" (click)="removeAdditionalImage(i)">×</button>
+            </div>
+          </div>
+
+          <div class="video-preview" *ngIf="videoPreviewUrl">
+            <video [src]="videoPreviewUrl" controls></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONAL DETAILS -->
+      <div class="section-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.personal }}</h2>
+          <p>{{ tr.sections.personalSub }}</p>
+        </div>
+
+        <div class="form-grid">
+         <div class="field" [class.invalid]="isInvalid('fullName')">
+  <label>{{ tr.labels.fullName }} <span class="required">*</span></label>
+ <input
+  type="text"
+  [ngModel]="currentLang === 'ta'
+    ? (formDataTa.fullName || formData.fullName)
+    : formData.fullName"
+  (ngModelChange)="onTamilInputChange('fullName', $event)"
+  name="fullName"
+  [placeholder]="tr.placeholders.fullName">
+            <small class="field-error" *ngIf="isInvalid('fullName')">Required</small>
+          </div>
+
+         <div class="field" [class.invalid]="isInvalid('gender')">
+  <label>{{ tr.labels.gender }} <span class="required">*</span></label>
+            <select [(ngModel)]="formData.gender" name="gender">
+              <option value="">{{ tr.labels.selectGender }}</option>
+              <option
+  *ngFor="let g of translations.en.options.genders"
+  [value]="g">
+
+  {{ getTamilPersonalValue('gender', g) }}
+
+</option>
+            </select>
+            <small class="field-error" *ngIf="isInvalid('gender')">Required</small>
+          </div>
+
+        <!-- DOB -->
+<div class="field" [class.invalid]="isInvalid('dob')">
+  <label>{{ tr.labels.dob }} <span class="required">*</span></label>
+  <input type="date" [(ngModel)]="formData.dob" name="dob" disabled>
+  <small class="field-error" *ngIf="isInvalid('dob')">Required</small>
+</div>
+
+          <div class="field">
+            <label>{{ tr.labels.age }}</label>
+            <input type="text" [(ngModel)]="formData.age" name="age" [placeholder]="tr.labels.agePlaceholder" readonly>
+          </div>
+
+        <!-- MARITAL STATUS -->
+<div class="field" [class.invalid]="isInvalid('maritalStatus')">
+  <label>{{ tr.labels.maritalStatus }} <span class="required">*</span></label>
+  <select [(ngModel)]="formData.maritalStatus" name="maritalStatus">
+    <option value="">{{ tr.labels.selectStatus }}</option>
+   <option
+  *ngFor="let status of translations.en.options.maritalStatuses"
+  [value]="status">
+
+  {{ getTamilPersonalValue('maritalStatus', status) }}
+
+</option>
+  </select>
+  <small class="field-error" *ngIf="isInvalid('maritalStatus')">Required</small>
+</div>
+
+<!-- MOBILE -->
+<div class="field" [class.invalid]="isInvalid('mobile')">
+  <label>{{ tr.labels.mobile }} <span class="required">*</span></label>
+  <input type="text" [(ngModel)]="formData.mobile" name="mobile" disabled>
+  <small class="field-error" *ngIf="isInvalid('mobile')">Required</small>
+</div>
+
+<div class="field">
+<label>{{ tr.labels.additionalMobile }}</label>
+  <input
+    type="text"
+    [(ngModel)]="formData.additionalMobile"
+    name="additionalMobile"
+    maxlength="10"
+   [placeholder]="currentLang === 'ta'
+  ? 'கூடுதல் எண்ணை உள்ளிடவும்'
+  : 'Enter additional number'"
+  >
+</div>
+          <!-- EMAIL -->
+<div class="field" [class.invalid]="isInvalid('email')">
+  <label>{{ tr.labels.email }} <span class="required">*</span></label>
+  <input type="email" [(ngModel)]="formData.email" name="email" [placeholder]="tr.placeholders.email">
+  <small class="field-error" *ngIf="isInvalid('email')">Required</small>
+</div>
+
+<!-- HEIGHT -->
+<div class="field">
+  <label>{{ tr.labels.height }} <span class="required">*</span></label>
+
+  <input
+    type="text"
+    [(ngModel)]="formData.height"
+    name="height"
+    [placeholder]="tr.placeholders.height"
+  >
+
+</div>
+ <!-- WEIGHT -->
+<div class="field">
+  <label>{{ tr.labels.weight }} <span class="required">*</span></label>
+
+  <input
+    type="text"
+    [(ngModel)]="formData.weight"
+    name="weight"
+    [placeholder]="tr.placeholders.weight"
+  >
+
+</div>
+
+          <!-- RELIGION -->
+<div class="field" [class.invalid]="isInvalid('religion')">
+  <label>{{ tr.labels.religion }} <span class="required">*</span></label>
+
+  <select
+    [(ngModel)]="selectedReligionId"
+    name="religionId"
+    (change)="onReligionChange()">
+
+   <option value="">
+  {{ currentLang === 'ta' ? 'மதத்தை தேர்வு செய்யவும்' : 'Select Religion' }}
+</option>
+
+    <option
+      *ngFor="let religion of religionList"
+      [ngValue]="religion.religion_id">
+      {{ currentLang === 'ta'
+  ? (religion.religion_name_ta || religion.religion_name)
+  : religion.religion_name
+}}
+    </option>
+
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('religion')">Required</small>
+</div>
+
+   <div class="field" [class.invalid]="isInvalid('caste')">
+  <label>{{ tr.labels.caste }} <span class="required">*</span></label>
+
+  <select [(ngModel)]="formData.caste" name="caste">
+
+   <option value="">
+  {{ currentLang === 'ta' ? 'ஜாதியை தேர்வு செய்யவும்' : 'Select Caste' }}
+</option>
+
+    <option
+      *ngFor="let caste of casteList"
+      [value]="caste.caste_name">
+     {{ currentLang === 'ta'
+  ? (caste.caste_name_ta || caste.caste_name)
+  : caste.caste_name
+}}
+    </option>
+
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('caste')">Required</small>
+</div>
+        </div>
+      </div>
+
+      <!-- FAMILY -->
+      <div class="section-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.family }}</h2>
+          <p>{{ tr.sections.familySub }}</p>
+        </div>
+
+        <div class="form-grid">
+        <div class="field" [class.invalid]="isInvalid('fatherName')">
+  <label>{{ tr.labels.fatherName }} <span class="required">*</span></label>
+ <input
+  type="text"
+  [ngModel]="getTypedValue('fatherName')"
+  (ngModelChange)="onTamilInputChange('fatherName', $event)"
+  name="fatherName"
+  [placeholder]="tr.placeholders.fatherName">
+  <small class="field-error" *ngIf="isInvalid('fatherName')">Required</small>
+</div>
+
+         <!-- MOTHER NAME -->
+<div class="field" [class.invalid]="isInvalid('motherName')">
+  <label>{{ tr.labels.motherName }} <span class="required">*</span></label>
+ <input
+  type="text"
+  [ngModel]="getTypedValue('motherName')"
+  (ngModelChange)="onTamilInputChange('motherName', $event)"
+  name="motherName"
+  [placeholder]="tr.placeholders.motherName">
+  <small class="field-error" *ngIf="isInvalid('motherName')">Required</small>
+</div>
+
+       <!-- FATHER OCCUPATION -->
+<div class="field" [class.invalid]="isInvalid('fatherOccupation')">
+  <label>{{ tr.labels.fatherOccupation }} <span class="required">*</span></label>
+ <input
+  type="text"
+  [ngModel]="getTypedValue('fatherOccupation')"
+(ngModelChange)="onTamilInputChange('fatherOccupation', $event)"
+  name="fatherOccupation"
+  [placeholder]="tr.placeholders.fatherOccupation">
+
+  <small class="field-error" *ngIf="isInvalid('fatherOccupation')">Required</small>
+</div>
+
+
+          <div class="field">
+            <label>{{ tr.labels.motherOccupation }}</label>
+           <input
+  type="text"
+  [ngModel]="getTypedValue('motherOccupation')"
+  (ngModelChange)="onTamilInputChange('motherOccupation', $event)"
+  name="motherOccupation"
+  [placeholder]="tr.placeholders.motherOccupation">
+          </div>
+
+         <!-- SIBLINGS -->
+<div class="field" [class.invalid]="isInvalid('siblings')">
+  <label>{{ tr.labels.siblings }} <span class="required">*</span></label>
+  <input
+  type="text"
+  [ngModel]="getTypedValue('siblings')"
+ (ngModelChange)="onTamilInputChange('siblings', $event)"
+  name="siblings"
+  [placeholder]="tr.placeholders.siblings">
+
+  <small class="field-error" *ngIf="isInvalid('siblings')">Required</small>
+</div>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="section-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.education }}</h2>
+          <p>{{ tr.sections.educationSub }}</p>
+        </div>
+
+        <div class="form-grid">
+        <!-- EDUCATION -->
+<div class="field education-field" [class.invalid]="isInvalid('education')">
+  <label>{{ tr.labels.education }} <span class="required">*</span></label>
+
+  <div class="custom-education-select" (click)="toggleEducationDropdown()">
+    <span>
+  {{
+    currentLang === 'ta'
+      ? (getTamilEducationName(formData.education) || 'கல்வியை தேர்வு செய்யவும்')
+      : (formData.education || 'Select Education')
+  }}
+</span>
+    <span>⌄</span>
+  </div>
+
+  <small class="field-error" *ngIf="isInvalid('education')">Required</small>
+
+  <div class="education-dropdown" *ngIf="showEducationDropdown">
+    <input
+      type="text"
+      class="education-search-input"
+      [(ngModel)]="educationSearch"
+      name="educationSearch"
+      [placeholder]="tr.labels.searchEducation"
+      (input)="onEducationSearchChange()"
+      (click)="$event.stopPropagation()"
+    />
+
+    <div
+      class="education-option"
+      *ngFor="let edu of filteredEducationList"
+      (click)="selectEducation(edu.education_name)">
+      {{ edu.education_name }}
+    </div>
+
+    <div
+      class="education-add-option"
+      *ngIf="canShowAddEducationButton()"
+      (click)="addEducationLevel()">
+     + {{ tr.labels.add }} "{{ educationSearch }}"
+    </div>
+  </div>
+</div>
+         <!-- JOB -->
+<div class="field" [class.invalid]="isInvalid('job')">
+  <label>{{ tr.labels.occupation }} <span class="required">*</span></label>
+  <input
+  type="text"
+  [ngModel]="getTypedValue('job')"
+ (ngModelChange)="onTamilInputChange('job', $event)"
+  name="job"
+  [placeholder]="tr.placeholders.occupation">
+  <small class="field-error" *ngIf="isInvalid('job')">Required</small>
+</div>
+
+        <!-- COMPANY -->
+<div class="field" [class.invalid]="isInvalid('company')">
+  <label>{{ tr.labels.company }} <span class="required">*</span></label>
+  <input
+  type="text"
+  [ngModel]="getTypedValue('company')"
+ (ngModelChange)="onTamilInputChange('company', $event)"
+  name="company"
+  [placeholder]="tr.placeholders.company">
+
+  <small class="field-error" *ngIf="isInvalid('company')">Required</small>
+</div>
+
+         <!-- SALARY -->
+<div class="field" [class.invalid]="isInvalid('salary')">
+  <label>{{ tr.labels.salary }} <span class="required">*</span></label>
+<input
+  type="text"
+  [ngModel]="getTypedValue('salary')"
+  (ngModelChange)="onTamilInputChange('salary', $event)"
+  name="salary"
+  [placeholder]="tr.placeholders.salary">
+  <small class="field-error" *ngIf="isInvalid('salary')">Required</small>
+</div>
+        </div>
+      </div>
+
+      <!-- ADDRESS -->
+      <div class="section-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.address }}</h2>
+          <p>{{ tr.sections.addressSub }}</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="field full-width" [class.invalid]="isInvalid('address')">
+  <label>{{ tr.labels.address }} <span class="required">*</span></label>
+ <textarea
+  [ngModel]="getTypedValue('address')"
+  (ngModelChange)="onTamilInputChange('address', $event)"
+  name="address"
+  rows="4"
+  [placeholder]="tr.placeholders.address">
+</textarea>
+  <small class="field-error" *ngIf="isInvalid('address')">Required</small>
+</div>
+
+
+<!-- COUNTRY -->
+<div class="field" [class.invalid]="isInvalid('country')">
+  <label>{{ tr.labels.country }} <span class="required">*</span></label>
+
+  <select
+    [(ngModel)]="selectedCountryId"
+    name="countryId"
+    (change)="onCountryChange()">
+
+   <option value="">
+  {{ currentLang === 'ta'
+    ? 'நாட்டை தேர்வு செய்யவும்'
+    : 'Select Country'
+  }}
+</option>
+
+    <option
+      *ngFor="let country of countryList"
+      [ngValue]="country.country_id">
+      {{ currentLang === 'ta'
+  ? (country.country_name_ta || country.country_name)
+  : country.country_name
+}}
+    </option>
+
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('country')">Required</small>
+</div>
+
+<!-- STATE -->
+<div class="field" [class.invalid]="isInvalid('state')">
+  <label>{{ tr.labels.state }} <span class="required">*</span></label>
+
+  <select
+    [(ngModel)]="selectedStateId"
+    name="stateId"
+    (change)="onStateChange()">
+
+    <option value="">
+  {{ currentLang === 'ta'
+    ? 'மாநிலத்தை தேர்வு செய்யவும்'
+    : 'Select State'
+  }}
+</option>
+
+    <option
+      *ngFor="let state of stateList"
+      [ngValue]="state.state_id">
+      {{ currentLang === 'ta'
+  ? (state.state_name_ta || state.state_name)
+  : state.state_name
+}}
+    </option>
+
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('state')">Required</small>
+</div>
+
+
+<!-- CITY -->
+<div class="field" [class.invalid]="isInvalid('city')">
+  <label>{{ tr.labels.city }} <span class="required">*</span></label>
+
+ <select [(ngModel)]="selectedCityId" name="cityId">
+
+  <option value="">
+    {{ currentLang === 'ta'
+      ? 'நகரத்தை தேர்வு செய்யவும்'
+      : 'Select City'
+    }}
+  </option>
+
+  <option
+    *ngFor="let city of cityList"
+    [ngValue]="city.city_id">
+
+    {{ currentLang === 'ta'
+      ? (city.city_name_ta || city.city_name)
+      : city.city_name
+    }}
+
+  </option>
+
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('city')">Required</small>
+</div>
+        </div>
+      </div>
+
+      <!-- HOROSCOPE UPLOAD -->
+      <div class="section-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.horoscopeUpload }}</h2>
+          <p>{{ tr.sections.horoscopeUploadSub }}</p>
+        </div>
+
+        <div class="horoscope-upload-area" [class.invalid-upload]="isInvalid('horoscopeFile')">
+          <div class="upload-panel">
+            <label class="upload-btn wide-btn">
+              {{ tr.labels.selectHoroscope }}
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+                (change)="onHoroscopeFileChange($event)"
+                hidden
+              />
+    
+            </label>
+
+            <button
+              type="button"
+              class="extract-btn"
+              (click)="extractHoroscopeData()"
+              [disabled]="isExtracting"
+            >
+              {{ isExtracting ? tr.labels.extracting : tr.labels.autoFill }}
+            </button>
+
+            <div class="file-note" *ngIf="selectedHoroscopeFile">
+              {{ tr.labels.selected }}: {{ selectedHoroscopeFile.name }}
+            </div>
+                      <small class="upload-error" *ngIf="isInvalid('horoscopeFile')">
+  Horoscope file is required
+</small>
+          </div>
+
+          <div class="horoscope-preview" *ngIf="horoscopePreviewUrl">
+            <img [src]="horoscopePreviewUrl" alt="Horoscope Preview">
+          </div>
+        </div>
+      </div>
+
+      <!-- HOROSCOPE DETAILS + CHART -->
+      <div class="section-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.horoscopeDetails }}</h2>
+          <p>{{ tr.sections.horoscopeDetailsSub }}</p>
+        </div>
+
+        <div class="form-grid">
+     <!-- RASI -->
+<div class="field" [class.invalid]="isInvalid('rasi')">
+  <label>{{ tr.labels.rasi }} <span class="required">*</span></label>
+
+  <select [(ngModel)]="formData.rasi" name="rasi">
+    <option value="">{{ tr.labels.selectRasi }}</option>
+   <option
+  *ngFor="let r of translations.en.options.rasiList"
+  [value]="r">
+  {{ getTamilValue('rasi', r) }}
+</option>
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('rasi')">Required</small>
+</div>
+
+         <!-- NAKSHATRA -->
+<div class="field" [class.invalid]="isInvalid('nakshatra')">
+  <label>{{ tr.labels.nakshatra }} <span class="required">*</span></label>
+
+  <select [(ngModel)]="formData.nakshatra" name="nakshatra">
+    <option value="">{{ tr.labels.selectNakshatra }}</option>
+   <option
+  *ngFor="let n of translations.en.options.nakshatraList"
+  [value]="n">
+  {{ getTamilValue('nakshatra', n) }}
+</option>
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('nakshatra')">Required</small>
+</div>
+
+       <!-- LAGNAM -->
+<div class="field" [class.invalid]="isInvalid('lagnam')">
+  <label>{{ tr.labels.lagnam }} <span class="required">*</span></label>
+
+  <select [(ngModel)]="formData.lagnam" name="lagnam">
+    <option value="">{{ tr.labels.selectLagnam }}</option>
+   <option
+  *ngFor="let l of translations.en.options.lagnamList"
+  [value]="l">
+  {{ getTamilValue('lagnam', l) }}
+</option>
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('lagnam')">Required</small>
+</div>
+
+          <div class="field">
+            <label>{{ tr.labels.gothram }}</label>
+           <input
+  type="text"
+  [ngModel]="getTypedValue('gothram')"
+  (ngModelChange)="onTamilInputChange('gothram', $event)"
+  name="gothram"
+  [placeholder]="tr.placeholders.gothram">
+          </div>
+
+          <div class="field">
+            <label>{{ tr.labels.dhosham }}</label>
+            <select [(ngModel)]="formData.dhosham" name="dhosham">
+              <option value="">{{ tr.labels.selectDhosham }}</option>
+              <option
+  *ngFor="let d of translations.en.options.dhoshamList"
+  [value]="d">
+  {{ getTamilValue('dhosham', d) }}
+</option>
+            </select>
+          </div>
+
+         <!-- BIRTH TIME -->
+<div class="field" [class.invalid]="isInvalid('birthTime')">
+  <label>{{ tr.labels.birthTime }} <span class="required">*</span></label>
+
+  <input type="time" [(ngModel)]="formData.birthTime" name="birthTime">
+
+  <small class="field-error" *ngIf="isInvalid('birthTime')">Required</small>
+</div>
+
+         <!-- BIRTH PLACE -->
+<div class="field full-width" [class.invalid]="isInvalid('birthPlace')">
+  <label>{{ tr.labels.birthPlace }} <span class="required">*</span></label>
+
+<input
+  type="text"
+  [ngModel]="getTypedValue('birthPlace')"
+ (ngModelChange)="onTamilInputChange('birthPlace', $event)"
+  name="birthPlace"
+  [placeholder]="tr.placeholders.birthPlace">
+
+  <small class="field-error" *ngIf="isInvalid('birthPlace')">Required</small>
+</div>
+        </div>
+
+        <!-- HOROSCOPE CHART -->
+        <div class="horoscope-chart-card">
+          <div class="chart-top">
+            <div class="chart-hints">
+              <h4>Hints to fill up the chart</h4>
+              <div class="hint-grid">
+                <div class="hint-item" *ngFor="let item of horoscopeHints">
+                  <span class="hint-no">{{ item.no }}</span>
+                  <span class="hint-text">{{ item.label }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-example">
+              <div class="chart-example-title">Example</div>
+              <img src="assets/example-chart.png" alt="Example Horoscope Chart" />
+            </div>
+          </div>
+
+         <div class="double-chart-wrap">
+  <!-- RASI -->
+  <div class="single-chart-block">
+    <div class="chart-box chart-box-12">
+      <div class="chart-cell-wrap cell-1">
+        <textarea
+          [ngModel]="rasiChart[0]"
+          (input)="onChartInput('rasi', 0, $event)"
+          name="rasiChart0"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[0]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-2">
+        <textarea
+          [ngModel]="rasiChart[1]"
+          (input)="onChartInput('rasi', 1, $event)"
+          name="rasiChart1"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[1]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-3">
+        <textarea
+          [ngModel]="rasiChart[2]"
+          (input)="onChartInput('rasi', 2, $event)"
+          name="rasiChart2"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[2]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-4">
+        <textarea
+          [ngModel]="rasiChart[3]"
+          (input)="onChartInput('rasi', 3, $event)"
+          name="rasiChart3"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[3]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-5">
+        <textarea
+          [ngModel]="rasiChart[4]"
+          (input)="onChartInput('rasi', 4, $event)"
+          name="rasiChart4"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[4]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-6">
+        <textarea
+          [ngModel]="rasiChart[5]"
+          (input)="onChartInput('rasi', 5, $event)"
+          name="rasiChart5"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[5]) }}</div>
+      </div>
+
+      <div class="chart-center-label rasi-label">ராசி</div>
+
+      <div class="chart-cell-wrap cell-7">
+        <textarea
+          [ngModel]="rasiChart[6]"
+          (input)="onChartInput('rasi', 6, $event)"
+          name="rasiChart6"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[6]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-8">
+        <textarea
+          [ngModel]="rasiChart[7]"
+          (input)="onChartInput('rasi', 7, $event)"
+          name="rasiChart7"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[7]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-9">
+        <textarea
+          [ngModel]="rasiChart[8]"
+          (input)="onChartInput('rasi', 8, $event)"
+          name="rasiChart8"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[8]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-10">
+        <textarea
+          [ngModel]="rasiChart[9]"
+          (input)="onChartInput('rasi', 9, $event)"
+          name="rasiChart9"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[9]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-11">
+        <textarea
+          [ngModel]="rasiChart[10]"
+          (input)="onChartInput('rasi', 10, $event)"
+          name="rasiChart10"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[10]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-12">
+        <textarea
+          [ngModel]="rasiChart[11]"
+          (input)="onChartInput('rasi', 11, $event)"
+          name="rasiChart11"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(rasiChart[11]) }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AMSAM -->
+  <div class="single-chart-block">
+    <div class="chart-box chart-box-12">
+      <div class="chart-cell-wrap cell-1">
+        <textarea
+          [ngModel]="amsamChart[0]"
+          (input)="onChartInput('amsam', 0, $event)"
+          name="amsamChart0"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[0]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-2">
+        <textarea
+          [ngModel]="amsamChart[1]"
+          (input)="onChartInput('amsam', 1, $event)"
+          name="amsamChart1"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[1]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-3">
+        <textarea
+          [ngModel]="amsamChart[2]"
+          (input)="onChartInput('amsam', 2, $event)"
+          name="amsamChart2"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[2]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-4">
+        <textarea
+          [ngModel]="amsamChart[3]"
+          (input)="onChartInput('amsam', 3, $event)"
+          name="amsamChart3"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[3]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-5">
+        <textarea
+          [ngModel]="amsamChart[4]"
+          (input)="onChartInput('amsam', 4, $event)"
+          name="amsamChart4"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[4]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-6">
+        <textarea
+          [ngModel]="amsamChart[5]"
+          (input)="onChartInput('amsam', 5, $event)"
+          name="amsamChart5"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[5]) }}</div>
+      </div>
+
+      <div class="chart-center-label amsam-label">அம்சம்</div>
+
+      <div class="chart-cell-wrap cell-7">
+        <textarea
+          [ngModel]="amsamChart[6]"
+          (input)="onChartInput('amsam', 6, $event)"
+          name="amsamChart6"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[6]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-8">
+        <textarea
+          [ngModel]="amsamChart[7]"
+          (input)="onChartInput('amsam', 7, $event)"
+          name="amsamChart7"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[7]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-9">
+        <textarea
+          [ngModel]="amsamChart[8]"
+          (input)="onChartInput('amsam', 8, $event)"
+          name="amsamChart8"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[8]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-10">
+        <textarea
+          [ngModel]="amsamChart[9]"
+          (input)="onChartInput('amsam', 9, $event)"
+          name="amsamChart9"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[9]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-11">
+        <textarea
+          [ngModel]="amsamChart[10]"
+          (input)="onChartInput('amsam', 10, $event)"
+          name="amsamChart10"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[10]) }}</div>
+      </div>
+
+      <div class="chart-cell-wrap cell-12">
+        <textarea
+          [ngModel]="amsamChart[11]"
+          (input)="onChartInput('amsam', 11, $event)"
+          name="amsamChart11"
+          class="cell-input"
+        ></textarea>
+        <div class="cell-short">{{ getPlanetShort(amsamChart[11]) }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      </div>
+
+      <!-- ABOUT & PARTNER EXPECTATION -->
+     <!-- ABOUT & PARTNER EXPECTATION -->
+<div class="section-card">
+  <div class="section-title-wrap">
+    <h2>{{ currentLang === 'ta' ? 'என்னை பற்றி & துணைவர் எதிர்பார்ப்பு' : 'About & Partner Expectation' }}</h2>
+    <p>{{ currentLang === 'ta' ? 'உங்களைப் பற்றியும் எதிர்பார்ப்புகளையும் எழுதுங்கள்' : 'Tell something about yourself and your expectations' }}</p>
+  </div>
+
+  <div class="form-grid">
+    <div class="field full-width">
+      <label>{{ currentLang === 'ta' ? 'என்னை பற்றி' : 'About Me' }}</label>
+      <textarea
+        [ngModel]="currentLang === 'ta' ? (formDataTa.aboutMe || formData.aboutMe) : formData.aboutMe"
+      (ngModelChange)="onTamilInputChange('aboutMe', $event)"
+        name="aboutMe"
+        rows="4"
+        [placeholder]="currentLang === 'ta' ? 'உங்களை பற்றி எழுதுங்கள்...' : 'Write about yourself...'"
+      ></textarea>
+    </div>
+
+    <div class="field full-width">
+      <label>{{ currentLang === 'ta' ? 'துணைவர் எதிர்பார்ப்பு' : 'Partner Expectation' }}</label>
+      <textarea
+        [ngModel]="currentLang === 'ta' ? (formDataTa.partnerExpectation || formData.partnerExpectation) : formData.partnerExpectation"
+        (ngModelChange)="onTamilInputChange('partnerExpectation', $event)"
+        name="partnerExpectation"
+        rows="4"
+        [placeholder]="currentLang === 'ta' ? 'எதிர்பார்க்கும் துணையை பற்றி எழுதுங்கள்...' : 'Describe your expected partner...'"
+      ></textarea>
+    </div>
+  </div>
+</div>
+
+      <div class="submit-wrap">
+        <button type="submit" class="submit-btn" [disabled]="isSaving">
+          {{ isSaving ? tr.labels.saving : tr.labels.submit }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

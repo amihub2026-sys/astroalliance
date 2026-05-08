@@ -1,0 +1,186 @@
+<div class="my-biodata-page">
+  <div class="container">
+    <div class="page-head">
+      <h1>{{ currentLang === 'ta' ? 'என் பயோடேட்டா' : 'My Biodata' }}</h1>
+<p>{{ currentLang === 'ta' ? 'உங்கள் சேமிக்கப்பட்ட திருமண விவரங்கள்' : 'Your saved matrimony profile details' }}</p>
+    </div>
+
+    <div *ngIf="loading" class="state-card">
+      Loading your biodata...
+    </div>
+
+    <div *ngIf="!loading && errorMessage && !profile" class="state-card error-card">
+      <p>{{ errorMessage }}</p>
+      <a (click)="editBiodata()" class="primary-btn">Create Biodata</a>
+    </div>
+
+    <div *ngIf="!loading && profile" class="profile-card">
+      <div class="top-section">
+        <div class="image-wrap">
+          <img
+            [src]="profile.profile_image_url || 'assets/default-profile.png'"
+            alt="Profile Image"
+            class="profile-image"
+          />
+        </div>
+
+     <div class="main-info">
+  <h2>
+  {{
+    currentLang === 'ta'
+      ? (profile.full_name_ta || profile.full_name || '-')
+      : (profile.full_name || '-')
+  }}
+</h2>
+
+  <p><strong>{{ currentLang === 'ta' ? 'சுயவிவர ஐடி:' : 'Profile ID:' }}</strong> {{ profile.profile_code || '-' }}</p>
+  <p><strong>{{ currentLang === 'ta' ? 'பாலினம்:' : 'Gender:' }}</strong> {{ showValue('gender', profile.gender_text) }}</p>
+  <p><strong>{{ currentLang === 'ta' ? 'வயது:' : 'Age:' }}</strong> {{ profile.age || '-' }}</p>
+  <p><strong>{{ currentLang === 'ta' ? 'திருமண நிலை:' : 'Marital Status:' }}</strong> {{ showValue('maritalStatus', profile.marital_status_text) }}</p>
+  <p><strong>{{ currentLang === 'ta' ? 'மொபைல்:' : 'Mobile:' }}</strong> {{ profile.mobile || '-' }}</p>
+  <p><strong>{{ currentLang === 'ta' ? 'மின்னஞ்சல்:' : 'Email:' }}</strong> {{ profile.email || '-' }}</p>
+
+  <button class="primary-btn" (click)="editBiodata()" [disabled]="isNavigating">
+    {{ currentLang === 'ta' ? 'பயோடேட்டா திருத்து' : 'Edit Biodata' }}
+  </button>
+</div>
+
+</div>
+    <div class="details-grid">
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'மதம்' : 'Religion' }}</h3><p>{{ showTextValue(profile.religion_text, profile.religion_name_ta) }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'ஜாதி' : 'Caste' }}</h3><p>{{ showTextValue(profile.caste_text, profile.caste_name_ta) }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'உயரம்' : 'Height' }}</h3><p>{{ profile.height_text || '-' }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'எடை' : 'Weight' }}</h3><p>{{ profile.weight_text || '-' }}</p></div>
+<div class="detail-box">
+  <h3>{{ currentLang === 'ta' ? 'தந்தை பெயர்' : 'Father Name' }}</h3>
+<p>{{ showLangValue(profile.father_name, profile.father_name_ta) }}</p>
+</div>
+
+<div class="detail-box">
+  <h3>{{ currentLang === 'ta' ? 'தாய் பெயர்' : 'Mother Name' }}</h3>
+<p>{{ showLangValue(profile.mother_name, profile.mother_name_ta) }}</p>
+</div>
+
+<div class="detail-box">
+  <h3>{{ currentLang === 'ta' ? 'தந்தையின் தொழில்' : 'Father Occupation' }}</h3>
+<p>{{ showLangValue(profile.father_occupation_text, profile.father_occupation_ta) }}</p>
+</div>
+
+<div class="detail-box">
+  <h3>{{ currentLang === 'ta' ? 'தாயின் தொழில்' : 'Mother Occupation' }}</h3>
+ <p>{{ showLangValue(profile.mother_occupation_text, profile.mother_occupation_ta) }}</p>
+</div>
+
+<div class="detail-box">
+  <h3>{{ currentLang === 'ta' ? 'உடன்பிறப்புகள்' : 'Siblings' }}</h3>
+<p>{{ showLangValue(profile.siblings_text, profile.siblings_ta) }}</p>
+</div>
+
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'கல்வி' : 'Education' }}</h3><p>{{ showTextValue(profile.education_text, profile.education_text_ta) }}</p></div>
+<div class="detail-box">
+  <h3>{{ currentLang === 'ta' ? 'தொழில்' : 'Occupation' }}</h3>
+ <p>{{ showLangValue(profile.occupation_text, profile.occupation_text_ta) }}</p>
+</div>
+<div class="detail-box">
+  <h3>{{ currentLang === 'ta' ? 'நிறுவனம்' : 'Company' }}</h3>
+<p>{{ showLangValue(profile.company_name, profile.company_name_ta) }}</p>
+</div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'சம்பளம்' : 'Salary' }}</h3><p>{{ profile.salary_text || '-' }}</p></div>
+
+ <div class="detail-box full">
+  <h3>{{ currentLang === 'ta' ? 'முகவரி' : 'Address' }}</h3>
+  <p>{{ showLangValue(profile.address_line, profile.address_line_ta) }}</p>
+</div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'நகரம்' : 'City' }}</h3><p>{{ showTextValue(profile.city_text, profile.city_name_ta) }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'மாநிலம்' : 'State' }}</h3><p>{{ showTextValue(profile.state_text, profile.state_name_ta) }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'நாடு' : 'Country' }}</h3><p>{{ showTextValue(profile.country_text, profile.country_name_ta) }}</p></div>
+
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'ராசி' : 'Rasi' }}</h3><p>{{ showValue('rasi', profile.rasi_text) }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'நட்சத்திரம்' : 'Nakshatra' }}</h3><p>{{ showValue('nakshatra', profile.nakshatra_text) }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'லக்னம்' : 'Lagnam' }}</h3><p>{{ showValue('rasi', profile.lagnam_text) }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'கோத்ரம்' : 'Gothram' }}</h3><p>
+{{ showLangValue(profile.gothram, profile.gothram_ta) }}
+</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'தோஷம்' : 'Dhosham' }}</h3><p>{{ showValue('dhosham', profile.dhosham_text) }}</p></div>
+  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'பிறந்த நேரம்' : 'Birth Time' }}</h3><p>{{ profile.birth_time || '-' }}</p></div>
+ <div class="detail-box">
+  <h3>{{ currentLang === 'ta' ? 'பிறந்த இடம்' : 'Birth Place' }}</h3>
+<p>{{ showLangValue(profile.birth_place, profile.birth_place_ta) }}</p>
+</div>
+
+  <div class="detail-box full">
+    <h3>{{ currentLang === 'ta' ? 'என்னை பற்றி' : 'About Me' }}</h3>
+<p>{{ showLangValue(profile.about_me, profile.about_me_ta) }}</p>
+  </div>
+
+  <div class="detail-box full">
+    <h3>{{ currentLang === 'ta' ? 'துணை எதிர்பார்ப்பு' : 'Partner Expectation' }}</h3>
+<p>{{ showLangValue(profile.partner_expectation, profile.partner_expectation_ta) }}</p>
+  </div>
+</div>
+
+      <div class="chart-section">
+        <div class="section-head">
+          <h2>{{ currentLang === 'ta' ? 'ஜாதக கட்டம்' : 'Horoscope Chart' }}</h2>
+<p>
+  {{
+    currentLang === 'ta'
+      ? 'உங்கள் சேமிக்கப்பட்ட ராசி மற்றும் அம்சம் கட்ட விவரங்கள்'
+      : 'Your saved Rasi and Amsam chart details'
+  }}
+</p>
+        </div>
+
+        <div class="double-chart-wrap">
+          <div class="single-chart-card">
+            <h3 class="chart-title">ராசி</h3>
+
+            <div class="chart-box chart-box-12">
+              <div class="cell cell-1">{{ getPlanetShort(profile.rasi_chart?.[0]) }}</div>
+              <div class="cell cell-2">{{ getPlanetShort(profile.rasi_chart?.[1]) }}</div>
+              <div class="cell cell-3">{{ getPlanetShort(profile.rasi_chart?.[2]) }}</div>
+              <div class="cell cell-4">{{ getPlanetShort(profile.rasi_chart?.[3]) }}</div>
+
+              <div class="cell cell-5">{{ getPlanetShort(profile.rasi_chart?.[4]) }}</div>
+              <div class="cell cell-6">{{ getPlanetShort(profile.rasi_chart?.[5]) }}</div>
+
+              <div class="chart-center-label">ராசி</div>
+
+              <div class="cell cell-7">{{ getPlanetShort(profile.rasi_chart?.[6]) }}</div>
+              <div class="cell cell-8">{{ getPlanetShort(profile.rasi_chart?.[7]) }}</div>
+
+              <div class="cell cell-9">{{ getPlanetShort(profile.rasi_chart?.[8]) }}</div>
+              <div class="cell cell-10">{{ getPlanetShort(profile.rasi_chart?.[9]) }}</div>
+              <div class="cell cell-11">{{ getPlanetShort(profile.rasi_chart?.[10]) }}</div>
+              <div class="cell cell-12">{{ getPlanetShort(profile.rasi_chart?.[11]) }}</div>
+            </div>
+          </div>
+
+          <div class="single-chart-card">
+            <h3 class="chart-title">அம்சம்</h3>
+
+            <div class="chart-box chart-box-12">
+              <div class="cell cell-1">{{ getPlanetShort(profile.amsam_chart?.[0]) }}</div>
+              <div class="cell cell-2">{{ getPlanetShort(profile.amsam_chart?.[1]) }}</div>
+              <div class="cell cell-3">{{ getPlanetShort(profile.amsam_chart?.[2]) }}</div>
+              <div class="cell cell-4">{{ getPlanetShort(profile.amsam_chart?.[3]) }}</div>
+
+              <div class="cell cell-5">{{ getPlanetShort(profile.amsam_chart?.[4]) }}</div>
+              <div class="cell cell-6">{{ getPlanetShort(profile.amsam_chart?.[5]) }}</div>
+
+              <div class="chart-center-label">அம்சம்</div>
+
+              <div class="cell cell-7">{{ getPlanetShort(profile.amsam_chart?.[6]) }}</div>
+              <div class="cell cell-8">{{ getPlanetShort(profile.amsam_chart?.[7]) }}</div>
+
+              <div class="cell cell-9">{{ getPlanetShort(profile.amsam_chart?.[8]) }}</div>
+              <div class="cell cell-10">{{ getPlanetShort(profile.amsam_chart?.[9]) }}</div>
+              <div class="cell cell-11">{{ getPlanetShort(profile.amsam_chart?.[10]) }}</div>
+              <div class="cell cell-12">{{ getPlanetShort(profile.amsam_chart?.[11]) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

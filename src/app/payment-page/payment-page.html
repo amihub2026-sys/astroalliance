@@ -1,0 +1,131 @@
+<section class="payment-page">
+  <div class="container">
+
+    <div class="payment-wrapper" *ngIf="!paymentSuccess">
+      <div class="payment-left">
+        <p class="mini-title">SECURE PAYMENT</p>
+        <h1>Complete Your Membership Payment</h1>
+
+        <p class="subtitle">
+          This is a static Razorpay-style payment page for your matrimony membership.
+        </p>
+
+        <div class="summary-card">
+          <div class="summary-row">
+            <span>Plan Name</span>
+            <strong>{{ planName }}</strong>
+          </div>
+
+          <div class="summary-row">
+            <span>Duration</span>
+            <strong>{{ planDuration }}</strong>
+          </div>
+
+          <div class="summary-row" *ngIf="profileName || profileId">
+            <span>Unlocking Profile</span>
+            <strong>{{ profileName || 'Selected Profile' }}</strong>
+          </div>
+
+          <div class="summary-row" *ngIf="profileId">
+            <span>Profile ID</span>
+            <strong>{{ profileId }}</strong>
+          </div>
+
+          <div class="summary-row total">
+            <span>Total Amount</span>
+            <strong>{{ planPrice }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-right">
+        <div class="razorpay-card">
+          <div class="razorpay-top">
+            <div>
+              <p class="brand-label">Razorpay</p>
+              <h2>Pay {{ planPrice }}</h2>
+            </div>
+            <div class="brand-badge">RP</div>
+          </div>
+
+          <div class="form-group">
+            <label>Card Holder Name</label>
+            <input type="text" placeholder="Enter card holder name" />
+          </div>
+
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" placeholder="1234 5678 9012 3456" />
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Expiry</label>
+              <input type="text" placeholder="MM/YY" />
+            </div>
+
+            <div class="form-group">
+              <label>CVV</label>
+              <input type="password" placeholder="123" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>UPI ID</label>
+            <input type="text" placeholder="yourname@upi" />
+          </div>
+
+          <button class="pay-btn" type="button" (click)="payNow()" [disabled]="isPaying">
+            {{ isPaying ? 'Processing...' : 'Pay Now' }}
+          </button>
+
+          <button class="back-btn" type="button" (click)="goBack()" [disabled]="isPaying">
+            Back to Plans
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="success-wrapper" *ngIf="paymentSuccess">
+      <div class="success-card">
+        <div class="success-icon">✓</div>
+
+        <p class="success-mini">PAYMENT COMPLETED</p>
+
+        <h2>Payment Successful</h2>
+
+        <p class="success-text">
+          Your <strong>{{ planName }}</strong> membership has been activated successfully.
+        </p>
+
+        <div class="success-summary">
+          <div class="success-row">
+            <span>Plan</span>
+            <strong>{{ planName }}</strong>
+          </div>
+
+          <div class="success-row">
+            <span>Amount Paid</span>
+            <strong>{{ planPrice }}</strong>
+          </div>
+
+          <div class="success-row">
+            <span>Duration</span>
+            <strong>{{ planDuration }}</strong>
+          </div>
+        </div>
+
+        <div class="success-actions">
+          <button class="view-profile-btn" type="button" (click)="goToProfile()">
+            View Profile
+          </button>
+
+          <button class="secondary-btn" type="button" (click)="goToHome()">
+            Go to Home
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

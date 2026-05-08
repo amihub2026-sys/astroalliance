@@ -1,0 +1,183 @@
+<div class="app-shell">
+  <header class="navbar">
+    <div class="logo-section">
+     <a routerLink="/" class="logo" (click)="closeMenu()">
+  <img
+    src="assets/malogo.png"
+    alt="Astro Alliance Logo"
+    class="logo-img"
+  />
+</a>
+    </div>
+
+    <div class="nav-right">
+      <div class="language-switcher">
+        <button
+          type="button"
+          [class.active]="currentLang === 'en'"
+          (click)="changeLanguage('en')"
+        >
+          EN
+        </button>
+        <button
+          type="button"
+          [class.active]="currentLang === 'ta'"
+          (click)="changeLanguage('ta')"
+        >
+          தமிழ்
+        </button>
+      </div>
+
+      <button class="menu-toggle" (click)="toggleMenu()" type="button">☰</button>
+    </div>
+
+    <nav class="nav-links" [class.active]="menuOpen">
+      <a routerLink="/" (click)="closeMenu()">{{ t.nav.home }}</a>
+      <a routerLink="/profiles" (click)="closeMenu()">{{ t.nav.profiles }}</a>
+      <a routerLink="/plans" (click)="closeMenu()">{{ t.nav.plans }}</a>
+
+      <!-- NOT LOGGED IN -->
+      <a *ngIf="!isLoggedIn" routerLink="/login" (click)="closeMenu()">
+        {{ t.nav.login }}
+      </a>
+
+      <a *ngIf="!isLoggedIn" routerLink="/register" (click)="closeMenu()">
+        {{ t.nav.register }}
+      </a>
+
+      <!-- LOGGED IN -->
+      <a
+        *ngIf="isLoggedIn"
+        routerLink="/biodata"
+        (click)="closeMenu()"
+        class="highlight-btn"
+      >
+        {{ t.nav.biodata }}
+      </a>
+
+      <div *ngIf="isLoggedIn" class="my-biodata-dropdown">
+ <button
+  type="button"
+  class="my-biodata-btn"
+  [class.has-notification]="interestNotificationCount > 0"
+  (click)="$event.stopPropagation(); toggleBiodataMenu()"
+>
+  <span class="profile-icon">♡</span>
+<span>{{ currentLang === 'ta' ? 'என் சுயவிவரம்' : 'My Profile' }}</span>
+
+  <span class="interest-badge" *ngIf="interestNotificationCount > 0">
+    {{ interestNotificationCount }}
+  </span>
+</button>
+
+      <div class="my-biodata-menu" [class.show]="biodataMenuOpen">
+
+  <a (click)="goToPage('/my-biodata')">
+  {{ currentLang === 'ta' ? 'என் சுயவிவரம்' : 'My Profile' }}
+</a>
+
+<a (click)="openReceivedInterests()">
+{{ currentLang === 'ta' ? 'பெற்ற ஆர்வங்கள்' : 'Received Interests' }}
+  <span class="menu-badge" *ngIf="receivedInterestCount > 0">
+    {{ receivedInterestCount }}
+  </span>
+</a>
+
+<a (click)="openSentInterests()">
+ {{ currentLang === 'ta' ? 'அனுப்பிய ஆர்வங்கள்' : 'Sent Interests' }}
+  <span class="menu-badge" *ngIf="sentInterestCount > 0">
+    {{ sentInterestCount }}
+  </span>
+</a>
+
+  <button type="button" class="dropdown-logout-btn" (click)="logout()">
+    {{ t.nav.logout }}
+  </button>
+
+</div>
+      </div>
+
+ 
+
+      <!-- MOBILE LANGUAGE -->
+      <div class="mobile-language-switcher">
+        <button
+          type="button"
+          [class.active]="currentLang === 'en'"
+          (click)="changeLanguage('en')"
+        >
+          EN
+        </button>
+        <button
+          type="button"
+          [class.active]="currentLang === 'ta'"
+          (click)="changeLanguage('ta')"
+        >
+          தமிழ்
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- FOOTER (UNCHANGED) -->
+  <footer class="footer">
+    <div class="footer-container">
+     <div class="footer-col">
+  <img
+    src="assets/malogo.png"
+    alt="Astro Alliance Logo"
+    class="footer-logo-img"
+  />
+
+  <p>{{ t.footer.aboutText }}</p>
+</div>
+      <div class="footer-col">
+        <h3>{{ t.footer.quickLinks }}</h3>
+        <ul>
+          <li><a routerLink="/">{{ t.footer.home }}</a></li>
+          <li><a routerLink="/profiles">{{ t.footer.profiles }}</a></li>
+          <li><a routerLink="/plans">{{ t.footer.plans }}</a></li>
+          <li><a routerLink="/terms">{{ t.footer.terms }}</a></li>
+
+          <li *ngIf="!isLoggedIn">
+            <a routerLink="/login">{{ t.footer.login }}</a>
+          </li>
+
+          <li *ngIf="!isLoggedIn">
+            <a routerLink="/register">{{ t.footer.register }}</a>
+          </li>
+
+          <li *ngIf="isLoggedIn">
+            <a routerLink="/biodata">{{ t.nav.biodata }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>{{ t.footer.contact }}</h3>
+        <p>{{ t.footer.location }}</p>
+        <p>{{ t.footer.phone }}</p>
+        <p>{{ t.footer.email }}</p>
+      </div>
+
+      <div class="footer-col">
+        <h3>{{ t.footer.followUs }}</h3>
+        <div class="social-icons">
+          <a href="#">🌐</a>
+          <a href="#">📘</a>
+          <a href="#">📸</a>
+          <a href="#">▶</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>{{ t.footer.copyright }}</p>
+    </div>
+  </footer>
+  <app-snackbar></app-snackbar>
+</div>
