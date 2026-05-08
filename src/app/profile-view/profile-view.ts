@@ -868,14 +868,21 @@ for (let i = 1; i <= totalPages; i++) {
     }
   );
 
-  pdf.text(
-    'Website: www.astroalliance.in',
-    105,
-    pageHeight - 8,
-    {
-      align: 'center'
-    }
-  );
+pdf.text(
+  'Website: www.astroalliance.in',
+  105,
+  pageHeight - 8,
+  {
+    align: 'center'
+  }
+);
 }
+
+const fileName =
+  `${this.getText(this.profile?.fullName || 'profile')}-Astro-Alliance.pdf`;
+
+pdf.save(fileName.replace(/[^\w\-]+/g, '_'));
+
+this.snackbar.success('Profile downloaded successfully');
 }
 }
