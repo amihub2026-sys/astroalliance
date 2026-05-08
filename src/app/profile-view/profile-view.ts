@@ -852,30 +852,30 @@ for (let i = 1; i <= totalPages; i++) {
   });
 
   // Footer Details
-  pdf.setFontSize(9);
-  pdf.setTextColor(90, 90, 90);
+//   pdf.setFontSize(9);
+//   pdf.setTextColor(90, 90, 90);
 
-  pdf.text('Astro Alliance', 105, pageHeight - 18, {
-    align: 'center'
-  });
+//   pdf.text('Astro Alliance', 105, pageHeight - 18, {
+//     align: 'center'
+//   });
 
-  pdf.text(
-    'Email: support@astroalliance.in | Contact: +91 9876543210',
-    105,
-    pageHeight - 13,
-    {
-      align: 'center'
-    }
-  );
+//   pdf.text(
+//     'Email: support@astroalliance.in | Contact: +91 9876543210',
+//     105,
+//     pageHeight - 13,
+//     {
+//       align: 'center'
+//     }
+//   );
 
-pdf.text(
-  'Website: www.astroalliance.in',
-  105,
-  pageHeight - 8,
-  {
-    align: 'center'
-  }
-);
+// pdf.text(
+//   'Website: www.astroalliance.in',
+//   105,
+//   pageHeight - 8,
+//   {
+//     align: 'center'
+//   }
+// );
 }
 
 const fileName =
