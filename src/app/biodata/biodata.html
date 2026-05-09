@@ -364,59 +364,82 @@
         </div>
 
         <div class="form-grid">
-        <!-- EDUCATION -->
-<div class="field education-field" [class.invalid]="isInvalid('education')">
+      <!-- EDUCATION -->
+<div class="field" [class.invalid]="isInvalid('education')">
   <label>{{ tr.labels.education }} <span class="required">*</span></label>
 
-  <div class="custom-education-select" (click)="toggleEducationDropdown()">
-    <span>
-  {{
-    currentLang === 'ta'
-      ? (getTamilEducationName(formData.education) || 'கல்வியை தேர்வு செய்யவும்')
-      : (formData.education || 'Select Education')
-  }}
-</span>
-    <span>⌄</span>
-  </div>
+  <select [(ngModel)]="formData.education" name="education">
+    <option value="">
+      {{ currentLang === 'ta' ? 'கல்வியை தேர்வு செய்யவும்' : 'Select Education' }}
+    </option>
+
+    <option
+      *ngFor="let edu of educationList"
+      [value]="edu.education_name">
+      {{
+        currentLang === 'ta'
+          ? (edu.education_name_ta || edu.education_name)
+          : edu.education_name
+      }}
+    </option>
+
+    <option value="Other">
+      {{ currentLang === 'ta' ? 'மற்றவை' : 'Other' }}
+    </option>
+  </select>
+
+  <input
+    *ngIf="formData.education === 'Other'"
+    type="text"
+    [(ngModel)]="formData.otherEducation"
+    name="otherEducation"
+    [placeholder]="currentLang === 'ta'
+      ? 'கல்வியை உள்ளிடவும்'
+      : 'Enter education'"
+  >
 
   <small class="field-error" *ngIf="isInvalid('education')">Required</small>
-
-  <div class="education-dropdown" *ngIf="showEducationDropdown">
-    <input
-      type="text"
-      class="education-search-input"
-      [(ngModel)]="educationSearch"
-      name="educationSearch"
-      [placeholder]="tr.labels.searchEducation"
-      (input)="onEducationSearchChange()"
-      (click)="$event.stopPropagation()"
-    />
-
-    <div
-      class="education-option"
-      *ngFor="let edu of filteredEducationList"
-      (click)="selectEducation(edu.education_name)">
-      {{ edu.education_name }}
-    </div>
-
-    <div
-      class="education-add-option"
-      *ngIf="canShowAddEducationButton()"
-      (click)="addEducationLevel()">
-     + {{ tr.labels.add }} "{{ educationSearch }}"
-    </div>
-  </div>
 </div>
-         <!-- JOB -->
+<!-- JOB -->
 <div class="field" [class.invalid]="isInvalid('job')">
   <label>{{ tr.labels.occupation }} <span class="required">*</span></label>
+
+  <select [(ngModel)]="formData.job" name="job">
+
+    <option value="">
+      {{ currentLang === 'ta'
+        ? 'தொழிலை தேர்வு செய்யவும்'
+        : 'Select Profession'
+      }}
+    </option>
+
+    <option
+      *ngFor="let profession of professionList"
+      [value]="profession.profession_name">
+
+      {{
+        currentLang === 'ta'
+          ? (profession.profession_name_ta || profession.profession_name)
+          : profession.profession_name
+      }}
+
+    </option>
+
+  </select>
+
   <input
-  type="text"
-  [ngModel]="getTypedValue('job')"
- (ngModelChange)="onTamilInputChange('job', $event)"
-  name="job"
-  [placeholder]="tr.placeholders.occupation">
-  <small class="field-error" *ngIf="isInvalid('job')">Required</small>
+    *ngIf="formData.job === 'Other'"
+    type="text"
+    [(ngModel)]="formData.otherProfession"
+    name="otherProfession"
+    [placeholder]="currentLang === 'ta'
+      ? 'தொழிலை உள்ளிடவும்'
+      : 'Enter profession'"
+  >
+
+  <small class="field-error" *ngIf="isInvalid('job')">
+    Required
+  </small>
 </div>
 
         <!-- COMPANY -->

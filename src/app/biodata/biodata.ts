@@ -332,7 +332,9 @@ required: 'தேவை'
     motherOccupation: '',
     siblings: '',
     education: '',
+    otherEducation: '',
     job: '',
+    otherProfession: '',
     company: '',
     salary: '',
     address: '',
@@ -425,6 +427,7 @@ selectedStateId = '';
 selectedCityId = '';
 educationList: any[] = [];
 filteredEducationList: any[] = [];
+professionList: any[] = [];
 educationSearch = '';
 showEducationDropdown = false;
   get currentLang(): 'en' | 'ta' {
@@ -837,7 +840,7 @@ async ngOnInit(): Promise<void> {
   await this.loadStates();
   await this.loadCities();
   await this.loadEducationLevels();
-
+await this.loadProfessionList();
   await this.loadExistingBiodata();
 
 if (this.currentLang === 'ta') {
@@ -1713,8 +1716,15 @@ mother_occupation_ta: this.safeText(taSnapshot.motherOccupation),
 
 siblings_ta: this.safeText(taSnapshot.siblings),
 
-occupation_text_ta: this.safeText(taSnapshot.job),
-
+occupation_text_ta: this.safeText(
+  this.formData.job === 'Other'
+    ? taSnapshot.job
+    : (
+        this.professionList.find(
+          (p: any) => p.profession_name === this.formData.job
+        )?.profession_name_ta || taSnapshot.job
+      )
+),
 company_name_ta: this.safeText(taSnapshot.company),
 
 address_line_ta: this.safeText(taSnapshot.address),
@@ -1739,16 +1749,22 @@ siblings_text: this.safeText(this.formData.siblings),
 education_id: null,
 
 education_text: this.safeText(
-  this.formData.education
+  this.formData.education === 'Other'
+    ? this.formData.otherEducation
+    : this.formData.education
 ),
 education_text_ta: this.safeText(
-  this.currentLang === 'ta'
-    ? this.getTamilEducationName(this.formData.education)
-    : await this.translateText(this.formData.education, 'ta')
+  this.formData.education === 'Other'
+    ? await this.translateText(this.formData.otherEducation, 'ta')
+    : this.getTamilEducationName(this.formData.education)
 ),
 occupation_id: null,
 
-occupation_text: this.safeText(this.formData.job),
+occupation_text: this.safeText(
+  this.formData.job === 'Other'
+    ? this.formData.otherProfession
+    : this.formData.job
+),
 company_name: this.safeText(this.formData.company),
         salary_amount: this.safeNumber(this.formData.salary),
         salary_currency: 'INR',
@@ -2062,6 +2078,24 @@ onStateChange() {
       String(c.state_id) === String(this.selectedStateId)
   );
 
+}
+async loadProfessionList() {
+  const { data, error } = await supabase
+    .from('mst_professions')
+    .select('profession_name, profession_name_ta, sort_order, is_active')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  if (error) {
+    console.error('Profession load error:', error.message);
+    this.professionList = [];
+    return;
+  }
+
+  console.log('PROFESSION LIST:', data);
+
+  this.professionList = data || [];
+  this.cdr.detectChanges();
 }
 async loadEducationLevels() {
 
