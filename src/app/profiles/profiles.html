@@ -192,10 +192,10 @@
 </div>
         <div
           class="tm-option"
-          *ngFor="let item of getFilteredOptions(religionOptions, searchTerms.religion)"
-          (click)="selectOption('religion', item)"
-        >
-          {{ item }}
+        *ngFor="let item of getFilteredLangOptions(religionOptions, searchTerms.religion)"
+(click)="selectOption('religion', getText(item))"
+>
+  {{ getText(item) }}
         </div>
       </div>
     </div>
@@ -218,10 +218,10 @@
 </div>
         <div
           class="tm-option"
-          *ngFor="let item of getFilteredOptions(casteOptions, searchTerms.caste)"
-          (click)="selectOption('caste', item)"
-        >
-          {{ item }}
+        *ngFor="let item of getFilteredLangOptions(casteOptions, searchTerms.caste)"
+(click)="selectOption('caste', getText(item))"
+>
+  {{ getText(item) }}
         </div>
       </div>
     </div>
@@ -244,10 +244,10 @@
 </div>
         <div
           class="tm-option"
-          *ngFor="let item of getFilteredOptions(genderOptions, searchTerms.gender)"
-          (click)="selectOption('gender', item)"
-        >
-          {{ item }}
+         *ngFor="let item of getFilteredLangOptions(genderOptions, searchTerms.gender)"
+(click)="selectOption('gender', getText(item))"
+>
+  {{ getText(item) }}
         </div>
       </div>
     </div>
@@ -270,10 +270,10 @@
 </div>
         <div
           class="tm-option"
-          *ngFor="let item of getFilteredOptions(maritalStatusOptions, searchTerms.maritalStatus)"
-          (click)="selectOption('maritalStatus', item)"
-        >
-          {{ item }}
+        *ngFor="let item of getFilteredLangOptions(maritalStatusOptions, searchTerms.maritalStatus)"
+(click)="selectOption('maritalStatus', getText(item))"
+>
+  {{ getText(item) }}
         </div>
       </div>
     </div>
@@ -296,10 +296,10 @@
 </div>
         <div
           class="tm-option"
-          *ngFor="let item of getFilteredOptions(cityOptions, searchTerms.location)"
-          (click)="selectOption('location', item)"
-        >
-          {{ item }}
+         *ngFor="let item of getFilteredLangOptions(cityOptions, searchTerms.location)"
+(click)="selectOption('location', getText(item))"
+>
+  {{ getText(item) }}
         </div>
       </div>
     </div>
@@ -333,10 +333,10 @@
 
     <div
       class="tm-option"
-      *ngFor="let item of getFilteredOptions(stateOptions, searchTerms.state)"
-      (click)="selectOption('state', item)"
-    >
-      {{ item }}
+    *ngFor="let item of getFilteredLangOptions(stateOptions, searchTerms.state)"
+(click)="selectOption('state', getText(item))"
+>
+  {{ getText(item) }}
     </div>
 
   </div>
@@ -387,10 +387,10 @@
 </div>
         <div
           class="tm-option"
-          *ngFor="let item of getFilteredOptions(educationOptions, searchTerms.education)"
-          (click)="selectOption('education', item)"
-        >
-          {{ item }}
+        *ngFor="let item of getFilteredLangOptions(educationOptions, searchTerms.education)"
+(click)="selectOption('education', getText(item))"
+>
+  {{ getText(item) }}
         </div>
       </div>
     </div>
@@ -422,10 +422,10 @@
 
     <div
       class="tm-option"
-      *ngFor="let item of getFilteredOptions(professionOptions, searchTerms.profession)"
-      (click)="selectOption('profession', item)"
-    >
-      {{ item }}
+    *ngFor="let item of getFilteredLangOptions(professionOptions, searchTerms.profession)"
+(click)="selectOption('profession', getText(item))"
+>
+  {{ getText(item) }}
     </div>
 
   </div>

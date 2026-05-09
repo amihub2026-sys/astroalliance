@@ -63,16 +63,15 @@ snackbar = inject(SnackbarService);
   ageFromOptions = [21, 23, 25, 27, 29, 31, 33, 35];
   ageToOptions = [25, 27, 29, 31, 33, 35, 37, 40];
   radiusOptions = [5, 10, 25, 50, 100, 200];
-educationOptions: string[] = [];
-maritalStatusOptions: string[] = [];
-stateOptions: string[] = [];
-cityOptions: string[] = [];
-religionOptions: string[] = [];
-casteOptions: string[] = [];
+educationOptions: LangText[] = [];
+maritalStatusOptions: LangText[] = [];
+stateOptions: LangText[] = [];
+cityOptions: LangText[] = [];
+religionOptions: LangText[] = [];
+casteOptions: LangText[] = [];
+genderOptions: LangText[] = [];
+professionOptions: LangText[] = [];
 casteMap: Record<string, string> = {};
-genderOptions: string[] = [];
-professionOptions: string[] = [];
-
   openDropdown: string | null = null;
   mobileFilterOpen = false;
 
@@ -1042,15 +1041,18 @@ image: row.profile_image_url || 'assets/default-avatar.png',
       }));
 
       this.likedMeProfiles = [];
-      this.professionOptions = this.getUniqueOptions(this.profiles, 'profession');
+const professionStrings = this.getUniqueOptions(this.profiles, 'profession');
 
-if (!this.professionOptions.includes('Not Working')) {
-  this.professionOptions.push('Not Working');
+if (!professionStrings.includes('Not Working')) {
+  professionStrings.push('Not Working');
 }
 
-this.professionOptions = this.professionOptions.sort((a, b) =>
-  a.localeCompare(b)
-);
+this.professionOptions = professionStrings
+  .sort((a, b) => a.localeCompare(b))
+  .map((value) => ({
+    en: value,
+    ta: this.getTamilProfileValue('profession', value)
+  }));
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Load profiles error:', error);
@@ -1079,11 +1081,11 @@ private getTamilProfileValue(
       Female: 'பெண்'
     },
 
-    maritalStatus: {
-      Unmarried: 'திருமணம் ஆகாதவர்',
-      Divorced: 'விவாகரத்து'
-    },
-
+   maritalStatus: {
+  Unmarried: 'திருமணம் ஆகாதவர்',
+  Divorced: 'விவாகரத்து',
+  Widowed: 'விதவை'
+},
     religion: {
       Hindu: 'இந்து',
       Christian: 'கிறிஸ்துவர்',
@@ -1511,120 +1513,134 @@ get planStatus(): string {
 
 
 
- async loadEducationOptions(): Promise<void> {
-
+async loadEducationOptions(): Promise<void> {
   const { data, error } = await supabase
     .from('mst_education_levels')
-    .select('education_name')
+    .select('education_name, education_name_ta')
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (error) {
     console.error('Education load error', error);
+    this.educationOptions = [];
     return;
   }
 
   this.educationOptions = (data || [])
-    .map((x: any) => String(x.education_name || '').trim())
-    .filter(Boolean);
+    .map((x: any) => ({
+      en: String(x.education_name || '').trim(),
+      ta: String(x.education_name_ta || x.education_name || '').trim()
+    }))
+    .filter((x: LangText) => x.en);
 
   this.cdr.detectChanges();
 }
 
 async loadFilterTables(): Promise<void> {
+const { data: maritalData, error: maritalError } = await supabase
+  .from('mst_marital_statuses')
+  .select('status_name')
+  .eq('is_active', true)
+  .order('sort_order', { ascending: true });
 
-  const { data: maritalData, error: maritalError } = await supabase
-    .from('mst_marital_statuses')
-    .select('status_name')
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true });
+if (!maritalError) {
+  this.maritalStatusOptions = (maritalData || [])
+    .map((x: any) => {
+      const en = String(x.status_name || '').trim();
 
-  if (!maritalError) {
-    this.maritalStatusOptions = (maritalData || [])
-      .map((x: any) => String(x.status_name || '').trim())
-      .filter(Boolean);
-  }
+      return {
+        en,
+        ta: this.getTamilProfileValue('maritalStatus', en)
+      };
+    })
+    .filter((x: LangText) => x.en);
+}
 
   const { data: stateData, error: stateError } = await supabase
     .from('mst_states')
-    .select('state_name')
+    .select('state_name, state_name_ta')
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (!stateError) {
     this.stateOptions = (stateData || [])
-      .map((x: any) => String(x.state_name || '').trim())
-      .filter(Boolean);
+      .map((x: any) => ({
+        en: String(x.state_name || '').trim(),
+        ta: String(x.state_name_ta || x.state_name || '').trim()
+      }))
+      .filter((x: LangText) => x.en);
   }
 
   const { data: cityData, error: cityError } = await supabase
     .from('mst_cities')
-    .select('city_name')
+    .select('city_name, city_name_ta')
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (!cityError) {
     this.cityOptions = (cityData || [])
-      .map((x: any) => String(x.city_name || '').trim())
-      .filter(Boolean);
+      .map((x: any) => ({
+        en: String(x.city_name || '').trim(),
+        ta: String(x.city_name_ta || x.city_name || '').trim()
+      }))
+      .filter((x: LangText) => x.en);
   }
-const { data: religionData, error: religionError } = await supabase
-  .from('mst_religions')
-  .select('religion_name')
-  .eq('is_active', true)
-  .order('sort_order', { ascending: true });
 
-if (!religionError) {
-  this.religionOptions = (religionData || [])
-    .map((x: any) => String(x.religion_name || '').trim())
-    .filter(Boolean);
-}
+  const { data: religionData, error: religionError } = await supabase
+    .from('mst_religions')
+    .select('religion_name, religion_name_ta')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
 
-const { data: casteData, error: casteError } = await supabase
-  .from('mst_castes')
-  .select('caste_name, caste_name_ta')
-  .eq('is_active', true)
-  .order('sort_order', { ascending: true });
+  if (!religionError) {
+    this.religionOptions = (religionData || [])
+      .map((x: any) => ({
+        en: String(x.religion_name || '').trim(),
+        ta: String(x.religion_name_ta || x.religion_name || '').trim()
+      }))
+      .filter((x: LangText) => x.en);
+  }
 
-if (!casteError) {
+  const { data: casteData, error: casteError } = await supabase
+    .from('mst_castes')
+    .select('caste_name, caste_name_ta')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
 
-  this.casteOptions = (casteData || [])
-    .map((x: any) => String(x.caste_name || '').trim())
-    .filter(Boolean);
+  if (!casteError) {
+    this.casteOptions = (casteData || [])
+      .map((x: any) => ({
+        en: String(x.caste_name || '').trim(),
+        ta: String(x.caste_name_ta || x.caste_name || '').trim()
+      }))
+      .filter((x: LangText) => x.en);
 
-  this.casteMap = {};
+    this.casteMap = {};
 
-  (casteData || []).forEach((x: any) => {
-
-    const en = String(x.caste_name || '').trim();
-    const ta = String(x.caste_name_ta || '').trim();
-
-    if (en) {
-      this.casteMap[en.toLowerCase()] = ta || en;
-    }
-
-  });
-}
+    this.casteOptions.forEach((x) => {
+      this.casteMap[x.en.toLowerCase()] = x.ta || x.en;
+    });
+  }
 
 const { data: genderData, error: genderError } = await supabase
   .from('mst_genders')
-  .select('gender_name, is_active')
+  .select('gender_name')
   .eq('is_active', true)
   .order('sort_order', { ascending: true });
 
-if (genderError) {
-
-  console.error('Gender load error:', genderError);
-
-} else {
-
-  console.log('Gender data:', genderData);
-
+if (!genderError) {
   this.genderOptions = (genderData || [])
-    .map((x: any) => String(x.gender_name || '').trim())
-    .filter(Boolean);
+    .map((x: any) => {
+      const en = String(x.gender_name || '').trim();
 
+      return {
+        en,
+        ta: this.getTamilProfileValue('gender', en)
+      };
+    })
+    .filter((x: LangText) => x.en);
 }
+
   this.cdr.detectChanges();
 }
   getText(value: string | LangText): string {
@@ -1689,7 +1705,15 @@ selectNumberOption(
       String(item || '').toLowerCase().includes(term)
     );
   }
+getFilteredLangOptions(options: LangText[], search: string): LangText[] {
+  const term = String(search || '').toLowerCase().trim();
 
+  if (!term) return options;
+
+  return options.filter(item =>
+    this.getText(item).toLowerCase().includes(term)
+  );
+}
   getFilteredNumberOptions(options: number[], search: string): number[] {
     const term = String(search || '').toLowerCase().trim();
     if (!term) return options;
