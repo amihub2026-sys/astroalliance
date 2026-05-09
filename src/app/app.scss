@@ -145,25 +145,57 @@ main {
 
 /* FOOTER */
 .footer {
-  background: linear-gradient(135deg, #111827, #1f2937);
-  color: #fff;
+  position: relative;
+  overflow: hidden;
+
   margin-top: 40px;
-}
 
+  background-image: url("../assets/footer-pink-peacock.png");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  min-height: 520px;
+}
 .footer-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 60px 20px 30px;
-  display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
-  gap: 30px;
-}
+  position: relative;
+  z-index: 2;
 
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  min-height: 520px;
+
+  padding: 140px 70px 40px;
+
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+
+  gap: 40px;
+  align-items: start;
+}
 .footer-col h3 {
   margin: 0 0 16px;
-  font-size: 20px;
-}
 
+  font-size: 24px;
+  font-weight: 900;
+
+  color: #9c0f52;
+
+  text-shadow:
+    0 2px 6px rgba(255,255,255,0.75);
+
+  position: relative;
+  z-index: 3;
+}
+.footer-bottom p{
+  font-weight: 700;
+  text-shadow:
+    0 1px 2px rgba(255,255,255,0.85);
+}
 .footer-logo {
   margin: 0 0 16px;
   font-size: 26px;
@@ -177,9 +209,18 @@ main {
 .footer-col p,
 .footer-col li,
 .footer-col a {
-  color: #d1d5db;
-  line-height: 1.8;
+  color: #6f1d46;
+
+  line-height: 1.9;
   text-decoration: none;
+
+  font-weight: 700;
+
+  text-shadow:
+    0 1px 2px rgba(255,255,255,0.85);
+
+  position: relative;
+  z-index: 3;
 }
 
 .footer-col ul {
@@ -210,14 +251,17 @@ main {
 }
 
 .footer-bottom {
+  position: relative;
+  z-index: 2;
+
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
   padding: 18px 20px;
 }
-
 .footer-bottom p {
   margin: 0;
-  color: #cbd5e1;
+  color: #7d5c6c;
+  font-weight: 600;
 }
 
 /* RESPONSIVE */
@@ -276,6 +320,80 @@ main {
 }
 
 @media (max-width: 600px) {
+
+.footer {
+  background-image: url("../assets/footer-pink-peacock.png");
+
+  background-size: auto 100%;
+  background-position: left top;
+  background-repeat: no-repeat;
+
+  background-color: #fff;
+}
+
+ .footer-container {
+  min-height: 560px;
+
+  padding-top: 38px;
+  padding-right: 18px;
+  padding-bottom: 22px;
+  padding-left: 115px;
+
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+  .footer-col {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+  .footer-logo-img {
+    width: 150px;
+    margin: 0 auto 12px;
+  }
+
+  .footer-col:first-child {
+    margin-top: 0;
+  }
+
+  .footer-col p {
+    font-size: 13px;
+    line-height: 1.7;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+
+  .footer-col h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .footer-col li,
+  .footer-col a {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .social-icons {
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .social-icons a {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .footer-bottom {
+    padding: 10px 12px;
+  }
+
+  .footer-bottom p {
+    font-size: 11px;
+  }
+
   .navbar {
     padding: 12px 16px;
   }
@@ -283,15 +401,6 @@ main {
   .logo-text {
     font-size: 18px;
     gap: 5px;
-  }
-
-  .footer-container {
-    grid-template-columns: 1fr;
-    padding: 50px 16px 24px;
-  }
-
-  .footer-logo {
-    font-size: 22px;
   }
 }
 .my-biodata-btn {
