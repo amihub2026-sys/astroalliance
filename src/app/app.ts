@@ -109,17 +109,24 @@ constructor() {
 
     this.loadInterestNotificationCount();
 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        if (event.urlAfterRedirects.includes('/received-interests')) {
-          this.markReceivedInterestsSeen();
-        }
+this.router.events.subscribe((event) => {
+  if (event instanceof NavigationEnd) {
 
-        if (event.urlAfterRedirects.includes('/sent-interests')) {
-          this.markSentInterestsSeen();
-        }
-      }
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
     });
+
+    if (event.urlAfterRedirects.includes('/received-interests')) {
+      this.markReceivedInterestsSeen();
+    }
+
+    if (event.urlAfterRedirects.includes('/sent-interests')) {
+      this.markSentInterestsSeen();
+    }
+  }
+});
   }
 }
 
