@@ -1489,10 +1489,18 @@ private markRequiredErrors(): boolean {
     motherOccupation: v(this.formData.motherOccupation, this.formDataTa.motherOccupation),
     siblings: v(this.formData.siblings, this.formDataTa.siblings),
 
-    education: this.formData.education,
-    job: v(this.formData.job, this.formDataTa.job),
+    education:
+      this.formData.education === 'Other'
+        ? this.formData.otherEducation
+        : this.formData.education,
+
+    job:
+      this.formData.job === 'Other'
+        ? this.formData.otherProfession
+        : this.formData.job,
+
     company: v(this.formData.company, this.formDataTa.company),
-    salary: this.formData.salary,
+    salary: v(this.formData.salary, this.formDataTa.salary),
 
     address: v(this.formData.address, this.formDataTa.address),
     country: this.selectedCountryId,
@@ -1504,7 +1512,7 @@ private markRequiredErrors(): boolean {
     rasi: this.formData.rasi,
     nakshatra: this.formData.nakshatra,
     lagnam: this.formData.lagnam,
-    gothram: this.formData.gothram,
+    gothram: v(this.formData.gothram, this.formDataTa.gothram),
     dhosham: this.formData.dhosham,
     birthTime: this.formData.birthTime,
     birthPlace: v(this.formData.birthPlace, this.formDataTa.birthPlace),
@@ -1516,32 +1524,36 @@ private markRequiredErrors(): boolean {
     }
   });
 
+  this.cdr.detectChanges();
+
   return Object.keys(this.fieldErrors).length > 0;
 }
-async onSubmit(event?: Event): Promise<void> {
-  event?.preventDefault();
+async onSubmit(): Promise<void> {
+  
 
   this.submitted = true;
+  this.fieldErrors = {};
+
+  const hasErrors = this.markRequiredErrors();
+
+  console.log('REQUIRED ERRORS:', this.fieldErrors);
+
+  if (hasErrors) {
+    this.isSaving = false;
+    this.snackbar.error(
+      this.currentLang === 'ta'
+        ? 'தேவையான அனைத்து விவரங்களையும் நிரப்பவும்'
+        : 'Please fill all required fields'
+    );
+    return;
+  }
       const selectedCity = this.cityList.find(
     (x: any) => x.city_id === this.selectedCityId
   );
 
   this.formData.city = selectedCity?.city_name || '';
 
-this.fieldErrors = {};
-
-   if (!String(this.formData.fullName || this.formDataTa.fullName || '').trim()) {
-  this.snackbar.error(this.currentLang === 'ta' ? 'முழு பெயர் தேவை' : 'Full name is required');
-  return;
-}
-
-    if (!this.formData.mobile.trim()) {
-      this.snackbar.error('Phone number is required');
-      return;
-    }
-  
-
-    this.isSaving = true;
+ this.isSaving = true;
 
    try {
         if (this.currentLang === 'ta') {
