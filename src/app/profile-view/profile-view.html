@@ -26,13 +26,150 @@
     >
      {{ currentLang === 'ta' ? 'முழு புகைப்படம் பார்க்க' : 'See Full Photo' }}
     </button>
+
+
+<div
+  class="media-row no-pdf"
+  *ngIf="p.galleryImages.length || p.videoUrl"
+>
+
+  <!-- ADDITIONAL PHOTOS -->
+
+  <div class="side-gallery" *ngIf="p.galleryImages.length">
+
+    <h3>
+      {{
+        currentLang === 'ta'
+          ? 'கூடுதல் புகைப்படங்கள்'
+          : 'Additional Photos'
+      }}
+    </h3>
+
+    <div class="side-gallery-item single-preview">
+
+      <img
+        [src]="p.galleryImages[0]"
+        alt="Additional photo"
+        (click)="openPhoto(p.galleryImages[0])"
+      />
+
+      <button
+        type="button"
+        class="see-additional-btn"
+        (click)="openAdditionalPhotos()"
+      >
+        {{
+          currentLang === 'ta'
+            ? 'கூடுதல் புகைப்படங்கள் பார்க்க'
+            : 'See Additional Photos'
+        }}
+      </button>
+
+    </div>
+
   </div>
 
-  <div class="full-photo-popup" *ngIf="openFullPhoto">
-    <button class="close-photo-btn" type="button" (click)="closePhoto()">×</button>
-    <img [src]="p.profileImage" />
+  <!-- VIDEO -->
+
+  <div class="side-video" *ngIf="p.videoUrl">
+
+    <h3>
+      {{
+        currentLang === 'ta'
+          ? 'சுயவிவர வீடியோ'
+          : 'Profile Video'
+      }}
+    </h3>
+
+    <div
+      class="video-thumb"
+      (click)="openVideoPopup()"
+    >
+
+      <video
+        [src]="p.videoUrl"
+        muted
+      ></video>
+
+      <div class="play-overlay">▶</div>
+
+    </div>
+
   </div>
 
+</div>
+  </div>
+
+ <div class="full-photo-popup" *ngIf="openFullPhoto">
+
+  <button
+    class="close-photo-btn"
+    type="button"
+    (click)="closePhoto()"
+  >
+    ×
+  </button>
+
+  <button
+    class="gallery-arrow left-arrow"
+    *ngIf="currentGalleryIndex >= 0"
+    (click)="showPrevPhoto()"
+  >
+    ❮
+  </button>
+
+  <img [src]="selectedPhotoUrl || p.profileImage" />
+
+  <button
+    class="gallery-arrow right-arrow"
+    *ngIf="currentGalleryIndex >= 0"
+    (click)="showNextPhoto()"
+  >
+    ❯
+  </button>
+
+</div>
+
+  <div class="full-photo-popup" *ngIf="openGalleryPopup">
+
+  <button
+    class="close-photo-btn"
+    type="button"
+    (click)="closeAdditionalPhotos()"
+  >
+    ×
+  </button>
+
+  <div class="gallery-popup-grid">
+
+   <img
+  *ngFor="let img of p.galleryImages"
+  [src]="img"
+  alt="Additional photo"
+  (click)="openPhotoFromGallery(img)"
+/>
+
+  </div>
+
+</div>
+<div class="full-photo-popup" *ngIf="openVideoFull">
+
+  <button
+    class="close-photo-btn"
+    type="button"
+    (click)="closeVideoPopup()"
+  >
+    ×
+  </button>
+
+  <video
+    class="popup-video"
+    [src]="p.videoUrl"
+    controls
+    autoplay
+  ></video>
+
+</div>
   <div class="profile-main-card">
 <div class="hero-top">
   <div>
@@ -117,23 +254,7 @@
       </p>
     </div>
 
-    <div class="detail-card full-width" *ngIf="p.galleryImages.length">
-      <h2>{{ currentLang === 'ta' ? 'புகைப்பட தொகுப்பு' : 'Photo Gallery' }}</h2>
-      <div class="gallery-grid">
-        <div class="gallery-item" *ngFor="let img of p.galleryImages">
-          <img [src]="img" [alt]="currentLang === 'ta' ? 'சுயவிவர படம்' : 'Profile gallery image'" />
-        </div>
-      </div>
-    </div>
-
-    <div class="detail-card full-width" *ngIf="p.videoUrl">
-      <h2>{{ currentLang === 'ta' ? 'சுயவிவர வீடியோ' : 'Profile Video' }}</h2>
-      <div class="video-wrap">
-        <video [src]="p.videoUrl" controls></video>
-      </div>
-    </div>
-
-    <div class="details-grid">
+ <div class="details-grid">
 
       <div class="detail-card">
         <h2>
