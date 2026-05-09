@@ -1041,18 +1041,7 @@ image: row.profile_image_url || 'assets/default-avatar.png',
       }));
 
       this.likedMeProfiles = [];
-const professionStrings = this.getUniqueOptions(this.profiles, 'profession');
 
-if (!professionStrings.includes('Not Working')) {
-  professionStrings.push('Not Working');
-}
-
-this.professionOptions = professionStrings
-  .sort((a, b) => a.localeCompare(b))
-  .map((value) => ({
-    en: value,
-    ta: this.getTamilProfileValue('profession', value)
-  }));
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Load profiles error:', error);
@@ -1640,7 +1629,20 @@ if (!genderError) {
     })
     .filter((x: LangText) => x.en);
 }
+const { data: professionData, error: professionError } = await supabase
+  .from('mst_professions')
+  .select('profession_name, profession_name_ta')
+  .eq('is_active', true)
+  .order('sort_order', { ascending: true });
 
+if (!professionError) {
+  this.professionOptions = (professionData || [])
+    .map((x: any) => ({
+      en: String(x.profession_name || '').trim(),
+      ta: String(x.profession_name_ta || x.profession_name || '').trim()
+    }))
+    .filter((x: LangText) => x.en);
+}
   this.cdr.detectChanges();
 }
   getText(value: string | LangText): string {
