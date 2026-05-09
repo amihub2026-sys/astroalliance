@@ -1465,68 +1465,58 @@ private async uploadAdditionalImages(): Promise<string[]> {
   return uploadedUrls;
 
 }
-private markRequiredErrors(): boolean {
+private markRequiredErrors(): string | null {
   this.fieldErrors = {};
 
-  const v = (en: any, ta?: any) =>
-    String(en || ta || '').trim();
+const v = (en: any, ta?: any) => {
+  if (this.currentLang === 'ta') {
+    return String(ta || '').trim();
+  }
 
-  const requiredFields: Record<string, any> = {
-    fullName: v(this.formData.fullName, this.formDataTa.fullName),
-    gender: this.formData.gender,
-    dob: this.formData.dob,
-    maritalStatus: this.formData.maritalStatus,
-    mobile: this.formData.mobile,
-    email: this.formData.email,
-    height: this.formData.height,
-    weight: this.formData.weight,
-    religion: this.selectedReligionId,
-    caste: this.formData.caste,
+  return String(en || '').trim();
+};
 
-    fatherName: v(this.formData.fatherName, this.formDataTa.fatherName),
-    motherName: v(this.formData.motherName, this.formDataTa.motherName),
-    fatherOccupation: v(this.formData.fatherOccupation, this.formDataTa.fatherOccupation),
-    motherOccupation: v(this.formData.motherOccupation, this.formDataTa.motherOccupation),
-    siblings: v(this.formData.siblings, this.formDataTa.siblings),
+  const requiredFields: { key: string; label: string; value: any }[] = [
+    { key: 'fullName', label: this.tr.labels.fullName, value: v(this.formData.fullName, this.formDataTa.fullName) },
+    { key: 'gender', label: this.tr.labels.gender, value: this.formData.gender },
+    { key: 'dob', label: this.tr.labels.dob, value: this.formData.dob },
+    { key: 'maritalStatus', label: this.tr.labels.maritalStatus, value: this.formData.maritalStatus },
+    { key: 'mobile', label: this.tr.labels.mobile, value: this.formData.mobile },
+    { key: 'email', label: this.tr.labels.email, value: this.formData.email },
+    { key: 'height', label: this.tr.labels.height, value: this.formData.height },
+    { key: 'weight', label: this.tr.labels.weight, value: this.formData.weight },
+    { key: 'religion', label: this.tr.labels.religion, value: this.selectedReligionId },
+    { key: 'caste', label: this.tr.labels.caste, value: this.formData.caste },
+    { key: 'fatherName', label: this.tr.labels.fatherName, value: v(this.formData.fatherName, this.formDataTa.fatherName) },
+    { key: 'motherName', label: this.tr.labels.motherName, value: v(this.formData.motherName, this.formDataTa.motherName) },
+    { key: 'fatherOccupation', label: this.tr.labels.fatherOccupation, value: v(this.formData.fatherOccupation, this.formDataTa.fatherOccupation) },
+    { key: 'siblings', label: this.tr.labels.siblings, value: v(this.formData.siblings, this.formDataTa.siblings) },
+    { key: 'education', label: this.tr.labels.education, value: this.formData.education === 'Other' ? this.formData.otherEducation : this.formData.education },
+    { key: 'job', label: this.tr.labels.occupation, value: this.formData.job === 'Other' ? this.formData.otherProfession : this.formData.job },
+    { key: 'company', label: this.tr.labels.company, value: v(this.formData.company, this.formDataTa.company) },
+    { key: 'salary', label: this.tr.labels.salary, value: v(this.formData.salary, this.formDataTa.salary) },
+    { key: 'address', label: this.tr.labels.address, value: v(this.formData.address, this.formDataTa.address) },
+    { key: 'country', label: this.tr.labels.country, value: this.selectedCountryId },
+    { key: 'state', label: this.tr.labels.state, value: this.selectedStateId },
+    { key: 'city', label: this.tr.labels.city, value: this.selectedCityId },
+    { key: 'horoscopeFile', label: this.tr.sections.horoscopeUpload, value: this.selectedHoroscopeFile || this.existingHoroscopeFileUrl },
+    { key: 'rasi', label: this.tr.labels.rasi, value: this.formData.rasi },
+    { key: 'nakshatra', label: this.tr.labels.nakshatra, value: this.formData.nakshatra },
+    { key: 'lagnam', label: this.tr.labels.lagnam, value: this.formData.lagnam },
+    { key: 'birthTime', label: this.tr.labels.birthTime, value: this.formData.birthTime },
+    { key: 'birthPlace', label: this.tr.labels.birthPlace, value: v(this.formData.birthPlace, this.formDataTa.birthPlace) }
+  ];
 
-    education:
-      this.formData.education === 'Other'
-        ? this.formData.otherEducation
-        : this.formData.education,
-
-    job:
-      this.formData.job === 'Other'
-        ? this.formData.otherProfession
-        : this.formData.job,
-
-    company: v(this.formData.company, this.formDataTa.company),
-    salary: v(this.formData.salary, this.formDataTa.salary),
-
-    address: v(this.formData.address, this.formDataTa.address),
-    country: this.selectedCountryId,
-    state: this.selectedStateId,
-    city: this.selectedCityId,
-
-    horoscopeFile: this.selectedHoroscopeFile || this.existingHoroscopeFileUrl,
-
-    rasi: this.formData.rasi,
-    nakshatra: this.formData.nakshatra,
-    lagnam: this.formData.lagnam,
-    gothram: v(this.formData.gothram, this.formDataTa.gothram),
-    dhosham: this.formData.dhosham,
-    birthTime: this.formData.birthTime,
-    birthPlace: v(this.formData.birthPlace, this.formDataTa.birthPlace),
-  };
-
-  Object.keys(requiredFields).forEach((key) => {
-    if (!String(requiredFields[key] || '').trim()) {
-      this.fieldErrors[key] = true;
+  for (const field of requiredFields) {
+    if (!String(field.value || '').trim()) {
+      this.fieldErrors[field.key] = true;
+      this.cdr.detectChanges();
+      return field.label;
     }
-  });
+  }
 
   this.cdr.detectChanges();
-
-  return Object.keys(this.fieldErrors).length > 0;
+  return null;
 }
 async onSubmit(): Promise<void> {
   
@@ -1534,19 +1524,21 @@ async onSubmit(): Promise<void> {
   this.submitted = true;
   this.fieldErrors = {};
 
-  const hasErrors = this.markRequiredErrors();
+ const missingField = this.markRequiredErrors();
 
-  console.log('REQUIRED ERRORS:', this.fieldErrors);
+console.log('REQUIRED ERRORS:', this.fieldErrors);
 
-  if (hasErrors) {
-    this.isSaving = false;
-    this.snackbar.error(
-      this.currentLang === 'ta'
-        ? 'தேவையான அனைத்து விவரங்களையும் நிரப்பவும்'
-        : 'Please fill all required fields'
-    );
-    return;
-  }
+if (missingField) {
+  this.isSaving = false;
+
+  this.snackbar.error(
+    this.currentLang === 'ta'
+      ? `${missingField} நிரப்பவும்`
+      : `Please fill ${missingField}`
+  );
+
+  return;
+}
       const selectedCity = this.cityList.find(
     (x: any) => x.city_id === this.selectedCityId
   );
