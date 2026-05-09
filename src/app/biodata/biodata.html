@@ -9,8 +9,8 @@
       <div class="banner-badge">{{ tr.banner.badge }}</div>
     </div>
 
-<form (submit)="onSubmit($event)" #biodataForm="ngForm">
-      <!-- PROFILE IMAGE -->
+<form (ngSubmit)="onSubmit()" #biodataForm="ngForm" novalidate>
+        <!-- PROFILE IMAGE -->
       <div class="section-card profile-card">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.profilePhoto }}</h2>
