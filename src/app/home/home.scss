@@ -689,10 +689,13 @@ img {
 .moments-section {
   position: relative;
   padding: 110px 8%;
-  background:
-    radial-gradient(circle at top left, rgba(233, 30, 99, 0.10), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(91, 44, 131, 0.10), transparent 24%),
-    linear-gradient(180deg, #fff7fb 0%, #ffffff 100%);
+
+  background-image: url('/assets/how-bg-flower.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  overflow: hidden;
 }
 
 .moments-timeline {
@@ -807,12 +810,18 @@ img {
 }
 /* MOBILE */
 @media (max-width: 768px) {
+
   .moments-section {
-    padding-top: 72px;
-    padding-bottom: 72px;
+    padding-top: 70px;
+    padding-bottom: 70px;
     padding-left: 16px;
     padding-right: 16px;
+
+    background-size: cover;
+    background-position: center;
   }
+
+
 
   .moments-timeline {
     padding-top: 12px;
@@ -2054,34 +2063,94 @@ img {
 .moment-number::after {
   display: none !important;
 }
-/* ===== MOBILE TIMELINE IMAGE CUT FIX ===== */
+/* ===== FINAL MOBILE HOW IT WORKS FIX ===== */
 @media (max-width: 768px) {
+
   .moments-section {
     overflow: hidden;
+    padding: 70px 18px;
+
+    background-image: url('/assets/how-bg-flower.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .moments-timeline {
+    width: 100%;
   }
 
   .moment-row,
   .moment-row.left,
   .moment-row.right {
-    padding-left: 88px !important;
+    width: 100%;
+    left: 0 !important;
+
+   padding-left: 70px !important;
     padding-right: 0 !important;
+
+    margin-bottom: 28px;
+
+    justify-content: flex-start;
+  }
+
+  .moment-card {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 22px 18px;
+
+    border-radius: 22px;
+
+    background: rgba(255,255,255,0.72);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255,255,255,0.75);
+
+    box-shadow:
+      0 10px 30px rgba(0,0,0,0.08),
+      0 6px 16px rgba(233,30,99,0.08);
+  }
+
+  .moment-card h3 {
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 800;
+    color: #8b0d4f;
+    margin-bottom: 10px;
+  }
+
+  .moment-card p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #5b2142;
+    font-weight: 600;
   }
 
   .moment-row.left .moment-number,
   .moment-row.right .moment-number,
   .moments-timeline .moment-row.left .moment-number,
   .moments-timeline .moment-row.right .moment-number {
-    left: 26px !important;
-    right: auto !important;
+
+    left: -78px !important;
+
+    width: 78px !important;
+    height: 78px !important;
+
     transform: translateY(-50%) !important;
-    width: 70px !important;
-    height: 70px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .timeline-img,
   .moments-timeline .timeline-img {
-    width: 58px !important;
-    height: 58px !important;
+    width: 68px !important;
+    height: 68px !important;
     object-fit: contain !important;
   }
+
 }
