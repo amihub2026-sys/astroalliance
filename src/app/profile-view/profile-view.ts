@@ -82,6 +82,10 @@ snackbar = inject(SnackbarService);
   selectedProfileId = '';
   isLoading = false;
 openFullPhoto = false;
+selectedPhotoUrl = '';
+openGalleryPopup = false;
+currentGalleryIndex = 0;
+openVideoFull = false;
   profile: ProfileViewItem | null = null;
   astroMatch: any = null;
   loadedProfileRow: any = null;
@@ -100,12 +104,79 @@ alreadySent = false;
     '11': 'மா',
     '12': 'வ'
   };
-openPhoto() {
+openPhoto(photoUrl?: string) {
+
+  const images = this.profile?.galleryImages || [];
+
+  if (photoUrl) {
+    const index = images.indexOf(photoUrl);
+
+    this.currentGalleryIndex =
+      index >= 0 ? index : 0;
+  } else {
+    this.currentGalleryIndex = -1;
+  }
+
+  this.selectedPhotoUrl =
+    photoUrl || this.profile?.profileImage || '';
+
   this.openFullPhoto = true;
 }
-
 closePhoto() {
   this.openFullPhoto = false;
+  this.selectedPhotoUrl = '';
+}
+openAdditionalPhotos() {
+  this.openGalleryPopup = true;
+}
+
+closeAdditionalPhotos() {
+  this.openGalleryPopup = false;
+}
+openVideoPopup() {
+  this.openVideoFull = true;
+}
+
+closeVideoPopup() {
+  this.openVideoFull = false;
+}
+openPhotoFromGallery(photoUrl: string) {
+
+  this.openGalleryPopup = false;
+
+  this.selectedPhotoUrl = photoUrl;
+
+  this.openFullPhoto = true;
+}
+showNextPhoto() {
+
+  if (!this.profile?.galleryImages?.length) return;
+
+  const images = this.profile.galleryImages;
+
+  this.currentGalleryIndex =
+    (this.currentGalleryIndex + 1) % images.length;
+
+  this.selectedPhotoUrl =
+    images[this.currentGalleryIndex];
+
+  this.cdr.detectChanges();
+}
+
+showPrevPhoto() {
+
+  if (!this.profile?.galleryImages?.length) return;
+
+  const images = this.profile.galleryImages;
+
+  this.currentGalleryIndex =
+    (this.currentGalleryIndex - 1 + images.length) %
+    images.length;
+
+  this.selectedPhotoUrl =
+    images[this.currentGalleryIndex];
+
+  this.cdr.detectChanges();
 }
   get currentLang(): 'en' | 'ta' {
     return this.app.currentLang;
@@ -255,30 +326,64 @@ this.profile.birthPlace.ta =
     return Array(12).fill('');
   }
 
-  private normalizeGalleryImages(row: any): string[] {
-    if (Array.isArray(row?.gallery_images)) {
-      return row.gallery_images.filter((item: any) => !!item).map((item: any) => String(item));
-    }
+private normalizeGalleryImages(row: any): string[] {
 
-    if (Array.isArray(row?.additional_images)) {
-      return row.additional_images.filter((item: any) => !!item).map((item: any) => String(item));
-    }
-
-    if (Array.isArray(row?.image_urls)) {
-      return row.image_urls.filter((item: any) => !!item).map((item: any) => String(item));
-    }
-
-    if (typeof row?.image_urls === 'string') {
-      try {
-        const parsed = JSON.parse(row.image_urls);
-        if (Array.isArray(parsed)) {
-          return parsed.filter((item: any) => !!item).map((item: any) => String(item));
-        }
-      } catch {}
-    }
-
-    return [];
+  // additional_image_urls
+  if (Array.isArray(row?.additional_image_urls)) {
+    return row.additional_image_urls
+      .filter((item: any) => !!item)
+      .map((item: any) => String(item));
   }
+
+  // additional_image_urls string JSON
+  if (typeof row?.additional_image_urls === 'string') {
+    try {
+      const parsed = JSON.parse(row.additional_image_urls);
+
+      if (Array.isArray(parsed)) {
+        return parsed
+          .filter((item: any) => !!item)
+          .map((item: any) => String(item));
+      }
+    } catch {}
+  }
+
+  // gallery_images
+  if (Array.isArray(row?.gallery_images)) {
+    return row.gallery_images
+      .filter((item: any) => !!item)
+      .map((item: any) => String(item));
+  }
+
+  // additional_images
+  if (Array.isArray(row?.additional_images)) {
+    return row.additional_images
+      .filter((item: any) => !!item)
+      .map((item: any) => String(item));
+  }
+
+  // image_urls
+  if (Array.isArray(row?.image_urls)) {
+    return row.image_urls
+      .filter((item: any) => !!item)
+      .map((item: any) => String(item));
+  }
+
+  // image_urls string JSON
+  if (typeof row?.image_urls === 'string') {
+    try {
+      const parsed = JSON.parse(row.image_urls);
+
+      if (Array.isArray(parsed)) {
+        return parsed
+          .filter((item: any) => !!item)
+          .map((item: any) => String(item));
+      }
+    } catch {}
+  }
+
+  return [];
+}
 
   private formatDateForApi(dateStr: string): string {
     const value = String(dateStr || '').trim();

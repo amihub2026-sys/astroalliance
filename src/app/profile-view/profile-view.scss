@@ -824,3 +824,420 @@
   font-weight: 800;
   color: #7a1f44;
 }
+.side-gallery,
+.side-video {
+  margin-top: 16px;
+  background: #fff;
+  border-radius: 22px;
+  border: 1px solid rgba(122, 31, 68, 0.08);
+  box-shadow: 0 16px 38px rgba(80, 24, 47, 0.07);
+  padding: 14px;
+}
+
+.side-gallery h3,
+.side-video h3 {
+  margin: 0 0 12px;
+  color: #7a1f44;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.side-gallery-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.side-gallery-item {
+  height: 220px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #faf3f7;
+}
+
+.side-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.side-video video {
+  width: 100%;
+  border-radius: 18px;
+  background: #000;
+  display: block;
+}
+
+.pdf-mode .no-pdf {
+  display: none !important;
+}
+.profile-hero {
+  align-items: start;
+}
+
+.profile-main-card {
+  height: fit-content;
+}
+
+.side-gallery-item img {
+  cursor: pointer;
+}
+
+.side-video video {
+  max-height: 220px;
+  object-fit: cover;
+}
+.single-preview {
+  position: relative;
+  height: 230px;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.single-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.see-additional-btn {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+
+  border: none;
+  border-radius: 14px;
+  padding: 11px 14px;
+
+  font-weight: 800;
+  color: #fff;
+
+  background: linear-gradient(135deg, #7a1f44, #d9467a);
+
+  cursor: pointer;
+}
+
+.gallery-popup-grid {
+  width: min(1000px, 92vw);
+
+  max-height: 85vh;
+  overflow-y: auto;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 14px;
+  padding: 18px;
+}
+
+.gallery-popup-grid img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .gallery-popup-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 56px;
+  height: 56px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+
+  color: #fff;
+  font-size: 34px;
+  font-weight: 700;
+
+  cursor: pointer;
+  z-index: 999999;
+}
+
+.left-arrow {
+  left: 24px;
+}
+
+.right-arrow {
+  right: 24px;
+}
+
+.gallery-arrow:hover {
+  background: rgba(255,255,255,0.32);
+}
+.full-photo-popup img {
+  animation: photoZoomIn 0.28s ease;
+}
+
+@keyframes photoZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 700px) {
+  .full-photo-popup {
+    padding: 18px;
+  }
+
+  .full-photo-popup img {
+    max-width: 94vw;
+    max-height: 76vh;
+    border-radius: 14px;
+  }
+
+  .gallery-arrow {
+    width: 44px;
+    height: 44px;
+    font-size: 26px;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .left-arrow {
+    left: 12px;
+  }
+
+  .right-arrow {
+    right: 12px;
+  }
+
+  .close-photo-btn {
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    font-size: 26px;
+  }
+
+  .see-additional-btn {
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+.full-photo-popup img {
+  animation: photoZoomIn 0.28s ease;
+}
+
+@keyframes photoZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 700px) {
+
+  .full-photo-popup {
+    padding: 18px;
+  }
+
+  .full-photo-popup img {
+    max-width: 94vw;
+    max-height: 76vh;
+    border-radius: 14px;
+  }
+
+  .gallery-arrow {
+    width: 44px;
+    height: 44px;
+    font-size: 26px;
+
+    background: rgba(0,0,0,0.45);
+  }
+
+  .left-arrow {
+    left: 12px;
+  }
+
+  .right-arrow {
+    right: 12px;
+  }
+
+  .close-photo-btn {
+    top: 14px;
+    right: 14px;
+
+    width: 40px;
+    height: 40px;
+
+    font-size: 26px;
+  }
+
+  .see-additional-btn {
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+/* MOBILE TAP EFFECT */
+@media (max-width: 700px) {
+
+  .gallery-arrow,
+  .close-photo-btn,
+  .see-additional-btn {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .gallery-arrow:active {
+    transform: translateY(-50%) scale(0.82);
+    background: rgba(255,255,255,0.45);
+
+    box-shadow:
+      0 0 18px rgba(255,255,255,0.55),
+      0 0 30px rgba(217,70,122,0.45);
+
+    transition: 0.12s ease;
+  }
+
+  .close-photo-btn:active {
+    transform: scale(0.82) rotate(90deg);
+
+    background: rgba(255,255,255,0.34);
+
+    box-shadow:
+      0 0 18px rgba(255,255,255,0.45),
+      0 0 26px rgba(255,0,90,0.35);
+
+    transition: 0.18s ease;
+  }
+
+  .see-additional-btn:active {
+    transform: scale(0.96);
+
+    background:
+      linear-gradient(135deg, #d9467a, #ff74a5);
+
+    box-shadow:
+      0 0 20px rgba(217,70,122,0.45);
+
+    transition: 0.14s ease;
+  }
+
+  .full-photo-popup img {
+    transition:
+      transform 0.22s ease,
+      opacity 0.22s ease,
+      filter 0.22s ease;
+  }
+
+  .gallery-arrow:hover,
+  .close-photo-btn:hover,
+  .see-additional-btn:hover {
+    transform: none;
+  }
+}
+.media-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.video-thumb {
+  position: relative;
+  height: 230px;
+
+  border-radius: 18px;
+  overflow: hidden;
+
+  cursor: pointer;
+  background: #000;
+}
+
+.video-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  color: #fff;
+  font-size: 42px;
+
+  background: rgba(0,0,0,0.28);
+}
+
+.popup-video {
+  width: min(900px, 92vw);
+  max-height: 82vh;
+
+  border-radius: 20px;
+  background: #000;
+}
+
+@media (max-width: 700px) {
+
+  .media-row {
+    grid-template-columns: 1fr;
+  }
+
+  .video-thumb {
+    height: 210px;
+  }
+}
+.media-row {
+  grid-template-columns: 1fr 1fr;
+}
+
+.side-gallery,
+.side-video {
+  min-width: 0;
+}
+
+.single-preview,
+.video-thumb {
+  height: 190px;
+}
+
+.see-additional-btn {
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: 9px 8px;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+@media (max-width: 700px) {
+  .media-row {
+    grid-template-columns: 1fr;
+  }
+
+  .single-preview,
+  .video-thumb {
+    height: 220px;
+  }
+
+  .see-additional-btn {
+    font-size: 13px;
+    padding: 11px 12px;
+  }
+}
