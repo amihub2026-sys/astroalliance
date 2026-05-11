@@ -1351,3 +1351,12 @@
     width: 100%;
   }
 }
+.success-btn,
+.primary-btn.success-btn,
+.secondary-btn.success-btn {
+  background: linear-gradient(135deg, #bff7cf, #7ee8a3) !important;
+  color: #14532d !important;
+  border: 1px solid #86efac !important;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.35) !important;
+  cursor: not-allowed;
+}
