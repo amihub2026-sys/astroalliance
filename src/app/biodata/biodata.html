@@ -508,23 +508,28 @@
     name="countryId"
     (change)="onCountryChange()">
 
-   <option value="">
-  {{ currentLang === 'ta'
-    ? 'நாட்டை தேர்வு செய்யவும்'
-    : 'Select Country'
-  }}
-</option>
+    <option value="">
+      {{ currentLang === 'ta' ? 'நாட்டை தேர்வு செய்யவும்' : 'Select Country' }}
+    </option>
 
     <option
       *ngFor="let country of countryList"
       [ngValue]="country.country_id">
-      {{ currentLang === 'ta'
-  ? (country.country_name_ta || country.country_name)
-  : country.country_name
-}}
+      {{
+        currentLang === 'ta'
+          ? (country.country_name_ta || country.country_name)
+          : country.country_name
+      }}
     </option>
-
   </select>
+
+  <input
+    *ngIf="isOtherCountrySelected()"
+    type="text"
+    [(ngModel)]="formData.country"
+    name="otherCountry"
+    [placeholder]="currentLang === 'ta' ? 'நாட்டை உள்ளிடவும்' : 'Enter country'"
+  >
 
   <small class="field-error" *ngIf="isInvalid('country')">Required</small>
 </div>
@@ -539,52 +544,62 @@
     (change)="onStateChange()">
 
     <option value="">
-  {{ currentLang === 'ta'
-    ? 'மாநிலத்தை தேர்வு செய்யவும்'
-    : 'Select State'
-  }}
-</option>
+      {{ currentLang === 'ta' ? 'மாநிலத்தை தேர்வு செய்யவும்' : 'Select State' }}
+    </option>
 
     <option
       *ngFor="let state of stateList"
       [ngValue]="state.state_id">
-      {{ currentLang === 'ta'
-  ? (state.state_name_ta || state.state_name)
-  : state.state_name
-}}
+      {{
+        currentLang === 'ta'
+          ? (state.state_name_ta || state.state_name)
+          : state.state_name
+      }}
     </option>
-
   </select>
+
+  <input
+    *ngIf="isOtherStateSelected() || isOtherCountrySelected()"
+    type="text"
+    [(ngModel)]="formData.state"
+    name="otherState"
+    [placeholder]="currentLang === 'ta' ? 'மாநிலத்தை உள்ளிடவும்' : 'Enter state'"
+  >
 
   <small class="field-error" *ngIf="isInvalid('state')">Required</small>
 </div>
-
 
 <!-- CITY -->
 <div class="field" [class.invalid]="isInvalid('city')">
   <label>{{ tr.labels.city }} <span class="required">*</span></label>
 
- <select [(ngModel)]="selectedCityId" name="cityId">
+  <select
+    [(ngModel)]="selectedCityId"
+    name="cityId"
+    (change)="onCityChange()">
 
-  <option value="">
-    {{ currentLang === 'ta'
-      ? 'நகரத்தை தேர்வு செய்யவும்'
-      : 'Select City'
-    }}
-  </option>
+    <option value="">
+      {{ currentLang === 'ta' ? 'நகரத்தை தேர்வு செய்யவும்' : 'Select City' }}
+    </option>
 
-  <option
-    *ngFor="let city of cityList"
-    [ngValue]="city.city_id">
-
-    {{ currentLang === 'ta'
-      ? (city.city_name_ta || city.city_name)
-      : city.city_name
-    }}
-
-  </option>
-
+    <option
+      *ngFor="let city of cityList"
+      [ngValue]="city.city_id">
+      {{
+        currentLang === 'ta'
+          ? (city.city_name_ta || city.city_name)
+          : city.city_name
+      }}
+    </option>
   </select>
+
+  <input
+    *ngIf="isOtherCitySelected() || isOtherStateSelected() || isOtherCountrySelected()"
+    type="text"
+    [(ngModel)]="formData.city"
+    name="otherCity"
+    [placeholder]="currentLang === 'ta' ? 'நகரத்தை உள்ளிடவும்' : 'Enter city'"
+  >
 
   <small class="field-error" *ngIf="isInvalid('city')">Required</small>
 </div>

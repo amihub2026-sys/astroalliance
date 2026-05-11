@@ -425,6 +425,37 @@ cityList: any[] = [];
 selectedCountryId = '';
 selectedStateId = '';
 selectedCityId = '';
+isOtherCountrySelected(): boolean {
+  const country = this.countryList.find(
+    (c: any) => c.country_id === this.selectedCountryId
+  );
+
+  return country?.country_name?.toLowerCase() === 'other';
+}
+
+isOtherStateSelected(): boolean {
+  const state = this.stateList.find(
+    (s: any) => s.state_id === this.selectedStateId
+  );
+
+  return state?.state_name?.toLowerCase() === 'other';
+}
+
+isOtherCitySelected(): boolean {
+  const city = this.cityList.find(
+    (c: any) => c.city_id === this.selectedCityId
+  );
+
+  return city?.city_name?.toLowerCase() === 'other';
+}
+
+onCityChange(): void {
+  const city = this.cityList.find(
+    (c: any) => c.city_id === this.selectedCityId
+  );
+
+  this.formData.city = city?.city_name || '';
+}
 educationList: any[] = [];
 filteredEducationList: any[] = [];
 professionList: any[] = [];
@@ -1496,9 +1527,33 @@ const v = (en: any, ta?: any) => {
     { key: 'company', label: this.tr.labels.company, value: v(this.formData.company, this.formDataTa.company) },
     { key: 'salary', label: this.tr.labels.salary, value: v(this.formData.salary, this.formDataTa.salary) },
     { key: 'address', label: this.tr.labels.address, value: v(this.formData.address, this.formDataTa.address) },
-    { key: 'country', label: this.tr.labels.country, value: this.selectedCountryId },
-    { key: 'state', label: this.tr.labels.state, value: this.selectedStateId },
-    { key: 'city', label: this.tr.labels.city, value: this.selectedCityId },
+{
+  key: 'country',
+  label: this.tr.labels.country,
+  value: this.isOtherCountrySelected()
+    ? this.formData.country
+    : this.selectedCountryId
+},
+
+{
+  key: 'state',
+  label: this.tr.labels.state,
+  value:
+    this.isOtherCountrySelected() || this.isOtherStateSelected()
+      ? this.formData.state
+      : this.selectedStateId
+},
+
+{
+  key: 'city',
+  label: this.tr.labels.city,
+  value:
+    this.isOtherCountrySelected() ||
+    this.isOtherStateSelected() ||
+    this.isOtherCitySelected()
+      ? this.formData.city
+      : this.selectedCityId
+},
     { key: 'horoscopeFile', label: this.tr.sections.horoscopeUpload, value: this.selectedHoroscopeFile || this.existingHoroscopeFileUrl },
     { key: 'rasi', label: this.tr.labels.rasi, value: this.formData.rasi },
     { key: 'nakshatra', label: this.tr.labels.nakshatra, value: this.formData.nakshatra },
@@ -2039,49 +2094,49 @@ async loadCities() {
 
 }
 
-onCountryChange() {
-
-  const selectedCountry = this.countryList.find(
+onCountryChange(): void {
+  const country = this.countryList.find(
     (c: any) => c.country_id === this.selectedCountryId
   );
 
-  this.formData.country =
-    selectedCountry?.country_name || '';
-
-  this.selectedStateId = '';
-
+  this.formData.country = country?.country_name || '';
   this.formData.state = '';
-
   this.formData.city = '';
 
-this.stateList = this.allStates.filter(
-  (s: any) =>
-    String(s.country_id) === String(this.selectedCountryId)
-);
+  this.selectedStateId = '';
+  this.selectedCityId = '';
 
+  if (this.isOtherCountrySelected()) {
+    this.stateList = [];
+    this.cityList = [];
+    return;
+  }
+
+  this.stateList = this.allStates.filter(
+    (s: any) => s.country_id === this.selectedCountryId
+  );
 
   this.cityList = [];
-
 }
 
-onStateChange() {
-
-  const selectedState = this.stateList.find(
+onStateChange(): void {
+  const state = this.stateList.find(
     (s: any) => s.state_id === this.selectedStateId
   );
 
-  this.formData.state =
-    selectedState?.state_name || '';
+  this.formData.state = state?.state_name || '';
+  this.formData.city = '';
 
   this.selectedCityId = '';
 
-  this.formData.city = '';
+  if (this.isOtherStateSelected()) {
+    this.cityList = [];
+    return;
+  }
 
   this.cityList = this.allCities.filter(
-    (c: any) =>
-      String(c.state_id) === String(this.selectedStateId)
+    (c: any) => c.state_id === this.selectedStateId
   );
-
 }
 async loadProfessionList() {
   const { data, error } = await supabase
