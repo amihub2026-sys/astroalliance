@@ -91,6 +91,7 @@ openVideoFull = false;
   loadedProfileRow: any = null;
 alreadySent = false;
 alreadyShortlisted = false;
+interestStatus = '';
   planetShortMap: Record<string, string> = {
     '1': 'வி',
     '2': 'கே',
@@ -848,6 +849,7 @@ getText(value: string | LangText): string {
     }
 
 this.alreadySent = true;
+this.interestStatus = 'pending';
 this.snackbar.success('Interest sent successfully');
 this.cdr.detectChanges();
   }
@@ -890,18 +892,20 @@ this.cdr.detectChanges();
 this.snackbar.success('Profile shortlisted successfully');
 this.cdr.detectChanges();
   }
-  async checkInterest() {
+async checkInterest() {
   const user = this.getStoredLoggedInUser();
   if (!user?.user_id || !this.profile) return;
 
   const { data } = await supabase
     .from('matrimony_interests')
-    .select('id')
+    .select('id,status_code')
     .eq('from_user_id', user.user_id)
     .eq('to_profile_id', this.profile.id)
     .maybeSingle();
 
   this.alreadySent = !!data;
+  this.interestStatus = data?.status_code || '';
+  this.cdr.detectChanges();
 }
 async checkShortlist() {
   const user = this.getStoredLoggedInUser();

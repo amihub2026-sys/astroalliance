@@ -216,17 +216,59 @@
     </div>
 
     <div class="hero-actions">
+
+<div class="interest-block">
+
 <button
+  class="primary-btn"
   class="primary-btn"
   [class.success-btn]="alreadySent"
   [disabled]="alreadySent"
   (click)="sendInterest()"
 >
- {{ alreadySent
-  ? (currentLang === 'ta' ? 'ஆர்வம் அனுப்பப்பட்டது' : 'Interest Sent')
-  : (currentLang === 'ta' ? 'ஆர்வம் அனுப்பு' : 'Send Interest')
-}}
+  {{
+    alreadySent
+      ? (currentLang === 'ta'
+          ? 'ஆர்வம் அனுப்பப்பட்டது'
+          : 'Interest Sent')
+      : (currentLang === 'ta'
+          ? 'ஆர்வம் அனுப்பு'
+          : 'Send Interest')
+  }}
 </button>
+
+<div
+  class="interest-status-text"
+  *ngIf="alreadySent"
+  [style.color]="
+    interestStatus === 'accepted'
+      ? '#16a34a'
+      : interestStatus === 'rejected'
+      ? '#dc2626'
+      : '#f59e0b'
+  "
+>
+{{
+  interestStatus === 'accepted'
+    ? (currentLang === 'ta'
+        ? '❤️ வாழ்த்துகள்! உங்கள் ஆர்வம் ஏற்றுக்கொள்ளப்பட்டது.'
+        : '❤️ Congratulations! Your interest was accepted.')
+
+    : interestStatus === 'rejected'
+    ? (currentLang === 'ta'
+        ? '💔 மன்னிக்கவும்! உங்கள் ஆர்வம் நிராகரிக்கப்பட்டது.'
+        : '💔 Sorry! Your interest was rejected.')
+
+    : (currentLang === 'ta'
+        ? '⏳ உங்கள் ஆர்வ கோரிக்கை பதிலுக்காக காத்திருக்கிறது.'
+        : '⏳ Your interest request is waiting for response.')
+}}
+
+</div>
+
+</div>
+
+
 
  <button
   class="secondary-btn"
@@ -249,6 +291,7 @@
     </div>
   </div>
 </div>
+
     <div class="detail-card full-width">
       <h2>{{ currentLang === 'ta' ? 'என்னை பற்றி' : 'About Me' }}</h2>
       <p class="about-text">
