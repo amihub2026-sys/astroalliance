@@ -90,6 +90,7 @@ openVideoFull = false;
   astroMatch: any = null;
   loadedProfileRow: any = null;
 alreadySent = false;
+alreadyShortlisted = false;
   planetShortMap: Record<string, string> = {
     '1': 'வி',
     '2': 'கே',
@@ -762,6 +763,7 @@ if (this.currentLang === 'ta') {
 
 await this.loadAstroMatch();
 await this.checkInterest();
+await this.checkShortlist();
     } catch (error: any) {
       console.error('Profile load error:', error);
      this.snackbar.error(error?.message || 'Failed to load profile');
@@ -831,7 +833,12 @@ getText(value: string | LangText): string {
 
     if (error) {
       if (error.code === '23505') {
-        this.snackbar.error('You already sent interest to this profile');
+      if (error.code === '23505') {
+  this.alreadySent = true;
+  this.snackbar.error('You already sent interest to this profile');
+  this.cdr.detectChanges();
+  return;
+}
         return;
       }
 
@@ -840,7 +847,9 @@ getText(value: string | LangText): string {
       return;
     }
 
-    this.snackbar.success('Interest sent successfully');
+this.alreadySent = true;
+this.snackbar.success('Interest sent successfully');
+this.cdr.detectChanges();
   }
 
   async shortlistProfile(): Promise<void> {
@@ -863,7 +872,12 @@ getText(value: string | LangText): string {
 
     if (error) {
       if (error.code === '23505') {
-        this.snackbar.error('This profile is already shortlisted');
+     if (error.code === '23505') {
+  this.alreadyShortlisted = true;
+  this.snackbar.error('This profile is already shortlisted');
+  this.cdr.detectChanges();
+  return;
+}
         return;
       }
 
@@ -872,7 +886,9 @@ getText(value: string | LangText): string {
       return;
     }
 
-    this.snackbar.success('Profile shortlisted successfully');
+  this.alreadyShortlisted = true;
+this.snackbar.success('Profile shortlisted successfully');
+this.cdr.detectChanges();
   }
   async checkInterest() {
   const user = this.getStoredLoggedInUser();
@@ -886,6 +902,20 @@ getText(value: string | LangText): string {
     .maybeSingle();
 
   this.alreadySent = !!data;
+}
+async checkShortlist() {
+  const user = this.getStoredLoggedInUser();
+  if (!user?.user_id || !this.profile) return;
+
+  const { data } = await supabase
+    .from('matrimony_shortlists')
+    .select('id')
+    .eq('user_id', user.user_id)
+    .eq('profile_id', this.profile.id)
+    .maybeSingle();
+
+  this.alreadyShortlisted = !!data;
+  this.cdr.detectChanges();
 }
 async downloadProfile() {
   if (!this.unlocked) {

@@ -218,6 +218,7 @@
     <div class="hero-actions">
 <button
   class="primary-btn"
+  [class.success-btn]="alreadySent"
   [disabled]="alreadySent"
   (click)="sendInterest()"
 >
@@ -227,14 +228,20 @@
 }}
 </button>
 
-  <button
-    class="secondary-btn"
-    *ngIf="unlocked"
-    type="button"
-    (click)="shortlistProfile()"
-  >
-    {{ currentLang === 'ta' ? 'பிடித்ததில் சேர்' : 'Shortlist' }}
-  </button>
+ <button
+  class="secondary-btn"
+  [class.success-btn]="alreadyShortlisted"
+  [disabled]="alreadyShortlisted"
+  *ngIf="unlocked"
+  type="button"
+  (click)="shortlistProfile()"
+>
+  {{
+    alreadyShortlisted
+      ? (currentLang === 'ta' ? 'பிடித்ததில் சேர்க்கப்பட்டது' : 'Shortlisted')
+      : (currentLang === 'ta' ? 'பிடித்ததில் சேர்' : 'Shortlist')
+  }}
+</button>
       <!-- <button class="secondary-btn" *ngIf="unlocked" type="button">Chat Now</button> -->
       <button class="locked-btn" *ngIf="!unlocked" type="button" (click)="goToPlans()">
         {{ currentLang === 'ta' ? 'முழு சுயவிவரம் திறக்கவும்' : 'Unlock Full Profile' }}
