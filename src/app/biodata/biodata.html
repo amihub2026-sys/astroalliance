@@ -39,7 +39,16 @@
                 hidden
               />
             </label>
-
+<label class="upload-btn camera-btn">
+  📷 Open Camera
+  <input
+    type="file"
+    accept="image/*"
+    capture="environment"
+    (change)="onProfileImageChange($event)"
+    hidden
+  />
+</label>
             <button
               type="button"
               class="remove-btn"
