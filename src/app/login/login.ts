@@ -40,7 +40,7 @@ cdr = inject(ChangeDetectorRef);
     en: {
       left: {
         tag: 'Welcome Back',
-        title: 'Find your perfect match with ASRO ALLIANCE',
+        title: 'Find your perfect match with ASTRO ALLIANCE',
         subtitle:
           'Login to access verified profiles, manage your account, and continue your journey toward a meaningful relationship.',
         points: [

@@ -449,10 +449,27 @@
     </span>
   </div>
 
-  <div class="empty-state" *ngIf="activeTab === 'browse' && isLoading">
-    <h3>Loading profiles...</h3>
-    <p>Please wait while we fetch profile data.</p>
-  </div>
+
+
+<div
+  class="lottie-loader-wrap"
+  *ngIf="activeTab === 'browse' && isLoading && filteredProfiles.length === 0"
+>
+
+  <dotlottie-player
+    src="assets/paper-plane-heart.lottie"
+    background="transparent"
+    speed="1"
+    style="width: 240px; height: 240px;"
+    loop
+    autoplay>
+  </dotlottie-player>
+
+
+
+
+
+</div>
 <div class="mobile-filter-head">
   <button
     type="button"
@@ -463,6 +480,7 @@
 
   </button>
 </div>
+
  <div class="empty-state" *ngIf="activeTab === 'browse' && !isLoading && filteredProfiles.length === 0">
  <h3>
   {{
@@ -774,8 +792,10 @@
           *ngFor="let profile of filteredProfiles; trackBy: trackByProfile"
         >
           <div class="profile-image">
-           <img
+          <img
   [src]="profile.image"
+  loading="lazy"
+  decoding="async"
   [alt]="getText(profile.name)"
   (error)="profile.image = 'assets/default-avatar.png'"
 />
@@ -847,8 +867,10 @@
         *ngFor="let profile of likedProfiles; trackBy: trackByProfile"
       >
         <div class="profile-image">
-         <img
+       <img
   [src]="profile.image"
+  loading="lazy"
+  decoding="async"
   [alt]="getText(profile.name)"
   (error)="profile.image = 'assets/default-avatar.png'"
 />
@@ -901,8 +923,10 @@
         *ngFor="let profile of likedMeProfiles; trackBy: trackByProfile"
       >
         <div class="profile-image">
-          <img
+        <img
   [src]="profile.image"
+  loading="lazy"
+  decoding="async"
   [alt]="getText(profile.name)"
   (error)="profile.image = 'assets/default-avatar.png'"
 />
