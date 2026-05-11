@@ -4,7 +4,8 @@ import {
   inject,
   PLATFORM_ID,
   ChangeDetectorRef,
-  HostListener
+  HostListener,
+  CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -45,6 +46,7 @@ interface ProfileItem {
   selector: 'app-profiles',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './profiles.html',
   styleUrls: ['./profiles.scss']
 })
@@ -474,19 +476,23 @@ assistedMatchesText:
     this.isLoading = true;
     this.cdr.detectChanges();
 
-    this.tryGetUserLocation();
-
+setTimeout(() => {
+  this.tryGetUserLocation();
+}, 2000);
     await this.loadCurrentPlanFromSupabase();
     await this.loadLoggedInUserProfile();
     await this.refreshUserProfileLanguage();
 
-    await this.loadEducationOptions();
-    await this.loadFilterTables();
-    await this.loadProfilesFromSupabase();
+await Promise.all([
+  this.loadEducationOptions(),
+  this.loadFilterTables()
+]);
 
-  await this.loadShortlistedByYouFromSupabase();
-await this.loadShortlistedMeFromSupabase();
-await this.loadLikedMeFromSupabase();
+await this.loadProfilesFromSupabase();
+
+this.loadShortlistedByYouFromSupabase();
+this.loadShortlistedMeFromSupabase();
+this.loadLikedMeFromSupabase();
 
     this.cdr.detectChanges();
 
@@ -985,60 +991,82 @@ if (
 //             distanceKm: null
 //           } as ProfileItem;
 //         });
-this.profiles = await Promise.all(
-  filteredRows.map(async (row: any) => {
-    const usableId = row.profile_code || row.user_id || row.profile_id || '';
+this.profiles = filteredRows.map((row: any) => {
+  const usableId = row.profile_code || row.user_id || row.profile_id || '';
 
-    return {
-      id: String(usableId).trim(),
-      userId: String(row.user_id || '').trim(),
-      name: await this.makeLangText(row.full_name, row.full_name_ta),
-      age: Number(row.age || 0),
-religion: await this.makeLangText(
-  row.religion_text || '-',
-  this.getTamilProfileValue('religion', row.religion_text)
-),
+  return {
+    id: String(usableId).trim(),
+    userId: String(row.user_id || '').trim(),
 
-maritalStatus: await this.makeLangText(
-  row.marital_status_text || '-',
-  this.getTamilProfileValue('maritalStatus', row.marital_status_text)
-),
+    name: this.asLangTextTa(row.full_name, row.full_name_ta),
 
-caste: await this.makeLangText(
-  row.caste_text || '-',
-  this.casteMap[String(row.caste_text || '').trim().toLowerCase()] || row.caste_text
-),
+    age: Number(row.age || 0),
 
-gender: await this.makeLangText(
-  row.gender_text || '-',
-  this.getTamilProfileValue('gender', row.gender_text)
-),
+    religion: this.asLangTextTa(
+      row.religion_text || '-',
+      this.getTamilProfileValue('religion', row.religion_text)
+    ),
 
-location: await this.makeLangText(row.location_text, row.location_text),
-city: await this.makeLangText(row.city_text, row.city_text),
-state: await this.makeLangText(row.state_text, row.state_text),
+    maritalStatus: this.asLangTextTa(
+      row.marital_status_text || '-',
+      this.getTamilProfileValue('maritalStatus', row.marital_status_text)
+    ),
 
-education: await this.makeLangText(
-  row.education_text || '-',
-  row.education_text_ta || this.getTamilProfileValue('education', row.education_text)
-),
+    caste: this.asLangTextTa(
+      row.caste_text || '-',
+      this.casteMap[
+        String(row.caste_text || '').trim().toLowerCase()
+      ] || row.caste_text
+    ),
 
-profession: await this.makeLangText(
-  row.occupation_text || '-',
-  row.occupation_text_ta || this.getTamilProfileValue('profession', row.occupation_text)
-),
+    gender: this.asLangTextTa(
+      row.gender_text || '-',
+      this.getTamilProfileValue('gender', row.gender_text)
+    ),
 
-image: row.profile_image_url || 'assets/default-avatar.png',
-      liked: false,
-      latitude: this.toNullableNumber(row.latitude),
-      longitude: this.toNullableNumber(row.longitude),
-      distanceKm: null
-    } as ProfileItem;
-  })
-);
+    location: this.asLangTextTa(
+      row.location_text,
+      row.location_text
+    ),
+
+    city: this.asLangTextTa(
+      row.city_text,
+      row.city_text
+    ),
+
+    state: this.asLangTextTa(
+      row.state_text,
+      row.state_text
+    ),
+
+    education: this.asLangTextTa(
+      row.education_text || '-',
+      row.education_text_ta ||
+      this.getTamilProfileValue('education', row.education_text)
+    ),
+
+    profession: this.asLangTextTa(
+      row.occupation_text || '-',
+      row.occupation_text_ta ||
+      this.getTamilProfileValue('profession', row.occupation_text)
+    ),
+
+    image: row.profile_image_url || 'assets/default-avatar.png',
+
+    liked: false,
+
+    latitude: this.toNullableNumber(row.latitude),
+
+    longitude: this.toNullableNumber(row.longitude),
+
+    distanceKm: null
+
+  } as ProfileItem;
+});
       this.profiles = this.profiles.map((profile) => ({
         ...profile,
         distanceKm: this.getDistanceForProfile(profile)
+        
       }));
 
       this.likedMeProfiles = [];
