@@ -111,6 +111,7 @@ casteMap: Record<string, string> = {};
     userProfileImage = '';
 userProfileName = '';
 userGender = '';
+userCaste = '';
   shortlistedByYouIds: string[] = [];
 
 showBiodataPopup = true;
@@ -1489,14 +1490,25 @@ get planStatus(): string {
           distanceKm
         };
       })
-      .sort((a, b) => {
-        const radiusActive = this.appliedFilters.radius !== null;
-        if (!radiusActive) return 0;
+     .sort((a, b) => {
+  const myCaste = this.normalizeText(this.userCaste);
 
-        const aDistance = a.distanceKm ?? Number.MAX_SAFE_INTEGER;
-        const bDistance = b.distanceKm ?? Number.MAX_SAFE_INTEGER;
-        return aDistance - bDistance;
-      });
+  const casteA = this.normalizeText(this.getText(a.caste));
+  const casteB = this.normalizeText(this.getText(b.caste));
+
+  const aSameCaste = myCaste && casteA === myCaste;
+  const bSameCaste = myCaste && casteB === myCaste;
+
+  if (aSameCaste && !bSameCaste) return -1;
+  if (!aSameCaste && bSameCaste) return 1;
+
+  const radiusActive = this.appliedFilters.radius !== null;
+  if (!radiusActive) return 0;
+
+  const aDistance = a.distanceKm ?? Number.MAX_SAFE_INTEGER;
+  const bDistance = b.distanceKm ?? Number.MAX_SAFE_INTEGER;
+  return aDistance - bDistance;
+});
   }
 
 
@@ -1991,7 +2003,7 @@ async loadLoggedInUserProfile(): Promise<void> {
 
   const { data, error } = await supabase
     .from('user_profiles')
-    .select('full_name, full_name_ta, profile_image_url, gender_text')
+    .select('full_name, full_name_ta, profile_image_url, gender_text, caste_text')
     .eq('user_id', userId)
     .maybeSingle();
 
@@ -2006,7 +2018,7 @@ this.userProfileName =
     : (data?.full_name || data?.full_name_ta || '');
       this.userProfileImage = data?.profile_image_url || '';
  this.userGender = data?.gender_text || '';
-
+this.userCaste = data?.caste_text || '';
   this.cdr.detectChanges();
 }
   renewPlan(): void {
