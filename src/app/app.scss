@@ -167,15 +167,20 @@ main {
 
   margin: 0 auto;
 
-  min-height: 520px;
-
-  padding: 140px 70px 40px;
+  padding: 120px 40px 40px;
 
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
 
   gap: 40px;
+
   align-items: start;
+}
+.footer-col {
+  width: 100%;
+  min-width: 0;
 }
 .footer-col h3 {
   margin: 0 0 16px;
@@ -314,29 +319,36 @@ main {
     margin-top: 6px;
   }
 
-  .footer-container {
-    grid-template-columns: 1fr 1fr;
-  }
+ .footer-container {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  padding: 80px 30px 30px;
+}
 }
 
 @media (max-width: 600px) {
 
 .footer {
   background-image: url("../assets/footer-pink-peacock.png");
-  background-size: cover;
-  background-position: center top;
+
+  background-size: auto 100%;
+  background-position: left top;
   background-repeat: no-repeat;
+
   background-color: #fff;
-  min-height: auto;
 }
 
-.footer-container {
-  min-height: auto;
-  padding: 40px 20px 24px;
+ .footer-container {
+  min-height: 560px;
+
+  padding-top: 38px;
+  padding-right: 18px;
+  padding-bottom: 22px;
+  padding-left: 115px;
+
   grid-template-columns: 1fr;
-  gap: 24px;
-  text-align: center;
-  align-items: center;
+  gap: 22px;
 }
   .footer-col {
   text-align: center;
