@@ -62,7 +62,6 @@ this.planPrice = this.route.snapshot.queryParamMap.get('planPrice') || '';
       if (rawUser) {
         const parsed = JSON.parse(rawUser);
 if (parsed?.user_id) {
-  console.log('APP USER ID:', parsed.user_id);
   return String(parsed.user_id);
 }      }
     } catch (error) {

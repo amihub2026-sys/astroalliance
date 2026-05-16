@@ -1,0 +1,266 @@
+<div class="cities-page">
+<div class="top-actions">
+<button
+  class="action-btn"
+  [class.active]="activeTab === 'country'"
+  (click)="activeTab = 'country'">
+
+  Country Management
+
+</button>
+  <button
+    class="action-btn"
+    [class.active]="activeTab === 'state'"
+    (click)="activeTab = 'state'">
+
+    State Management
+
+  </button>
+
+  <button
+    class="action-btn"
+    [class.active]="activeTab === 'city'"
+    (click)="activeTab = 'city'">
+
+    City Management
+
+  </button>
+
+</div>
+<div *ngIf="activeTab === 'country'">
+
+  <h2>Country Management</h2>
+
+  <div class="city-form">
+
+    <input
+      type="text"
+      [(ngModel)]="countryName"
+      placeholder="Country Name">
+
+    <input
+      type="text"
+      [(ngModel)]="countryNameTa"
+      placeholder="Tamil Country Name">
+
+    <button (click)="addCountry()">
+
+      {{ editingCountryId
+        ? 'Update Country'
+        : 'Add Country' }}
+
+    </button>
+
+  </div>
+
+  <table>
+
+  
+
+    <tr *ngFor="let country of countries">
+
+      <td>
+        {{ country.country_name }}
+      </td>
+
+      <td>
+        {{ country.country_name_ta }}
+      </td>
+
+      <td>
+
+        <button (click)="editCountry(country)">
+          Edit
+        </button>
+
+        <button
+          (click)="deleteCountry(country.country_id)">
+          Delete
+        </button>
+
+      </td>
+
+    </tr>
+
+  </table>
+
+    <div class="pagination">
+
+  <button (click)="prevCountryPage()">
+    Previous
+  </button>
+
+  <span>
+    Page {{ countryPage + 1 }}
+  </span>
+
+  <button (click)="nextCountryPage()">
+    Next
+  </button>
+
+</div>
+
+</div>
+
+<div *ngIf="activeTab === 'state'">
+  <h2>State Management</h2>
+
+ <div class="city-form">
+ <select [(ngModel)]="countryId">
+
+  <option value="">
+    Select Country
+  </option>
+
+  <option
+    *ngFor="let country of countries"
+    [value]="country.country_id">
+
+    {{ country.country_name }}
+
+  </option>
+
+</select>
+
+    <input
+      type="text"
+      [(ngModel)]="stateName"
+      placeholder="State Name">
+
+    <input
+      type="text"
+      [(ngModel)]="stateNameTa"
+      placeholder="Tamil State Name">
+
+    <button (click)="addState()">
+
+      {{ editingStateId ? 'Update State' : 'Add State' }}
+
+    </button>
+
+  </div>
+
+  <table>
+
+    <tr *ngFor="let state of states">
+
+      <td>{{ state.state_name }}</td>
+
+      <td>{{ state.state_name_ta }}</td>
+
+      <td>
+
+        <button (click)="editState(state)">
+          Edit
+        </button>
+
+        <button (click)="deleteState(state.state_id)">
+          Delete
+        </button>
+
+      </td>
+
+    </tr>
+
+  </table>
+<div class="pagination">
+
+  <button (click)="prevStatePage()">
+    Previous
+  </button>
+
+  <span>
+    Page {{ statePage + 1 }}
+  </span>
+
+  <button (click)="nextStatePage()">
+    Next
+  </button>
+
+</div>
+
+  </div>
+
+  <hr>
+<div *ngIf="activeTab === 'city'">
+  <h2>City Management</h2>
+<div class="city-form">
+
+    <select [(ngModel)]="selectedStateId">
+
+      <option value="">
+        Select State
+      </option>
+
+      <option
+        *ngFor="let state of states"
+        [value]="state.state_id">
+
+        {{ state.state_name }}
+
+      </option>
+
+    </select>
+
+    <input
+      type="text"
+      [(ngModel)]="cityName"
+      placeholder="City Name">
+
+    <input
+      type="text"
+      [(ngModel)]="cityNameTa"
+      placeholder="Tamil City Name">
+
+    <button (click)="addCity()">
+
+      {{ editingCityId ? 'Update City' : 'Add City' }}
+
+    </button>
+
+  </div>
+
+  <table>
+
+    <tr *ngFor="let city of cities">
+
+      <td>{{ city.city_name }}</td>
+
+      <td>{{ city.city_name_ta }}</td>
+
+      <td>{{ city.mst_states?.state_name }}</td>
+
+      <td>
+
+        <button (click)="editCity(city)">
+          Edit
+        </button>
+
+        <button (click)="deleteCity(city.city_id)">
+          Delete
+        </button>
+
+      </td>
+
+    </tr>
+
+  </table>
+<div class="pagination">
+
+  <button (click)="prevCityPage()">
+    Previous
+  </button>
+
+  <span>
+    Page {{ cityPage + 1 }}
+  </span>
+
+  <button (click)="nextCityPage()">
+    Next
+  </button>
+
+</div>
+
+  </div>
+
+</div>

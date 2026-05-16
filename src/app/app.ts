@@ -25,7 +25,7 @@ export class App {
     private platformId = inject(PLATFORM_ID);
   private router = inject(Router);
   private isBrowser = isPlatformBrowser(this.platformId);
-
+showFooter = true;
 menuOpen = false;
 biodataMenuOpen = false;
 currentLang: Language = 'en';
@@ -125,7 +125,10 @@ this.router.events.subscribe((event) => {
     if (event.urlAfterRedirects.includes('/sent-interests')) {
       this.markSentInterestsSeen();
     }
+    this.showFooter =
+  !event.urlAfterRedirects.includes('/admin');
   }
+  
 });
   }
 }

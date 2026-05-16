@@ -391,8 +391,32 @@ closeTermsPopup() {
       localStorage.setItem('app_user_email', cleanEmail);
       localStorage.setItem('app_user_phone', cleanPhone);
 
-      alert(this.tr.alerts.registerSuccess);
-      this.router.navigate(['/biodata']);
+    alert(this.tr.alerts.registerSuccess);
+
+// ADMIN FLOW
+if (
+  this.router.url.includes('create-user')
+) {
+
+  localStorage.setItem(
+    'admin_created_user_id',
+    appUser.user_id
+  );
+
+  this.router.navigate([
+    '/admin/create-biodata'
+  ]);
+
+}
+
+// NORMAL USER FLOW
+else {
+
+  this.router.navigate([
+    '/biodata'
+  ]);
+
+}
     } catch (error: any) {
       console.error('Register error:', error);
       alert(error?.message || this.tr.alerts.somethingWrong);

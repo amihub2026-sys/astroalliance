@@ -26,6 +26,7 @@ isInvalid(field: string): boolean {
   return this.submitted && !!this.fieldErrors[field];
 }
   private currentUserId: string | null = null;
+  private isAdminCreated = false;
   private existingProfileImageUrl: string | null = null;
   private existingVideoUrl: string | null = null;
   private existingHoroscopeFileUrl: string | null = null;
@@ -425,6 +426,37 @@ cityList: any[] = [];
 selectedCountryId = '';
 selectedStateId = '';
 selectedCityId = '';
+isOtherCountrySelected(): boolean {
+  const country = this.countryList.find(
+    (c: any) => c.country_id === this.selectedCountryId
+  );
+
+  return country?.country_name?.toLowerCase() === 'other';
+}
+
+isOtherStateSelected(): boolean {
+  const state = this.stateList.find(
+    (s: any) => s.state_id === this.selectedStateId
+  );
+
+  return state?.state_name?.toLowerCase() === 'other';
+}
+
+isOtherCitySelected(): boolean {
+  const city = this.cityList.find(
+    (c: any) => c.city_id === this.selectedCityId
+  );
+
+  return city?.city_name?.toLowerCase() === 'other';
+}
+
+onCityChange(): void {
+  const city = this.cityList.find(
+    (c: any) => c.city_id === this.selectedCityId
+  );
+
+  this.formData.city = city?.city_name || '';
+}
 educationList: any[] = [];
 filteredEducationList: any[] = [];
 professionList: any[] = [];
@@ -834,6 +866,20 @@ async ngOnInit(): Promise<void> {
 
   (window as any).activeBiodataComponent = this;
 
+  const adminCreatedUserId =
+  localStorage.getItem(
+    'admin_created_user_id'
+  );
+
+if (adminCreatedUserId) {
+
+  this.currentUserId =
+    adminCreatedUserId;
+
+  this.isAdminCreated = true;
+
+}
+
   await this.loadReligions();
   await this.loadCastes();
   await this.loadCountries();
@@ -857,6 +903,9 @@ if (this.currentLang === 'ta') {
   }
 
   private async resolveCurrentUserId(): Promise<string | null> {
+    if (this.currentUserId) {
+  return this.currentUserId;
+}
     const loggedInUser = this.getStoredLoggedInUser();
 
     if (loggedInUser?.user_id) {
@@ -1496,9 +1545,33 @@ const v = (en: any, ta?: any) => {
     { key: 'company', label: this.tr.labels.company, value: v(this.formData.company, this.formDataTa.company) },
     { key: 'salary', label: this.tr.labels.salary, value: v(this.formData.salary, this.formDataTa.salary) },
     { key: 'address', label: this.tr.labels.address, value: v(this.formData.address, this.formDataTa.address) },
-    { key: 'country', label: this.tr.labels.country, value: this.selectedCountryId },
-    { key: 'state', label: this.tr.labels.state, value: this.selectedStateId },
-    { key: 'city', label: this.tr.labels.city, value: this.selectedCityId },
+{
+  key: 'country',
+  label: this.tr.labels.country,
+  value: this.isOtherCountrySelected()
+    ? this.formData.country
+    : this.selectedCountryId
+},
+
+{
+  key: 'state',
+  label: this.tr.labels.state,
+  value:
+    this.isOtherCountrySelected() || this.isOtherStateSelected()
+      ? this.formData.state
+      : this.selectedStateId
+},
+
+{
+  key: 'city',
+  label: this.tr.labels.city,
+  value:
+    this.isOtherCountrySelected() ||
+    this.isOtherStateSelected() ||
+    this.isOtherCitySelected()
+      ? this.formData.city
+      : this.selectedCityId
+},
     { key: 'horoscopeFile', label: this.tr.sections.horoscopeUpload, value: this.selectedHoroscopeFile || this.existingHoroscopeFileUrl },
     { key: 'rasi', label: this.tr.labels.rasi, value: this.formData.rasi },
     { key: 'nakshatra', label: this.tr.labels.nakshatra, value: this.formData.nakshatra },
@@ -1526,7 +1599,6 @@ async onSubmit(): Promise<void> {
 
  const missingField = this.markRequiredErrors();
 
-console.log('REQUIRED ERRORS:', this.fieldErrors);
 
 if (missingField) {
   this.isSaving = false;
@@ -1864,8 +1936,7 @@ const { data: existingProfile, error: existingError } = await supabase
       }
 
   if (existingProfile) {
-  console.log('UPDATE STARTED FOR USER:', appUserId);
-  console.log('PAYLOAD:', payload);
+
 
   const { data: updatedData, error: updateError } = await supabase
     .from('user_profiles')
@@ -1873,8 +1944,7 @@ const { data: existingProfile, error: existingError } = await supabase
     .eq('user_id', appUserId)
     .select();
 
-  console.log('UPDATE RESULT:', updatedData);
-  console.log('UPDATE ERROR:', updateError);
+
 
   if (updateError) {
     this.snackbar.error(updateError.message);
@@ -1910,17 +1980,33 @@ const { data: existingProfile, error: existingError } = await supabase
         localStorage.setItem('app_user_phone', payload.mobile);
       }
 
-      const savedUser = this.getStoredLoggedInUser();
-      if (savedUser) {
-        savedUser.user_id = appUserId;
-        savedUser.full_name = payload.full_name;
-        savedUser.email = payload.email;
-        savedUser.phone_number = payload.mobile;
-        savedUser.dob = payload.dob;
-        localStorage.setItem('matrimony_user', JSON.stringify(savedUser));
-      }
+const savedUser = this.getStoredLoggedInUser();
 
-      this.snackbar.success(this.tr.alerts.biodataSubmitted);
+if (savedUser) {
+  savedUser.user_id = appUserId;
+  savedUser.full_name = payload.full_name;
+  savedUser.email = payload.email;
+  savedUser.phone_number = payload.mobile;
+  savedUser.dob = payload.dob;
+
+  localStorage.setItem(
+    'matrimony_user',
+    JSON.stringify(savedUser)
+  );
+}
+
+// ADMIN FLOW CLEANUP
+if (this.isAdminCreated) {
+
+  localStorage.removeItem(
+    'admin_created_user_id'
+  );
+
+}
+
+this.snackbar.success(
+  this.tr.alerts.biodataSubmitted
+);
     } catch (error: any) {
       console.error('Biodata save error:', error);
       this.snackbar.error(error?.message || 'Something went wrong while saving biodata');
@@ -2039,49 +2125,49 @@ async loadCities() {
 
 }
 
-onCountryChange() {
-
-  const selectedCountry = this.countryList.find(
+onCountryChange(): void {
+  const country = this.countryList.find(
     (c: any) => c.country_id === this.selectedCountryId
   );
 
-  this.formData.country =
-    selectedCountry?.country_name || '';
-
-  this.selectedStateId = '';
-
+  this.formData.country = country?.country_name || '';
   this.formData.state = '';
-
   this.formData.city = '';
 
-this.stateList = this.allStates.filter(
-  (s: any) =>
-    String(s.country_id) === String(this.selectedCountryId)
-);
+  this.selectedStateId = '';
+  this.selectedCityId = '';
 
+  if (this.isOtherCountrySelected()) {
+    this.stateList = [];
+    this.cityList = [];
+    return;
+  }
+
+  this.stateList = this.allStates.filter(
+    (s: any) => s.country_id === this.selectedCountryId
+  );
 
   this.cityList = [];
-
 }
 
-onStateChange() {
-
-  const selectedState = this.stateList.find(
+onStateChange(): void {
+  const state = this.stateList.find(
     (s: any) => s.state_id === this.selectedStateId
   );
 
-  this.formData.state =
-    selectedState?.state_name || '';
+  this.formData.state = state?.state_name || '';
+  this.formData.city = '';
 
   this.selectedCityId = '';
 
-  this.formData.city = '';
+  if (this.isOtherStateSelected()) {
+    this.cityList = [];
+    return;
+  }
 
   this.cityList = this.allCities.filter(
-    (c: any) =>
-      String(c.state_id) === String(this.selectedStateId)
+    (c: any) => c.state_id === this.selectedStateId
   );
-
 }
 async loadProfessionList() {
   const { data, error } = await supabase
@@ -2096,7 +2182,6 @@ async loadProfessionList() {
     return;
   }
 
-  console.log('PROFESSION LIST:', data);
 
   this.professionList = data || [];
   this.cdr.detectChanges();

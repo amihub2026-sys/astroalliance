@@ -1,0 +1,188 @@
+<div class="page">
+
+  <div class="page-header">
+
+    <div>
+
+      <h2>Profile View Tracking</h2>
+
+      <p>
+        Monitor who viewed profiles
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="search-box">
+
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Search by name or profile code">
+
+  </div>
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>Viewer</th>
+
+      <th>Total Views</th>
+<th>Action</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let item of filteredViews">
+
+        <td>
+
+  <div class="profile-info">
+
+  <img
+    [src]="
+ item.viewer?.profile_image_url
+    || 'assets/default-user.png'
+"
+    class="profile-img"
+    alt="Profile">
+
+  <div>
+
+    <span class="profile-code">
+      {{ item.viewer?.profile_code }}
+    </span>
+
+    <span>
+      {{
+        v(
+         item.viewer?.full_name,
+          item.viewer?.full_name_ta
+        )
+      }}
+    </span>
+
+  </div>
+
+</div>
+
+        </td>
+
+     <td>
+
+  {{
+    views.filter(v =>
+      v.viewer?.profile_code ===
+      item.viewer?.profile_code
+    ).length
+  }}
+
+</td>
+
+<td>
+
+  <button
+    class="history-btn"
+    (click)="openHistory(item)">
+
+    View History
+
+  </button>
+
+</td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+<div
+  class="history-section"
+  *ngIf="selectedHistory.length">
+
+  <div class="history-header">
+
+    <h3>
+
+      View History -
+     {{
+  v(
+    selectedViewer?.viewer?.full_name,
+    selectedViewer?.viewer?.full_name_ta
+  )
+}}
+
+    </h3>
+
+  </div>
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>Viewed Profile</th>
+
+        <th>Date & Time</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let item of selectedHistory">
+
+        <td>
+
+      <div class="profile-info">
+
+  <img
+    [src]="
+  item.viewed?.profile_image_url
+    || 'assets/default-user.png'
+"
+    class="profile-img"
+    alt="Profile">
+
+  <div>
+
+    <span class="profile-code">
+      {{ item.viewed?.profile_code }}
+    </span>
+
+    <span>
+      {{
+        v(
+          item.viewed?.full_name,
+          item.viewed?.full_name_ta
+        )
+      }}
+    </span>
+
+  </div>
+
+</div>
+
+        </td>
+
+        <td>
+          {{ item.viewed_at | date:'medium' }}
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+</div>

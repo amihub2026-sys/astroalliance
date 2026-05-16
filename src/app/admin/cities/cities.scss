@@ -1,0 +1,161 @@
+
+.top-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.action-btn {
+  min-width: 180px;
+}
+
+.cities-page {
+  padding: 30px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.city-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+input,
+select {
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+  background: #fff;
+}
+
+input:focus,
+select:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 4px rgba(124,58,237,0.12);
+}
+
+button {
+  height: 48px;
+  padding: 0 20px;
+  background: linear-gradient(
+    135deg,
+    #ec4899,
+    #7c3aed
+  );
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
+}
+
+thead {
+  background: #f9fafb;
+}
+
+th {
+  padding: 16px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+td {
+  padding: 16px;
+  border-top: 1px solid #f1f5f9;
+  color: #4b5563;
+}
+
+tr:hover {
+  background: #faf5ff;
+}
+
+hr {
+  margin: 40px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+td button {
+  margin-right: 10px;
+  height: 38px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+td button:last-child {
+  background: linear-gradient(
+    135deg,
+    #ef4444,
+    #dc2626
+  );
+}
+
+@media (max-width: 991px) {
+
+  .city-form {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+
+}
+.action-btn.active {
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #4f46e5
+  );
+}
+.pagination {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.pagination span {
+  font-weight: 600;
+  color: #374151;
+}
+
+.pagination button {
+  height: 40px;
+  padding: 0 18px;
+}

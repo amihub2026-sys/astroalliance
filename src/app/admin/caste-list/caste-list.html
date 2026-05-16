@@ -1,0 +1,227 @@
+<section class="content-section">
+
+  <div class="section-header">
+
+    <div>
+      <h2>Caste List</h2>
+      <p>Manage caste master data</p>
+    </div>
+
+    <button
+      class="refresh-btn"
+      type="button"
+     (mousedown)="openAdd()">
+      + Add Caste
+    </button>
+
+  </div>
+
+  <div class="search-card">
+
+    <input
+      type="text"
+      placeholder="Search caste..."
+      [(ngModel)]="searchTerm">
+
+  </div>
+
+  <div class="panel-card">
+
+    <p *ngIf="isLoading">Loading castes...</p>
+
+    <div class="table-wrap" *ngIf="!isLoading">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Caste Code</th>
+            <th>Religion</th>
+            <th>Caste Name</th>
+            <th>Tamil Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+         <tr *ngFor="let item of paginatedCastes">
+
+            <td>{{ item.caste_code }}</td>
+
+            <td>
+              {{ item.mst_religions?.religion_name }}
+            </td>
+
+            <td>{{ item.caste_name }}</td>
+
+            <td>{{ item.caste_name_ta }}</td>
+
+            <td>
+              <span
+                class="status"
+                [class.active]="item.is_active">
+
+                {{ item.is_active ? 'Active' : 'Inactive' }}
+
+              </span>
+            </td>
+
+            <td class="action-cell">
+
+              <button
+                class="edit-btn"
+                (mousedown)="editCaste(item)">
+                Edit
+              </button>
+
+              <button
+                class="block-btn"
+                (mousedown)="toggleStatus(item)">
+
+                {{ item.is_active ? 'Deactivate' : 'Activate' }}
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+      <div
+  class="pagination"
+  *ngIf="filteredCastes.length > itemsPerPage">
+
+  <button
+    type="button"
+    (mousedown)="prevPage()"
+    [disabled]="currentPage === 1">
+
+    Previous
+ 
+  </button>
+
+  <span>
+
+    Page {{ currentPage }}
+    of
+    {{ totalPages }}
+
+  </span>
+
+  <button
+    type="button"
+    (mousedown)="nextPage()"
+    [disabled]="currentPage === totalPages">
+
+    Next
+
+  </button>
+
+</div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<div class="modal-backdrop" *ngIf="showForm">
+
+  <div class="modal-card">
+
+    <h3>
+      {{ isEdit ? 'Edit Caste' : 'Add Caste' }}
+    </h3>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+
+        <label>Religion</label>
+
+        <select [(ngModel)]="formData.religion_id">
+
+          <option value="">Select Religion</option>
+
+          <option
+            *ngFor="let item of religions"
+            [value]="item.religion_id">
+
+            {{ item.religion_name }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Caste Code</label>
+
+        <input
+          type="text"
+          [(ngModel)]="formData.caste_code">
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Caste Name</label>
+
+        <input
+          type="text"
+          [(ngModel)]="formData.caste_name">
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Tamil Name</label>
+
+        <input
+          type="text"
+          [(ngModel)]="formData.caste_name_ta">
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Sort Order</label>
+
+        <input
+          type="number"
+          [(ngModel)]="formData.sort_order">
+
+      </div>
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button
+        class="cancel-btn"
+        (click)="showForm = false">
+
+        Cancel
+
+      </button>
+
+      <button
+        class="save-btn"
+   (click)="saveCaste()">
+
+        Save
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

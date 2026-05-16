@@ -753,12 +753,50 @@ partnerExpectation: {
         return;
       }
 
-  this.loadedProfileRow = data;
+this.loadedProfileRow = data;
+
 this.profile = this.mapRowToProfile(data);
+
+const loggedInUser =
+  this.getStoredLoggedInUser();
+
+if (
+  loggedInUser?.user_id &&
+  data?.profile_id
+) {
+
+  const { data: viewerProfile } =
+    await supabase
+      .from('user_profiles')
+      .select('profile_id')
+      .eq('user_id', loggedInUser.user_id)
+      .maybeSingle();
+
+  if (
+    viewerProfile?.profile_id &&
+    viewerProfile.profile_id !== data.profile_id
+  ) {
+
+    await supabase
+      .from('profile_views')
+      .insert({
+        viewer_profile_id:
+          viewerProfile.profile_id,
+
+        viewed_profile_id:
+          data.profile_id
+      });
+
+  }
+}
 
 if (this.currentLang === 'ta') {
   await this.translateProfileValuesToTamil();
 }
+
+await this.loadAstroMatch();
+
+await this.checkInterest();
 
 await this.loadAstroMatch();
 await this.checkInterest();
