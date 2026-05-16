@@ -1,0 +1,95 @@
+<div class="admin-users-page">
+
+  <div class="top-section">
+
+    <h1>Admin Management</h1>
+
+    <div class="form-grid">
+
+      <input
+        type="text"
+        placeholder="Admin Name"
+        [(ngModel)]="admin_name">
+
+     <input
+  type="text"
+  placeholder="Phone Number"
+  [(ngModel)]="phone_number"
+  maxlength="10"
+  minlength="10"
+  pattern="[0-9]{10}"
+  #phoneInput="ngModel"
+  required>
+
+<div
+  class="error-text"
+  *ngIf="phoneInput.invalid && phoneInput.touched">
+
+  Enter valid 10 digit mobile number
+
+</div>
+
+      <input
+        type="date"
+        [(ngModel)]="dob">
+
+      <select [(ngModel)]="role">
+
+        <option value="admin">
+          Admin
+        </option>
+
+        <option value="super_admin">
+          Super Admin
+        </option>
+
+      </select>
+
+      <button (click)="addAdmin()">
+        Add Admin
+      </button>
+
+    </div>
+
+  </div>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>DOB</th>
+        <th>Role</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let admin of admins">
+
+        <td>{{ admin.admin_name }}</td>
+
+        <td>{{ admin.phone_number }}</td>
+
+        <td>{{ admin.dob }}</td>
+
+        <td>{{ admin.role }}</td>
+
+        <td>
+
+          <button
+            (click)="deleteAdmin(admin.admin_id)">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

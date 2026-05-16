@@ -105,7 +105,12 @@ export const routes: Routes = [
     import('./admin/likes-history/likes-history')
       .then(m => m.LikesHistory)
 },
-
+{
+  path: 'admin-users',
+  loadComponent: () =>
+    import('./admin/admin-users/admin-users')
+      .then(m => m.AdminUsers)
+},
 {
   path: 'create-user',
   component: Register

@@ -28,13 +28,7 @@ cdr = inject(ChangeDetectorRef);
   isLoading = false;
   loginType: LoginType = 'user';
 
-  adminAccounts = [
-    {
-      phone: '9876543210',
-      dob: '1990-01-01',
-      name: 'Main Admin'
-    }
-  ];
+ 
 
   translations = {
     en: {
@@ -148,11 +142,7 @@ cdr = inject(ChangeDetectorRef);
     localStorage.removeItem('admin_phone');
   }
 
-  private saveAdminLogin(admin: { phone: string; dob: string; name: string }): void {
-    localStorage.setItem('is_admin', 'true');
-    localStorage.setItem('admin_name', admin.name);
-    localStorage.setItem('admin_phone', admin.phone);
-  }
+
 
   private saveLoginUser(payload: {
     user_id: string;
@@ -195,25 +185,39 @@ cdr = inject(ChangeDetectorRef);
   }
 
   private async handleAdminLogin(): Promise<void> {
-    const cleanPhone = this.normalizePhone(this.phone);
-    const cleanDob = this.dob;
 
-    const matchedAdmin = this.adminAccounts.find(
-      admin => this.normalizePhone(admin.phone) === cleanPhone && admin.dob === cleanDob
-    );
+  const cleanPhone = this.normalizePhone(this.phone);
+  const cleanDob = this.dob;
 
-  if (!matchedAdmin) {
-  this.stopLoading();
-  this.snackbar.error(this.tr.alerts.adminInvalid);
-  return;
-}
+  const { data: admin, error } = await supabase
+    .from('admin_users')
+    .select('*')
+    .eq('phone_number', cleanPhone)
+    .eq('dob', cleanDob)
+    .eq('is_active', true)
+    .maybeSingle();
 
-    this.clearOldLoginStorage();
-    this.saveAdminLogin(matchedAdmin);
-
-    this.snackbar.success(this.tr.alerts.adminLoginSuccess);
-    this.router.navigate(['/admin']);
+  if (error) {
+    throw error;
   }
+
+  if (!admin) {
+    this.stopLoading();
+    this.snackbar.error(this.tr.alerts.adminInvalid);
+    return;
+  }
+
+  this.clearOldLoginStorage();
+
+  localStorage.setItem('is_admin', 'true');
+  localStorage.setItem('admin_name', admin.admin_name);
+  localStorage.setItem('admin_phone', admin.phone_number);
+  localStorage.setItem('admin_id', admin.admin_id);
+
+  this.snackbar.success(this.tr.alerts.adminLoginSuccess);
+
+  this.router.navigate(['/admin']);
+}
 private stopLoading(): void {
   this.isLoading = false;
   this.cdr.detectChanges();
