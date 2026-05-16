@@ -159,6 +159,7 @@ main {
   min-height: 520px;
 }
 .footer-container {
+
   position: relative;
   z-index: 2;
 
@@ -169,13 +170,26 @@ main {
 
   min-height: 520px;
 
-  padding: 140px 70px 40px;
+  padding: 120px 60px 40px;
 
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr;
 
-  gap: 40px;
-  align-items: start;
+  grid-template-columns:
+    minmax(260px, 1.4fr)
+    minmax(180px, 1fr)
+    minmax(220px, 1fr)
+    minmax(180px, 1fr);
+
+  gap: 60px;
+
+  align-items: flex-start;
+}
+.footer-col {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
 }
 .footer-col h3 {
   margin: 0 0 16px;
@@ -210,7 +224,7 @@ main {
 .footer-col li,
 .footer-col a {
   color: #6f1d46;
-
+word-break: break-word;
   line-height: 1.9;
   text-decoration: none;
 
@@ -230,8 +244,12 @@ main {
 }
 
 .social-icons {
+
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+
 }
 
 .social-icons a {
