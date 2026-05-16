@@ -489,7 +489,7 @@ await Promise.all([
   this.loadFilterTables()
 ]);
 
- admin-page
+
 await this.loadLikedProfiles();
 await this.loadLikedMeProfiles();
 
@@ -497,8 +497,8 @@ await this.loadProfilesFromSupabase();
 
 this.loadShortlistedByYouFromSupabase();
 this.loadShortlistedMeFromSupabase();
-this.loadLikedMeFromSupabase();
- main
+this.loadShortlistedMeFromSupabase();
+
 
     this.cdr.detectChanges();
 
@@ -997,11 +997,12 @@ if (
 //             distanceKm: null
 //           } as ProfileItem;
 //         });
-this.profiles = filteredRows.map((row: any) => {
+this.profiles = await Promise.all(
+  filteredRows.map(async (row: any) => {
   const usableId = row.profile_code || row.user_id || row.profile_id || '';
 
 
-  admin-page
+
 return {
   id: String(row.profile_code || '').trim(),
   profileId: String(row.profile_id || '').trim(),
@@ -1050,77 +1051,8 @@ image: row.profile_image_url || 'assets/default-avatar.png',
     } as ProfileItem;
   })
 );
-=======
-  return {
-    id: String(usableId).trim(),
-    userId: String(row.user_id || '').trim(),
 
-    name: this.asLangTextTa(row.full_name, row.full_name_ta),
 
-    age: Number(row.age || 0),
-
-    religion: this.asLangTextTa(
-      row.religion_text || '-',
-      this.getTamilProfileValue('religion', row.religion_text)
-    ),
-
-    maritalStatus: this.asLangTextTa(
-      row.marital_status_text || '-',
-      this.getTamilProfileValue('maritalStatus', row.marital_status_text)
-    ),
-
-    caste: this.asLangTextTa(
-      row.caste_text || '-',
-      this.casteMap[
-        String(row.caste_text || '').trim().toLowerCase()
-      ] || row.caste_text
-    ),
-
-    gender: this.asLangTextTa(
-      row.gender_text || '-',
-      this.getTamilProfileValue('gender', row.gender_text)
-    ),
-
-    location: this.asLangTextTa(
-      row.location_text,
-      row.location_text
-    ),
-
-    city: this.asLangTextTa(
-      row.city_text,
-      row.city_text
-    ),
-
-    state: this.asLangTextTa(
-      row.state_text,
-      row.state_text
-    ),
-
-    education: this.asLangTextTa(
-      row.education_text || '-',
-      row.education_text_ta ||
-      this.getTamilProfileValue('education', row.education_text)
-    ),
-
-    profession: this.asLangTextTa(
-      row.occupation_text || '-',
-      row.occupation_text_ta ||
-      this.getTamilProfileValue('profession', row.occupation_text)
-    ),
-
-    image: row.profile_image_url || 'assets/default-avatar.png',
-
-    liked: false,
-
-    latitude: this.toNullableNumber(row.latitude),
-
-    longitude: this.toNullableNumber(row.longitude),
-
-    distanceKm: null
-
-  } as ProfileItem;
-});
- main
       this.profiles = this.profiles.map((profile) => ({
         ...profile,
         distanceKm: this.getDistanceForProfile(profile)
