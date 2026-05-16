@@ -146,8 +146,9 @@
 
 .hero-actions {
   display: flex;
+  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 18px;
 }
 
 .primary-btn,
@@ -1240,4 +1241,158 @@
     font-size: 13px;
     padding: 11px 12px;
   }
+}
+.contact-bottom-actions{
+  display:flex;
+  flex-direction:row !important;
+  align-items:center;
+  gap:18px; /* SPACE BETWEEN BUTTONS */
+  margin-top:24px;
+  flex-wrap:wrap;
+}
+
+/* BUTTON DESIGN */
+.contact-bottom-actions .back-btn,
+.contact-bottom-actions .secondary-btn{
+  min-width:220px;
+  padding:14px 24px;
+  border-radius:16px;
+  font-weight:800;
+  transition:all 0.35s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+/* BACK BUTTON */
+.contact-bottom-actions .back-btn{
+  background:#fff;
+  color:#7a1f44;
+  border:1px solid rgba(122,31,68,0.2);
+
+  box-shadow:
+    0 0 10px rgba(122,31,68,0.10),
+    0 0 20px rgba(122,31,68,0.08);
+}
+
+/* DOWNLOAD BUTTON */
+.contact-bottom-actions .secondary-btn{
+  background:linear-gradient(135deg,#7a1f44,#d9467a);
+  color:#fff;
+  border:none;
+
+  box-shadow:
+    0 0 12px rgba(217,70,122,0.35),
+    0 0 25px rgba(217,70,122,0.25);
+}
+
+/* GLOW HOVER */
+.contact-bottom-actions .back-btn:hover,
+.contact-bottom-actions .secondary-btn:hover{
+  transform:translateY(-3px) scale(1.02);
+
+  box-shadow:
+    0 0 18px rgba(217,70,122,0.45),
+    0 0 35px rgba(217,70,122,0.35);
+}
+
+/* MOBILE */
+@media (max-width:640px){
+
+  .contact-bottom-actions{
+    flex-direction:column !important;
+    align-items:stretch;
+    gap:14px;
+  }
+
+  .contact-bottom-actions .back-btn,
+  .contact-bottom-actions .secondary-btn{
+    width:100%;
+  }
+
+}
+.top-action-buttons {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 24px !important;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.top-action-buttons .back-btn,
+.top-action-buttons .secondary-btn,
+.top-action-buttons .download-profile-btn {
+  min-width: 230px;
+  padding: 15px 26px;
+  border-radius: 18px;
+  font-weight: 900;
+  box-shadow: 0 0 18px rgba(217, 70, 122, 0.28);
+}
+
+.top-action-buttons .download-profile-btn {
+  background: linear-gradient(135deg, #7a1f44, #d9467a);
+  color: #fff;
+  border: none;
+}
+
+.top-action-buttons button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 24px rgba(217, 70, 122, 0.55);
+}
+
+@media (max-width: 640px) {
+  .top-action-buttons {
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+
+  .top-action-buttons .back-btn,
+  .top-action-buttons .secondary-btn,
+  .top-action-buttons .download-profile-btn {
+    width: 100%;
+  }
+}
+.success-btn,
+.primary-btn.success-btn,
+.secondary-btn.success-btn {
+  background: linear-gradient(135deg, #bff7cf, #7ee8a3) !important;
+  color: #14532d !important;
+  border: 1px solid #86efac !important;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.35) !important;
+  cursor: not-allowed;
+}
+.interest-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  width: fit-content;
+  max-width: 260px;
+}
+
+.interest-status-text {
+  margin-top: 2px;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+.interest-status-text {
+  margin-top: 4px;
+
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.5;
+
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+
+  max-width: 260px;
 }

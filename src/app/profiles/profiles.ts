@@ -4,7 +4,8 @@ import {
   inject,
   PLATFORM_ID,
   ChangeDetectorRef,
-  HostListener
+  HostListener,
+  CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -46,6 +47,7 @@ interface ProfileItem {
   selector: 'app-profiles',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './profiles.html',
   styleUrls: ['./profiles.scss']
 })
@@ -112,6 +114,7 @@ casteMap: Record<string, string> = {};
     userProfileImage = '';
 userProfileName = '';
 userGender = '';
+userCaste = '';
   shortlistedByYouIds: string[] = [];
 
 showBiodataPopup = true;
@@ -474,18 +477,28 @@ assistedMatchesText:
     this.isLoading = true;
     this.cdr.detectChanges();
 
-    this.tryGetUserLocation();
-
+setTimeout(() => {
+  this.tryGetUserLocation();
+}, 2000);
     await this.loadCurrentPlanFromSupabase();
     await this.loadLoggedInUserProfile();
     await this.refreshUserProfileLanguage();
 
-    await this.loadEducationOptions();
-    await this.loadFilterTables();
-    await this.loadProfilesFromSupabase();
+await Promise.all([
+  this.loadEducationOptions(),
+  this.loadFilterTables()
+]);
 
+ admin-page
 await this.loadLikedProfiles();
 await this.loadLikedMeProfiles();
+
+await this.loadProfilesFromSupabase();
+
+this.loadShortlistedByYouFromSupabase();
+this.loadShortlistedMeFromSupabase();
+this.loadLikedMeFromSupabase();
+ main
 
     this.cdr.detectChanges();
 
@@ -984,10 +997,11 @@ if (
 //             distanceKm: null
 //           } as ProfileItem;
 //         });
-this.profiles = await Promise.all(
-  filteredRows.map(async (row: any) => {
-    const usableId = row.profile_code || row.user_id || row.profile_id || '';
+this.profiles = filteredRows.map((row: any) => {
+  const usableId = row.profile_code || row.user_id || row.profile_id || '';
 
+
+  admin-page
 return {
   id: String(row.profile_code || '').trim(),
   profileId: String(row.profile_id || '').trim(),
@@ -1036,9 +1050,81 @@ image: row.profile_image_url || 'assets/default-avatar.png',
     } as ProfileItem;
   })
 );
+=======
+  return {
+    id: String(usableId).trim(),
+    userId: String(row.user_id || '').trim(),
+
+    name: this.asLangTextTa(row.full_name, row.full_name_ta),
+
+    age: Number(row.age || 0),
+
+    religion: this.asLangTextTa(
+      row.religion_text || '-',
+      this.getTamilProfileValue('religion', row.religion_text)
+    ),
+
+    maritalStatus: this.asLangTextTa(
+      row.marital_status_text || '-',
+      this.getTamilProfileValue('maritalStatus', row.marital_status_text)
+    ),
+
+    caste: this.asLangTextTa(
+      row.caste_text || '-',
+      this.casteMap[
+        String(row.caste_text || '').trim().toLowerCase()
+      ] || row.caste_text
+    ),
+
+    gender: this.asLangTextTa(
+      row.gender_text || '-',
+      this.getTamilProfileValue('gender', row.gender_text)
+    ),
+
+    location: this.asLangTextTa(
+      row.location_text,
+      row.location_text
+    ),
+
+    city: this.asLangTextTa(
+      row.city_text,
+      row.city_text
+    ),
+
+    state: this.asLangTextTa(
+      row.state_text,
+      row.state_text
+    ),
+
+    education: this.asLangTextTa(
+      row.education_text || '-',
+      row.education_text_ta ||
+      this.getTamilProfileValue('education', row.education_text)
+    ),
+
+    profession: this.asLangTextTa(
+      row.occupation_text || '-',
+      row.occupation_text_ta ||
+      this.getTamilProfileValue('profession', row.occupation_text)
+    ),
+
+    image: row.profile_image_url || 'assets/default-avatar.png',
+
+    liked: false,
+
+    latitude: this.toNullableNumber(row.latitude),
+
+    longitude: this.toNullableNumber(row.longitude),
+
+    distanceKm: null
+
+  } as ProfileItem;
+});
+ main
       this.profiles = this.profiles.map((profile) => ({
         ...profile,
         distanceKm: this.getDistanceForProfile(profile)
+        
       }));
 
       this.likedMeProfiles = [];
@@ -1491,14 +1577,25 @@ get planStatus(): string {
           distanceKm
         };
       })
-      .sort((a, b) => {
-        const radiusActive = this.appliedFilters.radius !== null;
-        if (!radiusActive) return 0;
+     .sort((a, b) => {
+  const myCaste = this.normalizeText(this.userCaste);
 
-        const aDistance = a.distanceKm ?? Number.MAX_SAFE_INTEGER;
-        const bDistance = b.distanceKm ?? Number.MAX_SAFE_INTEGER;
-        return aDistance - bDistance;
-      });
+  const casteA = this.normalizeText(this.getText(a.caste));
+  const casteB = this.normalizeText(this.getText(b.caste));
+
+  const aSameCaste = myCaste && casteA === myCaste;
+  const bSameCaste = myCaste && casteB === myCaste;
+
+  if (aSameCaste && !bSameCaste) return -1;
+  if (!aSameCaste && bSameCaste) return 1;
+
+  const radiusActive = this.appliedFilters.radius !== null;
+  if (!radiusActive) return 0;
+
+  const aDistance = a.distanceKm ?? Number.MAX_SAFE_INTEGER;
+  const bDistance = b.distanceKm ?? Number.MAX_SAFE_INTEGER;
+  return aDistance - bDistance;
+});
   }
 
 
@@ -2059,7 +2156,7 @@ async loadLoggedInUserProfile(): Promise<void> {
 
   const { data, error } = await supabase
     .from('user_profiles')
-    .select('full_name, full_name_ta, profile_image_url, gender_text')
+    .select('full_name, full_name_ta, profile_image_url, gender_text, caste_text')
     .eq('user_id', userId)
     .maybeSingle();
 
@@ -2074,7 +2171,7 @@ this.userProfileName =
     : (data?.full_name || data?.full_name_ta || '');
       this.userProfileImage = data?.profile_image_url || '';
  this.userGender = data?.gender_text || '';
-
+this.userCaste = data?.caste_text || '';
   this.cdr.detectChanges();
 }
   renewPlan(): void {
