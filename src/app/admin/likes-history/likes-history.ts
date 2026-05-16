@@ -233,15 +233,14 @@ this.selectedUser = user;
 this.selectedHistory = [];
 
 this.usersWhoLiked = [];
-
 const { data, error } = await supabase
   .from('profile_likes')
   .select(`
-    like_id,
-    created_at,
-    from_profile_id,
-    to_profile_id
-  `)
+  like_id,
+  created_at,
+  from_profile_id,
+  to_profile_id
+`)
   .or(
     `from_profile_id.eq.${user.profile_id},to_profile_id.eq.${user.profile_id}`
   )
@@ -257,82 +256,76 @@ const { data, error } = await supabase
   }
   console.log('LIKES DATA', data);
 
+  const profileIds = Array.from(
+  new Set([
+    ...(data || []).map(x => x.from_profile_id),
+    ...(data || []).map(x => x.to_profile_id)
+  ])
+);
+
+const { data: profiles } = await supabase
+  .from('user_profiles')
+  .select(`
+    profile_id,
+    profile_code,
+    full_name,
+    full_name_ta
+  `)
+  .in('profile_id', profileIds);
+
   // LOAD ALL RELATED PROFILE IDS
 
-  const ids = Array.from(
-    new Set([
-      ...(data || []).map(
-        x => x.from_profile_id
-      ),
-      ...(data || []).map(
-        x => x.to_profile_id
-      )
-    ])
-  );
 
-  const { data: profiles } = await supabase
-    .from('user_profiles')
-    .select(`
-      profile_id,
-      profile_code,
-      full_name,
-      full_name_ta
-    `)
-    .in('profile_id', ids);
 
-const history = (data || []).map(item => {
-
-  const fromProfile = profiles?.find(
-    p => String(p.profile_id) === String(item.from_profile_id)
-  );
-
-  const toProfile = profiles?.find(
-    p => String(p.profile_id) === String(item.to_profile_id)
-  );
-
-  return {
-
-    ...item,
-
-    from_profile: fromProfile || {},
-
-    to_profile: toProfile || {}
-
-  };
-
-});
-this.selectedHistory = history.map(x => ({
-
-  ...x,
-
-  to_profile:
-    profiles?.find(
-      p =>
-        String(p.profile_id) ===
-        String(x.to_profile_id)
+this.selectedHistory =
+  (data || [])
+    .filter(item =>
+      item.from_profile_id === user.profile_id
     )
+    .map(item => {
 
-}));
+      const matchedProfile =
+        profiles?.find(
+          p => p.profile_id === item.to_profile_id
+        );
+
+      return {
+
+        ...item,
+
+        to_profile: matchedProfile || null
+
+      };
+
+    });
 
 this.usersWhoLiked =
-  history
-    .filter(
-      x =>
-        String(x.to_profile_id) ===
-        String(user.profile_id)
+  (data || [])
+    .filter(item =>
+      item.to_profile_id === user.profile_id
     )
-    .map(x => ({
+    .map(item => {
 
-      ...x,
-
-      from_profile:
+      const matchedProfile =
         profiles?.find(
-          p =>
-            String(p.profile_id) ===
-            String(x.from_profile_id)
-        )
+          p => p.profile_id === item.from_profile_id
+        );
 
-    }));
+      return {
+
+        ...item,
+
+        from_profile: matchedProfile || null
+
+      };
+
+    });
+this.selectedHistory = [...this.selectedHistory];
+
+this.usersWhoLiked = [...this.usersWhoLiked];
+
+this.cdr.detectChanges();
+
 }
 trackByLike(
   index: number,
