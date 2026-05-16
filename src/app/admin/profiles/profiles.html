@@ -1,0 +1,122 @@
+<section class="content-section">
+  <div class="section-header">
+    <div>
+    <h2>{{ txt('title') }}</h2>
+<p>{{ txt('subtitle') }}</p>
+    </div>
+
+    <button class="refresh-btn" type="button" (click)="refresh()">
+      {{ txt('refresh') }}
+    </button>
+  </div>
+
+  <div class="filter-row">
+    <button
+      *ngFor="let status of statuses"
+      type="button"
+      class="filter-btn"
+      [class.active]="statusFilter === status"
+      (click)="statusFilter = status; resetPage()">
+      {{ statusText(status) }}
+    </button>
+  </div>
+
+  <div class="search-card">
+    <input
+      type="text"
+[placeholder]="txt('search')"
+  [(ngModel)]="searchTerm"
+(ngModelChange)="resetPage()">
+  </div>
+
+  <p *ngIf="isLoading">{{ txt('loading') }}</p>
+
+  <div class="panel-card" *ngIf="!isLoading">
+    <div class="table-wrap">
+      <table>
+        <thead>
+       <tr>
+  <th>{{ txt('profileCode') }}</th>
+  <th>{{ txt('name') }}</th>
+  <th>{{ txt('age') }}</th>
+  <th>{{ txt('gender') }}</th>
+  <th>{{ txt('city') }}</th>
+  <th>{{ txt('maritalStatus') }}</th>
+  <th>{{ txt('status') }}</th>
+  <th>{{ txt('joined') }}</th>
+  <th>{{ txt('actions') }}</th>
+</tr>
+        </thead>
+
+        <tbody>
+       <tr
+ *ngFor="let profile of paginatedProfiles"
+  class="clickable-row"
+  [routerLink]="['/admin/profile', profile.profile_id]">
+            <td>{{ profile.profile_code }}</td>
+           <td>
+  {{ currentLang === 'ta' ? (profile.full_name_ta || profile.full_name) : profile.full_name }}
+</td>
+            <td>{{ calculateAge(profile.dob) }}</td>
+           <td>{{ genderText(profile.gender_text) }}</td>
+
+<td>{{ cityText(profile.city_text) }}</td>
+
+<td>{{ maritalText(profile.marital_status_text) }}</td>
+
+            <td>
+              <span
+                class="status"
+                [class.approved]="profile.profile_status === 'Approved'"
+                [class.pending]="!profile.profile_status || profile.profile_status === 'Pending'"
+                [class.rejected]="profile.profile_status === 'Rejected'"
+                [class.blocked]="profile.profile_status === 'Blocked'"
+                [class.review]="profile.profile_status === 'Under Review'">
+              {{ statusText(profile.profile_status || 'Pending') }}
+              </span>
+            </td>
+
+           <td>{{ dateText(profile.created_at) }}</td>
+
+            <td>
+              <div class="action-group">
+                <button class="approve-btn" type="button" (click)="updateStatus(profile, 'Approved')">
+                  {{ txt('approve') }}
+                </button>
+
+                <button class="review-btn" type="button" (click)="updateStatus(profile, 'Under Review')">
+                  {{ txt('review') }}
+                </button>
+
+                <button class="reject-btn" type="button" (click)="updateStatus(profile, 'Rejected')">
+                 {{ txt('reject') }}
+                </button>
+
+                <button class="block-btn" type="button" (click)="updateStatus(profile, 'Blocked')">
+                  {{ txt('block') }}
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredProfiles.length === 0">
+            <td colspan="9" class="empty-row">
+             {{ txt('noProfiles') }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination" *ngIf="filteredProfiles.length > 5">
+  <button type="button" (click)="prevPage()" [disabled]="currentPage === 1">
+  {{ txt('previous') }}
+  </button>
+
+  <span>{{ txt('page') }} {{ currentPage }} {{ txt('of') }} {{ totalPages }}</span>
+
+  <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+   {{ txt('next') }}
+  </button>
+</div>
+    </div>
+  </div>
+</section>

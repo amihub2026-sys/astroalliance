@@ -1,0 +1,250 @@
+<section class="content-section">
+
+  <div class="section-header">
+
+    <div>
+
+      <h2>
+        {{ txt('Manage Plans', 'திட்டங்களை நிர்வகிக்கவும்') }}
+      </h2>
+
+      <p>
+        {{
+          txt(
+            'View and control matrimony subscription plans',
+            'மேட்ரிமோனி சந்தா திட்டங்களை நிர்வகிக்கவும்'
+          )
+        }}
+      </p>
+
+    </div>
+
+    <button
+      class="add-btn"
+      type="button"
+      (click)="openAddPlan()">
+
+      {{ txt('Add Plan', 'திட்டத்தை சேர்க்கவும்') }}
+
+    </button>
+
+  </div>
+
+  <p *ngIf="isLoading" class="loading-text">
+    {{ txt('Loading plans...', 'திட்டங்கள் ஏற்றப்படுகிறது...') }}
+  </p>
+
+  <div
+    class="plans-grid"
+    *ngIf="!isLoading">
+
+    <div
+      class="plan-card"
+      *ngFor="let plan of plans">
+
+      <!-- TOP -->
+
+      <div class="plan-top">
+
+        <div>
+
+          <h3 class="plan-title">
+            {{ plan.plan_name }}
+          </h3>
+
+          <p class="plan-code">
+            {{ plan.plan_code }}
+          </p>
+
+        </div>
+
+        <div class="top-right">
+
+          <span
+            class="status"
+            [class.active]="plan.is_active"
+            [class.inactive]="!plan.is_active">
+
+            {{
+              plan.is_active
+                ? txt('Active', 'செயலில்')
+                : txt('Inactive', 'செயலற்றது')
+            }}
+
+          </span>
+
+          <button
+            class="edit-btn"
+            type="button"
+            (click)="editPlan(plan)">
+
+            {{ txt('Edit', 'திருத்து') }}
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- PRICE -->
+
+      <div class="price-section">
+
+        <span class="currency">₹</span>
+
+        <span class="amount">
+          {{ plan.price }}
+        </span>
+
+      </div>
+
+      <!-- FEATURES -->
+
+      <div class="features-box">
+
+        <div class="feature-row">
+
+          <span>
+            {{ txt('Duration', 'கால அளவு') }}
+          </span>
+
+          <strong>
+            {{ plan.duration_months }}
+            {{ txt('Months', 'மாதங்கள்') }}
+          </strong>
+
+        </div>
+
+        <div class="feature-row">
+
+          <span>
+            {{ txt('Contact Limit', 'தொடர்பு வரம்பு') }}
+          </span>
+
+          <strong>
+            {{ plan.contact_limit }}
+          </strong>
+
+        </div>
+
+        <div class="feature-row">
+
+          <span>
+            {{ txt('Profile Views', 'சுயவிவர பார்வைகள்') }}
+          </span>
+
+          <strong>
+            {{ plan.profile_view_limit }}
+          </strong>
+
+        </div>
+
+      </div>
+
+      <!-- BUTTONS -->
+
+      <div class="card-actions">
+
+        <button
+          class="toggle-btn"
+          type="button"
+          (click)="togglePlan(plan)">
+
+          {{
+            plan.is_active
+              ? txt('Disable Plan', 'திட்டத்தை முடக்கு')
+              : txt('Enable Plan', 'திட்டத்தை இயக்கு')
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- MODAL -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showPlanModal"
+  (click)="showPlanModal = false">
+
+  <div
+    class="plan-modal"
+    (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+
+      <h2>
+
+        {{
+          editingPlan
+            ? txt('Edit Plan', 'திட்டத்தை திருத்து')
+            : txt('Add Plan', 'திட்டத்தை சேர்')
+        }}
+
+      </h2>
+
+    </div>
+
+    <div class="form-grid">
+
+      <input
+        [(ngModel)]="planForm.plan_name"
+        [placeholder]="txt('Plan Name', 'திட்ட பெயர்')" />
+
+      <input
+        [(ngModel)]="planForm.price"
+        type="number"
+        [placeholder]="txt('Price', 'விலை')" />
+
+      <input
+        [(ngModel)]="planForm.duration_months"
+        type="number"
+        [placeholder]="txt('Duration Months', 'கால அளவு மாதங்கள்')" />
+
+      <input
+        [(ngModel)]="planForm.contact_limit"
+        type="number"
+        [placeholder]="txt('Contact Limit', 'தொடர்பு வரம்பு')" />
+
+      <input
+        [(ngModel)]="planForm.profile_view_limit"
+        type="number"
+        [placeholder]="txt('Profile View Limit', 'சுயவிவர பார்வை வரம்பு')" />
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button
+        class="save-btn"
+        type="button"
+        (click)="savePlan()">
+
+        {{
+          editingPlan
+            ? txt('Update Plan', 'திட்டத்தை புதுப்பிக்கவும்')
+            : txt('Save Plan', 'திட்டத்தை சேமிக்கவும்')
+        }}
+
+      </button>
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="showPlanModal = false">
+
+        {{ txt('Cancel', 'ரத்து') }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

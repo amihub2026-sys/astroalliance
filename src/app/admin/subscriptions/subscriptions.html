@@ -1,0 +1,191 @@
+<section class="content-section">
+
+  <div class="section-header">
+    <div>
+     <h2>
+  {{ txt('Subscriptions', 'சந்தாக்கள்') }}
+</h2>
+      <p>
+  {{
+    txt(
+      'Track active and expired user subscriptions',
+      'செயலில் உள்ள மற்றும் காலாவதியான சந்தாக்கள்'
+    )
+  }}
+</p>
+    </div>
+
+    <button class="refresh-btn" type="button" (click)="refresh()">
+    {{ txt('Refresh', 'புதுப்பிக்கவும்') }}
+    </button>
+  </div>
+
+  <div class="search-card">
+    <input
+      type="text"
+      placeholder="Search by user id, plan name, plan code..."
+      [(ngModel)]="searchTerm">
+  </div>
+
+  <p *ngIf="isLoading">Loading subscriptions...</p>
+
+  <div class="panel-card" *ngIf="!isLoading">
+    <div class="table-wrap">
+      <table>
+<thead>
+
+  <tr>
+
+    <th>{{ txt('User ID', 'பயனர் ID') }}</th>
+
+    <th>{{ txt('Plan', 'திட்டம்') }}</th>
+
+    <th>{{ txt('Plan Code', 'திட்ட குறியீடு') }}</th>
+
+    <th>{{ txt('Price', 'விலை') }}</th>
+
+    <th>{{ txt('Duration', 'கால அளவு') }}</th>
+
+    <th>{{ txt('Start Date', 'தொடக்க தேதி') }}</th>
+
+    <th>{{ txt('End Date', 'முடிவு தேதி') }}</th>
+
+    <th>{{ txt('Contacts Used', 'பயன்படுத்திய தொடர்புகள்') }}</th>
+
+    <th>{{ txt('Total Contacts', 'மொத்த தொடர்புகள்') }}</th>
+
+    <th>{{ txt('Profile Views', 'சுயவிவர பார்வைகள்') }}</th>
+
+    <th>{{ txt('Status', 'நிலை') }}</th>
+
+    <th>{{ txt('Action', 'செயல்') }}</th>
+
+  </tr>
+
+</thead>
+
+        <tbody>
+<tr *ngFor="let item of paginatedSubscriptions">
+
+  <td>
+    {{ item.user_id }}
+  </td>
+
+  <td>
+    {{ item.mst_plans?.plan_name || '-' }}
+  </td>
+
+  <td>
+    {{ item.mst_plans?.plan_code || '-' }}
+  </td>
+
+  <td>
+    ₹{{ item.mst_plans?.price || 0 }}
+  </td>
+
+  <td>
+    {{ item.mst_plans?.duration_months || 0 }}
+  {{ txt('Months', 'மாதங்கள்') }}
+  </td>
+
+  <td>
+    {{ item.start_date | date:'mediumDate' }}
+  </td>
+
+  <td>
+    {{ item.end_date | date:'mediumDate' }}
+  </td>
+
+  <td>
+    {{ item.contacts_used || 0 }}
+  </td>
+
+  <td>
+    {{ item.total_contacts_allowed || 0 }}
+  </td>
+
+  <td>
+    {{ item.mst_plans?.profile_view_limit || 0 }}
+  </td>
+
+  <td>
+
+    <span
+      class="status"
+      [class.active]="item.is_active"
+      [class.expired]="!item.is_active">
+
+   {{
+  item.is_active
+    ? txt('Active', 'செயலில்')
+    : txt('Expired', 'காலாவதியானது')
+}}
+
+    </span>
+
+  </td>
+
+  <td>
+
+    <button
+      class="action-btn"
+      type="button"
+      (mousedown)="toggleSubscription(item)">
+
+     {{
+  item.is_active
+    ? txt('Deactivate', 'முடக்கு')
+    : txt('Activate', 'இயக்கு')
+}}
+
+    </button>
+
+  </td>
+
+</tr>
+
+          <tr *ngIf="filteredSubscriptions.length === 0">
+          <td colspan="12" class="empty-row">
+              No subscriptions found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+  class="pagination"
+  *ngIf="filteredSubscriptions.length > itemsPerPage">
+
+  <button
+    type="button"
+    (mousedown)="prevPage()"
+    [disabled]="currentPage === 1">
+
+   {{ txt('Previous', 'முந்தைய') }}
+
+  </button>
+
+  <span>
+
+   {{ txt('Page', 'பக்கம்') }}
+{{ currentPage }}
+
+{{ txt('of', 'இல்') }}
+
+{{ totalPages }}
+
+  </span>
+
+  <button
+    type="button"
+    (mousedown)="nextPage()"
+    [disabled]="currentPage === totalPages">
+
+    {{ txt('Next', 'அடுத்து') }}
+
+  </button>
+
+</div>
+    </div>
+  </div>
+
+</section>

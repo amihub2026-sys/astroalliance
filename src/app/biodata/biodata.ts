@@ -26,6 +26,7 @@ isInvalid(field: string): boolean {
   return this.submitted && !!this.fieldErrors[field];
 }
   private currentUserId: string | null = null;
+  private isAdminCreated = false;
   private existingProfileImageUrl: string | null = null;
   private existingVideoUrl: string | null = null;
   private existingHoroscopeFileUrl: string | null = null;
@@ -865,6 +866,20 @@ async ngOnInit(): Promise<void> {
 
   (window as any).activeBiodataComponent = this;
 
+  const adminCreatedUserId =
+  localStorage.getItem(
+    'admin_created_user_id'
+  );
+
+if (adminCreatedUserId) {
+
+  this.currentUserId =
+    adminCreatedUserId;
+
+  this.isAdminCreated = true;
+
+}
+
   await this.loadReligions();
   await this.loadCastes();
   await this.loadCountries();
@@ -888,6 +903,9 @@ if (this.currentLang === 'ta') {
   }
 
   private async resolveCurrentUserId(): Promise<string | null> {
+    if (this.currentUserId) {
+  return this.currentUserId;
+}
     const loggedInUser = this.getStoredLoggedInUser();
 
     if (loggedInUser?.user_id) {
@@ -1581,7 +1599,6 @@ async onSubmit(): Promise<void> {
 
  const missingField = this.markRequiredErrors();
 
-console.log('REQUIRED ERRORS:', this.fieldErrors);
 
 if (missingField) {
   this.isSaving = false;
@@ -1919,8 +1936,7 @@ const { data: existingProfile, error: existingError } = await supabase
       }
 
   if (existingProfile) {
-  console.log('UPDATE STARTED FOR USER:', appUserId);
-  console.log('PAYLOAD:', payload);
+
 
   const { data: updatedData, error: updateError } = await supabase
     .from('user_profiles')
@@ -1928,8 +1944,7 @@ const { data: existingProfile, error: existingError } = await supabase
     .eq('user_id', appUserId)
     .select();
 
-  console.log('UPDATE RESULT:', updatedData);
-  console.log('UPDATE ERROR:', updateError);
+
 
   if (updateError) {
     this.snackbar.error(updateError.message);
@@ -1965,17 +1980,33 @@ const { data: existingProfile, error: existingError } = await supabase
         localStorage.setItem('app_user_phone', payload.mobile);
       }
 
-      const savedUser = this.getStoredLoggedInUser();
-      if (savedUser) {
-        savedUser.user_id = appUserId;
-        savedUser.full_name = payload.full_name;
-        savedUser.email = payload.email;
-        savedUser.phone_number = payload.mobile;
-        savedUser.dob = payload.dob;
-        localStorage.setItem('matrimony_user', JSON.stringify(savedUser));
-      }
+const savedUser = this.getStoredLoggedInUser();
 
-      this.snackbar.success(this.tr.alerts.biodataSubmitted);
+if (savedUser) {
+  savedUser.user_id = appUserId;
+  savedUser.full_name = payload.full_name;
+  savedUser.email = payload.email;
+  savedUser.phone_number = payload.mobile;
+  savedUser.dob = payload.dob;
+
+  localStorage.setItem(
+    'matrimony_user',
+    JSON.stringify(savedUser)
+  );
+}
+
+// ADMIN FLOW CLEANUP
+if (this.isAdminCreated) {
+
+  localStorage.removeItem(
+    'admin_created_user_id'
+  );
+
+}
+
+this.snackbar.success(
+  this.tr.alerts.biodataSubmitted
+);
     } catch (error: any) {
       console.error('Biodata save error:', error);
       this.snackbar.error(error?.message || 'Something went wrong while saving biodata');
@@ -2151,7 +2182,6 @@ async loadProfessionList() {
     return;
   }
 
-  console.log('PROFESSION LIST:', data);
 
   this.professionList = data || [];
   this.cdr.detectChanges();

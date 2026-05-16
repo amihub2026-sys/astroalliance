@@ -22,6 +22,7 @@ interface LangText {
 }
 
 interface ProfileItem {
+  profileId: string;
   id: string;
   userId: string;
   name: LangText;
@@ -488,11 +489,16 @@ await Promise.all([
   this.loadFilterTables()
 ]);
 
+ admin-page
+await this.loadLikedProfiles();
+await this.loadLikedMeProfiles();
+
 await this.loadProfilesFromSupabase();
 
 this.loadShortlistedByYouFromSupabase();
 this.loadShortlistedMeFromSupabase();
 this.loadLikedMeFromSupabase();
+ main
 
     this.cdr.detectChanges();
 
@@ -895,7 +901,7 @@ private async makeLangText(
   profile_status,
   updated_at
 `)
-  .eq('profile_status', 'published')
+ .eq('profile_status', 'Approved')
   .eq('is_published', true)
   .order('updated_at', { ascending: false });
 
@@ -922,7 +928,7 @@ if (
           const status = String(row.profile_status || '').toLowerCase().trim();
           if (status === 'draft') return false;
 
-          const usableId = row.profile_code || row.user_id || row.profile_id || '';
+          const usableId = row.profile_id || '';
           return !!usableId;
         })
 //         .map((row: any) => {
@@ -994,6 +1000,57 @@ if (
 this.profiles = filteredRows.map((row: any) => {
   const usableId = row.profile_code || row.user_id || row.profile_id || '';
 
+
+  admin-page
+return {
+  id: String(row.profile_code || '').trim(),
+  profileId: String(row.profile_id || '').trim(),
+  userId: String(row.user_id || '').trim(),
+      name: await this.makeLangText(row.full_name, row.full_name_ta),
+      age: Number(row.age || 0),
+religion: await this.makeLangText(
+  row.religion_text || '-',
+  this.getTamilProfileValue('religion', row.religion_text)
+),
+
+maritalStatus: await this.makeLangText(
+  row.marital_status_text || '-',
+  this.getTamilProfileValue('maritalStatus', row.marital_status_text)
+),
+
+caste: await this.makeLangText(
+  row.caste_text || '-',
+  this.casteMap[String(row.caste_text || '').trim().toLowerCase()] || row.caste_text
+),
+
+gender: await this.makeLangText(
+  row.gender_text || '-',
+  this.getTamilProfileValue('gender', row.gender_text)
+),
+
+location: await this.makeLangText(row.location_text, row.location_text),
+city: await this.makeLangText(row.city_text, row.city_text),
+state: await this.makeLangText(row.state_text, row.state_text),
+
+education: await this.makeLangText(
+  row.education_text || '-',
+  row.education_text_ta || this.getTamilProfileValue('education', row.education_text)
+),
+
+profession: await this.makeLangText(
+  row.occupation_text || '-',
+  row.occupation_text_ta || this.getTamilProfileValue('profession', row.occupation_text)
+),
+
+image: row.profile_image_url || 'assets/default-avatar.png',
+      liked: false,
+      latitude: this.toNullableNumber(row.latitude),
+      longitude: this.toNullableNumber(row.longitude),
+      distanceKm: null
+    } as ProfileItem;
+  })
+);
+=======
   return {
     id: String(usableId).trim(),
     userId: String(row.user_id || '').trim(),
@@ -1063,6 +1120,7 @@ this.profiles = filteredRows.map((row: any) => {
 
   } as ProfileItem;
 });
+ main
       this.profiles = this.profiles.map((profile) => ({
         ...profile,
         distanceKm: this.getDistanceForProfile(profile)
@@ -1211,12 +1269,13 @@ async loadShortlistedByYouFromSupabase(): Promise<void> {
 
   this.profiles = this.profiles.map(profile => ({
     ...profile,
-    liked: this.shortlistedByYouIds.includes(profile.userId)
+    liked: this.shortlistedByYouIds.includes(profile.id)
   }));
 
   this.cdr.detectChanges();
 }
-async loadLikedMeFromSupabase(): Promise<void> {
+async loadLikedMeProfiles(): Promise<void> {
+
   const userId = this.getLoggedInUserId();
 
   if (!userId) {
@@ -1225,36 +1284,36 @@ async loadLikedMeFromSupabase(): Promise<void> {
   }
 
   try {
+
     const { data: myProfile } = await supabase
       .from('user_profiles')
-      .select('user_id, profile_id, profile_code')
+      .select('profile_id')
       .eq('user_id', userId)
       .single();
 
-    const myIds = [
-      myProfile?.profile_code,
-      myProfile?.profile_id,
-      myProfile?.user_id
-    ].filter(Boolean).map(String);
+    if (!myProfile) return;
 
-    const { data } = await supabase
-      .from('matrimony_shortlists')
-      .select('user_id, profile_id')
-      .in('profile_id', myIds);
+    const myProfileId = String(myProfile.profile_id);
 
-    const likedUserIds = [
-      ...new Set(
-        (data || []).map((d: any) => String(d.user_id))
-      )
-    ];
+    const { data, error } = await supabase
+      .from('profile_likes')
+      .select('from_profile_id')
+      .eq('to_profile_id', myProfileId);
 
-    // 🔥 FIX HERE
-    this.likedMeProfiles = this.profiles.filter(p =>
-      likedUserIds.includes(p.userId)
+    if (error) throw error;
+
+    const likedMeIds = (data || []).map((x: any) =>
+      String(x.from_profile_id)
+    );
+
+    this.likedMeProfiles = this.profiles.filter(profile =>
+      likedMeIds.includes(profile.profileId)
     );
 
   } catch (err) {
+
     console.error(err);
+
   }
 }
 
@@ -1363,13 +1422,13 @@ get planStatus(): string {
   get filteredProfiles(): ProfileItem[] {
  if (this.sidebarFilter === 'shortlistedMe') {
   return this.profiles.filter(profile =>
-    this.shortlistedMeUserIds.includes(profile.userId)
-  );
+ this.shortlistedMeUserIds.includes(profile.profileId)
+);
 }
 
   if (this.sidebarFilter === 'liked') {
   return this.profiles.filter(profile =>
-    this.shortlistedByYouIds.includes(profile.userId) || profile.liked === true
+  this.shortlistedByYouIds.includes(profile.profileId) || profile.liked === true
   );
 }
     const result = this.profiles.filter((profile) => {
@@ -1444,11 +1503,11 @@ get planStatus(): string {
       if (this.sidebarFilter === 'all') return true;
 
     if (this.sidebarFilter === 'liked') {
-  return profile.liked === true || this.shortlistedByYouIds.includes(profile.userId);
+  return profile.liked === true || this.shortlistedByYouIds.includes(profile.id);
 }
 
     if (this.sidebarFilter === 'shortlistedMe') {
-  return this.shortlistedMeUserIds.includes(profile.userId);
+ return this.shortlistedMeUserIds.includes(profile.id);
 }
 
       if (this.sidebarFilter === 'viewedByYou' || this.sidebarFilter === 'viewed') {
@@ -1949,45 +2008,111 @@ if (!alreadyUnlocked) {
   }
 
 async likeProfile(profile: ProfileItem): Promise<void> {
+
   const userId = this.getLoggedInUserId();
 
   if (!userId) {
     this.snackbar.error('Please login first');
-    this.router.navigate(['/login']);
     return;
   }
 
-  const alreadyLiked = this.shortlistedByYouIds.includes(profile.userId);
+  try {
 
-  if (alreadyLiked) {
-    const { error } = await supabase
-      .from('matrimony_shortlists')
-      .delete()
+    // GET MY PROFILE
+    const { data: myProfile, error: myProfileError } = await supabase
+      .from('user_profiles')
+      .select('profile_id')
       .eq('user_id', userId)
-      .eq('profile_id', profile.userId);
+      .single();
 
-    if (error) {
-      this.snackbar.error('Error removing like');
-      return;
-    }
-  } else {
-    const { error } = await supabase
-      .from('matrimony_shortlists')
-      .insert({
-        user_id: userId,
-        profile_id: profile.userId
-      });
+    if (myProfileError) throw myProfileError;
 
-    if (error) {
-      this.snackbar.error('Error saving like');
-      return;
+    const myProfileId = String(myProfile.profile_id);
+
+    console.log('MY PROFILE ID:', myProfileId);
+    console.log('TARGET PROFILE ID:', profile.profileId);
+
+    // REMOVE LIKE
+    if (profile.liked) {
+
+      const { error } = await supabase
+        .from('profile_likes')
+        .delete()
+        .eq('from_profile_id', myProfileId)
+        .eq('to_profile_id', profile.profileId);
+
+      if (error) throw error;
+
+      profile.liked = false;
+
     }
+
+    // ADD LIKE
+    else {
+
+      const { error } = await supabase
+        .from('profile_likes')
+        .insert({
+          from_profile_id: myProfileId,
+          to_profile_id: profile.profileId
+        });
+
+      if (error) throw error;
+
+      profile.liked = true;
+
+    }
+
+    await this.loadLikedProfiles();
+    await this.loadLikedMeProfiles();
+
+    this.cdr.detectChanges();
+
+  } catch (err) {
+
+    console.error('LIKE ERROR:', err);
+
   }
+}
+async loadLikedProfiles(): Promise<void> {
 
-  // reload fresh data
-  await this.loadShortlistedByYouFromSupabase();
-  await this.loadShortlistedMeFromSupabase();
-  await this.loadLikedMeFromSupabase();
+  const userId = this.getLoggedInUserId();
+
+  if (!userId) return;
+
+  try {
+
+    const { data: myProfile } = await supabase
+      .from('user_profiles')
+      .select('profile_id')
+      .eq('user_id', userId)
+      .single();
+
+    if (!myProfile) return;
+
+    const myProfileId = String(myProfile.profile_id);
+
+    const { data, error } = await supabase
+      .from('profile_likes')
+      .select('to_profile_id')
+      .eq('from_profile_id', myProfileId);
+
+    if (error) throw error;
+
+    const likedIds = (data || []).map((x: any) =>
+      String(x.to_profile_id)
+    );
+
+    this.profiles = this.profiles.map(profile => ({
+      ...profile,
+     liked: likedIds.includes(profile.profileId)
+    }));
+
+  } catch (err) {
+
+    console.error(err);
+
+  }
 }
   async sendInterest(profile: ProfileItem): Promise<void> {
     const userId = this.getLoggedInUserId();

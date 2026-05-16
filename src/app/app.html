@@ -1,4 +1,4 @@
-<div class="app-shell">
+<div class="app_shell">
   <header class="navbar">
     <div class="logo-section">
      <a routerLink="/" class="logo" (click)="closeMenu()">
@@ -109,7 +109,9 @@
   </main>
 
   <!-- FOOTER (UNCHANGED) -->
-  <footer class="footer">
+  <footer
+  class="footer"
+  *ngIf="showFooter">
     <div class="footer-container">
      <div class="footer-col">
   <img
@@ -127,7 +129,7 @@
           <li><a routerLink="/profiles">{{ t.footer.profiles }}</a></li>
           <li><a routerLink="/plans">{{ t.footer.plans }}</a></li>
           <li><a routerLink="/terms">{{ t.footer.terms }}</a></li>
-
+   
           <li *ngIf="!isLoggedIn">
             <a routerLink="/login">{{ t.footer.login }}</a>
           </li>

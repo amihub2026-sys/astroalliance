@@ -1,336 +1,153 @@
 <div class="admin-layout">
-  <aside class="sidebar" [class.open]="sidebarOpen">
+<aside
+  class="sidebar"
+  [class.open]="sidebarOpen"
+  (click)="$event.stopPropagation()">
+
     <div class="brand">
       <h2>ASTRO ❤ ALLIANCE</h2>
       <p>Admin Panel</p>
     </div>
 
-    <nav class="nav-menu">
-      <button
-        class="nav-item"
-        [class.active]="activeSection === 'dashboard'"
-        (click)="setSection('dashboard')">
-        Dashboard
-      </button>
+<nav class="nav-menu">
 
-      <button
-        class="nav-item"
-        [class.active]="activeSection === 'profiles'"
-        (click)="setSection('profiles')">
-        Profiles
-      </button>
+<a
+  routerLink="/admin/dashboard"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Dashboard
+</a>
 
-      <button
-        class="nav-item"
-        [class.active]="activeSection === 'plans'"
-        (click)="setSection('plans')">
-        Plans
-      </button>
+<a
+  routerLink="/admin/profiles"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Profiles
+</a>
 
-      <button
-        class="nav-item"
-        [class.active]="activeSection === 'subscriptions'"
-        (click)="setSection('subscriptions')">
-        Subscriptions
-      </button>
+<a
+  routerLink="/admin/plans"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Plans
+</a>
 
-      <button
-        class="nav-item"
-        [class.active]="activeSection === 'payments'"
-        (click)="setSection('payments')">
-        Payments
-      </button>
+<a
+  routerLink="/admin/subscriptions"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  User Plans
+</a>
 
-      <button
-        class="nav-item"
-        [class.active]="activeSection === 'settings'"
-        (click)="setSection('settings')">
-        Settings
-      </button>
-    </nav>
+<!-- <a
+  routerLink="/admin/payments"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Payments
+</a>
+
+<a
+  routerLink="/admin/settings"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Settings
+</a> -->
+
+<a
+  routerLink="/admin/caste-list"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Caste List
+</a>
+
+<a
+  routerLink="/admin/cities"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Cities
+</a>
+
+<a
+  routerLink="/admin/profile-views"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Profile Views
+</a>
+
+<a
+  routerLink="/admin/interests"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="nav-item"
+  (click)="closeSidebar()">
+  Interests
+</a>
+<a
+  routerLink="/admin/shortlists"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Shortlists
+</a>
+
+<a
+  routerLink="/admin/likes-history"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Likes History
+</a>
+
+<a
+  routerLink="/admin/create-user"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  Create User
+</a>
+
+</nav>
+
   </aside>
+<div
+  class="mobile-overlay"
+  *ngIf="sidebarOpen"
+  (click)="sidebarOpen = false">
+</div>
+ <main
+  class="main-content">
 
-  <div class="main-content">
     <header class="topbar">
+
       <div class="topbar-left">
-        <button class="menu-btn" (click)="toggleSidebar()">☰</button>
+
+        <button
+          class="menu-btn"
+          type="button"
+          (click)="toggleSidebar($event)">
+          ☰
+        </button>
+
         <div>
           <h1>Admin Dashboard</h1>
           <p>Manage your matrimony website</p>
         </div>
+
       </div>
 
-      <div class="topbar-right">
-        <input
-          type="text"
-          placeholder="Search profiles, city, status..."
-          [(ngModel)]="searchTerm" />
-      </div>
     </header>
 
-    <section *ngIf="activeSection === 'dashboard'" class="content-section">
-      <div class="stats-grid">
-        <div class="stat-card pink">
-          <h3>Total Users</h3>
-          <h2>{{ stats.totalUsers }}</h2>
-        </div>
+    <router-outlet></router-outlet>
 
-        <div class="stat-card purple">
-          <h3>Total Profiles</h3>
-          <h2>{{ stats.totalProfiles }}</h2>
-        </div>
+  </main>
 
-        <div class="stat-card gold">
-          <h3>Premium Users</h3>
-          <h2>{{ stats.premiumUsers }}</h2>
-        </div>
-
-        <div class="stat-card green">
-          <h3>Active Subscriptions</h3>
-          <h2>{{ stats.activeSubscriptions }}</h2>
-        </div>
-
-        <div class="stat-card orange">
-          <h3>Pending Payments</h3>
-          <h2>{{ stats.pendingPayments }}</h2>
-        </div>
-
-        <div class="stat-card red">
-          <h3>Blocked Users</h3>
-          <h2>{{ stats.blockedUsers }}</h2>
-        </div>
-      </div>
-
-      <div class="dashboard-grid">
-        <div class="panel-card">
-          <div class="panel-head">
-            <h3>Recent Profiles</h3>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Profile ID</th>
-                  <th>Name</th>
-                  <th>City</th>
-                  <th>Plan</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let user of filteredUsers.slice(0, 5)">
-                  <td>{{ user.profileId }}</td>
-                  <td>{{ user.name }}</td>
-                  <td>{{ user.city }}</td>
-                  <td>{{ user.plan }}</td>
-                  <td>
-                    <span [class]="getStatusClass(user.status)">
-                      {{ user.status }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="panel-card">
-          <div class="panel-head">
-            <h3>Quick Actions</h3>
-          </div>
-
-          <div class="quick-actions">
-            <button (click)="setSection('profiles')">Manage Profiles</button>
-            <button (click)="setSection('plans')">Manage Plans</button>
-            <button (click)="setSection('subscriptions')">View Subscriptions</button>
-            <button (click)="setSection('payments')">View Payments</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section *ngIf="activeSection === 'profiles'" class="content-section">
-      <div class="section-header">
-        <h2>Manage Profiles</h2>
-        <p>Search, approve, block and delete profiles</p>
-      </div>
-
-      <div class="panel-card">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Profile ID</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>City</th>
-                <th>Plan</th>
-                <th>Status</th>
-                <th>Joined</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr *ngFor="let user of filteredUsers">
-                <td>{{ user.profileId }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.age }}</td>
-                <td>{{ user.gender }}</td>
-                <td>{{ user.city }}</td>
-                <td>{{ user.plan }}</td>
-                <td>
-                  <span [class]="getStatusClass(user.status)">
-                    {{ user.status }}
-                  </span>
-                </td>
-                <td>{{ user.joinedDate }}</td>
-                <td>
-                  <div class="action-group">
-                    <button class="approve-btn" (click)="approveUser(user.id)">Approve</button>
-                    <button class="block-btn" (click)="blockUser(user.id)">Block</button>
-                    <button class="delete-btn" (click)="deleteUser(user.id)">Delete</button>
-                  </div>
-                </td>
-              </tr>
-
-              <tr *ngIf="filteredUsers.length === 0">
-                <td colspan="9" class="empty-row">No profiles found</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section *ngIf="activeSection === 'plans'" class="content-section">
-      <div class="section-header">
-        <h2>Manage Plans</h2>
-        <p>Available matrimony subscription plans</p>
-      </div>
-
-      <div class="plans-grid">
-        <div class="plan-card" *ngFor="let plan of plans" [ngClass]="plan.colorClass">
-          <h3>{{ plan.name }}</h3>
-          <div class="price">₹{{ plan.price }}</div>
-          <p>Duration: {{ plan.duration }}</p>
-          <p>Contacts: {{ plan.contacts }}</p>
-          <button>Edit Plan</button>
-        </div>
-      </div>
-    </section>
-
-    <section *ngIf="activeSection === 'subscriptions'" class="content-section">
-      <div class="section-header">
-        <h2>Subscriptions</h2>
-        <p>Track active and expired subscriptions</p>
-      </div>
-
-      <div class="panel-card">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Profile ID</th>
-                <th>Plan</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of subscriptions">
-                <td>{{ item.user }}</td>
-                <td>{{ item.profileId }}</td>
-                <td>{{ item.plan }}</td>
-                <td>{{ item.startDate }}</td>
-                <td>{{ item.endDate }}</td>
-                <td>
-                  <span [class]="getStatusClass(item.status)">
-                    {{ item.status }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section *ngIf="activeSection === 'payments'" class="content-section">
-      <div class="section-header">
-        <h2>Payments</h2>
-        <p>Latest payment history</p>
-      </div>
-
-      <div class="panel-card">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Payment ID</th>
-                <th>User</th>
-                <th>Plan</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let payment of payments">
-                <td>{{ payment.id }}</td>
-                <td>{{ payment.user }}</td>
-                <td>{{ payment.plan }}</td>
-                <td>₹{{ payment.amount }}</td>
-                <td>{{ payment.date }}</td>
-                <td>
-                  <span [class]="getStatusClass(payment.status)">
-                    {{ payment.status }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section *ngIf="activeSection === 'settings'" class="content-section">
-      <div class="section-header">
-        <h2>Settings</h2>
-        <p>Admin website settings</p>
-      </div>
-
-      <div class="panel-card settings-card">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Site Name</label>
-            <input type="text" [(ngModel)]="settings.siteName" />
-          </div>
-
-          <div class="form-group">
-            <label>Support Email</label>
-            <input type="email" [(ngModel)]="settings.supportEmail" />
-          </div>
-
-          <div class="form-group">
-            <label>Support Phone</label>
-            <input type="text" [(ngModel)]="settings.supportPhone" />
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" [(ngModel)]="settings.maintenanceMode" />
-              Maintenance Mode
-            </label>
-          </div>
-        </div>
-
-        <button class="save-btn" (click)="saveSettings()">Save Settings</button>
-      </div>
-    </section>
-  </div>
 </div>

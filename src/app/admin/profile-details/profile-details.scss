@@ -1,0 +1,410 @@
+.details-page {
+  display: block;
+}
+
+.back-btn {
+  display: inline-flex;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #e91e63;
+  font-weight: 700;
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid #fce7f3;
+  box-shadow: 0 10px 30px rgba(233, 30, 99, 0.08);
+}
+
+.top-section {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.top-section img {
+  width: 140px;
+  height: 140px;
+  border-radius: 24px;
+  object-fit: cover;
+}
+
+.top-info h2 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.top-info p {
+  margin: 8px 0;
+  color: #64748b;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.info-card {
+  background: #fff1f6;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.info-card h3 {
+  margin-top: 0;
+  color: #be185d;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status.approved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status.rejected,
+.status.blocked {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status.review {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.action-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.action-group button {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.approve-btn {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.review-btn {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.reject-btn {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.block-btn {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+@media (max-width: 900px) {
+
+  .top-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+.pdf-btn {
+  background: linear-gradient(135deg, #111827, #374151);
+  color: #fff;
+}
+.pdf-biodata {
+  position: fixed;
+  left: -99999px;
+  top: 0;
+  width: 794px;
+  background: #fff;
+  color: #111;
+  padding: 35px;
+  font-family: Arial, sans-serif;
+}
+
+.pdf-header {
+  text-align: center;
+  background: linear-gradient(135deg, #7b1235, #d4af37);
+  color: #fff;
+  padding: 24px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+}
+
+.pdf-header h1 {
+  margin: 0;
+  font-size: 34px;
+}
+
+.pdf-biodata h2,
+.pdf-biodata .code {
+  text-align: center;
+}
+
+.pdf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.pdf-box {
+  background: #fff1f6;
+  border: 1px solid #ffd4e5;
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.pdf-box h3 {
+  color: #be185d;
+  margin-top: 0;
+}
+
+.pdf-box p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.pdf-footer {
+  margin-top: 25px;
+  text-align: center;
+  color: #7b1235;
+  font-weight: 800;
+}
+.horoscope-chart-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.chart-box {
+  background: #ffffff;
+  border: 2px solid #fbcfe8;
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+}
+
+.chart-box h4 {
+  margin: 0 0 10px;
+  color: #be185d;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.chart-image {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.chart-empty {
+  padding: 40px 8px;
+  color: #94a3b8;
+  font-size: 13px;
+  border: 1px dashed #f9a8d4;
+  border-radius: 10px;
+}
+.tamil-chart {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 80px);
+  overflow: hidden;
+  padding: 0;
+}
+
+.tamil-chart .cell {
+  border: 1px solid #f9a8d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #7b1235;
+  background: #fff;
+}
+
+.center-title {
+  background: linear-gradient(135deg, #7b1235, #d4af37);
+  color: white;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* ADMIN + PDF horoscope chart alignment fix */
+.horoscope-chart-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 16px;
+  align-items: start;
+}
+
+.tamil-chart {
+  width: 100%;
+  height: 180px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 60px);
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.tamil-chart .cell,
+.tamil-chart .center-title {
+  border: 1px solid #f9a8d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #7b1235;
+  background: #fff;
+  word-break: break-word;
+  overflow: hidden;
+}
+
+.tamil-chart .center-title {
+  background: linear-gradient(135deg, #7b1235, #d4af37);
+  color: #fff;
+  font-size: 12px;
+}
+
+/* PDF only smaller chart */
+.pdf-biodata .horoscope-chart-wrapper {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.pdf-biodata .tamil-chart {
+  height: 150px;
+  grid-template-rows: repeat(3, 50px);
+}
+
+.pdf-biodata .tamil-chart .cell,
+.pdf-biodata .tamil-chart .center-title {
+  font-size: 8px;
+  padding: 2px;
+}
+.tamil-chart {
+  width: 100%;
+  height: 150px !important;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 50px) !important;
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.tamil-chart .cell,
+.tamil-chart .center-title {
+  border: 1px solid #f9a8d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3px;
+  font-size: 10px !important;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #7b1235;
+  background: #fff;
+  overflow: hidden;
+}
+
+.tamil-chart .center-title {
+  background: linear-gradient(135deg, #7b1235, #d4af37);
+  color: #fff;
+}
+
+.pdf-biodata .tamil-chart {
+  height: 120px !important;
+  grid-template-rows: repeat(3, 40px) !important;
+}
+
+.pdf-biodata .tamil-chart .cell,
+.pdf-biodata .tamil-chart .center-title {
+  font-size: 7px !important;
+  padding: 2px;
+}
+.pdf-biodata {
+  width: 900px;
+  padding: 24px;
+}
+
+.pdf-header {
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.pdf-header h1 {
+  font-size: 26px;
+}
+
+.pdf-biodata h2 {
+  font-size: 22px;
+  margin: 8px 0;
+}
+
+.pdf-box {
+  padding: 12px;
+}
+
+.pdf-box h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.pdf-box p {
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 6px 0;
+}
+
+.pdf-grid {
+  gap: 12px;
+}
+
+.pdf-footer {
+  margin-top: 14px;
+  font-size: 14px;
+}

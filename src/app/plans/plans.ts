@@ -97,95 +97,7 @@ export class Plans implements OnInit {
     }
   };
 
-  plans = [
-    // {
-    //   name: { en: 'ASTRO ALLIANCE', ta: 'திருமகள் மேட்ரிமோனி' },
-    //   price: '₹999',
-    //   duration: { en: '/ 3 Months', ta: '/ 3 மாதங்கள்' },
-    //   validity: { en: 'Validity: 3 Months', ta: 'செல்லுபடியாகும் காலம்: 3 மாதங்கள்' },
-    //   popular: false,
-    //   features: {
-    //     en: [
-    //       'View up to 20 contacts',
-    //       'Basic profile visibility',
-    //       'Email support',
-    //       'Trusted matrimony access'
-    //     ],
-    //     ta: [
-    //       '20 தொடர்புகள் வரை பார்க்கலாம்',
-    //       'அடிப்படை சுயவிவர காட்சிப்படுத்தல்',
-    //       'மின்னஞ்சல் உதவி',
-    //       'நம்பகமான மேட்ரிமோனி அணுகல்'
-    //     ]
-    //   }
-    // },
-    {
-  code: 'TM_CLASSIC',
-  name: { en: 'TM Classic', ta: 'TM கிளாசிக்' },
-      price: '₹1999',
-      duration: { en: '/ 6 Months', ta: '/ 6 மாதங்கள்' },
-      validity: { en: 'Validity: 6 Months', ta: 'செல்லுபடியாகும் காலம்: 6 மாதங்கள்' },
-      popular: true,
-      features: {
-        en: [
-          'View up to 50 contacts',
-          'Premium visibility',
-          'Priority support',
-          'Better response reach'
-        ],
-        ta: [
-          '50 தொடர்புகள் வரை பார்க்கலாம்',
-          'பிரீமியம் காட்சிப்படுத்தல்',
-          'முன்னுரிமை உதவி',
-          'சிறந்த பதில் அடைவு'
-        ]
-      }
-    },
-   {
-  code: 'TM_PREMIUM',
-  name: { en: 'TM Premium', ta: 'TM பிரீமியம்' },
-      price: '₹2999',
-      duration: { en: '/ 9 Months', ta: '/ 9 மாதங்கள்' },
-      validity: { en: 'Validity: 9 Months', ta: 'செல்லுபடியாகும் காலம்: 9 மாதங்கள்' },
-      popular: false,
-      features: {
-        en: [
-          'View up to 80 contacts',
-          'Profile boost',
-          'Premium visibility',
-          'Priority support'
-        ],
-        ta: [
-          '80 தொடர்புகள் வரை பார்க்கலாம்',
-          'சுயவிவர மேம்பாடு',
-          'பிரீமியம் காட்சிப்படுத்தல்',
-          'முன்னுரிமை உதவி'
-        ]
-      }
-    },
-{
-  code: 'TM_ELITE',
-  name: { en: 'TM Elite', ta: 'TM எலீட்' },
-      price: '₹3999',
-      duration: { en: '/ 12 Months', ta: '/ 12 மாதங்கள்' },
-      validity: { en: 'Validity: 12 Months', ta: 'செல்லுபடியாகும் காலம்: 12 மாதங்கள்' },
-      popular: false,
-      features: {
-        en: [
-          'View up to 120 contacts',
-          'Profile boost',
-          'Premium visibility',
-          'Priority support'
-        ],
-        ta: [
-          '120 தொடர்புகள் வரை பார்க்கலாம்',
-          'சுயவிவர மேம்பாடு',
-          'பிரீமியம் காட்சிப்படுத்தல்',
-          'முன்னுரிமை உதவி'
-        ]
-      }
-    }
-  ];
+plans: any[] = [];
 
   constructor(private snackbar: SnackbarService) {
     this.route.queryParamMap.subscribe(params => {
@@ -258,6 +170,47 @@ export class Plans implements OnInit {
 
       const rows = Array.isArray(data) ? data : [];
       this.dbPlans = rows.filter((row: any) => row?.is_active === true);
+
+      this.plans = this.dbPlans.map((plan: any) => ({
+
+  code: plan.plan_code,
+
+  name: {
+    en: plan.plan_name,
+    ta: plan.plan_name
+  },
+
+  price: `₹${plan.price || 0}`,
+
+  duration: {
+    en: `/ ${plan.duration_months || 0} Months`,
+    ta: `/ ${plan.duration_months || 0} மாதங்கள்`
+  },
+
+  validity: {
+    en: `Validity: ${plan.duration_months || 0} Months`,
+    ta: `செல்லுபடியாகும் காலம்: ${plan.duration_months || 0} மாதங்கள்`
+  },
+
+  popular: plan.plan_code === 'TM_CLASSIC',
+
+  features: {
+    en: [
+      `View up to ${plan.contact_limit || 0} contacts`,
+      `Profile views ${plan.profile_view_limit || 0}`,
+      'Premium visibility',
+      'Priority support'
+    ],
+
+    ta: [
+      `${plan.contact_limit || 0} தொடர்புகள் வரை பார்க்கலாம்`,
+      `சுயவிவர பார்வைகள் ${plan.profile_view_limit || 0}`,
+      'பிரீமியம் காட்சிப்படுத்தல்',
+      'முன்னுரிமை உதவி'
+    ]
+  }
+
+}));
 
     } catch (error) {
       console.error('Load DB plans error:', error);

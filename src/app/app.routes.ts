@@ -28,7 +28,102 @@ export const routes: Routes = [
   { path: 'terms', component: Terms },
 { path: 'received-interests', component: ReceivedInterests },
 { path: 'sent-interests', component: SentInterests },
-  { path: 'admin', component: Admin},
+ {
+  path: 'admin',
+  loadComponent: () =>
+    import('./admin/admin').then(m => m.Admin),
+  children: [
+    {
+      path: '',
+      redirectTo: 'dashboard',
+      pathMatch: 'full'
+    },
+    {
+      path: 'dashboard',
+      loadComponent: () =>
+        import('./admin/dashboard/dashboard').then(m => m.Dashboard)
+    },
+    {
+      path: 'profiles',
+      loadComponent: () =>
+        import('./admin/profiles/profiles').then(m => m.Profiles)
+    },
+    {
+      path: 'plans',
+      loadComponent: () =>
+        import('./admin/plans/plans').then(m => m.Plans)
+    },
+    {
+      path: 'subscriptions',
+      loadComponent: () =>
+        import('./admin/subscriptions/subscriptions').then(m => m.Subscriptions)
+    },
+    {
+      path: 'payments',
+      loadComponent: () =>
+        import('./admin/payments/payments').then(m => m.Payments)
+    },
+    {
+      path: 'settings',
+      loadComponent: () =>
+        import('./admin/settings/settings').then(m => m.Settings)
+    },
+
+{
+  path: 'caste-list',
+  loadComponent: () =>
+    import('./admin/caste-list/caste-list').then(m => m.CasteList)
+},
+{
+  path: 'cities',
+  loadComponent: () =>
+    import('./admin/cities/cities')
+      .then(m => m.Cities)
+},
+{
+  path: 'profile-views',
+  loadComponent: () =>
+    import('./admin/profile-views/profile-views')
+      .then(m => m.ProfileViews)
+},
+
+{
+  path: 'interests',
+  loadComponent: () =>
+    import('./admin/interests/interests')
+      .then(m => m.Interests)
+},
+{
+  path: 'shortlists',
+  loadComponent: () =>
+    import('./admin/shortlists/shortlists')
+      .then(m => m.Shortlists)
+},
+{
+  path: 'likes-history',
+  loadComponent: () =>
+    import('./admin/likes-history/likes-history')
+      .then(m => m.LikesHistory)
+},
+
+{
+  path: 'create-user',
+  component: Register
+},
+
+{
+  path: 'create-biodata',
+  component: Biodata
+},
+
+    {
+  path: 'profile/:id',
+  loadComponent: () =>
+    import('./admin/profile-details/profile-details')
+      .then(m => m.ProfileDetails)
+},
+  ]
+},
 
   { path: '**', redirectTo: '' }
 ];
