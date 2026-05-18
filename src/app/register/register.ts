@@ -291,32 +291,27 @@ calculateAge() {
   this.age = calculatedAge;
 }
   async onRegister() {
-    if (
-      !this.firstName.trim() ||
-      // !this.lastName.trim() ||
-      // !this.email.trim() ||
-      !this.phone.trim() ||
-      !this.profileFor.trim() ||
-      !this.gender.trim() ||
-      !this.age ||
-      !this.dob ||
-      !this.religion.trim() ||
-      !this.location.trim() ||
-      !this.password.trim()
-    ) {
-      alert(this.tr.alerts.fillAll);
-      return;
-    }
-
+  if (
+  !this.firstName.trim() ||
+  !this.phone.trim() ||
+  !this.profileFor.trim() ||
+  !this.gender.trim() ||
+  !this.age ||
+  !this.dob ||
+  !this.religion.trim()
+) {
+  alert(this.tr.alerts.fillAll);
+  return;
+}
     if (!this.acceptedTerms) {
       alert(this.tr.alerts.acceptTerms);
       return;
     }
 
-    if (this.password.length < 6) {
-      alert(this.tr.alerts.passwordShort);
-      return;
-    }
+    // if (this.password.length < 6) {
+    //   alert(this.tr.alerts.passwordShort);
+    //   return;
+    // }
 
     if (this.age <= 0) {
       alert(this.tr.alerts.ageInvalid);
@@ -345,7 +340,7 @@ const fullName = this.getFullName();
      const { data: authData, error: authError } =
   await supabase.auth.signUp({
     email: generatedEmail,
-    password: this.password
+    password: 'Astro@123'
   });
 
       if (authError) {
