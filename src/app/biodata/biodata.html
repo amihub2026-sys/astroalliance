@@ -177,7 +177,7 @@
           </div>
 
         <!-- MARITAL STATUS -->
-<div class="field" [class.invalid]="isInvalid('maritalStatus')">
+<div class="field" [class.invalid]="isInvalid('mobile')">
   <label>{{ tr.labels.maritalStatus }} <span class="required">*</span></label>
   <select [(ngModel)]="formData.maritalStatus" name="maritalStatus">
     <option value="">{{ tr.labels.selectStatus }}</option>
@@ -191,7 +191,91 @@
   </select>
   <small class="field-error" *ngIf="isInvalid('maritalStatus')">Required</small>
 </div>
+<!-- CHILDREN STATUS -->
 
+<div
+  class="field"
+  *ngIf="
+    formData.maritalStatus === 'Divorced' ||
+    formData.maritalStatus === 'Widowed'
+  "
+>
+
+  <label>
+    {{ tr.labels.children }}
+  </label>
+
+  <select
+    [(ngModel)]="formData.childrenStatus"
+    name="childrenStatus"
+  >
+
+    <option value="No">No</option>
+    <option value="Yes">Yes</option>
+
+  </select>
+
+</div>
+
+<!-- CHILDREN COUNT -->
+
+<div
+  class="field"
+  *ngIf="formData.childrenStatus === 'Yes'"
+>
+
+  <label>
+    {{ tr.labels.childrenCount }}
+  </label>
+
+  <input
+    type="number"
+    [(ngModel)]="formData.childrenCount"
+    name="childrenCount"
+    min="1"
+  >
+
+</div>
+
+<!-- HANDICAP -->
+
+<div class="field">
+
+  <label>
+    {{ tr.labels.handicap }}
+  </label>
+
+  <select
+    [(ngModel)]="formData.handicapStatus"
+    name="handicapStatus"
+  >
+
+    <option value="No">No</option>
+    <option value="Yes">Yes</option>
+
+  </select>
+
+</div>
+
+<!-- HANDICAP DETAILS -->
+
+<div
+  class="field"
+  *ngIf="formData.handicapStatus === 'Yes'"
+>
+
+  <label>
+    {{ tr.labels.handicapDetails }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('handicapDetails')"
+    (ngModelChange)="onTamilInputChange('handicapDetails', $event)"
+    name="handicapDetails"
+  >
+
+</div>
 <!-- MOBILE -->
 <div class="field" [class.invalid]="isInvalid('mobile')">
   <label>{{ tr.labels.mobile }} <span class="required">*</span></label>
@@ -292,6 +376,23 @@
 
   <small class="field-error" *ngIf="isInvalid('caste')">Required</small>
 </div>
+
+<!-- SUB CASTE -->
+
+<div class="field">
+
+  <label>
+    {{ tr.labels.subCaste }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('subCaste')"
+    (ngModelChange)="onTamilInputChange('subCaste', $event)"
+    name="subCaste"
+  >
+
+</div>
         </div>
       </div>
 
@@ -351,16 +452,96 @@
           </div>
 
          <!-- SIBLINGS -->
-<div class="field" [class.invalid]="isInvalid('siblings')">
-  <label>{{ tr.labels.siblings }} <span class="required">*</span></label>
-  <input
-  type="text"
-  [ngModel]="getTypedValue('siblings')"
- (ngModelChange)="onTamilInputChange('siblings', $event)"
-  name="siblings"
-  [placeholder]="tr.placeholders.siblings">
+<!-- BROTHERS -->
 
-  <small class="field-error" *ngIf="isInvalid('siblings')">Required</small>
+<div class="field">
+
+  <label>
+    {{ tr.labels.brothers }}
+  </label>
+
+  <input
+    type="number"
+    [(ngModel)]="formData.brothersCount"
+    name="brothersCount"
+    min="0"
+  >
+
+</div>
+
+<!-- BROTHER MARITAL STATUS -->
+
+<div class="field">
+
+  <label>
+    Brother Marital Status
+  </label>
+
+  <select
+    [(ngModel)]="formData.brothersMaritalStatus"
+    name="brothersMaritalStatus"
+  >
+
+    <option value="">
+      Select Status
+    </option>
+
+    <option value="Married">
+      Married
+    </option>
+
+    <option value="Unmarried">
+      Unmarried
+    </option>
+
+  </select>
+
+</div>
+
+<!-- SISTERS -->
+
+<div class="field">
+
+  <label>
+    {{ tr.labels.sisters }}
+  </label>
+
+  <input
+    type="number"
+    [(ngModel)]="formData.sistersCount"
+    name="sistersCount"
+    min="0"
+  >
+
+</div>
+
+<!-- SISTER MARITAL STATUS -->
+
+<div class="field">
+
+  <label>
+    Sister Marital Status
+  </label>
+
+  <select
+    [(ngModel)]="formData.sistersMaritalStatus"
+    name="sistersMaritalStatus"
+  >
+
+    <option value="">
+      Select Status
+    </option>
+
+    <option value="Married">
+      Married
+    </option>
+
+    <option value="Unmarried">
+      Unmarried
+    </option>
+
+  </select>
+
 </div>
         </div>
       </div>

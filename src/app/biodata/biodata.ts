@@ -115,7 +115,15 @@ saving: 'Saving...',
 additionalMobile: 'Additional Phone Number',
 searchEducation: 'Search education',
 add: 'Add',
-required: 'Required'
+required: 'Required',subCaste: 'Sub Caste',
+brothers: 'Brothers',
+sisters: 'Sisters',
+
+handicap: 'Physically Challenged',
+handicapDetails: 'Handicap Details',
+
+children: 'Children',
+childrenCount: 'Children Count',
       },
       placeholders: {
         fullName: 'Enter full name',
@@ -254,7 +262,17 @@ saving: 'சேமிக்கப்படுகிறது...',
 additionalMobile: 'கூடுதல் தொலைபேசி எண்',
 searchEducation: 'கல்வியை தேடவும்',
 add: 'சேர்',
-required: 'தேவை'
+required: 'தேவை',
+subCaste: 'உட்பிரிவு',
+
+brothers: 'சகோதரர்கள்',
+sisters: 'சகோதரிகள்',
+
+handicap: 'உடல் ஊனம்',
+handicapDetails: 'ஊன விவரம்',
+
+children: 'குழந்தைகள்',
+childrenCount: 'குழந்தைகள் எண்ணிக்கை',
       },
       placeholders: {
         fullName: 'முழு பெயரை உள்ளிடவும்',
@@ -350,7 +368,18 @@ required: 'தேவை'
     birthTime: '',
     birthPlace: '',
     aboutMe: '',
-    partnerExpectation: ''
+    partnerExpectation: '',
+    subCaste: '',
+
+brothersCount: '',
+sistersCount: '',
+brothersMaritalStatus: '',
+sistersMaritalStatus: '',
+handicapStatus: 'No',
+handicapDetails: '',
+
+childrenStatus: 'No',
+childrenCount: '',
   };
 formDataTa = {
   fullName: '',
@@ -366,7 +395,9 @@ formDataTa = {
   address: '',
   birthPlace: '',
   aboutMe: '',
-  partnerExpectation: ''
+  partnerExpectation: '',
+  subCaste: '',
+handicapDetails: '',
 };
   horoscopeHints = [
     { no: 1, label: 'வியாழன்' },
@@ -986,6 +1017,38 @@ if (this.currentLang === 'ta') {
       this.formData.weight = data.weight_text || (data.weight_kg ? String(data.weight_kg) : '');
       this.formData.religion = data.religion_text || '';
       this.formData.caste = data.caste_text || '';
+      this.formData.subCaste =
+  data.sub_caste_text || '';
+
+this.formDataTa.subCaste =
+  data.sub_caste_text_ta || '';
+
+this.formData.brothersCount =
+  data.brothers_count || '';
+
+this.formData.sistersCount =
+  data.sisters_count || '';
+
+this.formData.brothersMaritalStatus =
+  data.brothers_marital_status || '';
+
+this.formData.sistersMaritalStatus =
+  data.sisters_marital_status || '';
+
+this.formData.handicapStatus =
+  data.handicap_status ? 'Yes' : 'No';
+
+this.formData.handicapDetails =
+  data.handicap_details || '';
+
+this.formDataTa.handicapDetails =
+  data.handicap_details_ta || '';
+
+this.formData.childrenStatus =
+  data.children_status ? 'Yes' : 'No';
+
+this.formData.childrenCount =
+  data.children_count || '';
       this.formData.fatherName = data.father_name || '';
       this.formData.motherName = data.mother_name || '';
       this.formData.fatherOccupation = data.father_occupation_text || data.father_occupation || '';
@@ -1539,7 +1602,7 @@ const v = (en: any, ta?: any) => {
     { key: 'fatherName', label: this.tr.labels.fatherName, value: v(this.formData.fatherName, this.formDataTa.fatherName) },
     { key: 'motherName', label: this.tr.labels.motherName, value: v(this.formData.motherName, this.formDataTa.motherName) },
     // { key: 'fatherOccupation', label: this.tr.labels.fatherOccupation, value: v(this.formData.fatherOccupation, this.formDataTa.fatherOccupation) },
-    { key: 'siblings', label: this.tr.labels.siblings, value: v(this.formData.siblings, this.formDataTa.siblings) },
+    // { key: 'siblings', label: this.tr.labels.siblings, value: v(this.formData.siblings, this.formDataTa.siblings) },
     { key: 'education', label: this.tr.labels.education, value: this.formData.education === 'Other' ? this.formData.otherEducation : this.formData.education },
     // { key: 'job', label: this.tr.labels.occupation, value: this.formData.job === 'Other' ? this.formData.otherProfession : this.formData.job },
     // { key: 'company', label: this.tr.labels.company, value: v(this.formData.company, this.formDataTa.company) },
@@ -1775,7 +1838,30 @@ console.log('SAVE CHECK:', {
 
 caste_id: null,
 caste_text: this.safeText(this.formData.caste),
+sub_caste_text: this.safeText(this.formData.subCaste),
+sub_caste_text_ta: this.safeText(this.formDataTa.subCaste),
 
+brothers_count: this.formData.brothersCount || 0,
+sisters_count: this.formData.sistersCount || 0,
+brothers_marital_status:
+  this.formData.brothersMaritalStatus,
+
+sisters_marital_status:
+  this.formData.sistersMaritalStatus,
+handicap_status:
+  this.formData.handicapStatus === 'Yes',
+
+handicap_details:
+  this.safeText(this.formData.handicapDetails),
+
+handicap_details_ta:
+  this.safeText(this.formDataTa.handicapDetails),
+
+children_status:
+  this.formData.childrenStatus === 'Yes',
+
+children_count:
+  this.formData.childrenCount || 0,
 father_name: this.safeText(this.formData.fatherName),
 
 mother_name: this.safeText(this.formData.motherName),
