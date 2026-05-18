@@ -1531,19 +1531,19 @@ const v = (en: any, ta?: any) => {
     { key: 'dob', label: this.tr.labels.dob, value: this.formData.dob },
     { key: 'maritalStatus', label: this.tr.labels.maritalStatus, value: this.formData.maritalStatus },
     { key: 'mobile', label: this.tr.labels.mobile, value: this.formData.mobile },
-    { key: 'email', label: this.tr.labels.email, value: this.formData.email },
-    { key: 'height', label: this.tr.labels.height, value: this.formData.height },
-    { key: 'weight', label: this.tr.labels.weight, value: this.formData.weight },
+    // { key: 'email', label: this.tr.labels.email, value: this.formData.email },
+    // { key: 'height', label: this.tr.labels.height, value: this.formData.height },
+    // { key: 'weight', label: this.tr.labels.weight, value: this.formData.weight },
     { key: 'religion', label: this.tr.labels.religion, value: this.selectedReligionId },
     { key: 'caste', label: this.tr.labels.caste, value: this.formData.caste },
     { key: 'fatherName', label: this.tr.labels.fatherName, value: v(this.formData.fatherName, this.formDataTa.fatherName) },
     { key: 'motherName', label: this.tr.labels.motherName, value: v(this.formData.motherName, this.formDataTa.motherName) },
-    { key: 'fatherOccupation', label: this.tr.labels.fatherOccupation, value: v(this.formData.fatherOccupation, this.formDataTa.fatherOccupation) },
+    // { key: 'fatherOccupation', label: this.tr.labels.fatherOccupation, value: v(this.formData.fatherOccupation, this.formDataTa.fatherOccupation) },
     { key: 'siblings', label: this.tr.labels.siblings, value: v(this.formData.siblings, this.formDataTa.siblings) },
     { key: 'education', label: this.tr.labels.education, value: this.formData.education === 'Other' ? this.formData.otherEducation : this.formData.education },
-    { key: 'job', label: this.tr.labels.occupation, value: this.formData.job === 'Other' ? this.formData.otherProfession : this.formData.job },
-    { key: 'company', label: this.tr.labels.company, value: v(this.formData.company, this.formDataTa.company) },
-    { key: 'salary', label: this.tr.labels.salary, value: v(this.formData.salary, this.formDataTa.salary) },
+    // { key: 'job', label: this.tr.labels.occupation, value: this.formData.job === 'Other' ? this.formData.otherProfession : this.formData.job },
+    // { key: 'company', label: this.tr.labels.company, value: v(this.formData.company, this.formDataTa.company) },
+    // { key: 'salary', label: this.tr.labels.salary, value: v(this.formData.salary, this.formDataTa.salary) },
     { key: 'address', label: this.tr.labels.address, value: v(this.formData.address, this.formDataTa.address) },
 {
   key: 'country',
@@ -1576,8 +1576,8 @@ const v = (en: any, ta?: any) => {
     { key: 'rasi', label: this.tr.labels.rasi, value: this.formData.rasi },
     { key: 'nakshatra', label: this.tr.labels.nakshatra, value: this.formData.nakshatra },
     { key: 'lagnam', label: this.tr.labels.lagnam, value: this.formData.lagnam },
-    { key: 'birthTime', label: this.tr.labels.birthTime, value: this.formData.birthTime },
-    { key: 'birthPlace', label: this.tr.labels.birthPlace, value: v(this.formData.birthPlace, this.formDataTa.birthPlace) }
+    // { key: 'birthTime', label: this.tr.labels.birthTime, value: this.formData.birthTime },
+    // { key: 'birthPlace', label: this.tr.labels.birthPlace, value: v(this.formData.birthPlace, this.formDataTa.birthPlace) }
   ];
 
   for (const field of requiredFields) {
