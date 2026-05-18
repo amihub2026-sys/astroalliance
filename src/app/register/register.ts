@@ -261,11 +261,40 @@ onTermsChange() {
 closeTermsPopup() {
   this.showTermsPopup = false;
 }
+calculateAge() {
+
+  if (!this.dob) {
+    this.age = null;
+    return;
+  }
+
+  const birthDate = new Date(this.dob);
+
+  const today = new Date();
+
+  let calculatedAge =
+    today.getFullYear() - birthDate.getFullYear();
+
+  const monthDifference =
+    today.getMonth() - birthDate.getMonth();
+
+  if (
+    monthDifference < 0 ||
+    (
+      monthDifference === 0 &&
+      today.getDate() < birthDate.getDate()
+    )
+  ) {
+    calculatedAge--;
+  }
+
+  this.age = calculatedAge;
+}
   async onRegister() {
     if (
       !this.firstName.trim() ||
-      !this.lastName.trim() ||
-      !this.email.trim() ||
+      // !this.lastName.trim() ||
+      // !this.email.trim() ||
       !this.phone.trim() ||
       !this.profileFor.trim() ||
       !this.gender.trim() ||
@@ -303,15 +332,21 @@ closeTermsPopup() {
 
     this.isLoading = true;
 
-    const cleanEmail = this.normalizeEmail(this.email);
-    const cleanPhone = this.normalizePhone(this.phone);
-    const fullName = this.getFullName();
+const cleanEmail = this.normalizeEmail(this.email);
 
+const cleanPhone = this.normalizePhone(this.phone);
+
+const generatedEmail =
+  cleanEmail ||
+  `${cleanPhone}@astroalliance.com`;
+
+const fullName = this.getFullName();
     try {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: cleanEmail,
-        password: this.password
-      });
+     const { data: authData, error: authError } =
+  await supabase.auth.signUp({
+    email: generatedEmail,
+    password: this.password
+  });
 
       if (authError) {
         throw authError;
@@ -330,7 +365,7 @@ closeTermsPopup() {
             auth_user_id: authUser.id,
             first_name: this.firstName.trim(),
             last_name: this.lastName.trim(),
-            email: cleanEmail,
+            email: cleanEmail || generatedEmail,
             phone_number: cleanPhone,
             preferred_language_id: null,
             is_phone_verified: false,
@@ -359,7 +394,7 @@ closeTermsPopup() {
             dob: this.dob,
             age: this.age,
             mobile: cleanPhone,
-            email: cleanEmail,
+           email: cleanEmail || generatedEmail,
             gender_text: this.gender.trim(),
             religion_text: this.religion.trim(),
             location_text: this.location.trim(),
@@ -380,7 +415,7 @@ closeTermsPopup() {
         JSON.stringify({
           user_id: appUser.user_id,
           full_name: fullName,
-          email: cleanEmail,
+         email: cleanEmail || generatedEmail,
           phone_number: cleanPhone,
           dob: this.dob,
           profile_image_url: ''
@@ -388,7 +423,10 @@ closeTermsPopup() {
       );
 
       localStorage.setItem('app_user_id', appUser.user_id);
-      localStorage.setItem('app_user_email', cleanEmail);
+      localStorage.setItem(
+  'app_user_email',
+  cleanEmail || generatedEmail
+);
       localStorage.setItem('app_user_phone', cleanPhone);
 
     alert(this.tr.alerts.registerSuccess);
