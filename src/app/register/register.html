@@ -37,6 +37,18 @@
                 name="firstName"
               />
             </div>
+             <div class="form-group">
+              <label>{{ tr.form.phone }}</label>
+              <input
+                type="text"
+                maxlength="10"
+                pattern="[0-9]{10}"
+                inputmode="numeric"
+                [placeholder]="tr.form.phonePlaceholder"
+                [(ngModel)]="phone"
+                name="phone"
+              />
+            </div>
 <!-- 
             <div class="form-group">
               <label>{{ tr.form.lastName }}</label>
@@ -64,20 +76,7 @@
   />
 </div>
 
-            <div class="form-group">
-              <label>{{ tr.form.phone }}</label>
-              <input
-                type="text"
-                maxlength="10"
-                pattern="[0-9]{10}"
-                inputmode="numeric"
-                [placeholder]="tr.form.phonePlaceholder"
-                [(ngModel)]="phone"
-                name="phone"
-              />
-            </div>
-          </div>
-<div class="form-group full-width">
+         <div class="form-group">
 
   <label>{{ tr.form.profileFor }}</label>
 
@@ -117,7 +116,9 @@
 
   </select>
 
-</div>
+</div>  
+          </div>
+
           <div class="form-row">
             <div class="form-group">
               <label>{{ tr.form.gender }}</label>
@@ -128,18 +129,15 @@
               </select>
             </div>
 
-         <div class="form-group">
-  <label>{{ tr.form.age }}</label>
-
-  <input
-    type="number"
-    [placeholder]="tr.form.agePlaceholder"
-    [(ngModel)]="age"
-    name="age"
-    readonly
-    class="readonly-age"
-  />
-</div>
+  <div class="form-group ">
+            <label>{{ tr.form.religion }}</label>
+            <select [(ngModel)]="religion" name="religion">
+              <option value="">{{ tr.form.religionPlaceholder }}</option>
+              <option [value]="tr.form.christian">{{ tr.form.christian }}</option>
+              <option [value]="tr.form.hindu">{{ tr.form.hindu }}</option>
+              <option [value]="tr.form.muslim">{{ tr.form.muslim }}</option>
+            </select>
+          </div>
           </div>
 
           <div class="form-row">
@@ -152,15 +150,19 @@
   (change)="calculateAge()"
 />
             </div>
- <div class="form-group ">
-            <label>{{ tr.form.religion }}</label>
-            <select [(ngModel)]="religion" name="religion">
-              <option value="">{{ tr.form.religionPlaceholder }}</option>
-              <option [value]="tr.form.christian">{{ tr.form.christian }}</option>
-              <option [value]="tr.form.hindu">{{ tr.form.hindu }}</option>
-              <option [value]="tr.form.muslim">{{ tr.form.muslim }}</option>
-            </select>
-          </div>
+
+               <div class="form-group">
+  <label>{{ tr.form.age }}</label>
+
+  <input
+    type="number"
+    [placeholder]="tr.form.agePlaceholder"
+    [(ngModel)]="age"
+    name="age"
+    readonly
+    class="readonly-age"
+  />
+</div>
             <!-- <div class="form-group">
               <label>{{ tr.form.password }}</label>
               <input
@@ -170,6 +172,7 @@
                 name="password"
               />
             </div> -->
+
           </div>
 
          
