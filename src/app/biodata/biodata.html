@@ -213,14 +213,14 @@
 </div>
           <!-- EMAIL -->
 <div class="field" [class.invalid]="isInvalid('email')">
-  <label>{{ tr.labels.email }} <span class="required">*</span></label>
+  <label>{{ tr.labels.email }} <span class="optional">(Optional)</span></label>
   <input type="email" [(ngModel)]="formData.email" name="email" [placeholder]="tr.placeholders.email">
-  <small class="field-error" *ngIf="isInvalid('email')">Required</small>
+  <!-- <small class="field-error" *ngIf="isInvalid('email')">Required</small> -->
 </div>
 
 <!-- HEIGHT -->
 <div class="field">
-  <label>{{ tr.labels.height }} <span class="required">*</span></label>
+  <label>{{ tr.labels.height }} <span class="optional">(Optional)</span></label>
 
   <input
     type="text"
@@ -232,7 +232,7 @@
 </div>
  <!-- WEIGHT -->
 <div class="field">
-  <label>{{ tr.labels.weight }} <span class="required">*</span></label>
+  <label>{{ tr.labels.weight }} <span class="optional">(Optional)</span></label>
 
   <input
     type="text"
@@ -328,7 +328,7 @@
 
        <!-- FATHER OCCUPATION -->
 <div class="field" [class.invalid]="isInvalid('fatherOccupation')">
-  <label>{{ tr.labels.fatherOccupation }} <span class="required">*</span></label>
+  <label>{{ tr.labels.fatherOccupation }} <span class="optional">(Optional)</span></label>
  <input
   type="text"
   [ngModel]="getTypedValue('fatherOccupation')"
@@ -336,7 +336,7 @@
   name="fatherOccupation"
   [placeholder]="tr.placeholders.fatherOccupation">
 
-  <small class="field-error" *ngIf="isInvalid('fatherOccupation')">Required</small>
+  <!-- <small class="field-error" *ngIf="isInvalid('fatherOccupation')">Required</small> -->
 </div>
 
 
@@ -411,7 +411,7 @@
 </div>
 <!-- JOB -->
 <div class="field" [class.invalid]="isInvalid('job')">
-  <label>{{ tr.labels.occupation }} <span class="required">*</span></label>
+  <label>{{ tr.labels.occupation }} <span class="optional">(Optional)</span></label>
 
   <select [(ngModel)]="formData.job" name="job">
 
@@ -446,14 +446,14 @@
       : 'Enter profession'"
   >
 
-  <small class="field-error" *ngIf="isInvalid('job')">
+  <!-- <small class="field-error" *ngIf="isInvalid('job')">
     Required
-  </small>
+  </small> -->
 </div>
 
         <!-- COMPANY -->
 <div class="field" [class.invalid]="isInvalid('company')">
-  <label>{{ tr.labels.company }} <span class="required">*</span></label>
+ <label>{{ tr.labels.company }} <span class="optional">(Optional)</span></label>
   <input
   type="text"
   [ngModel]="getTypedValue('company')"
@@ -461,7 +461,7 @@
   name="company"
   [placeholder]="tr.placeholders.company">
 
-  <small class="field-error" *ngIf="isInvalid('company')">Required</small>
+  <!-- <small class="field-error" *ngIf="isInvalid('company')">Required</small> -->
 </div>
 
          <!-- SALARY -->
@@ -706,7 +706,7 @@
 </div>
 
           <div class="field">
-            <label>{{ tr.labels.gothram }}</label>
+           <label>{{ tr.labels.gothram }} <span class="optional">(Optional)</span></label>
            <input
   type="text"
   [ngModel]="getTypedValue('gothram')"
@@ -729,16 +729,16 @@
 
          <!-- BIRTH TIME -->
 <div class="field" [class.invalid]="isInvalid('birthTime')">
-  <label>{{ tr.labels.birthTime }} <span class="required">*</span></label>
+  <label>{{ tr.labels.birthTime }} <span class="optional">(Optional)</span></label>
 
   <input type="time" [(ngModel)]="formData.birthTime" name="birthTime">
 
-  <small class="field-error" *ngIf="isInvalid('birthTime')">Required</small>
+  <!-- <small class="field-error" *ngIf="isInvalid('birthTime')">Required</small> -->
 </div>
 
          <!-- BIRTH PLACE -->
 <div class="field full-width" [class.invalid]="isInvalid('birthPlace')">
-  <label>{{ tr.labels.birthPlace }} <span class="required">*</span></label>
+ <label>{{ tr.labels.birthPlace }} <span class="optional">(Optional)</span></label>
 
 <input
   type="text"
@@ -747,7 +747,7 @@
   name="birthPlace"
   [placeholder]="tr.placeholders.birthPlace">
 
-  <small class="field-error" *ngIf="isInvalid('birthPlace')">Required</small>
+  <!-- <small class="field-error" *ngIf="isInvalid('birthPlace')">Required</small> -->
 </div>
         </div>
 
