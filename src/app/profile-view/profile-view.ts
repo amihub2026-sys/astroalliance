@@ -54,7 +54,11 @@ siblings: LangText;
   dhosham: LangText;
   birthTime: string;
   birthPlace: LangText;
-
+thisai: LangText;
+thisaiIruppu: LangText;
+paatham: LangText;
+sothukal: LangText;
+kuladeivam: LangText;
   about: LangText;
   partnerExpectation: LangText;
 
@@ -562,7 +566,30 @@ birthPlace: {
   en: row.birth_place || '',
   ta: row.birth_place_ta || row.birth_place || ''
 },
+thisai: {
+  en: row.thisai || '',
+  ta: row.thisai_ta || row.thisai || ''
+},
 
+thisaiIruppu: {
+  en: row.thisai_iruppu || '',
+  ta: row.thisai_iruppu_ta || row.thisai_iruppu || ''
+},
+
+paatham: {
+  en: row.paatham || '',
+  ta: row.paatham_ta || row.paatham || ''
+},
+
+sothukal: {
+  en: row.sothukal || '',
+  ta: row.sothukal_ta || row.sothukal || ''
+},
+
+kuladeivam: {
+  en: row.kuladeivam || '',
+  ta: row.kuladeivam_ta || row.kuladeivam || ''
+},
 about: {
   en: row.about_me || '',
   ta: row.about_me_ta || row.about_me || ''
