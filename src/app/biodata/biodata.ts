@@ -456,6 +456,8 @@ kuladeivam: '',
   horoscopePreviewUrl: string | null = null;
   casteList: any[] = [];
   religionList: any[] = [];
+  thisaiIruppuList: any[] = [];
+  thisaiList: any[] = [];
 allCastes: any[] = [];
 selectedReligionId = '';
 countryList: any[] = [];
@@ -956,6 +958,7 @@ if (adminCreatedUserId) {
 }
 
   await this.loadReligions();
+  await this.loadThisaiIruppu();
   await this.loadCastes();
   await this.loadCountries();
   await this.loadStates();
@@ -2181,7 +2184,27 @@ async loadReligions() {
   this.religionList = data || [];
 
 }
+async loadThisaiIruppu(): Promise<void> {
 
+  const { data, error } = await supabase
+    .from('mst_thisai_iruppu')
+    .select('*')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  if (error) {
+
+    console.error('THISAI IRUPPU ERROR', error);
+
+    return;
+
+  }
+
+  console.log('THISAI IRUPPU DATA', data);
+
+  this.thisaiIruppuList = data || [];
+this.cdr.detectChanges();
+}
 onReligionChange() {
 
   const selectedReligion = this.religionList.find(
