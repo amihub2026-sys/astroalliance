@@ -497,8 +497,12 @@
 <div class="field">
 
   <label>
-    Brother Marital Status
-  </label>
+  {{
+    currentLang === 'ta'
+      ? 'சகோதரர் திருமண நிலை'
+      : 'Brother Marital Status'
+  }}
+</label>
 
   <select
     [(ngModel)]="formData.brothersMaritalStatus"
@@ -506,16 +510,28 @@
   >
 
     <option value="">
-      Select Status
-    </option>
+  {{
+    currentLang === 'ta'
+      ? 'நிலையை தேர்வு செய்யவும்'
+      : 'Select Status'
+  }}
+</option>
 
-    <option value="Married">
-      Married
-    </option>
+   <option value="Married">
+  {{
+    currentLang === 'ta'
+      ? 'திருமணமானவர்'
+      : 'Married'
+  }}
+</option>
 
-    <option value="Unmarried">
-      Unmarried
-    </option>
+<option value="Unmarried">
+  {{
+    currentLang === 'ta'
+      ? 'திருமணம் ஆகாதவர்'
+      : 'Unmarried'
+  }}
+</option>
 
   </select>
 
@@ -543,8 +559,12 @@
 <div class="field">
 
   <label>
-    Sister Marital Status
-  </label>
+  {{
+    currentLang === 'ta'
+      ? 'சகோதரி திருமண நிலை'
+      : 'Sister Marital Status'
+  }}
+</label>
 
   <select
     [(ngModel)]="formData.sistersMaritalStatus"
@@ -552,16 +572,27 @@
   >
 
     <option value="">
-      Select Status
-    </option>
+  {{
+    currentLang === 'ta'
+      ? 'நிலையை தேர்வு செய்யவும்'
+      : 'Select Status'
+  }}
+</option>
+<option value="Married">
+  {{
+    currentLang === 'ta'
+      ? 'திருமணமானவர்'
+      : 'Married'
+  }}
+</option>
 
-    <option value="Married">
-      Married
-    </option>
-
-    <option value="Unmarried">
-      Unmarried
-    </option>
+<option value="Unmarried">
+  {{
+    currentLang === 'ta'
+      ? 'திருமணம் ஆகாதவர்'
+      : 'Unmarried'
+  }}
+</option>
 
   </select>
 
