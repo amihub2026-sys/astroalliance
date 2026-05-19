@@ -131,12 +131,25 @@
 
   <div class="form-group ">
             <label>{{ tr.form.religion }}</label>
-            <select [(ngModel)]="religion" name="religion">
-              <option value="">{{ tr.form.religionPlaceholder }}</option>
-              <option [value]="tr.form.christian">{{ tr.form.christian }}</option>
-              <option [value]="tr.form.hindu">{{ tr.form.hindu }}</option>
-              <option [value]="tr.form.muslim">{{ tr.form.muslim }}</option>
-            </select>
+         <select [(ngModel)]="religion" name="religion">
+
+  <option value="">
+    {{ tr.form.religionPlaceholder }}
+  </option>
+
+  <option
+    *ngFor="let religion of religionList"
+    [value]="religion.religion_name">
+
+    {{
+      currentLang === 'ta'
+        ? (religion.religion_name_ta || religion.religion_name)
+        : religion.religion_name
+    }}
+
+  </option>
+
+</select>
           </div>
           </div>
 

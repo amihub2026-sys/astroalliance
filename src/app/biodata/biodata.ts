@@ -2166,9 +2166,9 @@ async loadReligions() {
 
   const { data, error } = await supabase
     .from('mst_religions')
-    .select('*')
-    .eq('is_active', true)
-    .order('religion_name');
+ .select('*')
+.eq('is_active', true)
+.order('sort_order', { ascending: true });
 
   if (error) {
 
