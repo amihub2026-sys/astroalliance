@@ -107,7 +107,100 @@
   <h3>{{ currentLang === 'ta' ? 'பிறந்த இடம்' : 'Birth Place' }}</h3>
 <p>{{ showLangValue(profile.birth_place, profile.birth_place_ta) }}</p>
 </div>
+<!-- THISAI -->
 
+<div class="detail-box">
+  <h3>
+    {{ currentLang === 'ta'
+      ? 'திசை'
+      : 'Thisai'
+    }}
+  </h3>
+
+  <p>
+    {{
+      currentLang === 'ta'
+        ? (profile.thisai_ta || profile.thisai || '-')
+        : (profile.thisai || '-')
+    }}
+  </p>
+</div>
+
+<!-- THISAI IRUPPU -->
+
+<div class="detail-box">
+  <h3>
+    {{ currentLang === 'ta'
+      ? 'திசை இருப்பு'
+      : 'Thisai Iruppu'
+    }}
+  </h3>
+
+  <p>
+    {{
+      currentLang === 'ta'
+        ? (profile.thisai_iruppu_ta || profile.thisai_iruppu || '-')
+        : (profile.thisai_iruppu || '-')
+    }}
+  </p>
+</div>
+
+<!-- PAATHAM -->
+
+<div class="detail-box">
+  <h3>
+    {{ currentLang === 'ta'
+      ? 'பாதம்'
+      : 'Paatham'
+    }}
+  </h3>
+
+  <p>
+    {{
+      currentLang === 'ta'
+        ? (profile.paatham_ta || profile.paatham || '-')
+        : (profile.paatham || '-')
+    }}
+  </p>
+</div>
+
+<!-- SOTHUKAL -->
+
+<div class="detail-box">
+  <h3>
+    {{ currentLang === 'ta'
+      ? 'சொத்துகள்'
+      : 'Sothukal'
+    }}
+  </h3>
+
+  <p>
+    {{
+      currentLang === 'ta'
+        ? (profile.sothukal_ta || profile.sothukal || '-')
+        : (profile.sothukal || '-')
+    }}
+  </p>
+</div>
+
+<!-- KULADEIVAM -->
+
+<div class="detail-box">
+  <h3>
+    {{ currentLang === 'ta'
+      ? 'குலதெய்வம்'
+      : 'Kuladeivam'
+    }}
+  </h3>
+
+  <p>
+    {{
+      currentLang === 'ta'
+        ? (profile.kuladeivam_ta || profile.kuladeivam || '-')
+        : (profile.kuladeivam || '-')
+    }}
+  </p>
+</div>
   <div class="detail-box full">
     <h3>{{ currentLang === 'ta' ? 'என்னை பற்றி' : 'About Me' }}</h3>
 <p>{{ showLangValue(profile.about_me, profile.about_me_ta) }}</p>
