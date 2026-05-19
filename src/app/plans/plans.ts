@@ -1,4 +1,10 @@
-import { Component, inject, PLATFORM_ID, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  PLATFORM_ID,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { App } from '../app';
@@ -27,6 +33,7 @@ export class Plans implements OnInit {
   app = inject(App);
   route = inject(ActivatedRoute);
   router = inject(Router);
+  cdr = inject(ChangeDetectorRef);
   platformId = inject(PLATFORM_ID);
   isBrowser = isPlatformBrowser(this.platformId);
 
@@ -108,10 +115,17 @@ plans: any[] = [];
     });
   }
 
-  async ngOnInit(): Promise<void> {
-    await this.loadDbPlans();
-  }
+ async ngOnInit(): Promise<void> {
 
+  if (!this.isBrowser) return;
+
+  setTimeout(() => {
+
+    this.loadDbPlans();
+
+  }, 300);
+
+}
   get currentLang(): 'en' | 'ta' {
     return this.app.currentLang;
   }
@@ -148,7 +162,7 @@ plans: any[] = [];
 
   async loadDbPlans(): Promise<void> {
     this.isLoadingDbPlans = true;
-
+this.plans = [];
     try {
       const { data, error } = await supabase
         .from('mst_plans')
@@ -211,13 +225,17 @@ plans: any[] = [];
   }
 
 }));
-
+this.cdr.detectChanges();
     } catch (error) {
       console.error('Load DB plans error:', error);
       this.dbPlans = [];
-    } finally {
-      this.isLoadingDbPlans = false;
-    }
+} finally {
+
+  this.isLoadingDbPlans = false;
+
+  this.cdr.detectChanges();
+
+}
   }
 
   goBackToProfiles() {
