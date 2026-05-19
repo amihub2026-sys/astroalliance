@@ -1149,6 +1149,35 @@ this.formDataTa.gothram = data.gothram_ta || '';
           this.formData.dhosham = data.dhosham_text || '';
       this.formData.birthTime = data.birth_time || '';
       this.formData.birthPlace = data.birth_place || '';
+      this.formData.thisai =
+  data.thisai || '';
+
+this.formDataTa.thisai =
+  data.thisai_ta || '';
+
+this.formData.thisaiIruppu =
+  data.thisai_iruppu || '';
+
+this.formDataTa.thisaiIruppu =
+  data.thisai_iruppu_ta || '';
+
+this.formData.paatham =
+  data.paatham || '';
+
+this.formDataTa.paatham =
+  data.paatham_ta || '';
+
+this.formData.sothukal =
+  data.sothukal || '';
+
+this.formDataTa.sothukal =
+  data.sothukal_ta || '';
+
+this.formData.kuladeivam =
+  data.kuladeivam || '';
+
+this.formDataTa.kuladeivam =
+  data.kuladeivam_ta || '';
       this.formDataTa.fatherName = data.father_name_ta || '';
 this.formDataTa.motherName = data.mother_name_ta || '';
 this.formDataTa.fatherOccupation = data.father_occupation_ta || '';
@@ -2038,6 +2067,23 @@ gothram: this.safeText(
 
         birth_time: this.formData.birthTime || null,
 birth_place: this.safeText(this.formData.birthPlace),
+
+
+
+thisai: this.safeText(this.formData.thisai),
+thisai_ta: this.safeText(this.formDataTa.thisai),
+
+thisai_iruppu: this.safeText(this.formData.thisaiIruppu),
+thisai_iruppu_ta: this.safeText(this.formDataTa.thisaiIruppu),
+
+paatham: this.safeText(this.formData.paatham),
+paatham_ta: this.safeText(this.formDataTa.paatham),
+
+sothukal: this.safeText(this.formData.sothukal),
+sothukal_ta: this.safeText(this.formDataTa.sothukal),
+
+kuladeivam: this.safeText(this.formData.kuladeivam),
+kuladeivam_ta: this.safeText(this.formDataTa.kuladeivam),
 
 about_me: this.safeText(this.formData.aboutMe),
 

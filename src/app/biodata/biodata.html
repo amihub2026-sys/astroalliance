@@ -618,12 +618,11 @@
     }}
   </label>
 
-  <input
-    type="text"
-    [ngModel]="getTypedValue('kuladeivam')"
-    (ngModelChange)="onTamilInputChange('kuladeivam', $event)"
-    name="kuladeivam"
-  >
+ <input
+  type="text"
+  [(ngModel)]="formData.kuladeivam"
+  name="kuladeivam"
+>
 
 </div>
 
@@ -953,12 +952,11 @@
     }}
   </label>
 
-  <input
-    type="text"
-    [ngModel]="getTypedValue('paatham')"
-    (ngModelChange)="onTamilInputChange('paatham', $event)"
-    name="paatham"
-  >
+<input
+  type="text"
+  [(ngModel)]="formData.paatham"
+  name="paatham"
+>
 
 </div>
 
@@ -1092,12 +1090,11 @@
     }}
   </label>
 
-  <input
-    type="text"
-    [ngModel]="getTypedValue('sothukal')"
-    (ngModelChange)="onTamilInputChange('sothukal', $event)"
-    name="sothukal"
-  >
+<input
+  type="text"
+  [(ngModel)]="formData.sothukal"
+  name="sothukal"
+>
 
 </div>
 
