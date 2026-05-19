@@ -71,9 +71,76 @@
  <p>{{ showLangValue(profile.mother_occupation_text, profile.mother_occupation_ta) }}</p>
 </div>
 
+<!-- BROTHERS -->
+
 <div class="detail-box">
-  <h3>{{ currentLang === 'ta' ? 'உடன்பிறப்புகள்' : 'Siblings' }}</h3>
-<p>{{ showLangValue(profile.siblings_text, profile.siblings_ta) }}</p>
+
+  <h3>
+    {{
+      currentLang === 'ta'
+        ? 'சகோதரர்கள்'
+        : 'Brothers'
+    }}
+  </h3>
+
+  <p>
+    {{ profile.brothers_count || '0' }}
+  </p>
+
+</div>
+
+<!-- BROTHER MARITAL STATUS -->
+
+<div class="detail-box">
+
+  <h3>
+    {{
+      currentLang === 'ta'
+        ? 'சகோதரர் திருமண நிலை'
+        : 'Brother Marital Status'
+    }}
+  </h3>
+
+  <p>
+    {{ profile.brothers_marital_status || '-' }}
+  </p>
+
+</div>
+
+<!-- SISTERS -->
+
+<div class="detail-box">
+
+  <h3>
+    {{
+      currentLang === 'ta'
+        ? 'சகோதரிகள்'
+        : 'Sisters'
+    }}
+  </h3>
+
+  <p>
+    {{ profile.sisters_count || '0' }}
+  </p>
+
+</div>
+
+<!-- SISTER MARITAL STATUS -->
+
+<div class="detail-box">
+
+  <h3>
+    {{
+      currentLang === 'ta'
+        ? 'சகோதரி திருமண நிலை'
+        : 'Sister Marital Status'
+    }}
+  </h3>
+
+  <p>
+    {{ profile.sisters_marital_status || '-' }}
+  </p>
+
 </div>
 
   <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'கல்வி' : 'Education' }}</h3><p>{{ showTextValue(profile.education_text, profile.education_text_ta) }}</p></div>

@@ -304,6 +304,21 @@ gothram_ta: data?.gothram_ta || '',
       birth_time: data?.birth_time || '',
       birth_place: data?.birth_place || '',
 
+      thisai: data?.thisai || '',
+thisai_ta: data?.thisai_ta || '',
+
+thisai_iruppu: data?.thisai_iruppu || '',
+thisai_iruppu_ta: data?.thisai_iruppu_ta || '',
+
+paatham: data?.paatham || '',
+paatham_ta: data?.paatham_ta || '',
+
+sothukal: data?.sothukal || '',
+sothukal_ta: data?.sothukal_ta || '',
+
+kuladeivam: data?.kuladeivam || '',
+kuladeivam_ta: data?.kuladeivam_ta || '',
+
       about_me: data?.about_me || '',
 about_me_ta: data?.about_me_ta || '',
 
