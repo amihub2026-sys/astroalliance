@@ -357,22 +357,45 @@
    <div class="field" [class.invalid]="isInvalid('caste')">
   <label>{{ tr.labels.caste }} <span class="required">*</span></label>
 
-  <select [(ngModel)]="formData.caste" name="caste">
+<select [(ngModel)]="formData.caste" name="caste">
 
-   <option value="">
-  {{ currentLang === 'ta' ? 'ஜாதியை தேர்வு செய்யவும்' : 'Select Caste' }}
-</option>
+  <option value="">
+    {{ currentLang === 'ta'
+      ? 'ஜாதியை தேர்வு செய்யவும்'
+      : 'Select Caste'
+    }}
+  </option>
 
-    <option
-      *ngFor="let caste of casteList"
-      [value]="caste.caste_name">
-     {{ currentLang === 'ta'
-  ? (caste.caste_name_ta || caste.caste_name)
-  : caste.caste_name
-}}
-    </option>
+  <option
+    *ngFor="let caste of casteList"
+    [value]="caste.caste_name">
 
-  </select>
+    {{
+      currentLang === 'ta'
+        ? (caste.caste_name_ta || caste.caste_name)
+        : caste.caste_name
+    }}
+
+  </option>
+
+  <option value="Other">
+    {{ currentLang === 'ta'
+      ? 'மற்றவை'
+      : 'Other'
+    }}
+  </option>
+
+</select>
+
+<input
+  *ngIf="formData.caste === 'Other'"
+  type="text"
+  [(ngModel)]="formData.subCaste"
+  name="otherCaste"
+  [placeholder]="currentLang === 'ta'
+    ? 'ஜாதியை உள்ளிடவும்'
+    : 'Enter caste'"
+>
 
   <small class="field-error" *ngIf="isInvalid('caste')">Required</small>
 </div>
@@ -908,6 +931,106 @@
             </select>
           </div>
 
+<!-- KULADEIVAM -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'குலதெய்வம்'
+      : 'Kuladeivam'
+    }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('kuladeivam')"
+    (ngModelChange)="onTamilInputChange('kuladeivam', $event)"
+    name="kuladeivam"
+  >
+
+</div>
+
+<!-- THISAI -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'திசை'
+      : 'Thisai'
+    }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('thisai')"
+    (ngModelChange)="onTamilInputChange('thisai', $event)"
+    name="thisai"
+  >
+
+</div>
+
+<!-- THISAI IRUPPU -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'திசை இருப்பு'
+      : 'Thisai Iruppu'
+    }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('thisaiIruppu')"
+    (ngModelChange)="onTamilInputChange('thisaiIruppu', $event)"
+    name="thisaiIruppu"
+  >
+
+</div>
+
+<!-- PAATHAM -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'பாதம்'
+      : 'Paatham'
+    }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('paatham')"
+    (ngModelChange)="onTamilInputChange('paatham', $event)"
+    name="paatham"
+  >
+
+</div>
+
+<!-- SOTHUKAL -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'சொத்துகள்'
+      : 'Sothukal'
+    }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('sothukal')"
+    (ngModelChange)="onTamilInputChange('sothukal', $event)"
+    name="sothukal"
+  >
+
+</div>
+
          <!-- BIRTH TIME -->
 <div class="field" [class.invalid]="isInvalid('birthTime')">
   <label>{{ tr.labels.birthTime }} <span class="optional">(Optional)</span></label>
@@ -916,9 +1039,8 @@
 
   <!-- <small class="field-error" *ngIf="isInvalid('birthTime')">Required</small> -->
 </div>
-
          <!-- BIRTH PLACE -->
-<div class="field full-width" [class.invalid]="isInvalid('birthPlace')">
+<div class="field" [class.invalid]="isInvalid('birthPlace')">
  <label>{{ tr.labels.birthPlace }} <span class="optional">(Optional)</span></label>
 
 <input
@@ -930,6 +1052,7 @@
 
   <!-- <small class="field-error" *ngIf="isInvalid('birthPlace')">Required</small> -->
 </div>
+
         </div>
 
         <!-- HOROSCOPE CHART -->
