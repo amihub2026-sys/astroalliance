@@ -805,28 +805,60 @@ async prepareAutoTamilValues(): Promise<void> {
 
 this.formDataTa.gothram = await convert(this.formData.gothram, this.formDataTa.gothram);
 }
-  onChartInput(type: 'rasi' | 'amsam', index: number, event: Event): void {
-    const input = event.target as HTMLTextAreaElement | HTMLInputElement;
-    let value = (input.value || '').replace(/[^0-9]/g, '');
+onChartInput(
+  type: 'rasi' | 'amsam',
+  index: number,
+  event: Event
+): void {
 
-    if (value.length > 2) {
-      value = value.slice(0, 2);
-    }
+  const input =
+    event.target as HTMLInputElement;
 
-    if (value) {
-      const num = Number(value);
-      if (num < 1 || num > 12) {
-        value = '';
-      }
-    }
+  // get raw typed value
+  let rawValue = input.value;
 
-    if (type === 'rasi') {
-      this.rasiChart[index] = value;
-    } else {
-      this.amsamChart[index] = value;
-    }
+  // convert tamil back to numbers first
+  Object.entries(this.planetShortMap).forEach(([num, tamil]) => {
+
+    rawValue = rawValue.replaceAll(
+      tamil,
+      num
+    );
+
+  });
+
+  // allow only numbers and /
+ rawValue = rawValue.replace(/[^0-9\/]/g, '');
+
+  // split values
+ const numbers = rawValue
+  .split('/')
+  .map(v => v.trim());
+
+  // convert numbers → tamil
+  const converted = numbers.map(num => {
+
+    return this.planetShortMap[num] || num;
+
+  });
+
+  const finalValue =
+    converted.join('/');
+
+  // keep showing tamil text
+  input.value = finalValue;
+
+  if (type === 'rasi') {
+
+    this.rasiChart[index] = finalValue;
+
+  } else {
+
+    this.amsamChart[index] = finalValue;
+
   }
 
+}
   getPlanetShort(value: string | number | null | undefined): string {
     if (value === null || value === undefined) return '';
     return this.planetShortMap[String(value)] || '';
