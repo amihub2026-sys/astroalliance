@@ -268,8 +268,8 @@ subCaste: 'உட்பிரிவு',
 brothers: 'சகோதரர்கள்',
 sisters: 'சகோதரிகள்',
 
-handicap: 'உடல் ஊனம்',
-handicapDetails: 'ஊன விவரம்',
+handicap: 'மாற்றுத்திறனாளி',
+handicapDetails: 'விவரம்',
 
 children: 'குழந்தைகள்',
 childrenCount: 'குழந்தைகள் எண்ணிக்கை',
