@@ -597,6 +597,36 @@
   </select>
 
 </div>
+
+    <div class="field">
+           <label>{{ tr.labels.gothram }} <span class="optional">(Optional)</span></label>
+           <input
+  type="text"
+  [ngModel]="getTypedValue('gothram')"
+  (ngModelChange)="onTamilInputChange('gothram', $event)"
+  name="gothram"
+  [placeholder]="tr.placeholders.gothram">
+          </div>
+<!-- KULADEIVAM -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'குலதெய்வம்'
+      : 'Kuladeivam'
+    }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('kuladeivam')"
+    (ngModelChange)="onTamilInputChange('kuladeivam', $event)"
+    name="kuladeivam"
+  >
+
+</div>
+
         </div>
       </div>
 
@@ -892,21 +922,7 @@
         </div>
 
         <div class="form-grid">
-     <!-- RASI -->
-<div class="field" [class.invalid]="isInvalid('rasi')">
-  <label>{{ tr.labels.rasi }} <span class="required">*</span></label>
 
-  <select [(ngModel)]="formData.rasi" name="rasi">
-    <option value="">{{ tr.labels.selectRasi }}</option>
-   <option
-  *ngFor="let r of translations.en.options.rasiList"
-  [value]="r">
-  {{ getTamilValue('rasi', r) }}
-</option>
-  </select>
-
-  <small class="field-error" *ngIf="isInvalid('rasi')">Required</small>
-</div>
 
          <!-- NAKSHATRA -->
 <div class="field" [class.invalid]="isInvalid('nakshatra')">
@@ -924,103 +940,7 @@
   <small class="field-error" *ngIf="isInvalid('nakshatra')">Required</small>
 </div>
 
-       <!-- LAGNAM -->
-<div class="field" [class.invalid]="isInvalid('lagnam')">
-  <label>{{ tr.labels.lagnam }} <span class="required">*</span></label>
 
-  <select [(ngModel)]="formData.lagnam" name="lagnam">
-    <option value="">{{ tr.labels.selectLagnam }}</option>
-   <option
-  *ngFor="let l of translations.en.options.lagnamList"
-  [value]="l">
-  {{ getTamilValue('lagnam', l) }}
-</option>
-  </select>
-
-  <small class="field-error" *ngIf="isInvalid('lagnam')">Required</small>
-</div>
-
-          <div class="field">
-           <label>{{ tr.labels.gothram }} <span class="optional">(Optional)</span></label>
-           <input
-  type="text"
-  [ngModel]="getTypedValue('gothram')"
-  (ngModelChange)="onTamilInputChange('gothram', $event)"
-  name="gothram"
-  [placeholder]="tr.placeholders.gothram">
-          </div>
-
-          <div class="field">
-            <label>{{ tr.labels.dhosham }}</label>
-            <select [(ngModel)]="formData.dhosham" name="dhosham">
-              <option value="">{{ tr.labels.selectDhosham }}</option>
-              <option
-  *ngFor="let d of translations.en.options.dhoshamList"
-  [value]="d">
-  {{ getTamilValue('dhosham', d) }}
-</option>
-            </select>
-          </div>
-
-<!-- KULADEIVAM -->
-
-<div class="field">
-
-  <label>
-    {{ currentLang === 'ta'
-      ? 'குலதெய்வம்'
-      : 'Kuladeivam'
-    }}
-  </label>
-
-  <input
-    type="text"
-    [ngModel]="getTypedValue('kuladeivam')"
-    (ngModelChange)="onTamilInputChange('kuladeivam', $event)"
-    name="kuladeivam"
-  >
-
-</div>
-
-<!-- THISAI -->
-
-<div class="field">
-
-  <label>
-    {{ currentLang === 'ta'
-      ? 'திசை'
-      : 'Thisai'
-    }}
-  </label>
-
-  <input
-    type="text"
-    [ngModel]="getTypedValue('thisai')"
-    (ngModelChange)="onTamilInputChange('thisai', $event)"
-    name="thisai"
-  >
-
-</div>
-
-<!-- THISAI IRUPPU -->
-
-<div class="field">
-
-  <label>
-    {{ currentLang === 'ta'
-      ? 'திசை இருப்பு'
-      : 'Thisai Iruppu'
-    }}
-  </label>
-
-  <input
-    type="text"
-    [ngModel]="getTypedValue('thisaiIruppu')"
-    (ngModelChange)="onTamilInputChange('thisaiIruppu', $event)"
-    name="thisaiIruppu"
-  >
-
-</div>
 
 <!-- PAATHAM -->
 
@@ -1041,6 +961,125 @@
   >
 
 </div>
+
+     <!-- RASI -->
+<div class="field" [class.invalid]="isInvalid('rasi')">
+  <label>{{ tr.labels.rasi }} <span class="required">*</span></label>
+
+  <select [(ngModel)]="formData.rasi" name="rasi">
+    <option value="">{{ tr.labels.selectRasi }}</option>
+   <option
+  *ngFor="let r of translations.en.options.rasiList"
+  [value]="r">
+  {{ getTamilValue('rasi', r) }}
+</option>
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('rasi')">Required</small>
+</div>
+
+
+
+
+       <!-- LAGNAM -->
+<div class="field" [class.invalid]="isInvalid('lagnam')">
+  <label>{{ tr.labels.lagnam }} <span class="required">*</span></label>
+
+  <select [(ngModel)]="formData.lagnam" name="lagnam">
+    <option value="">{{ tr.labels.selectLagnam }}</option>
+   <option
+  *ngFor="let l of translations.en.options.lagnamList"
+  [value]="l">
+  {{ getTamilValue('lagnam', l) }}
+</option>
+  </select>
+
+  <small class="field-error" *ngIf="isInvalid('lagnam')">Required</small>
+</div>
+
+
+
+      
+
+          <div class="field">
+            <label>{{ tr.labels.dhosham }}</label>
+            <select [(ngModel)]="formData.dhosham" name="dhosham">
+              <option value="">{{ tr.labels.selectDhosham }}</option>
+              <option
+  *ngFor="let d of translations.en.options.dhoshamList"
+  [value]="d">
+  {{ getTamilValue('dhosham', d) }}
+</option>
+            </select>
+          </div>
+
+
+
+<!-- THISAI -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'திசை'
+      : 'Thisai'
+    }}
+  </label>
+
+<input
+  type="date"
+  [(ngModel)]="formData.thisai"
+  name="thisai"
+>
+
+</div>
+
+<!-- THISAI IRUPPU -->
+
+<!-- THISAI IRUPPU -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'திசை இருப்பு'
+      : 'Thisai Iruppu'
+    }}
+  </label>
+
+  <select
+    [(ngModel)]="formData.thisaiIruppu"
+    name="thisaiIruppu"
+  >
+
+  <option value="">
+  {{
+    currentLang === 'ta'
+      ? '-- தேர்வு செய்யவும் --'
+      : '-- Select --'
+  }}
+</option>
+
+ <option
+ *ngFor="let t of (thisaiIruppuList || [])"
+  [value]="t.thisai_iruppu_name"
+>
+
+  {{
+    currentLang === 'ta'
+      ? (
+          t.thisai_iruppu_name_ta ||
+          t.thisai_iruppu_name
+        )
+      : t.thisai_iruppu_name
+  }}
+
+</option>
+  </select>
+
+</div>
+
+
 
 <!-- SOTHUKAL -->
 
