@@ -15,7 +15,9 @@ import { supabase } from '../core/supabase.client';
 export class Register {
   app = inject(App);
 
-  constructor(private router: Router) {}
+constructor(private router: Router) {
+  this.loadReligions();
+}
 
   firstName = '';
   lastName = '';
@@ -26,6 +28,7 @@ export class Register {
   age: number | null = null;
   dob = '';
   religion = '';
+  religionList: any[] = [];
   location = '';
   acceptedTerms = false;
   password = '';
@@ -290,6 +293,20 @@ calculateAge() {
 
   this.age = calculatedAge;
 }
+async loadReligions(): Promise<void> {
+
+  const { data, error } = await supabase
+    .from('mst_religions')
+    .select('*')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  if (!error && data) {
+    this.religionList = data;
+  }
+
+}
+
   async onRegister() {
   if (
   !this.firstName.trim() ||
