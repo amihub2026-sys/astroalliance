@@ -632,8 +632,8 @@
     <h3>{{ currentLang === 'ta' ? 'ஜாதகம் பூட்டப்பட்டுள்ளது' : 'Horoscope Locked' }}</h3>
     <p>{{
   currentLang === 'ta'
-    ? 'ஜாதகத்தை பார்க்க மற்றும் பதிவிறக்க மேம்படுத்தவும்.'
-    : 'Upgrade to view and download horoscope.'
+    ? 'ஜாதகத்தை பார்க்க மேம்படுத்தவும்.'
+    : 'Upgrade to view horoscope.'
 }}</p>
     <button class="unlock-premium-btn" (click)="goToPlans()">
       {{ currentLang === 'ta' ? 'இப்போது திறக்கவும்' : 'Unlock Now' }}
@@ -761,7 +761,7 @@
       }}
     </button>
 
-    <button
+    <!-- <button
       *ngIf="unlocked"
       type="button"
       class="secondary-btn download-profile-btn"
@@ -772,7 +772,7 @@
           ? 'சுயவிவரம் பதிவிறக்கு'
           : 'Download Profile'
       }}
-    </button>
+    </button> -->
 
   </div>
 
