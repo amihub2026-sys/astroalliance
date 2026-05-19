@@ -380,6 +380,12 @@ handicapDetails: '',
 
 childrenStatus: 'No',
 childrenCount: '',
+
+thisai: '',
+thisaiIruppu: '',
+paatham: '',
+sothukal: '',
+kuladeivam: '',
   };
 formDataTa = {
   fullName: '',
@@ -398,6 +404,12 @@ formDataTa = {
   partnerExpectation: '',
   subCaste: '',
 handicapDetails: '',
+thisai: '',
+thisaiIruppu: '',
+paatham: '',
+sothukal: '',
+kuladeivam: '',
+
 };
   horoscopeHints = [
     { no: 1, label: 'வியாழன்' },
