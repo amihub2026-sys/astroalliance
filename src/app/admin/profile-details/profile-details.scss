@@ -141,270 +141,341 @@
   background: linear-gradient(135deg, #111827, #374151);
   color: #fff;
 }
-.pdf-biodata {
-  position: fixed;
-  left: -99999px;
-  top: 0;
-  width: 794px;
-  background: #fff;
-  color: #111;
-  padding: 35px;
-  font-family: Arial, sans-serif;
+/* =========================================
+   ASTRO PDF
+========================================= */
+
+.astro-pdf{
+  position:fixed;
+  left:-99999px;
+  top:0;
+
+  width:1200px;
+
+  background:#ffffff;
+  color:#111827;
+
+  padding:30px;
+
+  font-family:'Noto Sans Tamil', Arial, sans-serif;
 }
 
-.pdf-header {
-  text-align: center;
-  background: linear-gradient(135deg, #7b1235, #d4af37);
-  color: #fff;
-  padding: 24px;
-  border-radius: 18px;
-  margin-bottom: 22px;
+/* HEADER */
+
+.astro-header{
+  text-align:center;
+  border-bottom:3px solid #166534;
+  padding-bottom:20px;
+  margin-bottom:30px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
-.pdf-header h1 {
-  margin: 0;
-  font-size: 34px;
+.logo-side{
+  font-size:40px;
 }
 
-.pdf-biodata h2,
-.pdf-biodata .code {
-  text-align: center;
+.header-center{
+  flex:1;
 }
 
-.pdf-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+.header-center h1{
+  margin:0;
+  font-size:42px;
+  color:#166534;
+  font-weight:800;
 }
 
-.pdf-box {
-  background: #fff1f6;
-  border: 1px solid #ffd4e5;
-  border-radius: 18px;
-  padding: 18px;
+.header-center h2{
+  margin:10px 0;
+  font-size:30px;
+  color:#111827;
 }
 
-.pdf-box h3 {
-  color: #be185d;
-  margin-top: 0;
+.header-center p,
+.header-center span{
+  display:block;
+  margin:6px 0;
+  font-size:18px;
 }
 
-.pdf-box p {
-  font-size: 14px;
-  line-height: 1.7;
+/* BODY */
+
+.astro-body{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  margin-top:20px;
 }
 
-.pdf-footer {
-  margin-top: 25px;
-  text-align: center;
-  color: #7b1235;
-  font-weight: 800;
-}
-.horoscope-chart-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 16px;
+.astro-column p{
+  margin:10px 0;
+  font-size:18px;
+  line-height:1.8;
 }
 
-.chart-box {
-  background: #ffffff;
-  border: 2px solid #fbcfe8;
-  border-radius: 16px;
-  padding: 12px;
-  text-align: center;
+.astro-column strong{
+  color:#166534;
 }
 
-.chart-box h4 {
-  margin: 0 0 10px;
-  color: #be185d;
-  font-size: 14px;
-  font-weight: 800;
+/* FOOTER */
+
+.astro-footer{
+  margin-top:35px;
+  border-top:2px solid #166534;
+  padding-top:18px;
+  text-align:center;
 }
 
-.chart-image {
-  width: 100%;
-  height: 160px;
-  object-fit: contain;
-  border-radius: 10px;
-  background: #ffffff;
+.astro-footer p{
+  margin:8px 0;
+  font-size:18px;
+  font-weight:700;
+}
+/* =========================================
+   FINAL TAMIL HOROSCOPE
+========================================= */
+
+.horoscope-chart-wrapper,
+.astro-chart-section{
+  display:flex;
+  gap:40px;
+  flex-wrap:wrap;
+  margin-top:24px;
+}
+/* MAIN CHART */
+
+.astro-chart{
+  width:282px;
 }
 
-.chart-empty {
-  padding: 40px 8px;
-  color: #94a3b8;
-  font-size: 13px;
-  border: 1px dashed #f9a8d4;
-  border-radius: 10px;
-}
-.tamil-chart {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 80px);
-  overflow: hidden;
-  padding: 0;
+/* ROW */
+
+.chart-row{
+  display:flex;
 }
 
-.tamil-chart .cell {
-  border: 1px solid #f9a8d4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #7b1235;
-  background: #fff;
+/* BOX */
+.chart-cell{
+  width:68px;
+  height:68px;
+  border:2px solid #166534;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:15px;
+  font-weight:700;
+  color:#065f46;
+  padding:2px;
+  box-sizing:border-box;
 }
 
-.center-title {
-  background: linear-gradient(135deg, #7b1235, #d4af37);
-  color: white;
-  font-size: 15px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* SIDE BOX */
+
+.side-cell{
+  height:136px;
 }
-/* ADMIN + PDF horoscope chart alignment fix */
-.horoscope-chart-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 16px;
-  align-items: start;
+/* CENTER */
+
+.chart-center{
+  width:136px;
+  height:136px;
+  border-top:2px solid #166534;
+  border-bottom:2px solid #166534;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:34px;
+  font-weight:800;
+  color:#1d4ed8;
+  background:#fff;
+  overflow:hidden;
+  line-height:1;
+  box-sizing:border-box;
+}
+.chart-row{
+  display:flex;
+  width:100%;
+}
+/* PDF */
+
+.astro-pdf .astro-chart{
+  width:320px;
 }
 
-.tamil-chart {
-  width: 100%;
-  height: 180px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 60px);
-  overflow: hidden;
-  padding: 0 !important;
+.astro-pdf .chart-cell{
+  width:80px;
+  height:80px;
+  font-size:14px;
 }
 
-.tamil-chart .cell,
-.tamil-chart .center-title {
-  border: 1px solid #f9a8d4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 4px;
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1.2;
-  color: #7b1235;
-  background: #fff;
-  word-break: break-word;
-  overflow: hidden;
+.astro-pdf .side-cell{
+  height:160px;
 }
 
-.tamil-chart .center-title {
-  background: linear-gradient(135deg, #7b1235, #d4af37);
-  color: #fff;
-  font-size: 12px;
+.astro-pdf .chart-center{
+  width:160px;
+  height:160px;
+  font-size:40px;
+}
+@media (max-width: 768px){
+
+  .horoscope-chart-wrapper{
+    justify-content:center;
+  }
+
+  .astro-chart{
+    width:280px;
+  }
+
+  .chart-cell{
+    width:70px;
+    height:70px;
+    font-size:14px;
+  }
+
+  .side-cell{
+    height:140px;
+  }
+
+  .chart-center{
+    width:140px;
+    height:140px;
+    font-size:32px;
+  }
+
 }
 
-/* PDF only smaller chart */
-.pdf-biodata .horoscope-chart-wrapper {
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+.full-width-card{
+  grid-column:1/-1;
 }
 
-.pdf-biodata .tamil-chart {
-  height: 150px;
-  grid-template-rows: repeat(3, 50px);
+.additional-images{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+  flex-wrap:wrap;
 }
 
-.pdf-biodata .tamil-chart .cell,
-.pdf-biodata .tamil-chart .center-title {
-  font-size: 8px;
-  padding: 2px;
-}
-.tamil-chart {
-  width: 100%;
-  height: 150px !important;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 50px) !important;
-  overflow: hidden;
-  padding: 0 !important;
+.additional-images img{
+  width:90px;
+  height:90px;
+  object-fit:cover;
+  border-radius:12px;
 }
 
-.tamil-chart .cell,
-.tamil-chart .center-title {
-  border: 1px solid #f9a8d4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 3px;
-  font-size: 10px !important;
-  font-weight: 800;
-  line-height: 1.2;
-  color: #7b1235;
-  background: #fff;
-  overflow: hidden;
+.profile-video{
+  margin-top:20px;
 }
 
-.tamil-chart .center-title {
-  background: linear-gradient(135deg, #7b1235, #d4af37);
-  color: #fff;
+.profile-video video{
+  border-radius:14px;
+}
+.top-section{
+  display:flex;
+  gap:40px;
+  align-items:flex-start;
+  justify-content:flex-start;
+  flex-wrap:wrap;
 }
 
-.pdf-biodata .tamil-chart {
-  height: 120px !important;
-  grid-template-rows: repeat(3, 40px) !important;
+.media-section{
+  width:420px;
+  max-width:100%;
 }
 
-.pdf-biodata .tamil-chart .cell,
-.pdf-biodata .tamil-chart .center-title {
-  font-size: 7px !important;
-  padding: 2px;
-}
-.pdf-biodata {
-  width: 900px;
-  padding: 24px;
+.main-profile-image{
+  width:100%;
+  height:520px;
+  object-fit:cover;
+  border-radius:24px;
+  display:block;
 }
 
-.pdf-header {
-  padding: 16px;
-  margin-bottom: 14px;
+.profile-video{
+  margin-top:20px;
 }
 
-.pdf-header h1 {
-  font-size: 26px;
+.profile-video video{
+ width:140px;
+height:220px;
+  object-fit:cover;
+  border-radius:18px;
+  display:block;
+}
+.additional-images{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:18px;
 }
 
-.pdf-biodata h2 {
-  font-size: 22px;
-  margin: 8px 0;
+.additional-images img{
+  width:85px;
+  height:85px;
+  object-fit:cover;
+  border-radius:14px;
 }
 
-.pdf-box {
-  padding: 12px;
+.top-info{
+  flex:1;
+  min-width:300px;
+  padding-top:20px;
 }
 
-.pdf-box h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.top-info h2{
+  font-size:42px;
+  font-weight:700;
+  margin-bottom:10px;
 }
 
-.pdf-box p {
-  font-size: 12px;
-  line-height: 1.35;
-  margin: 6px 0;
+.top-info p{
+  font-size:18px;
+  color:#666;
+  margin-bottom:20px;
 }
 
-.pdf-grid {
-  gap: 12px;
+.action-group{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:25px;
 }
 
-.pdf-footer {
-  margin-top: 14px;
-  font-size: 14px;
+.action-group button{
+  border:none;
+  padding:12px 22px;
+  border-radius:14px;
+  font-size:15px;
+  cursor:pointer;
+}
+
+@media(max-width:991px){
+
+  .top-section{
+    flex-direction:column;
+  }
+
+  .media-section{
+    width:100%;
+  }
+
+  .main-profile-image{
+    height:auto;
+  }
+
+  .top-info{
+    width:100%;
+    min-width:100%;
+  }
+
+  .top-info h2{
+    font-size:32px;
+  }
+
 }

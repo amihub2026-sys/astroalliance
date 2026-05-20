@@ -96,7 +96,45 @@ dhoshamText(value: string): string {
 
   return map[value] || value || '-';
 }
+getRasiChart(): string[] {
 
+  if (!this.profile?.rasi_chart) {
+    return [];
+  }
+
+  try {
+
+    return typeof this.profile.rasi_chart === 'string'
+      ? JSON.parse(this.profile.rasi_chart)
+      : this.profile.rasi_chart;
+
+  } catch {
+
+    return [];
+
+  }
+
+}
+
+getAmsamChart(): string[] {
+
+  if (!this.profile?.amsam_chart) {
+    return [];
+  }
+
+  try {
+
+    return typeof this.profile.amsam_chart === 'string'
+      ? JSON.parse(this.profile.amsam_chart)
+      : this.profile.amsam_chart;
+
+  } catch {
+
+    return [];
+
+  }
+
+}
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes['id'] && this.id) {
       await this.loadProfile(this.id);
@@ -151,7 +189,7 @@ dhoshamText(value: string): string {
 
   const imgData = canvas.toDataURL('image/png');
 
-  const pdf = new jsPDF('p', 'mm', 'a3');
+  const pdf = new jsPDF('p', 'mm', 'a4');
 
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
