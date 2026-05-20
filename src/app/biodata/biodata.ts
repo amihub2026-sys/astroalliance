@@ -385,6 +385,8 @@ thisai: '',
 thisaiIruppu: '',
 paatham: '',
 sothukal: '',
+poorvegam: '',
+iruppidam: '',
 kuladeivam: '',
   };
 formDataTa = {
@@ -408,6 +410,8 @@ thisai: '',
 thisaiIruppu: '',
 paatham: '',
 sothukal: '',
+poorvegam: '',
+iruppidam: '',
 kuladeivam: '',
 
 };
