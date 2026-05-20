@@ -1679,8 +1679,8 @@ const v = (en: any, ta?: any) => {
     // { key: 'weight', label: this.tr.labels.weight, value: this.formData.weight },
     { key: 'religion', label: this.tr.labels.religion, value: this.selectedReligionId },
     { key: 'caste', label: this.tr.labels.caste, value: this.formData.caste },
-    { key: 'fatherName', label: this.tr.labels.fatherName, value: v(this.formData.fatherName, this.formDataTa.fatherName) },
-    { key: 'motherName', label: this.tr.labels.motherName, value: v(this.formData.motherName, this.formDataTa.motherName) },
+    // { key: 'fatherName', label: this.tr.labels.fatherName, value: v(this.formData.fatherName, this.formDataTa.fatherName) },
+    // { key: 'motherName', label: this.tr.labels.motherName, value: v(this.formData.motherName, this.formDataTa.motherName) },
     // { key: 'fatherOccupation', label: this.tr.labels.fatherOccupation, value: v(this.formData.fatherOccupation, this.formDataTa.fatherOccupation) },
     // { key: 'siblings', label: this.tr.labels.siblings, value: v(this.formData.siblings, this.formDataTa.siblings) },
     { key: 'education', label: this.tr.labels.education, value: this.formData.education === 'Other' ? this.formData.otherEducation : this.formData.education },
@@ -1715,10 +1715,10 @@ const v = (en: any, ta?: any) => {
       ? this.formData.city
       : this.selectedCityId
 },
-    { key: 'horoscopeFile', label: this.tr.sections.horoscopeUpload, value: this.selectedHoroscopeFile || this.existingHoroscopeFileUrl },
-    { key: 'rasi', label: this.tr.labels.rasi, value: this.formData.rasi },
-    { key: 'nakshatra', label: this.tr.labels.nakshatra, value: this.formData.nakshatra },
-    { key: 'lagnam', label: this.tr.labels.lagnam, value: this.formData.lagnam },
+    // { key: 'horoscopeFile', label: this.tr.sections.horoscopeUpload, value: this.selectedHoroscopeFile || this.existingHoroscopeFileUrl },
+    // { key: 'rasi', label: this.tr.labels.rasi, value: this.formData.rasi },
+    // { key: 'nakshatra', label: this.tr.labels.nakshatra, value: this.formData.nakshatra },
+    // { key: 'lagnam', label: this.tr.labels.lagnam, value: this.formData.lagnam },
     // { key: 'birthTime', label: this.tr.labels.birthTime, value: this.formData.birthTime },
     // { key: 'birthPlace', label: this.tr.labels.birthPlace, value: v(this.formData.birthPlace, this.formDataTa.birthPlace) }
   ];

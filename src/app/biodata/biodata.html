@@ -446,26 +446,26 @@
 
         <div class="form-grid">
         <div class="field" [class.invalid]="isInvalid('fatherName')">
-  <label>{{ tr.labels.fatherName }} <span class="required">*</span></label>
+  <label>{{ tr.labels.fatherName }} </label>
  <input
   type="text"
   [ngModel]="getTypedValue('fatherName')"
   (ngModelChange)="onTamilInputChange('fatherName', $event)"
   name="fatherName"
   [placeholder]="tr.placeholders.fatherName">
-  <small class="field-error" *ngIf="isInvalid('fatherName')">Required</small>
+
 </div>
 
          <!-- MOTHER NAME -->
 <div class="field" [class.invalid]="isInvalid('motherName')">
-  <label>{{ tr.labels.motherName }} <span class="required">*</span></label>
+  <label>{{ tr.labels.motherName }}</label>
  <input
   type="text"
   [ngModel]="getTypedValue('motherName')"
   (ngModelChange)="onTamilInputChange('motherName', $event)"
   name="motherName"
   [placeholder]="tr.placeholders.motherName">
-  <small class="field-error" *ngIf="isInvalid('motherName')">Required</small>
+ 
 </div>
 
        <!-- FATHER OCCUPATION -->
@@ -777,14 +777,14 @@
 
          <!-- SALARY -->
 <div class="field" [class.invalid]="isInvalid('salary')">
-  <label>{{ tr.labels.salary }} <span class="required">*</span></label>
+  <label>{{ tr.labels.salary }} </label>
 <input
   type="text"
   [ngModel]="getTypedValue('salary')"
   (ngModelChange)="onTamilInputChange('salary', $event)"
   name="salary"
   [placeholder]="tr.placeholders.salary">
-  <small class="field-error" *ngIf="isInvalid('salary')">Required</small>
+ 
 </div>
         </div>
       </div>
@@ -971,9 +971,7 @@
             <div class="file-note" *ngIf="selectedHoroscopeFile">
               {{ tr.labels.selected }}: {{ selectedHoroscopeFile.name }}
             </div>
-                      <small class="upload-error" *ngIf="isInvalid('horoscopeFile')">
-  Horoscope file is required
-</small>
+
           </div>
 
           <div class="horoscope-preview" *ngIf="horoscopePreviewUrl">
@@ -993,8 +991,8 @@
 
 
          <!-- NAKSHATRA -->
-<div class="field" [class.invalid]="isInvalid('nakshatra')">
-  <label>{{ tr.labels.nakshatra }} <span class="required">*</span></label>
+<div class="field">
+  <label>{{ tr.labels.nakshatra }} </label>
 
   <select [(ngModel)]="formData.nakshatra" name="nakshatra">
     <option value="">{{ tr.labels.selectNakshatra }}</option>
@@ -1005,7 +1003,6 @@
 </option>
   </select>
 
-  <small class="field-error" *ngIf="isInvalid('nakshatra')">Required</small>
 </div>
 
 
@@ -1030,9 +1027,8 @@
 </div>
 
      <!-- RASI -->
-<div class="field" [class.invalid]="isInvalid('rasi')">
-  <label>{{ tr.labels.rasi }} <span class="required">*</span></label>
-
+<div class="field">
+  <label>{{ tr.labels.rasi }}</label>
   <select [(ngModel)]="formData.rasi" name="rasi">
     <option value="">{{ tr.labels.selectRasi }}</option>
    <option
@@ -1042,15 +1038,14 @@
 </option>
   </select>
 
-  <small class="field-error" *ngIf="isInvalid('rasi')">Required</small>
 </div>
 
 
 
 
        <!-- LAGNAM -->
-<div class="field" [class.invalid]="isInvalid('lagnam')">
-  <label>{{ tr.labels.lagnam }} <span class="required">*</span></label>
+<div class="field">
+  <label>{{ tr.labels.lagnam }}</label>
 
   <select [(ngModel)]="formData.lagnam" name="lagnam">
     <option value="">{{ tr.labels.selectLagnam }}</option>
@@ -1061,7 +1056,7 @@
 </option>
   </select>
 
-  <small class="field-error" *ngIf="isInvalid('lagnam')">Required</small>
+ 
 </div>
 
 
