@@ -170,6 +170,14 @@
   <input type="date" [(ngModel)]="formData.dob" name="dob" disabled>
   <small class="field-error" *ngIf="isInvalid('dob')">Required</small>
 </div>
+         <!-- BIRTH TIME -->
+<div class="field" [class.invalid]="isInvalid('birthTime')">
+  <label>{{ tr.labels.birthTime }} <span class="optional">(Optional)</span></label>
+
+  <input type="time" [(ngModel)]="formData.birthTime" name="birthTime">
+
+  <!-- <small class="field-error" *ngIf="isInvalid('birthTime')">Required</small> -->
+</div>
 
           <div class="field">
             <label>{{ tr.labels.age }}</label>
@@ -416,6 +424,16 @@
   >
 
 </div>
+
+  <div class="field">
+           <label>{{ tr.labels.gothram }} <span class="optional">(Optional)</span></label>
+           <input
+  type="text"
+  [ngModel]="getTypedValue('gothram')"
+  (ngModelChange)="onTamilInputChange('gothram', $event)"
+  name="gothram"
+  [placeholder]="tr.placeholders.gothram">
+          </div>
         </div>
       </div>
 
@@ -598,15 +616,24 @@
 
 </div>
 
-    <div class="field">
-           <label>{{ tr.labels.gothram }} <span class="optional">(Optional)</span></label>
-           <input
+  <!-- SOTHUKAL -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'சொத்துகள்'
+      : 'Sothukal'
+    }}
+  </label>
+
+<input
   type="text"
-  [ngModel]="getTypedValue('gothram')"
-  (ngModelChange)="onTamilInputChange('gothram', $event)"
-  name="gothram"
-  [placeholder]="tr.placeholders.gothram">
-          </div>
+  [(ngModel)]="formData.sothukal"
+  name="sothukal"
+>
+
+</div>
 <!-- KULADEIVAM -->
 
 <div class="field">
@@ -623,6 +650,26 @@
   [(ngModel)]="formData.kuladeivam"
   name="kuladeivam"
 >
+
+</div>
+
+<!-- POORVEGAM -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'பூர்வீகம்'
+      : 'Poorvegam'
+    }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('poorvegam')"
+    (ngModelChange)="onTamilInputChange('poorvegam', $event)"
+    name="poorvegam"
+  >
 
 </div>
 
@@ -867,6 +914,28 @@
 
   <small class="field-error" *ngIf="isInvalid('city')">Required</small>
 </div>
+
+
+<!-- IRUPPIDAM -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'இருப்பிடம்'
+      : 'Iruppidam'
+    }}
+  </label>
+
+  <input
+    type="text"
+    [ngModel]="getTypedValue('iruppidam')"
+    (ngModelChange)="onTamilInputChange('iruppidam', $event)"
+    name="iruppidam"
+  >
+
+</div>
+
         </div>
       </div>
 
@@ -1013,23 +1082,19 @@
 
 
 
-<!-- THISAI -->
 
-<div class="field">
-
-  <label>
-    {{ currentLang === 'ta'
-      ? 'திசை'
-      : 'Thisai'
-    }}
-  </label>
+         <!-- BIRTH PLACE -->
+<div class="field" [class.invalid]="isInvalid('birthPlace')">
+ <label>{{ tr.labels.birthPlace }} <span class="optional">(Optional)</span></label>
 
 <input
-  type="date"
-  [(ngModel)]="formData.thisai"
-  name="thisai"
->
+  type="text"
+  [ngModel]="getTypedValue('birthPlace')"
+ (ngModelChange)="onTamilInputChange('birthPlace', $event)"
+  name="birthPlace"
+  [placeholder]="tr.placeholders.birthPlace">
 
+  <!-- <small class="field-error" *ngIf="isInvalid('birthPlace')">Required</small> -->
 </div>
 
 <!-- THISAI IRUPPU -->
@@ -1077,50 +1142,26 @@
 
 </div>
 
-
-
-<!-- SOTHUKAL -->
+<!-- THISAI -->
 
 <div class="field">
 
   <label>
     {{ currentLang === 'ta'
-      ? 'சொத்துகள்'
-      : 'Sothukal'
+      ? 'திசை'
+      : 'Thisai'
     }}
   </label>
 
 <input
-  type="text"
-  [(ngModel)]="formData.sothukal"
-  name="sothukal"
+  type="date"
+  [(ngModel)]="formData.thisai"
+  name="thisai"
 >
 
 </div>
 
-         <!-- BIRTH TIME -->
-<div class="field" [class.invalid]="isInvalid('birthTime')">
-  <label>{{ tr.labels.birthTime }} <span class="optional">(Optional)</span></label>
-
-  <input type="time" [(ngModel)]="formData.birthTime" name="birthTime">
-
-  <!-- <small class="field-error" *ngIf="isInvalid('birthTime')">Required</small> -->
-</div>
-         <!-- BIRTH PLACE -->
-<div class="field" [class.invalid]="isInvalid('birthPlace')">
- <label>{{ tr.labels.birthPlace }} <span class="optional">(Optional)</span></label>
-
-<input
-  type="text"
-  [ngModel]="getTypedValue('birthPlace')"
- (ngModelChange)="onTamilInputChange('birthPlace', $event)"
-  name="birthPlace"
-  [placeholder]="tr.placeholders.birthPlace">
-
-  <!-- <small class="field-error" *ngIf="isInvalid('birthPlace')">Required</small> -->
-</div>
-
-        </div>
+ </div>
 
         <!-- HOROSCOPE CHART -->
         <div class="horoscope-chart-card">
