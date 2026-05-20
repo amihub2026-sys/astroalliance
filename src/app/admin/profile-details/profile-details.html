@@ -13,48 +13,118 @@
 </p>
   <div class="profile-card" *ngIf="!isLoading && profile">
 
-    <div class="top-section">
-      <img
-        [src]="profile.profile_image_url || 'assets/default-avatar.png'"
-        alt="Profile">
+  <div class="top-section">
 
-      <div class="top-info">
-        <h2>{{ v(profile.full_name, profile.full_name_ta) }}</h2>
-        <p>{{ profile.profile_code }}</p>
+  <!-- LEFT -->
 
-        <span
-          class="status"
-          [class.approved]="profile.profile_status === 'Approved'"
-          [class.pending]="profile.profile_status === 'Pending'"
-          [class.rejected]="profile.profile_status === 'Rejected'"
-          [class.blocked]="profile.profile_status === 'Blocked'"
-          [class.review]="profile.profile_status === 'Under Review'">
-      {{ statusText(profile.profile_status || 'Pending') }}
-        </span>
+  <div class="media-section">
 
-        <div class="action-group">
-        <button class="approve-btn" (click)="updateStatus('Approved')">
-  {{ txt('Approve', 'ஒப்புதல்') }}
-</button>
+    <!-- MAIN IMAGE -->
 
-<button class="review-btn" (click)="updateStatus('Under Review')">
-  {{ txt('Review', 'மதிப்பாய்வு') }}
-</button>
+    <img
+      class="main-profile-image"
+      [src]="profile.profile_image_url || 'assets/default-avatar.png'"
+      alt="Profile">
 
-<button class="reject-btn" (click)="updateStatus('Rejected')">
-  {{ txt('Reject', 'நிராகரி') }}
-</button>
+    <!-- VIDEO -->
 
-<button class="block-btn" (click)="updateStatus('Blocked')">
-  {{ txt('Block', 'தடை செய்') }}
-</button>
+    <div
+      *ngIf="profile.video_url"
+      class="profile-video">
 
-<button class="pdf-btn" (click)="downloadBiodataPdf()">
-  {{ txt('Download Biodata PDF', 'பயோடேட்டா PDF பதிவிறக்கு') }}
-</button>
-        </div>
-      </div>
+      <video
+        [src]="profile.video_url"
+        controls>
+      </video>
+
     </div>
+
+    <!-- ADDITIONAL IMAGES -->
+
+    <div
+      class="additional-images"
+      *ngIf="profile.additional_image_urls?.length">
+
+      <img
+        *ngFor="let img of profile.additional_image_urls"
+        [src]="img"
+        alt="Additional Image">
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+
+  <div class="top-info">
+
+    <h2>
+      {{ v(profile.full_name, profile.full_name_ta) }}
+    </h2>
+
+    <p>
+      {{ profile.profile_code }}
+    </p>
+
+    <span
+      class="status"
+      [class.approved]="profile.profile_status === 'Approved'"
+      [class.pending]="profile.profile_status === 'Pending'"
+      [class.rejected]="profile.profile_status === 'Rejected'"
+      [class.blocked]="profile.profile_status === 'Blocked'"
+      [class.review]="profile.profile_status === 'Under Review'">
+
+      {{ statusText(profile.profile_status || 'Pending') }}
+
+    </span>
+
+    <div class="action-group">
+
+      <button
+        class="approve-btn"
+        (click)="updateStatus('Approved')">
+
+        {{ txt('Approve', 'ஒப்புதல்') }}
+
+      </button>
+
+      <button
+        class="review-btn"
+        (click)="updateStatus('Under Review')">
+
+        {{ txt('Review', 'மதிப்பாய்வு') }}
+
+      </button>
+
+      <button
+        class="reject-btn"
+        (click)="updateStatus('Rejected')">
+
+        {{ txt('Reject', 'நிராகரி') }}
+
+      </button>
+
+      <button
+        class="block-btn"
+        (click)="updateStatus('Blocked')">
+
+        {{ txt('Block', 'தடை செய்') }}
+
+      </button>
+
+      <button
+        class="pdf-btn"
+        (click)="downloadBiodataPdf()">
+
+        {{ txt('Download Biodata PDF', 'பயோடேட்டா PDF பதிவிறக்கு') }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
     <div class="details-grid">
 
@@ -118,39 +188,135 @@
 
 <div class="horoscope-chart-wrapper">
 
-  <div class="chart-box tamil-chart">
+  <!-- RASI -->
 
-<div class="cell">{{ txt('Rasi', 'ராசி') }}</div>
-<div class="cell">{{ v(profile.rasi_text, profile.rasi_text_ta) }}</div>
-<div class="cell">{{ txt('Lagnam', 'லக்னம்') }}</div>
+  <div class="astro-chart">
 
-<div class="cell">{{ v(profile.nakshatra_text, profile.nakshatra_text_ta) }}</div>
-   <div class="center-title">
-  {{ txt('Rasi Chart', 'ராசி கட்டம்') }}
-</div>
-<div class="cell">{{ dhoshamText(profile.dhosham_text) }}</div>
+    <!-- TOP -->
 
-    <div class="cell">{{ txt('Moon', 'சந்திரன்') }}</div>
-    <div class="cell">{{ txt('Guru', 'குரு') }}</div>
-   <div class="cell">{{ txt('Venus', 'சுக்கிரன்') }}</div>
+    <div class="chart-row">
+
+      <div class="chart-cell">
+        {{ getRasiChart()[0] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[1] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[2] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[3] || '' }}
+      </div>
+
+    </div>
+
+    <!-- MIDDLE -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell side-cell">
+        {{ getRasiChart()[4] || '' }}
+      </div>
+
+      <div class="chart-center">
+        ராசி
+      </div>
+
+      <div class="chart-cell side-cell">
+        {{ getRasiChart()[5] || '' }}
+      </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell">
+        {{ getRasiChart()[6] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[7] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[8] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[9] || '' }}
+      </div>
+
+    </div>
 
   </div>
 
-  <div class="chart-box tamil-chart">
+  <!-- AMSAM -->
 
-   <div class="cell">{{ txt('Raghu', 'ராகு') }}</div>
-   <div class="cell">{{ v(profile.rasi_text, profile.rasi_text_ta) }}</div>
-   <div class="cell">{{ txt('Kethu', 'கேது') }}</div>
+  <div class="astro-chart">
 
-    <div class="cell">{{ v(profile.nakshatra_text, profile.nakshatra_text_ta) }}</div>
-   <div class="center-title">
-  {{ txt('Amsam Chart', 'அம்ச கட்டம்') }}
-</div>
-   <div class="cell">{{ v(profile.lagnam_text, profile.lagnam_text_ta) }}</div>
+    <!-- TOP -->
 
-   <div class="cell">{{ txt('Sani', 'சனி') }}</div>
-   <div class="cell">{{ txt('Budhan', 'புதன்') }}</div>
-   <div class="cell">{{ txt('Sevvai', 'செவ்வாய்') }}</div>
+    <div class="chart-row">
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[0] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[1] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[2] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[3] || '' }}
+      </div>
+
+    </div>
+
+    <!-- MIDDLE -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell side-cell">
+        {{ getAmsamChart()[4] || '' }}
+      </div>
+
+      <div class="chart-center">
+        அம்சம்
+      </div>
+
+      <div class="chart-cell side-cell">
+        {{ getAmsamChart()[5] || '' }}
+      </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[6] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[7] || '' }}
+      </div>
+
+      <div class="chart-cell"></div>
+
+      <div class="chart-cell"></div>
+
+    </div>
 
   </div>
 
@@ -174,6 +340,21 @@
   <strong>{{ txt('Family Status', 'குடும்ப நிலை') }}:</strong>
   {{ v(profile.family_status, profile.family_status_ta) }}
 </p>
+<p>
+  <strong>{{ txt('Father Occupation', 'தந்தை தொழில்') }}:</strong>
+  {{ v(profile.father_occupation, profile.father_occupation_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Mother Occupation', 'தாய் தொழில்') }}:</strong>
+  {{ v(profile.mother_occupation, profile.mother_occupation_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Siblings', 'உடன்பிறப்புகள்') }}:</strong>
+  {{ v(profile.siblings_text, profile.siblings_text_ta) }}
+</p>
+
       </div>
 
      <div class="info-card">
@@ -207,7 +388,30 @@
   <strong>{{ txt('Occupation', 'தொழில்') }}:</strong>
   {{ v(profile.occupation_text, profile.occupation_text_ta) }}
 </p>
+<p>
+  <strong>{{ txt('Age', 'வயது') }}:</strong>
+  {{ profile.age || '-' }}
+</p>
 
+<p>
+  <strong>{{ txt('Date of Birth', 'பிறந்த தேதி') }}:</strong>
+  {{ profile.dob || '-' }}
+</p>
+
+<p>
+  <strong>{{ txt('Height', 'உயரம்') }}:</strong>
+  {{ v(profile.height_text, profile.height_text_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Weight', 'எடை') }}:</strong>
+  {{ v(profile.weight_text, profile.weight_text_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Marital Status', 'திருமண நிலை') }}:</strong>
+  {{ v(profile.marital_status_text, profile.marital_status_text_ta) }}
+</p>
 <p>
   <strong>{{ txt('Salary', 'சம்பளம்') }}:</strong>
  {{ profile.salary_text || '-' }}
@@ -246,166 +450,387 @@
 </div>
 
     </div>
+
+<div class="info-card full-width-card">
+
+  <h3>{{ txt('About Me', 'என்னை பற்றி') }}</h3>
+
+  <p>
+    {{ v(profile.about_me, profile.about_me_ta) || '-' }}
+  </p>
+
+</div>
+
+<div class="info-card full-width-card">
+
+  <h3>{{ txt('Partner Expectation', 'துணை எதிர்பார்ப்பு') }}</h3>
+
+  <p>
+    {{ v(profile.partner_expectation, profile.partner_expectation_ta) || '-' }}
+  </p>
+
+</div>
+
+
   </div>
 
 </div>
 
-<div id="biodataPdf" class="pdf-biodata" *ngIf="!isLoading && profile">
+<div id="biodataPdf" class="astro-pdf" *ngIf="!isLoading && profile">
 
-  <div class="pdf-header">
-    <h1>Astro Alliance</h1>
-    <p>Traditional Matrimony Biodata / பாரம்பரிய திருமண சுயவிவரம்</p>
-  </div>
+  <!-- HEADER -->
 
-  <h2>{{ profile.full_name || '-' }}</h2>
-  <p class="code">{{ profile.profile_code || '-' }}</p>
+  <div class="astro-header">
 
-  <div class="pdf-grid">
-
-    <div class="pdf-box">
-      <h3>Personal Details / தனிப்பட்ட விவரங்கள்</h3>
-    <p><b>Gender / பாலினம்:</b> {{ genderText(profile.gender_text) }}</p>
-      <p><b>Date of Birth / பிறந்த தேதி:</b> {{ profile.date_of_birth || profile.dob || '-' }}</p>
-      <p><b>Age / வயது:</b> {{ profile.age || '-' }}</p>
-      <p><b>Height / உயரம்:</b>{{ v(profile.height_text, profile.height_text_ta) }}</p>
-      <p><b>Weight / எடை:</b> {{ v(profile.weight_text, profile.weight_text_ta) }}</p>
-      <p><b>Marital Status / திருமண நிலை:</b> {{ v(profile.marital_status_text, profile.marital_status_text_ta) }}</p>
-    <p><b>Religion / மதம்:</b> {{ v(profile.religion_text, profile.religion_text_ta) }}</p>
-     <p><b>Caste / சாதி:</b> {{ v(profile.caste_text, profile.caste_text_ta) }}</p>
+    <div class="logo-side">
+      ✨
     </div>
 
-    <div class="pdf-box">
-      <h3>Contact Details / தொடர்பு விவரங்கள்</h3>
-      <p><b>Mobile / கைபேசி:</b> {{ profile.mobile || profile.phone || '-' }}</p>
-      <p><b>Additional Mobile / கூடுதல் கைபேசி:</b> {{ profile.additional_mobile || '-' }}</p>
-      <p><b>Email / மின்னஞ்சல்:</b> {{ profile.email || '-' }}</p>
-    </div>
+    <div class="header-center">
 
-    <div class="pdf-box">
-      <h3>Horoscope Details / ஜாதக விவரங்கள்</h3>
-     <p><b>Rasi / ராசி:</b> {{ v(profile.rasi_text, profile.rasi_text_ta) }}</p>
-     <p><b>Nakshatra / நட்சத்திரம்:</b> {{ v(profile.nakshatra_text, profile.nakshatra_text_ta) }}</p>
-   <p><b>Lagnam / லக்னம்:</b> {{ v(profile.lagnam_text, profile.lagnam_text_ta) }}</p>
-     <p><b>Dhosham / தோஷம்:</b> {{ dhoshamText(profile.dhosham_text) }}</p>
-      <p><b>Birth Time / பிறந்த நேரம்:</b> {{ profile.birth_time || '-' }}</p>
-      <p><b>Birth Place / பிறந்த இடம்:</b> {{ v(profile.birth_place, profile.birth_place_ta) || '-' }}</p>
-<p>
-  <b>Thisai / திசை:</b>
-  {{ v(profile.thisai, profile.thisai_ta) || '-' }}
-</p>
+      <h1>Astro Alliance</h1>
 
-<p>
-  <b>Thisai Iruppu / திசை இருப்பு:</b>
-  {{ v(profile.thisai_iruppu, profile.thisai_iruppu_ta) || '-' }}
-</p>
-
-<p>
-  <b>Paatham / பாதம்:</b>
-  {{ v(profile.paatham, profile.paatham_ta) || '-' }}
-</p>
-
-<p>
-  <b>Sothukal / சொத்துகள்:</b>
-  {{ v(profile.sothukal, profile.sothukal_ta) || '-' }}
-</p>
-
-<p>
-  <b>Kuladeivam / குலதெய்வம்:</b>
-  {{ v(profile.kuladeivam, profile.kuladeivam_ta) || '-' }}
-</p>
+      <h2>
+        திருமண தகவல் மையம்
+      </h2>
 
       <p>
-  <b>Thisai / திசை:</b>
-  {{ v(profile.thisai, profile.thisai_ta) || '-' }}
-</p>
+        www.astroalliance.in
+      </p>
 
-<p>
-  <b>Thisai Iruppu / திசை இருப்பு:</b>
-  {{ v(profile.thisai_iruppu, profile.thisai_iruppu_ta) || '-' }}
-</p>
+      <span>
+        Contact No : 9943315331
+      </span>
 
-<p>
-  <b>Paatham / பாதம்:</b>
-  {{ v(profile.paatham, profile.paatham_ta) || '-' }}
-</p>
-
-<p>
-  <b>Sothukal / சொத்துகள்:</b>
-  {{ v(profile.sothukal, profile.sothukal_ta) || '-' }}
-</p>
-
-<p>
-  <b>Kuladeivam / குலதெய்வம்:</b>
-  {{ v(profile.kuladeivam, profile.kuladeivam_ta) || '-' }}
-</p>
-<div class="horoscope-chart-wrapper">
-
-  <div class="chart-box tamil-chart">
-
-    <div class="cell">Rasi</div>
-  <div class="cell">{{ v(profile.rasi_text, profile.rasi_text_ta) }}</div>
-    <div class="cell">Lagnam</div>
-
-   <div class="cell">{{ v(profile.nakshatra_text, profile.nakshatra_text_ta) }}</div>
-    <div class="center-title">
-  {{ txt('Rasi Chart', 'ராசி கட்டம்') }}
-</div>
-   <div class="cell">{{ dhoshamText(profile.dhosham_text) }}</div>
-
-   <div class="cell">{{ txt('Moon', 'சந்திரன்') }}</div>
-   <div class="cell">{{ txt('Guru', 'குரு') }}</div>
-  <div class="cell">{{ txt('Venus', 'சுக்கிரன்') }}</div>
-
-  </div>
-
-  <div class="chart-box tamil-chart">
-
-   <div class="cell">{{ txt('Raghu', 'ராகு') }}</div>
-   <div class="cell">{{ v(profile.rasi_text, profile.rasi_text_ta) }}</div>
-   <div class="cell">{{ txt('Kethu', 'கேது') }}</div>
-   <div class="cell">{{ v(profile.nakshatra_text, profile.nakshatra_text_ta) }}</div>
-   <div class="center-title">
-  {{ txt('Amsam Chart', 'அம்ச கட்டம்') }}
-</div>
-  <div class="cell">{{ v(profile.lagnam_text, profile.lagnam_text_ta) }}</div>
-    <div class="cell">{{ txt('Sani', 'சனி') }}</div>
-    <div class="cell">{{ txt('Budhan', 'புதன்') }}</div>
-    <div class="cell">{{ txt('Sevvai', 'செவ்வாய்') }}</div>
-
-  </div>
-
-</div>
     </div>
 
-    <div class="pdf-box">
-      <h3>Family Details / குடும்ப விவரங்கள்</h3>
-      <p><b>Father / தந்தை:</b> {{ v(profile.father_name, profile.father_name_ta) }}</p>
-      <p><b>Father Occupation / தந்தை தொழில்:</b> {{ v(profile.father_occupation, profile.father_occupation_ta) }}</p>
-      <p><b>Mother / தாய்:</b> {{ v(profile.mother_name, profile.mother_name_ta) }}</p>
-      <p><b>Mother Occupation / தாய் தொழில்:</b>{{ v(profile.mother_occupation, profile.mother_occupation_ta) }}</p>
-     <p><b>Family Status / குடும்ப நிலை:</b> {{ v(profile.family_status, profile.family_status_ta) }}</p>
-    </div>
-
-    <div class="pdf-box">
-      <h3>Education & Career Details / கல்வி & தொழில் விவரங்கள்</h3>
-      <p><b>Education / கல்வி:</b> {{ v(profile.education_text, profile.education_text_ta) }}</p>
-      <p><b>Occupation / தொழில்:</b> {{ v(profile.occupation_text, profile.occupation_text_ta) }}</p>
-      <p><b>Salary / சம்பளம்:</b> {{ profile.salary_text || '-' }}</p>
-    <p><b>Company / நிறுவனம்:</b> {{ v(profile.company_name, profile.company_name_ta) }}</p>
-    </div>
-
-    <div class="pdf-box">
-      <h3>Address Details / முகவரி விவரங்கள்</h3>
-     <p><b>City / நகரம்:</b> {{ v(profile.city_text, profile.city_text_ta) }}</p>
-    <p><b>State / மாநிலம்:</b> {{ v(profile.state_text, profile.state_text_ta) }}</p>
-     <p><b>Country / நாடு:</b> {{ v(profile.country_text, profile.country_text_ta) }}</p>
-   <p><b>Address / முகவரி:</b>{{ v(profile.address_line, profile.address_line_ta) }}</p>
+    <div class="logo-side">
+      ✨
     </div>
 
   </div>
 
-  <div class="pdf-footer">
-    Generated by Astro Alliance
+  <!-- BODY -->
+
+  <div class="astro-body">
+
+    <!-- LEFT -->
+
+    <div class="astro-column">
+
+      <p>
+        <strong>திருமண நிலை :</strong>
+        {{ v(profile.marital_status_text, profile.marital_status_text_ta) }}
+      </p>
+
+      <p>
+        <strong>மதம் :</strong>
+        {{ v(profile.religion_text, profile.religion_text_ta) }}
+      </p>
+
+      <p>
+        <strong>மணமகன் பெயர் :</strong>
+        {{ v(profile.full_name, profile.full_name_ta) }}
+      </p>
+
+      <p>
+        <strong>பிறந்த தேதி :</strong>
+        {{ profile.dob || '-' }}
+      </p>
+
+      <p>
+        <strong>கல்வி தகுதி :</strong>
+        {{ v(profile.education_text, profile.education_text_ta) }}
+      </p>
+
+      <p>
+        <strong>தாய் பெயர் :</strong>
+        {{ v(profile.mother_name, profile.mother_name_ta) }}
+      </p>
+
+      <p>
+        <strong>உயரம் :</strong>
+        {{ v(profile.height_text, profile.height_text_ta) }}
+      </p>
+
+      <p>
+        <strong>சம்பளம் :</strong>
+        {{ profile.salary_text || '-' }}
+      </p>
+
+      <p>
+        <strong>பணிபுரியும் இடம் :</strong>
+        {{ v(profile.company_name, profile.company_name_ta) }}
+      </p>
+
+      <p>
+        <strong>ராசி :</strong>
+        {{ v(profile.rasi_text, profile.rasi_text_ta) }}
+      </p>
+
+      <p>
+        <strong>குலதெய்வம் :</strong>
+        {{ v(profile.kuladeivam, profile.kuladeivam_ta) }}
+      </p>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="astro-column">
+
+      <p>
+        <strong>பதிவு எண் :</strong>
+        {{ profile.profile_code || '-' }}
+      </p>
+
+      <p>
+        <strong>இனம் :</strong>
+        {{ genderText(profile.gender_text) }}
+      </p>
+
+      <p>
+        <strong>உட்பிரிவு :</strong>
+        {{ v(profile.caste_text, profile.caste_text_ta) }}
+      </p>
+
+      <p>
+        <strong>நேரம் :</strong>
+        {{ profile.birth_time || '-' }}
+      </p>
+
+      <p>
+        <strong>தகப்பன் வேலை :</strong>
+        {{ v(profile.father_occupation, profile.father_occupation_ta) }}
+      </p>
+
+      <p>
+        <strong>தாயின் வேலை :</strong>
+        {{ v(profile.mother_occupation, profile.mother_occupation_ta) }}
+      </p>
+
+      <p>
+        <strong>நிறம் :</strong>
+        {{ profile.complexion || '-' }}
+      </p>
+
+      <p>
+        <strong>தோஷம் :</strong>
+        {{ dhoshamText(profile.dhosham_text) }}
+      </p>
+<p>
+  <strong>{{ txt('Birth Time', 'பிறந்த நேரம்') }}:</strong>
+  {{ profile.birth_time || '-' }}
+</p>
+
+<p>
+  <strong>{{ txt('Birth Place', 'பிறந்த இடம்') }}:</strong>
+  {{ v(profile.birth_place, profile.birth_place_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Gothram', 'கோத்திரம்') }}:</strong>
+  {{ v(profile.gothram, profile.gothram_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Thisai', 'திசை') }}:</strong>
+  {{ v(profile.thisai, profile.thisai_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Thisai Iruppu', 'திசை இருப்பு') }}:</strong>
+  {{ v(profile.thisai_iruppu, profile.thisai_iruppu_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Paatham', 'பாதம்') }}:</strong>
+  {{ v(profile.paatham, profile.paatham_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Sothukal', 'சொத்துகள்') }}:</strong>
+  {{ v(profile.sothukal, profile.sothukal_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Kuladeivam', 'குலதெய்வம்') }}:</strong>
+  {{ v(profile.kuladeivam, profile.kuladeivam_ta) }}
+</p>
+      <p>
+        <strong>இருப்பிடம் :</strong>
+        {{ v(profile.city_text, profile.city_text_ta) }}
+      </p>
+
+      <p>
+        <strong>சொத்துக்கள் :</strong>
+        {{ v(profile.sothukal, profile.sothukal_ta) }}
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- HOROSCOPE -->
+
+<!-- HOROSCOPE -->
+
+<!-- HOROSCOPE -->
+
+<div class="astro-chart-section">
+
+  <!-- RASI -->
+
+  <div class="astro-chart">
+
+    <!-- TOP -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell">
+        {{ getRasiChart()[0] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[1] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[2] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[3] || '' }}
+      </div>
+
+    </div>
+
+    <!-- MIDDLE -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell side-cell">
+        {{ getRasiChart()[4] || '' }}
+      </div>
+
+      <div class="chart-center">
+        ராசி
+      </div>
+
+      <div class="chart-cell side-cell">
+        {{ getRasiChart()[5] || '' }}
+      </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell">
+        {{ getRasiChart()[6] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[7] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[8] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getRasiChart()[9] || '' }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- AMSAM -->
+
+  <div class="astro-chart">
+
+    <!-- TOP -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[0] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[1] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[2] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[3] || '' }}
+      </div>
+
+    </div>
+
+    <!-- MIDDLE -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell side-cell">
+        {{ getAmsamChart()[4] || '' }}
+      </div>
+
+      <div class="chart-center">
+        அம்சம்
+      </div>
+
+      <div class="chart-cell side-cell">
+        {{ getAmsamChart()[5] || '' }}
+      </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+
+    <div class="chart-row">
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[6] || '' }}
+      </div>
+
+      <div class="chart-cell">
+        {{ getAmsamChart()[7] || '' }}
+      </div>
+
+      <div class="chart-cell"></div>
+
+      <div class="chart-cell"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  <!-- FOOTER -->
+
+  <div class="astro-footer">
+
+    <p>
+      முகவரி :
+      {{ v(profile.address_line, profile.address_line_ta) }}
+    </p>
+
+    <p>
+      Mobile :
+      {{ profile.mobile || '-' }}
+    </p>
+
+    <p>
+      Generated by Astro Alliance
+    </p>
+
   </div>
 
 </div>
