@@ -18,6 +18,9 @@ export class Biodata implements OnInit {
 snackbar = inject(SnackbarService);
   isExtracting = false;
   isSaving = false;
+  isSubmitted = false;
+isEditMode = false;
+  
   isLoadingProfile = false;
 submitted = false;
 fieldErrors: Record<string, boolean> = {};
@@ -333,7 +336,7 @@ childrenCount: 'குழந்தைகள் எண்ணிக்கை',
   };
 
   formData = {
-    additionalMobile: '',
+    additionalMobile: [''],
     fullName: '',
     gender: '',
     dob: '',
@@ -371,10 +374,11 @@ childrenCount: 'குழந்தைகள் எண்ணிக்கை',
     partnerExpectation: '',
     subCaste: '',
 
-brothersCount: '',
-sistersCount: '',
-brothersMaritalStatus: '',
-sistersMaritalStatus: '',
+marriedBrothers: '',
+unmarriedBrothers: '',
+
+marriedSisters: '',
+unmarriedSisters: '',
 handicapStatus: 'No',
 handicapDetails: '',
 
@@ -500,6 +504,7 @@ isOtherCitySelected(): boolean {
 }
 
 onCityChange(): void {
+  
   const city = this.cityList.find(
     (c: any) => c.city_id === this.selectedCityId
   );
@@ -514,7 +519,17 @@ showEducationDropdown = false;
   get currentLang(): 'en' | 'ta' {
     return this.app.currentLang;
   }
+addAdditionalMobile(): void {
 
+  this.formData.additionalMobile.push('');
+
+}
+
+removeAdditionalMobile(index: number): void {
+
+  this.formData.additionalMobile.splice(index, 1);
+
+}
   get tr() {
     return this.translations[this.currentLang];
   }
@@ -767,12 +782,19 @@ getTamilEducationName(value: string): string {
 }
 async prepareEnglishValues(): Promise<void> {
 
-  const convert = async (taValue: string, enValue: string) => {
-    if (!taValue || !taValue.trim()) return enValue;
-    return await this.translateText(taValue, 'en');
-  };
+const convert = async (taValue: string, enValue: string) => {
 
-  this.formData.fullName = await convert(this.formDataTa.fullName, this.formData.fullName);
+  if (!taValue || !taValue.trim()) {
+    return enValue;
+  }
+
+  // do not translate english names
+  return taValue;
+
+};
+
+  this.formData.fullName =
+  this.formDataTa.fullName || this.formData.fullName;
   this.formData.fatherName = await convert(this.formDataTa.fatherName, this.formData.fatherName);
   this.formData.motherName = await convert(this.formDataTa.motherName, this.formData.motherName);
   this.formData.fatherOccupation = await convert(this.formDataTa.fatherOccupation, this.formData.fatherOccupation);
@@ -787,6 +809,59 @@ async prepareEnglishValues(): Promise<void> {
 this.formData.salary = await convert(this.formDataTa.salary, this.formData.salary);
 
 this.formData.gothram = await convert(this.formDataTa.gothram, this.formData.gothram);
+this.formData.subCaste =
+  await convert(
+    this.formDataTa.subCaste,
+    this.formData.subCaste
+  );
+
+this.formData.handicapDetails =
+  await convert(
+    this.formDataTa.handicapDetails,
+    this.formData.handicapDetails
+  );
+
+this.formData.thisai =
+  await convert(
+    this.formDataTa.thisai,
+    this.formData.thisai
+  );
+
+this.formData.thisaiIruppu =
+  await convert(
+    this.formDataTa.thisaiIruppu,
+    this.formData.thisaiIruppu
+  );
+
+this.formData.paatham =
+  await convert(
+    this.formDataTa.paatham,
+    this.formData.paatham
+  );
+
+this.formData.sothukal =
+  await convert(
+    this.formDataTa.sothukal,
+    this.formData.sothukal
+  );
+
+this.formData.poorvegam =
+  await convert(
+    this.formDataTa.poorvegam,
+    this.formData.poorvegam
+  );
+
+this.formData.iruppidam =
+  await convert(
+    this.formDataTa.iruppidam,
+    this.formData.iruppidam
+  );
+
+this.formData.kuladeivam =
+  await convert(
+    this.formDataTa.kuladeivam,
+    this.formData.kuladeivam
+  );
 }
 async onLanguageSwitch(lang: 'en' | 'ta'): Promise<void> {
   if (lang === 'en') {
@@ -804,7 +879,7 @@ async prepareAutoTamilValues(): Promise<void> {
   const convert = async (enValue: string, taValue: string) => {
     if (taValue && taValue.trim()) return taValue;
     if (!enValue || !enValue.trim()) return '';
-    return await this.translateText(enValue, 'ta');
+   return enValue;
   };
 
   this.formDataTa.fullName = await convert(this.formData.fullName, this.formDataTa.fullName);
@@ -1055,7 +1130,7 @@ if (this.currentLang === 'ta') {
         }
         return;
       }
-
+      this.isEditMode = true;
       this.formData.fullName = data.full_name || '';
       this.formDataTa.fullName = data.full_name_ta || '';
       this.formData.gender = data.gender_text || '';
@@ -1063,6 +1138,10 @@ if (this.currentLang === 'ta') {
       this.formData.age = data.age ? String(data.age) : '';
       this.formData.maritalStatus = data.marital_status_text || '';
       this.formData.mobile = data.mobile || '';
+      this.formData.additionalMobile =
+  Array.isArray(data.additional_mobile)
+    ? data.additional_mobile
+    : [''];
       this.formData.email = data.email || '';
       this.formData.height = data.height_text || (data.height_cm ? String(data.height_cm) : '');
       this.formData.weight = data.weight_text || (data.weight_kg ? String(data.weight_kg) : '');
@@ -1073,18 +1152,17 @@ if (this.currentLang === 'ta') {
 
 this.formDataTa.subCaste =
   data.sub_caste_text_ta || '';
+this.formData.marriedBrothers =
+  String(data.married_brothers ?? 0);
 
-this.formData.brothersCount =
-  data.brothers_count || '';
+this.formData.unmarriedBrothers =
+  String(data.unmarried_brothers ?? 0);
 
-this.formData.sistersCount =
-  data.sisters_count || '';
+this.formData.marriedSisters =
+  String(data.married_sisters ?? 0);
 
-this.formData.brothersMaritalStatus =
-  data.brothers_marital_status || '';
-
-this.formData.sistersMaritalStatus =
-  data.sisters_marital_status || '';
+this.formData.unmarriedSisters =
+  String(data.unmarried_sisters ?? 0);
 
 this.formData.handicapStatus =
   data.handicap_status ? 'Yes' : 'No';
@@ -1101,6 +1179,27 @@ this.formData.childrenStatus =
 this.formData.childrenCount =
   data.children_count || '';
       this.formData.fatherName = data.father_name || '';
+
+this.formData.thisai =
+  data.thisai || '';
+
+this.formData.thisaiIruppu =
+  data.thisai_iruppu || '';
+
+this.formData.paatham =
+  data.paatham || '';
+
+this.formData.sothukal =
+  data.sothukal || '';
+
+this.formData.poorvegam =
+  data.poorvegam || '';
+
+this.formData.iruppidam =
+  data.iruppidam || '';
+
+this.formData.kuladeivam =
+  data.kuladeivam || '';
       this.formData.motherName = data.mother_name || '';
       this.formData.fatherOccupation = data.father_occupation_text || data.father_occupation || '';
       this.formData.motherOccupation = data.mother_occupation_text || data.mother_occupation || '';
@@ -1183,6 +1282,29 @@ this.formData.kuladeivam =
 this.formDataTa.kuladeivam =
   data.kuladeivam_ta || '';
       this.formDataTa.fatherName = data.father_name_ta || '';
+      this.formDataTa.handicapDetails =
+  data.handicap_details_ta || '';
+
+this.formDataTa.thisai =
+  data.thisai_ta || '';
+
+this.formDataTa.thisaiIruppu =
+  data.thisai_iruppu_ta || '';
+
+this.formDataTa.paatham =
+  data.paatham_ta || '';
+
+this.formDataTa.sothukal =
+  data.sothukal_ta || '';
+
+this.formDataTa.poorvegam =
+  data.poorvegam_ta || '';
+
+this.formDataTa.iruppidam =
+  data.iruppidam_ta || '';
+
+this.formDataTa.kuladeivam =
+  data.kuladeivam_ta || '';
 this.formDataTa.motherName = data.mother_name_ta || '';
 this.formDataTa.fatherOccupation = data.father_occupation_ta || '';
 this.formDataTa.motherOccupation = data.mother_occupation_ta || '';
@@ -1761,12 +1883,9 @@ if (missingField) {
   this.formData.city = selectedCity?.city_name || '';
 
  this.isSaving = true;
-
+await this.prepareEnglishValues();
    try {
-        if (this.currentLang === 'ta') {
-          await this.prepareEnglishValues();
-        }
-
+       
         if (this.currentLang === 'en') {
           await this.prepareAutoTamilValues();
         }
@@ -1824,7 +1943,7 @@ if (missingField) {
       const { data: currentProfile, error: currentProfileError } = await supabase
         .from('user_profiles')
       .select('profile_code, profile_image_url, video_url, horoscope_file_url, additional_image_urls, latitude, longitude')
-        .eq('user_id', appUserId)
+       .eq('user_id', appUserId)
         .maybeSingle();
 
       if (currentProfileError) {
@@ -1874,9 +1993,7 @@ if (this.additionalImages.length > 0) {
         locationCoords.lng !== null
           ? locationCoords.lng
           : (typeof currentProfile?.longitude === 'number' ? currentProfile.longitude : this.existingLongitude);
-if (this.currentLang === 'ta') {
-  await this.prepareEnglishValues();
-}
+
 
 const taSnapshot = { ...this.formDataTa };
 console.log('SAVE CHECK:', {
@@ -1900,7 +2017,9 @@ console.log('SAVE CHECK:', {
         marital_status_text: this.safeText(this.formData.maritalStatus),
 
         mobile: this.safeText(this.formData.mobile || fallbackPhone),
-        additional_mobile: this.safeText(this.formData.additionalMobile),
+        additional_mobile:
+  this.formData.additionalMobile
+    .filter((x: string) => x.trim() !== ''),
         email: this.safeText(this.formData.email || fallbackEmail),
 
         height_cm: this.safeNumber(this.formData.height),
@@ -1921,14 +2040,18 @@ caste_text: this.safeText(this.formData.caste),
 sub_caste_text: this.safeText(this.formData.subCaste),
 sub_caste_text_ta: this.safeText(this.formDataTa.subCaste),
 
-brothers_count: this.formData.brothersCount || 0,
-sisters_count: this.formData.sistersCount || 0,
-brothers_marital_status:
-  this.formData.brothersMaritalStatus,
+married_brothers:
+  this.safeNumber(this.formData.marriedBrothers) || 0,
 
-sisters_marital_status:
-  this.formData.sistersMaritalStatus,
-handicap_status:
+unmarried_brothers:
+  this.safeNumber(this.formData.unmarriedBrothers) || 0,
+
+married_sisters:
+  this.safeNumber(this.formData.marriedSisters) || 0,
+
+unmarried_sisters:
+  this.safeNumber(this.formData.unmarriedSisters) || 0,
+handicap:
   this.formData.handicapStatus === 'Yes',
 
 handicap_details:
@@ -2089,6 +2212,20 @@ sothukal_ta: this.safeText(this.formDataTa.sothukal),
 kuladeivam: this.safeText(this.formData.kuladeivam),
 kuladeivam_ta: this.safeText(this.formDataTa.kuladeivam),
 
+poorvegam: this.safeText(this.formData.poorvegam),
+
+poorvegam_ta: this.safeText(
+  this.formDataTa.poorvegam
+),
+
+iruppidam: this.safeText(
+  this.formData.iruppidam
+),
+
+iruppidam_ta: this.safeText(
+  this.formDataTa.iruppidam
+),
+
 about_me: this.safeText(this.formData.aboutMe),
 
 partner_expectation: this.safeText(this.formData.partnerExpectation),
@@ -2101,7 +2238,7 @@ partner_expectation: this.safeText(this.formData.partnerExpectation),
         video_url: videoUrl || '',
 additional_image_urls: additionalImageUrls,
         completion_percentage: this.getCompletionPercentage(),
-        profile_status: 'published',
+        profile_status: 'draft',
         is_verified: false,
         is_published: true,
         updated_at: new Date().toISOString()
@@ -2109,7 +2246,7 @@ additional_image_urls: additionalImageUrls,
 
 const { data: existingProfile, error: existingError } = await supabase
   .from('user_profiles')
-  .select('user_id')
+  .select('profile_id, user_id')
   .eq('user_id', appUserId)
   .maybeSingle();
 
@@ -2118,31 +2255,35 @@ const { data: existingProfile, error: existingError } = await supabase
         return;
       }
 
-  if (existingProfile) {
+if (existingProfile) {
 
-
-  const { data: updatedData, error: updateError } = await supabase
+  const { error } = await supabase
     .from('user_profiles')
     .update(payload)
-    .eq('user_id', appUserId)
-    .select();
+    .eq('profile_id', existingProfile.profile_id);
 
-
-
-  if (updateError) {
-    this.snackbar.error(updateError.message);
+  if (error) {
+    this.snackbar.error(error.message);
     return;
   }
-} else {
-        const { error: insertError } = await supabase
-          .from('user_profiles')
-          .insert([payload]);
 
-        if (insertError) {
-          this.snackbar.error(insertError.message);
-          return;
-        }
+} else {
+
+  const { error } = await supabase
+    .from('user_profiles')
+    .insert([
+      {
+        ...payload,
+        user_id: appUserId
       }
+    ]);
+
+  if (error) {
+    this.snackbar.error(error.message);
+    return;
+  }
+
+}
 
       this.existingProfileImageUrl = profileImageUrl;
       this.existingVideoUrl = videoUrl;
@@ -2188,8 +2329,21 @@ if (this.isAdminCreated) {
 }
 
 this.snackbar.success(
-  this.tr.alerts.biodataSubmitted
+  this.isEditMode
+    ? (
+       this.currentLang === 'ta'
+          ? 'பயோடேட்டா வெற்றிகரமாக புதுப்பிக்கப்பட்டது'
+          : 'Biodata Updated Successfully'
+      )
+    : (
+       this.currentLang === 'ta'
+          ? 'பயோடேட்டா வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது'
+          : 'Biodata Submitted Successfully'
+      )
 );
+this.isSubmitted = true;
+await this.loadExistingBiodata();
+
     } catch (error: any) {
       console.error('Biodata save error:', error);
       this.snackbar.error(error?.message || 'Something went wrong while saving biodata');

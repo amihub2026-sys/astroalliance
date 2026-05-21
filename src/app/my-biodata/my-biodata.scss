@@ -602,3 +602,62 @@
     padding: 16px;
   }
 }
+.section-card{
+  margin-top:30px;
+  padding:0;
+  background:transparent;
+  box-shadow:none;
+  border-radius:0;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+}
+
+.field label{
+  font-size:15px;
+  font-weight:700;
+  color:#c2185b;
+  margin-bottom:8px;
+}
+
+.field input,
+.field textarea{
+  width:100%;
+  border:none;
+  border-bottom:1px solid #ddd;
+  border-radius:0;
+  padding:10px 0;
+  font-size:15px;
+  background:transparent;
+  color:#333;
+  outline:none;
+  box-shadow:none;
+}
+.field textarea{
+  min-height:80px;
+  resize:none;
+}
+
+.full-width{
+  grid-column:1 / -1;
+}
+
+@media(max-width:768px){
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .section-card{
+    padding:20px;
+  }
+
+}
