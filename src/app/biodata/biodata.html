@@ -291,17 +291,52 @@
   <small class="field-error" *ngIf="isInvalid('mobile')">Required</small>
 </div>
 
-<div class="field">
-<label>{{ tr.labels.additionalMobile }}</label>
-  <input
-    type="text"
-    [(ngModel)]="formData.additionalMobile"
-    name="additionalMobile"
-    maxlength="10"
-   [placeholder]="currentLang === 'ta'
-  ? 'கூடுதல் எண்ணை உள்ளிடவும்'
-  : 'Enter additional number'"
-  >
+<div class="field full-width additional-phone-field">
+
+  <label>
+    {{ tr.labels.additionalMobile }}
+  </label>
+
+  <div class="additional-phone-wrapper">
+
+    <div
+      *ngFor="
+        let mobile of formData.additionalMobile;
+        let i = index
+      "
+      class="additional-mobile-row"
+    >
+
+      <input
+        type="tel"
+        [(ngModel)]="formData.additionalMobile[i]"
+        [name]="'additionalMobile' + i"
+        maxlength="10"
+        inputmode="numeric"
+        placeholder="Enter 10 digit mobile number"
+      >
+
+      <button
+        type="button"
+        class="remove-btn"
+        *ngIf="formData.additionalMobile.length > 1"
+        (click)="removeAdditionalMobile(i)"
+      >
+        Remove
+      </button>
+
+    </div>
+
+    <button
+      type="button"
+      class="add-mobile-btn"
+      (click)="addAdditionalMobile()"
+    >
+      + Add Number
+    </button>
+
+  </div>
+
 </div>
           <!-- EMAIL -->
 <div class="field" [class.invalid]="isInvalid('email')">
@@ -493,126 +528,87 @@
           </div>
 
          <!-- SIBLINGS -->
-<!-- BROTHERS -->
+<!-- MARRIED BROTHERS -->
 
 <div class="field">
 
   <label>
-    {{ tr.labels.brothers }}
+    {{
+      currentLang === 'ta'
+        ? 'திருமணமான சகோதரர்கள்'
+        : 'Married Brothers'
+    }}
   </label>
 
   <input
     type="number"
-    [(ngModel)]="formData.brothersCount"
-    name="brothersCount"
+    [(ngModel)]="formData.marriedBrothers"
+    name="marriedBrothers"
     min="0"
   >
 
 </div>
 
-<!-- BROTHER MARITAL STATUS -->
+<!-- UNMARRIED BROTHERS -->
 
 <div class="field">
 
   <label>
-  {{
-    currentLang === 'ta'
-      ? 'சகோதரர் திருமண நிலை'
-      : 'Brother Marital Status'
-  }}
-</label>
-
-  <select
-    [(ngModel)]="formData.brothersMaritalStatus"
-    name="brothersMaritalStatus"
-  >
-
-    <option value="">
-  {{
-    currentLang === 'ta'
-      ? 'நிலையை தேர்வு செய்யவும்'
-      : 'Select Status'
-  }}
-</option>
-
-   <option value="Married">
-  {{
-    currentLang === 'ta'
-      ? 'திருமணமானவர்'
-      : 'Married'
-  }}
-</option>
-
-<option value="Unmarried">
-  {{
-    currentLang === 'ta'
-      ? 'திருமணம் ஆகாதவர்'
-      : 'Unmarried'
-  }}
-</option>
-
-  </select>
-
-</div>
-
-<!-- SISTERS -->
-
-<div class="field">
-
-  <label>
-    {{ tr.labels.sisters }}
+    {{
+      currentLang === 'ta'
+        ? 'திருமணம் ஆகாத சகோதரர்கள்'
+        : 'Unmarried Brothers'
+    }}
   </label>
 
   <input
     type="number"
-    [(ngModel)]="formData.sistersCount"
-    name="sistersCount"
+    [(ngModel)]="formData.unmarriedBrothers"
+    name="unmarriedBrothers"
     min="0"
   >
 
 </div>
 
-<!-- SISTER MARITAL STATUS -->
+<!-- MARRIED SISTERS -->
 
 <div class="field">
 
   <label>
-  {{
-    currentLang === 'ta'
-      ? 'சகோதரி திருமண நிலை'
-      : 'Sister Marital Status'
-  }}
-</label>
+    {{
+      currentLang === 'ta'
+        ? 'திருமணமான சகோதரிகள்'
+        : 'Married Sisters'
+    }}
+  </label>
 
-  <select
-    [(ngModel)]="formData.sistersMaritalStatus"
-    name="sistersMaritalStatus"
+  <input
+    type="number"
+    [(ngModel)]="formData.marriedSisters"
+    name="marriedSisters"
+    min="0"
   >
 
-    <option value="">
-  {{
-    currentLang === 'ta'
-      ? 'நிலையை தேர்வு செய்யவும்'
-      : 'Select Status'
-  }}
-</option>
-<option value="Married">
-  {{
-    currentLang === 'ta'
-      ? 'திருமணமானவர்'
-      : 'Married'
-  }}
-</option>
+</div>
 
-<option value="Unmarried">
-  {{
-    currentLang === 'ta'
-      ? 'திருமணம் ஆகாதவர்'
-      : 'Unmarried'
-  }}
-</option>
+<!-- UNMARRIED SISTERS -->
 
-  </select>
+<div class="field">
+
+  <label>
+    {{
+      currentLang === 'ta'
+        ? 'திருமணம் ஆகாத சகோதரிகள்'
+        : 'Unmarried Sisters'
+    }}
+  </label>
+
+  <input
+    type="number"
+    [(ngModel)]="formData.unmarriedSisters"
+    name="unmarriedSisters"
+    min="0"
+  >
 
 </div>
 
@@ -939,47 +935,6 @@
         </div>
       </div>
 
-      <!-- HOROSCOPE UPLOAD -->
-      <div class="section-card">
-        <div class="section-title-wrap">
-          <h2>{{ tr.sections.horoscopeUpload }}</h2>
-          <p>{{ tr.sections.horoscopeUploadSub }}</p>
-        </div>
-
-        <div class="horoscope-upload-area" [class.invalid-upload]="isInvalid('horoscopeFile')">
-          <div class="upload-panel">
-            <label class="upload-btn wide-btn">
-              {{ tr.labels.selectHoroscope }}
-              <input
-                type="file"
-                accept=".jpg,.jpeg,.png,.pdf"
-                (change)="onHoroscopeFileChange($event)"
-                hidden
-              />
-    
-            </label>
-
-            <button
-              type="button"
-              class="extract-btn"
-              (click)="extractHoroscopeData()"
-              [disabled]="isExtracting"
-            >
-              {{ isExtracting ? tr.labels.extracting : tr.labels.autoFill }}
-            </button>
-
-            <div class="file-note" *ngIf="selectedHoroscopeFile">
-              {{ tr.labels.selected }}: {{ selectedHoroscopeFile.name }}
-            </div>
-
-          </div>
-
-          <div class="horoscope-preview" *ngIf="horoscopePreviewUrl">
-            <img [src]="horoscopePreviewUrl" alt="Horoscope Preview">
-          </div>
-        </div>
-      </div>
-
       <!-- HOROSCOPE DETAILS + CHART -->
       <div class="section-card">
         <div class="section-title-wrap">
@@ -1161,20 +1116,53 @@
         <!-- HOROSCOPE CHART -->
         <div class="horoscope-chart-card">
           <div class="chart-top">
-            <div class="chart-hints">
-              <h4>Hints to fill up the chart</h4>
-              <div class="hint-grid">
-                <div class="hint-item" *ngFor="let item of horoscopeHints">
-                  <span class="hint-no">{{ item.no }}</span>
-                  <span class="hint-text">{{ item.label }}</span>
-                </div>
-              </div>
-            </div>
+         <div class="chart-top-layout">
 
-            <div class="chart-example">
-              <div class="chart-example-title">Example</div>
-              <img src="assets/example_chart.png" alt="Example Horoscope Chart" />
-            </div>
+  <!-- LEFT SIDE -->
+
+  <div class="chart-hints">
+
+    <h4>
+      Hints to fill up the chart
+    </h4>
+
+    <div class="hint-grid">
+
+      <div
+        class="hint-item"
+        *ngFor="let item of horoscopeHints"
+      >
+
+        <span class="hint-no">
+          {{ item.no }}
+        </span>
+
+        <span class="hint-text">
+          {{ item.label }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+
+  <div class="chart-example">
+
+    <div class="chart-example-title">
+      Example
+    </div>
+
+    <img
+      src="assets/example_chart.png"
+      alt="Example Horoscope Chart"
+    />
+
+  </div>
+
+</div>
           </div>
 
          <div class="double-chart-wrap">
@@ -1435,7 +1423,48 @@
         </div>
       </div>
 
-      <!-- ABOUT & PARTNER EXPECTATION -->
+      <!-- HOROSCOPE UPLOAD -->
+      <div class="section-card">
+        <div class="section-title-wrap">
+          <h2>{{ tr.sections.horoscopeUpload }}</h2>
+          <p>{{ tr.sections.horoscopeUploadSub }}</p>
+        </div>
+
+        <div class="horoscope-upload-area" [class.invalid-upload]="isInvalid('horoscopeFile')">
+          <div class="upload-panel">
+            <label class="upload-btn wide-btn">
+              {{ tr.labels.selectHoroscope }}
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+                (change)="onHoroscopeFileChange($event)"
+                hidden
+              />
+    
+            </label>
+
+            <button
+              type="button"
+              class="extract-btn"
+              (click)="extractHoroscopeData()"
+              [disabled]="isExtracting"
+            >
+              {{ isExtracting ? tr.labels.extracting : tr.labels.autoFill }}
+            </button>
+
+            <div class="file-note" *ngIf="selectedHoroscopeFile">
+              {{ tr.labels.selected }}: {{ selectedHoroscopeFile.name }}
+            </div>
+
+          </div>
+
+          <div class="horoscope-preview" *ngIf="horoscopePreviewUrl">
+            <img [src]="horoscopePreviewUrl" alt="Horoscope Preview">
+          </div>
+        </div>
+      </div>
+
+     
      <!-- ABOUT & PARTNER EXPECTATION -->
 <div class="section-card">
   <div class="section-title-wrap">
@@ -1444,7 +1473,7 @@
   </div>
 
   <div class="form-grid">
-    <div class="field full-width">
+    <!-- <div class="field full-width">
       <label>{{ currentLang === 'ta' ? 'என்னை பற்றி' : 'About Me' }}</label>
       <textarea
         [ngModel]="currentLang === 'ta' ? (formDataTa.aboutMe || formData.aboutMe) : formData.aboutMe"
@@ -1453,10 +1482,10 @@
         rows="4"
         [placeholder]="currentLang === 'ta' ? 'உங்களை பற்றி எழுதுங்கள்...' : 'Write about yourself...'"
       ></textarea>
-    </div>
+    </div> -->
 
     <div class="field full-width">
-      <label>{{ currentLang === 'ta' ? 'துணைவர் எதிர்பார்ப்பு' : 'Partner Expectation' }}</label>
+      <label>{{ currentLang === 'ta' ? 'எதிர்பார்ப்பு' : 'Expectation' }}</label>
       <textarea
         [ngModel]="currentLang === 'ta' ? (formDataTa.partnerExpectation || formData.partnerExpectation) : formData.partnerExpectation"
         (ngModelChange)="onTamilInputChange('partnerExpectation', $event)"
@@ -1464,15 +1493,36 @@
         rows="4"
         [placeholder]="currentLang === 'ta' ? 'எதிர்பார்க்கும் துணையை பற்றி எழுதுங்கள்...' : 'Describe your expected partner...'"
       ></textarea>
+
     </div>
   </div>
 </div>
 
-      <div class="submit-wrap">
-        <button type="submit" class="submit-btn" [disabled]="isSaving">
-          {{ isSaving ? tr.labels.saving : tr.labels.submit }}
-        </button>
-      </div>
+    <div class="submit-wrap">
+
+<button
+  type="submit"
+  class="submit-btn"
+  [disabled]="isSaving"
+>
+
+  {{
+    isSaving
+      ? tr.labels.saving
+      : (
+          isEditMode
+            ? (currentLang === 'ta'
+                ? 'பயோடேட்டாவை புதுப்பிக்கவும்'
+                : 'Update Biodata')
+            : (currentLang === 'ta'
+                ? 'பயோடேட்டாவை சமர்ப்பிக்கவும்'
+                : 'Submit Biodata')
+        )
+  }}
+ 
+</button>
+
+</div>
     </form>
   </div>
 </div>
