@@ -92,9 +92,9 @@ sentInterestTotal = 0;
         terms: 'விதிமுறைகள் மற்றும் நிபந்தனைகள்',
         login: 'உள்நுழைவு',
         register: 'பதிவு',
-        location: '📍 மதுரை, தமிழ்நாடு',
-        phone: '📞 +91 90421 11424',
-        email: '✉️ support@thirumagal.com',
+        location: 'மதுரை, தமிழ்நாடு',
+        phone: '+91 90421 11424',
+        email: 'support@thirumagal.com',
         copyright: '© 2026 திருமகள் மேட்ரிமோனி. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.'
       }
     }
@@ -152,15 +152,30 @@ this.showFooter =
     return !!rawUser || !!appUserId;
   }
 
-  toggleMenu(): void {
-    this.menuOpen = !this.menuOpen;
-    this.biodataMenuOpen = false;
-  }
+ toggleMenu(): void {
 
-  closeMenu(): void {
-    this.menuOpen = false;
-    this.biodataMenuOpen = false;
+  this.menuOpen = !this.menuOpen;
+
+  this.biodataMenuOpen = false;
+
+  if (this.menuOpen) {
+
+    document.body.style.overflow = 'hidden';
+
+  } else {
+
+    document.body.style.overflow = 'auto';
   }
+}
+
+closeMenu(): void {
+
+  this.menuOpen = false;
+
+  this.biodataMenuOpen = false;
+
+  document.body.style.overflow = 'auto';
+}
 
   toggleBiodataMenu(): void {
     this.biodataMenuOpen = !this.biodataMenuOpen;
