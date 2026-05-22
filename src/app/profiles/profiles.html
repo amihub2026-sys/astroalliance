@@ -816,14 +816,40 @@
               <span class="profile-id">{{ profile.id }}</span>
             </div>
 
-            <p><strong>{{ tr.profile.age }}:</strong> {{ profile.age || '-' }}</p>
-            <p><strong>{{ tr.profile.gender }}:</strong> {{ getText(profile.gender) || '-' }}</p>
-            <p><strong>{{ tr.profile.maritalStatus }}:</strong> {{ getText(profile.maritalStatus) || '-' }}</p>
-            <p><strong>{{ tr.profile.religion }}:</strong> {{ getText(profile.religion) || '-' }}</p>
-            <p><strong>{{ tr.profile.caste }}:</strong> {{ getText(profile.caste) || '-' }}</p>
+            <p>
+    <i class="fas fa-cake-candles"></i>
+    {{ profile.age || '-' }}
+    </p>
+
+           <p>
+    <i class="fas fa-venus-mars"></i>
+    {{ getText(profile.gender) || '-' }}
+  </p>
+
+            
+        <p>
+    <i class="fas fa-ring"></i>
+    {{ getText(profile.maritalStatus) || '-' }}
+  </p>
+   <p>
+    <i class="fas fa-place-of-worship"></i>
+    {{ getText(profile.religion) || '-' }}
+  </p>
+            <p>
+    <i class="fas fa-users"></i>
+    {{ getText(profile.caste) || '-' }}
+  </p>
+
             <!-- <p><strong>{{ tr.profile.location }}:</strong> {{ getText(profile.location) || '-' }}</p> -->
-            <p><strong>{{ tr.profile.education }}:</strong> {{ getText(profile.education) || '-' }}</p>
-            <p><strong>{{ tr.profile.profession }}:</strong> {{ getText(profile.profession) || '-' }}</p>
+            <p>
+    <i class="fas fa-graduation-cap"></i>
+    {{ getText(profile.education) || '-' }}
+  </p>
+
+            <p>
+    <i class="fas fa-briefcase"></i>
+    {{ getText(profile.profession) || '-' }}
+  </p>
             <p *ngIf="filters.radius">
               <strong>{{ tr.profile.distance }}:</strong> {{ formatDistance(profile.distanceKm) }}
             </p>
