@@ -1,6 +1,7 @@
 <div class="biodata-page">
   <div class="biodata-container">
 
+<div class="biodata-layout">
     <div class="top-banner">
       <div>
         <h1>{{ tr.banner.title }}</h1>
@@ -9,9 +10,18 @@
       <div class="banner-badge">{{ tr.banner.badge }}</div>
     </div>
 
+<div class="form-side">
+
 <form (ngSubmit)="onSubmit()" #biodataForm="ngForm" novalidate>
-        <!-- PROFILE IMAGE -->
-      <div class="section-card profile-card">
+       <!-- MEDIA UPLOAD -->
+
+<details class="form-accordion" open>
+
+<summary>
+  Images & Videos
+</summary>
+
+<div class="section-card profile-card">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.profilePhoto }}</h2>
           <p>{{ tr.sections.profilePhotoSub }}</p>
@@ -72,6 +82,9 @@
 
         <div class="media-upload-wrap">
           <div class="media-actions">
+            <h4 class="media-sub-title">
+  Additional Images & Video
+</h4>
             <label class="upload-btn">
               {{ tr.labels.chooseImages }}
               <input
@@ -127,9 +140,16 @@
           </div>
         </div>
       </div>
+</details>
 
       <!-- PERSONAL DETAILS -->
-      <div class="section-card">
+ <details class="form-accordion" open>
+
+<summary>
+  Personal Details
+</summary>
+
+<div class="section-card">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.personal }}</h2>
           <p>{{ tr.sections.personalSub }}</p>
@@ -471,9 +491,18 @@
           </div>
         </div>
       </div>
+</details>
 
       <!-- FAMILY -->
-      <div class="section-card">
+     <!-- FAMILY -->
+
+<details class="form-accordion">
+
+<summary>
+  Family Details
+</summary>
+
+<div class="section-card">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.family }}</h2>
           <p>{{ tr.sections.familySub }}</p>
@@ -671,9 +700,17 @@
 
         </div>
       </div>
+      </details>
 
-      <!-- EDUCATION -->
-      <div class="section-card">
+    <!-- EDUCATION -->
+
+<details class="form-accordion">
+
+<summary>
+  Education Details
+</summary>
+
+<div class="section-card">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.education }}</h2>
           <p>{{ tr.sections.educationSub }}</p>
@@ -784,9 +821,17 @@
 </div>
         </div>
       </div>
-
+</details>
       <!-- ADDRESS -->
-      <div class="section-card">
+    
+
+<details class="form-accordion">
+
+<summary>
+  Address Details
+</summary>
+
+<div class="section-card">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.address }}</h2>
           <p>{{ tr.sections.addressSub }}</p>
@@ -934,9 +979,16 @@
 
         </div>
       </div>
+</details>
+ <!-- HOROSCOPE DETAILS + CHART -->
 
-      <!-- HOROSCOPE DETAILS + CHART -->
-      <div class="section-card">
+<details class="form-accordion">
+
+<summary>
+  Horoscope Details
+</summary>
+
+<div class="section-card">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.horoscopeDetails }}</h2>
           <p>{{ tr.sections.horoscopeDetailsSub }}</p>
@@ -1422,7 +1474,7 @@
 </div>
         </div>
       </div>
-
+</details>
       <!-- HOROSCOPE UPLOAD -->
       <div class="section-card">
         <div class="section-title-wrap">
@@ -1524,5 +1576,173 @@
 
 </div>
     </form>
+    </div>
+
+<!-- LIVE PREVIEW -->
+
+<div class="preview-side">
+
+  <div class="preview-card">
+
+    <!-- <div class="preview-header">
+
+      <div class="preview-image">
+
+        <img
+          *ngIf="profilePreviewUrl"
+          [src]="profilePreviewUrl"
+        >
+
+      </div>
+
+      <h2>
+        {{ currentLang === 'ta'
+          ? (formDataTa.fullName || formData.fullName)
+          : formData.fullName || 'Your Name'
+        }}
+      </h2>
+
+      <p>
+        {{ formData.age || '--' }} Years
+      </p>
+
+    </div> -->
+
+    <!-- ACCORDION TITLE -->
+
+    <h3 class="accordion-title">
+      Live Preview
+    </h3>
+
+    <!-- ACCORDION -->
+
+ <div class="preview-full-content">
+
+  <!-- PERSONAL DETAILS -->
+
+  <div class="preview-section">
+
+    <h3>Personal Details</h3>
+
+    <div class="preview-grid">
+
+      <p><strong>Full Name:</strong><span>{{ currentLang === 'ta'
+      ? (formDataTa.fullName || formData.fullName)
+      : formData.fullName || '-' }}</span></p>
+
+      <p><strong>DOB:</strong><span>{{ formData.dob || '-' }}</span></p>
+
+      <p><strong>Birth Time:</strong><span>{{ formData.birthTime || '-' }}</span></p>
+
+      <p><strong>Age:</strong><span>{{ formData.age || '-' }}</span></p>
+
+      <p><strong>Gender:</strong><span>{{ formData.gender || '-' }}</span></p>
+
+      <p><strong>Marital Status:</strong><span>{{ formData.maritalStatus || '-' }}</span></p>
+
+      <p><strong>Mobile:</strong><span>{{ formData.mobile || '-' }}</span></p>
+
+      <p><strong>Email:</strong><span>{{ formData.email || '-' }}</span></p>
+
+      <p><strong>Religion:</strong><span>{{ formData.religion || '-' }}</span></p>
+
+      <p><strong>Caste:</strong><span>{{ formData.caste || '-' }}</span></p>
+
+    </div>
+
+  </div>
+
+  <!-- FAMILY -->
+
+  <div class="preview-section">
+
+    <h3>Family Details</h3>
+
+    <div class="preview-grid">
+
+      <p><strong>Father Name:</strong><span>{{ formData.fatherName || '-' }}</span></p>
+
+      <p><strong>Mother Name:</strong><span>{{ formData.motherName || '-' }}</span></p>
+
+      <p><strong>Father Occupation:</strong><span>{{ formData.fatherOccupation || '-' }}</span></p>
+
+      <p><strong>Mother Occupation:</strong><span>{{ formData.motherOccupation || '-' }}</span></p>
+
+      <p><strong>Sothukal:</strong><span>{{ formData.sothukal || '-' }}</span></p>
+
+      <p><strong>Kuladeivam:</strong><span>{{ formData.kuladeivam || '-' }}</span></p>
+
+    </div>
+
+  </div>
+
+  <!-- EDUCATION -->
+
+  <div class="preview-section">
+
+    <h3>Education Details</h3>
+
+    <div class="preview-grid">
+
+      <p><strong>Education:</strong><span>{{ formData.education || '-' }}</span></p>
+
+      <p><strong>Job:</strong><span>{{ formData.job || '-' }}</span></p>
+
+      <p><strong>Company:</strong><span>{{ formData.company || '-' }}</span></p>
+
+      <p><strong>Salary:</strong><span>{{ formData.salary || '-' }}</span></p>
+
+    </div>
+
+  </div>
+
+  <!-- ADDRESS -->
+
+<!-- ADDRESS -->
+
+<div class="preview-section">
+
+  <h3>Address Details</h3>
+
+<div class="preview-grid address-clean-grid">
+
+  <p class="full-address-row">
+    <strong>Address:</strong>
+    <span>{{ formData.address || '-' }}</span>
+  </p>
+
+  <p>
+    <strong>Country:</strong>
+    <span>{{ formData.country || '-' }}</span>
+  </p>
+
+  <p>
+    <strong>State:</strong>
+    <span>{{ formData.state || '-' }}</span>
+  </p>
+
+  <p>
+    <strong>City:</strong>
+    <span>{{ formData.city || '-' }}</span>
+  </p>
+
+  <p>
+    <strong>Iruppidam:</strong>
+    <span>{{ formData.iruppidam || '-' }}</span>
+  </p>
+
+</div>
+
+</div>
+
+  
+
+</div>
+
+  </div>
+
+</div>
+
+</div>
   </div>
 </div>
