@@ -62,9 +62,9 @@ sentInterestTotal = 0;
         terms: 'Terms & Conditions',
         login: 'Login',
         register: 'Register',
-        location: '📍 Madurai, Tamil Nadu',
-        phone: '📞 +91 90421 11424',
-        email: '✉️ support@thirumagal.com',
+        location: 'Madurai, Tamil Nadu',
+        phone: '+91 90421 11424',
+        email: 'support@thirumagal.com',
         copyright: '© 2026 Astro Alliance. All Rights Reserved.'
       }
     },
