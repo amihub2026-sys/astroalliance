@@ -3,17 +3,33 @@
   class="navbar"
   *ngIf="!isAdminPage">
     <div class="logo-section">
-     <a routerLink="/" class="logo" (click)="closeMenu()">
-  <img
-    src="assets/malogo.png"
-    alt="Astro Alliance Logo"
-    class="logo-img"
-  />
-</a>
+
+  <a routerLink="/" class="logo" (click)="closeMenu()">
+
+    <img
+      src="assets/malogo.png"
+      alt="Astro Alliance Logo"
+      class="logo-img"
+    />
+
+    <div class="logo-text-wrap">
+
+      <h2 class="logo-title">
+        Astro Alliance
+      </h2>
+
+      <span class="logo-subtitle">
+        Matrimony
+      </span>
+
     </div>
 
+  </a>
+
+</div>
+
     <div class="nav-right">
-      <div class="language-switcher">
+     <div class="language-switcher creative-switcher">
         <button
           type="button"
           [class.active]="currentLang === 'en'"
