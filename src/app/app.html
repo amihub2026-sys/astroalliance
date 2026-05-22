@@ -1,5 +1,7 @@
 <div class="app_shell">
-  <header class="navbar">
+  <header
+  class="navbar"
+  *ngIf="!isAdminPage">
     <div class="logo-section">
      <a routerLink="/" class="logo" (click)="closeMenu()">
   <img
