@@ -128,63 +128,171 @@
     <router-outlet></router-outlet>
   </main>
 
-  <!-- FOOTER (UNCHANGED) -->
-  <footer
+  <!-- PREMIUM FOOTER -->
+
+<footer
   class="footer"
-  *ngIf="showFooter">
-    <div class="footer-container">
-     <div class="footer-col">
-  <img
-    src="assets/malogo.png"
-    alt="Astro Alliance Logo"
-    class="footer-logo-img"
-  />
+  *ngIf="showFooter"
+>
+  <div class="footer-overlay"></div>
 
-  <p>{{ t.footer.aboutText }}</p>
-</div>
-      <div class="footer-col">
-        <h3>{{ t.footer.quickLinks }}</h3>
-        <ul>
-          <li><a routerLink="/">{{ t.footer.home }}</a></li>
-          <li><a routerLink="/profiles">{{ t.footer.profiles }}</a></li>
-          <li><a routerLink="/plans">{{ t.footer.plans }}</a></li>
-          <li><a routerLink="/terms">{{ t.footer.terms }}</a></li>
-   
-          <li *ngIf="!isLoggedIn">
-            <a routerLink="/login">{{ t.footer.login }}</a>
-          </li>
+  <div class="footer-container">
 
-          <li *ngIf="!isLoggedIn">
-            <a routerLink="/register">{{ t.footer.register }}</a>
-          </li>
+    <!-- LEFT -->
 
-          <li *ngIf="isLoggedIn">
-            <a routerLink="/biodata">{{ t.nav.biodata }}</a>
-          </li>
-        </ul>
-      </div>
+    <div class="footer-col footer-brand">
 
-      <div class="footer-col">
-        <h3>{{ t.footer.contact }}</h3>
-        <p>{{ t.footer.location }}</p>
-        <p>{{ t.footer.phone }}</p>
-        <p>{{ t.footer.email }}</p>
-      </div>
+      <img
+        src="assets/malogo.png"
+        alt="Astro Alliance Logo"
+        class="footer-logo-img"
+      />
 
-      <div class="footer-col">
-        <h3>{{ t.footer.followUs }}</h3>
-        <div class="social-icons">
-          <a href="#">🌐</a>
-          <a href="#">📘</a>
-          <a href="#">📸</a>
-          <a href="#">▶</a>
-        </div>
-      </div>
+      <p class="footer-about">
+        {{ t.footer.aboutText }}
+      </p>
+
     </div>
 
-    <div class="footer-bottom">
-      <p>{{ t.footer.copyright }}</p>
+    <!-- QUICK LINKS -->
+
+    <div class="footer-col">
+
+      <h3>{{ t.footer.quickLinks }}</h3>
+
+      <ul class="footer-links">
+
+        <li>
+          <a routerLink="/">
+            {{ t.footer.home }}
+          </a>
+        </li>
+
+        <li>
+          <a routerLink="/profiles">
+            {{ t.footer.profiles }}
+          </a>
+        </li>
+
+        <li>
+          <a routerLink="/plans">
+            {{ t.footer.plans }}
+          </a>
+        </li>
+
+        <li>
+          <a routerLink="/terms">
+            {{ t.footer.terms }}
+          </a>
+        </li>
+
+        <li *ngIf="!isLoggedIn">
+          <a routerLink="/login">
+            {{ t.footer.login }}
+          </a>
+        </li>
+
+        <li *ngIf="!isLoggedIn">
+          <a routerLink="/register">
+            {{ t.footer.register }}
+          </a>
+        </li>
+
+        <li *ngIf="isLoggedIn">
+          <a routerLink="/biodata">
+            {{ t.nav.biodata }}
+          </a>
+        </li>
+
+      </ul>
+
     </div>
-  </footer>
-  <app-snackbar></app-snackbar>
+
+    <!-- CONTACT -->
+
+    <div class="footer-col">
+
+      <h3>{{ t.footer.contact }}</h3>
+<div class="footer-contact">
+
+  <p>
+    <span class="contact-icon">
+      <i class="fas fa-map-marker-alt"></i>
+    </span>
+
+    <span>{{ t.footer.location }}</span>
+  </p>
+
+  <p>
+    <span class="contact-icon">
+      <i class="fas fa-phone-volume"></i>
+    </span>
+
+    <span>{{ t.footer.phone }}</span>
+  </p>
+
+  <p>
+    <span class="contact-icon">
+      <i class="fas fa-envelope"></i>
+    </span>
+
+    <span>{{ t.footer.email }}</span>
+  </p>
+
 </div>
+    </div>
+
+    <!-- SOCIAL -->
+
+<div class="footer-col">
+
+  <h3>{{ t.footer.followUs }}</h3>
+
+  <div class="social-icons">
+
+    <!-- WEBSITE -->
+    <a href="https://yourwebsite.com" target="_blank">
+      <i class="fas fa-globe"></i>
+    </a>
+
+    <!-- WHATSAPP -->
+    <a href="https://wa.me/919042111424" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- FACEBOOK -->
+    <a href="https://facebook.com" target="_blank">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+
+    <!-- INSTAGRAM -->
+    <a href="https://instagram.com" target="_blank">
+      <i class="fab fa-instagram"></i>
+    </a>
+
+    <!-- THREADS -->
+    <a href="https://threads.net" target="_blank">
+      <i class="fab fa-threads"></i>
+    </a>
+
+    <!-- YOUTUBE -->
+    <a href="https://youtube.com" target="_blank">
+      <i class="fab fa-youtube"></i>
+    </a>
+
+  </div>
+
+</div>
+  </div>
+
+  <!-- BOTTOM -->
+
+  <div class="footer-bottom">
+
+    <p>
+      {{ t.footer.copyright }}
+    </p>
+
+  </div>
+
+</footer>
