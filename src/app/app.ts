@@ -26,6 +26,7 @@ export class App {
   private router = inject(Router);
   private isBrowser = isPlatformBrowser(this.platformId);
 showFooter = true;
+isAdminPage = false;
 menuOpen = false;
 biodataMenuOpen = false;
 currentLang: Language = 'en';
@@ -69,9 +70,9 @@ sentInterestTotal = 0;
     },
     ta: {
       nav: {
-        home: 'முகப்பு',
-        profiles: 'சுயவிவரங்கள்',
-        plans: 'திட்டங்கள்',
+        home: 'ஹோம்',
+        profiles: 'மேட்ச்சஸ்',
+        plans: 'திட்டம்',
         terms: 'விதிமுறைகள்',
         login: 'உள்நுழைவு',
         register: 'பதிவு',
@@ -85,9 +86,9 @@ sentInterestTotal = 0;
         quickLinks: 'விரைவு இணைப்புகள்',
         contact: 'தொடர்பு',
         followUs: 'எங்களை பின்தொடருங்கள்',
-        home: 'முகப்பு',
-        profiles: 'சுயவிவரங்கள்',
-        plans: 'திட்டங்கள்',
+        home: 'ஹோம்',
+        profiles: 'மேட்ச்சஸ்',
+        plans: 'திட்டம்',
         terms: 'விதிமுறைகள் மற்றும் நிபந்தனைகள்',
         login: 'உள்நுழைவு',
         register: 'பதிவு',
@@ -125,8 +126,13 @@ this.router.events.subscribe((event) => {
     if (event.urlAfterRedirects.includes('/sent-interests')) {
       this.markSentInterestsSeen();
     }
-    this.showFooter =
-  !event.urlAfterRedirects.includes('/admin');
+   const currentUrl = event.urlAfterRedirects;
+   this.isAdminPage =
+  currentUrl.includes('/admin');
+
+this.showFooter =
+  currentUrl === '/' ||
+  currentUrl.includes('/plans');
   }
   
 });

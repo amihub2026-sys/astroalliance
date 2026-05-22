@@ -1,5 +1,7 @@
 <div class="app_shell">
-  <header class="navbar">
+  <header
+  class="navbar"
+  *ngIf="!isAdminPage">
     <div class="logo-section">
      <a routerLink="/" class="logo" (click)="closeMenu()">
   <img
@@ -63,7 +65,7 @@
   (click)="$event.stopPropagation(); toggleBiodataMenu()"
 >
   <span class="profile-icon">♡</span>
-<span>{{ currentLang === 'ta' ? 'என் சுயவிவரம்' : 'My Profile' }}</span>
+<span>{{ currentLang === 'ta' ? 'மை ப்ரொபைல்' : 'My Profile' }}</span>
 
   <span class="interest-badge" *ngIf="interestNotificationCount > 0">
     {{ interestNotificationCount }}
@@ -73,18 +75,18 @@
       <div class="my-biodata-menu" [class.show]="biodataMenuOpen">
 
   <a (click)="goToPage('/my-biodata')">
-  {{ currentLang === 'ta' ? 'என் சுயவிவரம்' : 'My Profile' }}
+  {{ currentLang === 'ta' ? 'மை ப்ரொபைல்' : 'My Profile' }}
 </a>
 
 <a (click)="openReceivedInterests()">
-{{ currentLang === 'ta' ? 'பெற்ற ஆர்வங்கள்' : 'Received Interests' }}
+{{ currentLang === 'ta' ? 'ரிசீவ்டு இன்ட்ரஸ்ட்' : 'Received Interests' }}
   <span class="menu-badge" *ngIf="receivedInterestCount > 0">
     {{ receivedInterestCount }}
   </span>
 </a>
 
 <a (click)="openSentInterests()">
- {{ currentLang === 'ta' ? 'அனுப்பிய ஆர்வங்கள்' : 'Sent Interests' }}
+ {{ currentLang === 'ta' ? 'சென்ட் இன்ட்ரஸ்ட்' : 'Sent Interests' }}
   <span class="menu-badge" *ngIf="sentInterestCount > 0">
     {{ sentInterestCount }}
   </span>

@@ -46,239 +46,348 @@
 </div>
 
 </div>
-    <div class="details-grid">
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'மதம்' : 'Religion' }}</h3><p>{{ showTextValue(profile.religion_text, profile.religion_name_ta) }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'ஜாதி' : 'Caste' }}</h3><p>{{ showTextValue(profile.caste_text, profile.caste_name_ta) }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'உயரம்' : 'Height' }}</h3><p>{{ profile.height_text || '-' }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'எடை' : 'Weight' }}</h3><p>{{ profile.weight_text || '-' }}</p></div>
-<div class="detail-box">
-  <h3>{{ currentLang === 'ta' ? 'தந்தை பெயர்' : 'Father Name' }}</h3>
-<p>{{ showLangValue(profile.father_name, profile.father_name_ta) }}</p>
+ <div class="section-card">
+
+  <div class="form-grid">
+
+    <div class="field">
+     <label>
+  {{ currentLang === 'ta' ? 'மதம்' : 'Religion' }}
+</label>
+      <input
+        [value]="showTextValue(profile.religion_text, profile.religion_name_ta)"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+     <label>
+  {{ currentLang === 'ta' ? 'ஜாதி' : 'Caste' }}
+</label>
+      <input
+        [value]="showTextValue(profile.caste_text, profile.caste_name_ta)"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+      <label>
+  {{ currentLang === 'ta' ? 'உயரம்' : 'Height' }}
+</label>
+      <input
+        [value]="profile.height_text || '-'"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+      <label>
+  {{ currentLang === 'ta' ? 'எடை' : 'Weight' }}
+</label>
+      <input
+        [value]="profile.weight_text || '-'"
+        readonly
+      >
+    </div>
+<div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'நட்சத்திரம்' : 'Nakshatra' }}
+</label>
+  <input
+    [value]="showValue('nakshatra', profile.nakshatra_text)"
+    readonly
+  >
 </div>
 
-<div class="detail-box">
-  <h3>{{ currentLang === 'ta' ? 'தாய் பெயர்' : 'Mother Name' }}</h3>
-<p>{{ showLangValue(profile.mother_name, profile.mother_name_ta) }}</p>
+<div class="field">
+ <label>
+  {{ currentLang === 'ta' ? 'ராசி' : 'Rasi' }}
+</label>
+  <input
+    [value]="showValue('rasi', profile.rasi_text)"
+    readonly
+  >
 </div>
 
-<div class="detail-box">
-  <h3>{{ currentLang === 'ta' ? 'தந்தையின் தொழில்' : 'Father Occupation' }}</h3>
-<p>{{ showLangValue(profile.father_occupation_text, profile.father_occupation_ta) }}</p>
+<div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'லக்னம்' : 'Lagnam' }}
+</label>
+  <input
+    [value]="showValue('lagnam', profile.lagnam_text)"
+    readonly
+  >
 </div>
 
-<div class="detail-box">
-  <h3>{{ currentLang === 'ta' ? 'தாயின் தொழில்' : 'Mother Occupation' }}</h3>
- <p>{{ showLangValue(profile.mother_occupation_text, profile.mother_occupation_ta) }}</p>
+<div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'தோஷம்' : 'Dhosham' }}
+</label>
+  <input
+    [value]="showValue('dhosham', profile.dhosham_text)"
+    readonly
+  >
 </div>
 
-<!-- BROTHERS -->
-
-<div class="detail-box">
-
-  <h3>
-    {{
-      currentLang === 'ta'
-        ? 'சகோதரர்கள்'
-        : 'Brothers'
-    }}
-  </h3>
-
-  <p>
-    {{ profile.brothers_count || '0' }}
-  </p>
-
+<div class="field">
+ <label>
+  {{ currentLang === 'ta' ? 'பிறந்த இடம்' : 'Birth Place' }}
+</label>
+  <input
+    [value]="showLangValue(profile.birth_place, profile.birth_place_ta)"
+    readonly
+  >
 </div>
 
-<!-- BROTHER MARITAL STATUS -->
-
-<div class="detail-box">
-
-  <h3>
-    {{
-      currentLang === 'ta'
-        ? 'சகோதரர் திருமண நிலை'
-        : 'Brother Marital Status'
-    }}
-  </h3>
-
-  <p>
-    {{ profile.brothers_marital_status || '-' }}
-  </p>
-
+<div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'கோத்திரம்' : 'Gothram' }}
+</label>
+  <input
+    [value]="showLangValue(profile.gothram, profile.gothram_ta)"
+    readonly
+  >
 </div>
 
-<!-- SISTERS -->
-
-<div class="detail-box">
-
-  <h3>
-    {{
-      currentLang === 'ta'
-        ? 'சகோதரிகள்'
-        : 'Sisters'
-    }}
-  </h3>
-
-  <p>
-    {{ profile.sisters_count || '0' }}
-  </p>
-
+<div class="field">
+ <label>
+  {{ currentLang === 'ta' ? 'குலதெய்வம்' : 'Kuladeivam' }}
+</label>
+  <input
+    [value]="profile.kuladeivam || '-'"
+    readonly
+  >
 </div>
 
-<!-- SISTER MARITAL STATUS -->
-
-<div class="detail-box">
-
-  <h3>
-    {{
-      currentLang === 'ta'
-        ? 'சகோதரி திருமண நிலை'
-        : 'Sister Marital Status'
-    }}
-  </h3>
-
-  <p>
-    {{ profile.sisters_marital_status || '-' }}
-  </p>
-
+<div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'பூர்வீகம்' : 'Poorvegam' }}
+</label>
+  <input
+    [value]="showLangValue(profile.poorvegam, profile.poorvegam_ta)"
+    readonly
+  >
 </div>
 
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'கல்வி' : 'Education' }}</h3><p>{{ showTextValue(profile.education_text, profile.education_text_ta) }}</p></div>
-<div class="detail-box">
-  <h3>{{ currentLang === 'ta' ? 'தொழில்' : 'Occupation' }}</h3>
- <p>{{ showLangValue(profile.occupation_text, profile.occupation_text_ta) }}</p>
-</div>
-<div class="detail-box">
-  <h3>{{ currentLang === 'ta' ? 'நிறுவனம்' : 'Company' }}</h3>
-<p>{{ showLangValue(profile.company_name, profile.company_name_ta) }}</p>
-</div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'சம்பளம்' : 'Salary' }}</h3><p>{{ profile.salary_text || '-' }}</p></div>
-
- <div class="detail-box full">
-  <h3>{{ currentLang === 'ta' ? 'முகவரி' : 'Address' }}</h3>
-  <p>{{ showLangValue(profile.address_line, profile.address_line_ta) }}</p>
-</div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'நகரம்' : 'City' }}</h3><p>{{ showTextValue(profile.city_text, profile.city_name_ta) }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'மாநிலம்' : 'State' }}</h3><p>{{ showTextValue(profile.state_text, profile.state_name_ta) }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'நாடு' : 'Country' }}</h3><p>{{ showTextValue(profile.country_text, profile.country_name_ta) }}</p></div>
-
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'ராசி' : 'Rasi' }}</h3><p>{{ showValue('rasi', profile.rasi_text) }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'நட்சத்திரம்' : 'Nakshatra' }}</h3><p>{{ showValue('nakshatra', profile.nakshatra_text) }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'லக்னம்' : 'Lagnam' }}</h3><p>{{ showValue('rasi', profile.lagnam_text) }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'கோத்ரம்' : 'Gothram' }}</h3><p>
-{{ showLangValue(profile.gothram, profile.gothram_ta) }}
-</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'தோஷம்' : 'Dhosham' }}</h3><p>{{ showValue('dhosham', profile.dhosham_text) }}</p></div>
-  <div class="detail-box"><h3>{{ currentLang === 'ta' ? 'பிறந்த நேரம்' : 'Birth Time' }}</h3><p>{{ profile.birth_time || '-' }}</p></div>
- <div class="detail-box">
-  <h3>{{ currentLang === 'ta' ? 'பிறந்த இடம்' : 'Birth Place' }}</h3>
-<p>{{ showLangValue(profile.birth_place, profile.birth_place_ta) }}</p>
-</div>
-<!-- THISAI -->
-
-<div class="detail-box">
-  <h3>
-    {{ currentLang === 'ta'
-      ? 'திசை'
-      : 'Thisai'
-    }}
-  </h3>
-
-  <p>
-    {{
-      currentLang === 'ta'
-        ? (profile.thisai_ta || profile.thisai || '-')
-        : (profile.thisai || '-')
-    }}
-  </p>
+<div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'இருப்பிடம்' : 'Iruppidam' }}
+</label>
+  <input
+    [value]="showLangValue(profile.iruppidam, profile.iruppidam_ta)"
+    readonly
+  >
 </div>
 
-<!-- THISAI IRUPPU -->
+<div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'சொத்துகள்' : 'Sothukal' }}
+</label>
+  <input
+    [value]="profile.sothukal || '-'"
+    readonly
+  >
+</div>
+    <div class="field">
+      <label>
+  {{ currentLang === 'ta' ? 'தந்தை பெயர்' : 'Father Name' }}
+</label>
+      <input
+        [value]="showLangValue(profile.father_name, profile.father_name_ta)"
+        readonly
+      >
+    </div>
 
-<div class="detail-box">
-  <h3>
-    {{ currentLang === 'ta'
-      ? 'திசை இருப்பு'
-      : 'Thisai Iruppu'
-    }}
-  </h3>
+    <div class="field">
+      <label>
+  {{ currentLang === 'ta' ? 'தாய் பெயர்' : 'Mother Name' }}
+</label>
+      <input
+        [value]="showLangValue(profile.mother_name, profile.mother_name_ta)"
+        readonly
+      >
+    </div>
 
-  <p>
-    {{
-      currentLang === 'ta'
-        ? (profile.thisai_iruppu_ta || profile.thisai_iruppu || '-')
-        : (profile.thisai_iruppu || '-')
-    }}
-  </p>
+    <div class="field">
+      <label>
+  {{ currentLang === 'ta' ? 'தந்தை தொழில்' : 'Father Occupation' }}
+</label>
+      <input
+        [value]="showLangValue(profile.father_occupation_text, profile.father_occupation_ta)"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+      <label>
+  {{ currentLang === 'ta' ? 'தாய் தொழில்' : 'Mother Occupation' }}
+</label>
+      <input
+        [value]="showLangValue(profile.mother_occupation_text, profile.mother_occupation_ta)"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+     <label>
+  {{ currentLang === 'ta'
+    ? 'திருமணமான சகோதரர்கள்'
+    : 'Married Brothers'
+  }}
+</label>
+      <input
+        [value]="profile.married_brothers || 0"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+   <label>
+  {{ currentLang === 'ta'
+    ? 'திருமணம் ஆகாத சகோதரர்கள்'
+    : 'Unmarried Brothers'
+  }}
+</label>
+      <input
+        [value]="profile.unmarried_brothers || 0"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+     <label>
+  {{ currentLang === 'ta'
+    ? 'திருமணமான சகோதரிகள்'
+    : 'Married Sisters'
+  }}
+</label>
+      <input
+        [value]="profile.married_sisters || 0"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+     <label>
+  {{ currentLang === 'ta'
+    ? 'திருமணம் ஆகாத சகோதரிகள்'
+    : 'Unmarried Sisters'
+  }}
+</label>
+      <input
+        [value]="profile.unmarried_sisters || 0"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+      <label>
+  {{ currentLang === 'ta' ? 'கல்வி' : 'Education' }}
+</label>
+      <input
+        [value]="showTextValue(profile.education_text, profile.education_text_ta)"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+     <label>
+  {{ currentLang === 'ta' ? 'தொழில்' : 'Occupation' }}
+</label>
+      <input
+        [value]="showLangValue(profile.occupation_text, profile.occupation_text_ta)"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+     <label>
+  {{ currentLang === 'ta' ? 'நிறுவனம்' : 'Company' }}
+</label>
+      <input
+        [value]="showLangValue(profile.company_name, profile.company_name_ta)"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+     <label>
+  {{ currentLang === 'ta' ? 'சம்பளம்' : 'Salary' }}
+</label>
+      <input
+        [value]="profile.salary_text || '-'"
+        readonly
+      >
+    </div>
+
+    <div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'குழந்தைகள் நிலை' : 'Children Status' }}
+</label>
+  <input
+    [value]="profile.children_status || '-'"
+    readonly
+  >
 </div>
 
-<!-- PAATHAM -->
-
-<div class="detail-box">
-  <h3>
-    {{ currentLang === 'ta'
-      ? 'பாதம்'
-      : 'Paatham'
-    }}
-  </h3>
-
-  <p>
-    {{
-      currentLang === 'ta'
-        ? (profile.paatham_ta || profile.paatham || '-')
-        : (profile.paatham || '-')
-    }}
-  </p>
+<div class="field">
+<label>
+  {{ currentLang === 'ta' ? 'குழந்தைகள் எண்ணிக்கை' : 'Children Count' }}
+</label>
+  <input
+    [value]="profile.children_count || '-'"
+    readonly
+  >
 </div>
 
-<!-- SOTHUKAL -->
-
-<div class="detail-box">
-  <h3>
-    {{ currentLang === 'ta'
-      ? 'சொத்துகள்'
-      : 'Sothukal'
-    }}
-  </h3>
-
-  <p>
-    {{
-      currentLang === 'ta'
-        ? (profile.sothukal_ta || profile.sothukal || '-')
-        : (profile.sothukal || '-')
-    }}
-  </p>
+<div class="field">
+  <label>
+  {{ currentLang === 'ta' ? 'உடல் குறைபாடு' : 'Handicap' }}
+</label>
+  <input
+    [value]="profile.handicap_status || '-'"
+    readonly
+  >
 </div>
 
-<!-- KULADEIVAM -->
-
-<div class="detail-box">
-  <h3>
-    {{ currentLang === 'ta'
-      ? 'குலதெய்வம்'
-      : 'Kuladeivam'
-    }}
-  </h3>
-
-  <p>
-    {{
-      currentLang === 'ta'
-        ? (profile.kuladeivam_ta || profile.kuladeivam || '-')
-        : (profile.kuladeivam || '-')
-    }}
-  </p>
+<div class="field">
+<label>
+  {{ currentLang === 'ta'
+    ? 'உடல் குறைபாடு விவரம்'
+    : 'Handicap Details'
+  }}
+</label>
+  <input
+    [value]="profile.handicap_details || '-'"
+    readonly
+  >
 </div>
-  <div class="detail-box full">
-    <h3>{{ currentLang === 'ta' ? 'என்னை பற்றி' : 'About Me' }}</h3>
-<p>{{ showLangValue(profile.about_me, profile.about_me_ta) }}</p>
+
+<div class="field full-width">
+ <label>
+  {{ currentLang === 'ta'
+    ? 'எதிர்பார்ப்பு'
+    : 'Expectation'
+  }}
+</label>
+  <textarea readonly>
+{{ showLangValue(profile.partner_expectation, profile.partner_expectation_ta) }}
+  </textarea>
+</div>
+
+    <div class="field full-width">
+      <label>
+  {{ currentLang === 'ta'
+    ? 'முகவரி'
+    : 'Address'
+  }}
+</label>
+      <textarea readonly>{{ showLangValue(profile.address_line, profile.address_line_ta) }}</textarea>
+    </div>
+
   </div>
 
-  <div class="detail-box full">
-    <h3>{{ currentLang === 'ta' ? 'துணை எதிர்பார்ப்பு' : 'Partner Expectation' }}</h3>
-<p>{{ showLangValue(profile.partner_expectation, profile.partner_expectation_ta) }}</p>
-  </div>
 </div>
-
       <div class="chart-section">
         <div class="section-head">
           <h2>{{ currentLang === 'ta' ? 'ஜாதக கட்டம்' : 'Horoscope Chart' }}</h2>

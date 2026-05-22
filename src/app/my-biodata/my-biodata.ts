@@ -271,6 +271,17 @@ full_name_ta: data?.full_name_ta || '',
       mother_occupation_text: data?.mother_occupation_text || '',
       mother_occupation: data?.mother_occupation || '',
       siblings_text: data?.siblings_text || '',
+      married_brothers:
+  data?.married_brothers || 0,
+
+unmarried_brothers:
+  data?.unmarried_brothers || 0,
+
+married_sisters:
+  data?.married_sisters || 0,
+
+unmarried_sisters:
+  data?.unmarried_sisters || 0,
      father_name_ta: data?.father_name_ta || '',
 mother_name_ta: data?.mother_name_ta || '',
 father_occupation_ta: data?.father_occupation_ta || '',
@@ -318,6 +329,25 @@ sothukal_ta: data?.sothukal_ta || '',
 
 kuladeivam: data?.kuladeivam || '',
 kuladeivam_ta: data?.kuladeivam_ta || '',
+
+sub_caste: data?.sub_caste || '',
+sub_caste_ta: data?.sub_caste_ta || '',
+
+handicap_status: data?.handicap_status || '',
+handicap_details: data?.handicap_details || '',
+handicap_details_ta: data?.handicap_details_ta || '',
+
+children_status: data?.children_status || '',
+children_count: data?.children_count || '',
+
+poorvegam: data?.poorvegam || '',
+poorvegam_ta: data?.poorvegam_ta || '',
+
+iruppidam: data?.iruppidam || '',
+iruppidam_ta: data?.iruppidam_ta || '',
+
+sub_caste_text: data?.sub_caste_text || '',
+sub_caste_text_ta: data?.sub_caste_text_ta || '',
 
       about_me: data?.about_me || '',
 about_me_ta: data?.about_me_ta || '',
