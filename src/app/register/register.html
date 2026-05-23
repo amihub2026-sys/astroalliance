@@ -156,10 +156,11 @@
           <div class="form-row">
             <div class="form-group">
              <label>{{ dobLabel }}</label>
-            <input
+<input
   type="date"
   [(ngModel)]="dob"
   name="dob"
+  [max]="maxDate"
   (change)="calculateAge()"
 />
             </div>
