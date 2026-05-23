@@ -112,11 +112,6 @@ export const routes: Routes = [
       .then(m => m.AdminUsers)
 },
 {
-  path: 'create-user',
-  component: Register
-},
-
-{
   path: 'create-biodata',
   component: Biodata
 },

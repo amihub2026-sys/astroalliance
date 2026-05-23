@@ -187,7 +187,15 @@
         <!-- DOB -->
 <div class="field" [class.invalid]="isInvalid('dob')">
   <label>{{ tr.labels.dob }} <span class="required">*</span></label>
-  <input type="date" [(ngModel)]="formData.dob" name="dob" disabled>
+<input
+  type="date"
+  [(ngModel)]="formData.dob"
+  name="dob"
+  (change)="onDobChange()"
+  [class.invalid]="isInvalid('dob')"
+  [max]="maxDobDate"
+  [disabled]="!isAdminCreated && isEditMode"
+>
   <small class="field-error" *ngIf="isInvalid('dob')">Required</small>
 </div>
          <!-- BIRTH TIME -->
@@ -307,7 +315,55 @@
 <!-- MOBILE -->
 <div class="field" [class.invalid]="isInvalid('mobile')">
   <label>{{ tr.labels.mobile }} <span class="required">*</span></label>
-  <input type="text" [(ngModel)]="formData.mobile" name="mobile" disabled>
+<input
+  type="text"
+
+  [value]="formData.mobile"
+
+  (input)="
+    formData.mobile =
+    ($any($event.target).value || '')
+      .replace(/[^0-9]/g, '')
+      .substring(0,10);
+
+    $any($event.target).value =
+    formData.mobile;
+  "
+
+  name="mobile"
+
+  maxlength="10"
+
+  inputmode="numeric"
+
+  autocomplete="off"
+
+  placeholder="Enter 10 digit mobile number"
+
+  [class.invalid]="
+    formData.mobile &&
+    !/^[6-9]\d{9}$/.test(formData.mobile)
+  "
+  [disabled]="!isAdminCreated && isEditMode"
+>
+
+
+<small
+  class="field-error"
+
+  *ngIf="
+    formData.mobile &&
+    !/^[6-9]\d{9}$/.test(formData.mobile)
+  "
+>
+
+  {{
+    currentLang === 'ta'
+      ? 'சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்'
+      : 'Enter valid 10 digit mobile number'
+  }}
+
+</small>
   <small class="field-error" *ngIf="isInvalid('mobile')">Required</small>
 </div>
 
@@ -320,21 +376,46 @@
   <div class="additional-phone-wrapper">
 
     <div
-      *ngFor="
-        let mobile of formData.additionalMobile;
-        let i = index
-      "
+    *ngFor="
+  let mobile of formData.additionalMobile;
+  let i = index;
+  trackBy: trackByIndex
+"
       class="additional-mobile-row"
     >
 
-      <input
-        type="tel"
-        [(ngModel)]="formData.additionalMobile[i]"
-        [name]="'additionalMobile' + i"
-        maxlength="10"
-        inputmode="numeric"
-        placeholder="Enter 10 digit mobile number"
-      >
+<input
+  type="text"
+  [(ngModel)]="formData.additionalMobile[i]"
+  (keypress)="
+    $event.charCode >= 48 && $event.charCode <= 57
+      ? true
+      : $event.preventDefault()
+  "
+  [name]="'additionalMobile' + i"
+  maxlength="10"
+  inputmode="numeric"
+  autocomplete="off"
+  placeholder="Enter 10 digit mobile number"
+>
+<small
+  class="field-error"
+
+  *ngIf="
+    formData.additionalMobile[i] &&
+    !/^[6-9]\d{9}$/.test(
+      formData.additionalMobile[i]
+    )
+  "
+>
+
+  {{
+    currentLang === 'ta'
+      ? 'சரியான மொபைல் எண்ணை உள்ளிடவும்'
+      : 'Enter valid mobile number'
+  }}
+
+</small>
 
       <button
         type="button"

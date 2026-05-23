@@ -264,9 +264,21 @@ body{
 
 .field-error,
 .upload-error{
+
+  display:block;
+
+  margin-top:6px;
+
+  margin-left:210px;
+
   color:#e11d48;
+
   font-size:12px;
+
   font-weight:700;
+
+  white-space:nowrap;
+
 }
 
 /* MEDIA */
@@ -1366,4 +1378,11 @@ background:#fff;
 .preview-grid span{
     font-size:10px !important;
   text-align:left !important;
+}
+.invalid{
+
+  border:2px solid #e91e63 !important;
+
+  background:#fff5f8 !important;
+
 }
