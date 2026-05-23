@@ -29,7 +29,7 @@
         <form class="register-form" (ngSubmit)="onRegister()">
           <div class="form-row">
             <div class="form-group full-width">
-              <label>{{ tr.form.firstName }}</label>
+              <label>{{ tr.form.firstName }} <span class="required-star">*</span></label>
               <input
                 type="text"
                 [placeholder]="tr.form.firstNamePlaceholder"
@@ -38,7 +38,7 @@
               />
             </div>
              <div class="form-group">
-              <label>{{ tr.form.phone }}</label>
+              <label>{{ tr.form.phone }} <span class="required-star">*</span></label>
 <input
   type="text"
   maxlength="10"
@@ -79,7 +79,7 @@
 
          <div class="form-group">
 
-  <label>{{ tr.form.profileFor }}</label>
+  <label>{{ tr.form.profileFor }} <span class="required-star">*</span></label>
 
   <select
   [(ngModel)]="profileFor"
@@ -125,7 +125,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>{{ tr.form.gender }}</label>
+              <label>{{ tr.form.gender }} <span class="required-star">*</span></label>
               <select [(ngModel)]="gender" name="gender">
                 <option value="">{{ tr.form.genderPlaceholder }}</option>
                 <option [value]="tr.form.male">{{ tr.form.male }}</option>
@@ -134,7 +134,7 @@
             </div>
 
   <div class="form-group ">
-            <label>{{ tr.form.religion }}</label>
+            <label>{{ tr.form.religion }} <span class="required-star">*</span></label>
          <select [(ngModel)]="religion" name="religion">
 
   <option value="">
@@ -159,7 +159,7 @@
 
           <div class="form-row">
             <div class="form-group">
-             <label>{{ dobLabel }}</label>
+            <label>{{ dobLabel }} <span class="required-star">*</span></label>
 <!-- DESKTOP DOB -->
 
 <input
