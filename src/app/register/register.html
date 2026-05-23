@@ -156,15 +156,50 @@
           <div class="form-row">
             <div class="form-group">
              <label>{{ dobLabel }}</label>
+<!-- DESKTOP DOB -->
+
 <input
+  class="dob-input desktop-dob"
   type="date"
   [(ngModel)]="dob"
   name="dob"
   [max]="maxDate"
   (input)="calculateAge()"
   (change)="calculateAge()"
-  class="dob-input"
 />
+
+<!-- MOBILE DOB -->
+<div class="mobile-dob-wrap">
+
+  <input
+    class="dob-input mobile-dob"
+    type="text"
+    placeholder="dd-mm-yyyy"
+    [(ngModel)]="dob"
+    name="dobMobile"
+    inputmode="numeric"
+    maxlength="10"
+    (input)="formatDob($event)"
+  />
+
+  <input
+    #mobileDatePicker
+    type="date"
+    class="real-date-picker"
+    [max]="maxDate"
+    (change)="onMobileDatePick($event)"
+  />
+
+  <button
+    type="button"
+    class="calendar-btn"
+    (click)="mobileDatePicker.showPicker()">
+
+    📅
+
+  </button>
+
+</div>
             </div>
 
                <div class="form-group">
