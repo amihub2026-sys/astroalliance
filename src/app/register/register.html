@@ -161,7 +161,8 @@
   [(ngModel)]="dob"
   name="dob"
   [max]="maxDate"
-  (change)="calculateAge()"
+  (input)="calculateAge()"
+  onclick="this.showPicker()"
 />
             </div>
 
