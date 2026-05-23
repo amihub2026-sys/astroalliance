@@ -181,6 +181,7 @@ body{
 /* FORM */
 
 .form-grid{
+  overflow:visible !important;
   display:grid;
   grid-template-columns:1fr 1fr;
   column-gap:22px;
@@ -1138,6 +1139,7 @@ background:#fff;
 .form-accordion{
   margin-bottom:20px;
   border-radius:18px;
+  overflow:visible !important;
   overflow:hidden;
   border:1px solid #eee;
   background:#fff;
@@ -1384,5 +1386,108 @@ background:#fff;
   border:2px solid #e91e63 !important;
 
   background:#fff5f8 !important;
+
+}
+.iruppidam-field{
+  position:relative;
+  z-index:9999;
+}
+
+.iruppidam-select-wrap{
+  position:relative;
+  width:100%;
+  overflow:visible !important;
+}
+
+.iruppidam-dropdown{
+
+  position:absolute;
+
+  top:100%;
+
+  left:0;
+
+  width:100%;
+
+  max-height:220px;
+
+  overflow-y:auto;
+
+  background:#fff;
+
+  border:1px solid #d5d5d5;
+
+  z-index:999999;
+
+  box-shadow:0 8px 18px rgba(0,0,0,0.12);
+
+}
+
+.iruppidam-option{
+
+  padding:10px 12px;
+
+  cursor:pointer;
+
+  font-size:14px;
+
+}
+
+.iruppidam-option:hover{
+
+  background:#fff5f8;
+
+  color:#d81b60;
+
+  font-weight:700;
+
+}
+.poorvegam-field{
+  position:relative;
+  z-index:9999;
+}
+
+.poorvegam-select-wrap{
+  position:relative;
+  width:100%;
+}
+
+.poorvegam-dropdown{
+
+  position:absolute;
+
+  top:100%;
+
+  left:0;
+
+  width:100%;
+
+  max-height:220px;
+
+  overflow-y:auto;
+
+  background:#fff;
+
+  border:1px solid #d5d5d5;
+
+  z-index:999999;
+
+  box-shadow:0 8px 18px rgba(0,0,0,0.12);
+
+}
+
+.poorvegam-option{
+
+  padding:10px 12px;
+
+  cursor:pointer;
+
+}
+
+.poorvegam-option:hover{
+
+  background:#fff5f8;
+
+  color:#d81b60;
 
 }
