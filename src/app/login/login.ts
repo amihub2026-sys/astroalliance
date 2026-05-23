@@ -123,7 +123,43 @@ cdr = inject(ChangeDetectorRef);
     const digits = String(value || '').replace(/\D/g, '');
     return digits.length > 10 ? digits.slice(-10) : digits;
   }
+formatDob(event: any) {
 
+  let value = event.target.value.replace(/\D/g, '');
+
+  if (value.length > 2) {
+
+    value =
+      value.substring(0, 2) +
+      '-' +
+      value.substring(2);
+  }
+
+  if (value.length > 5) {
+
+    value =
+      value.substring(0, 5) +
+      '-' +
+      value.substring(5, 9);
+  }
+
+  this.dob = value;
+
+}
+
+onMobileDatePick(event: any) {
+
+  const value = event.target.value;
+
+  if (!value) return;
+
+  const [year, month, day] =
+    value.split('-');
+
+  this.dob =
+    `${day}-${month}-${year}`;
+
+}
   private clearOldLoginStorage(): void {
     localStorage.removeItem('matrimony_user');
     localStorage.removeItem('matrimony_user_id');

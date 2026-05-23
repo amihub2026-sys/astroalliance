@@ -69,11 +69,47 @@
             <label>
               {{ loginType === 'admin' ? 'Admin DOB' : tr.form.dob }}
             </label>
-            <input
-              type="date"
-              name="dob"
-              [(ngModel)]="dob"
-            />
+          <!-- DESKTOP DOB -->
+
+<input
+  class="dob-input desktop-dob"
+  type="date"
+  name="dob"
+  [(ngModel)]="dob"
+/>
+
+<!-- MOBILE DOB -->
+
+<div class="mobile-dob-wrap">
+
+  <input
+    class="dob-input mobile-dob"
+    type="text"
+    placeholder="dd-mm-yyyy"
+    [(ngModel)]="dob"
+    name="dobMobile"
+    inputmode="numeric"
+    maxlength="10"
+    (input)="formatDob($event)"
+  />
+
+  <input
+    #mobileDatePicker
+    type="date"
+    class="real-date-picker"
+    (change)="onMobileDatePick($event)"
+  />
+
+  <button
+    type="button"
+    class="calendar-btn"
+    (click)="mobileDatePicker.showPicker()">
+
+    📅
+
+  </button>
+
+</div>
           </div>
 
           <button type="submit" class="login-btn" [disabled]="isLoading">
