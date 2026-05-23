@@ -41,6 +41,8 @@ interface ProfileItem {
   latitude: number | null;
   longitude: number | null;
   distanceKm?: number | null;
+  dob: string;
+  nakshatra: LangText;
 }
 
 @Component({
@@ -888,6 +890,12 @@ private async makeLangText(
 
   gender_text,
 
+  dob,
+
+  nakshatra_text,
+
+  nakshatra_text_ta,
+
   city_text,
 
   state_text,
@@ -1027,6 +1035,13 @@ caste: await this.makeLangText(
 gender: await this.makeLangText(
   row.gender_text || '-',
   this.getTamilProfileValue('gender', row.gender_text)
+),
+
+dob: row.dob || '',
+
+nakshatra: await this.makeLangText(
+  row.nakshatra_text || '-',
+  row.nakshatra_text_ta || row.nakshatra_text
 ),
 
 location: await this.makeLangText(row.location_text, row.location_text),
@@ -1438,8 +1453,8 @@ get planStatus(): string {
   return profile.liked === true || this.shortlistedByYouIds.includes(profile.id);
 }
 
-    if (this.sidebarFilter === 'shortlistedMe') {
- return this.shortlistedMeUserIds.includes(profile.id);
+   if (this.sidebarFilter === 'shortlistedMe') {
+ return this.shortlistedMeUserIds.includes(profile.profileId);
 }
 
       if (this.sidebarFilter === 'viewedByYou' || this.sidebarFilter === 'viewed') {
@@ -1509,7 +1524,14 @@ get planStatus(): string {
           distanceKm
         };
       })
-     .sort((a, b) => {
+    .sort((a, b) => {
+  const ageFromActive = this.appliedFilters.ageFrom !== null;
+  const ageToActive = this.appliedFilters.ageTo !== null;
+
+  if (ageFromActive || ageToActive) {
+    return Number(a.age || 0) - Number(b.age || 0);
+  }
+
   const myCaste = this.normalizeText(this.userCaste);
 
   const casteA = this.normalizeText(this.getText(a.caste));
@@ -1526,6 +1548,7 @@ get planStatus(): string {
 
   const aDistance = a.distanceKm ?? Number.MAX_SAFE_INTEGER;
   const bDistance = b.distanceKm ?? Number.MAX_SAFE_INTEGER;
+
   return aDistance - bDistance;
 });
   }
@@ -1713,21 +1736,61 @@ getUniqueOptions(list: ProfileItem[], key: keyof ProfileItem): string[] {
     this.openDropdown = this.openDropdown === name ? null : name;
   }
 
-  selectOption(
+selectOption(
   field: 'caste' | 'religion' | 'gender' | 'maritalStatus' | 'location' | 'education' | 'profession' | 'state',
   value: string
 ): void {
-    this.filters[field] = value;
-    this.openDropdown = null;
-    this.cdr.detectChanges();
-  }
+
+  this.filters[field] = value;
+
+  this.applyFilters();
+
+  const nextDropdownMap: Record<string, string | null> = {
+
+    religion: 'caste',
+
+    caste: 'gender',
+
+    gender: 'maritalStatus',
+
+    maritalStatus: 'location',
+
+    location: 'state',
+
+    state: 'radius',
+
+    education: 'profession',
+
+    profession: null
+
+  };
+
+  this.openDropdown = nextDropdownMap[field] ?? null;
+
+  this.cdr.detectChanges();
+}
 
 selectNumberOption(
   field: 'ageFrom' | 'ageTo' | 'radius',
   value: number | null
 ): void {
+
   this.filters[field] = value;
-  this.openDropdown = null;
+
+  this.applyFilters();
+
+  const nextDropdownMap: Record<string, string | null> = {
+
+    ageFrom: 'ageTo',
+
+    ageTo: 'religion',
+
+    radius: 'education'
+
+  };
+
+  this.openDropdown = nextDropdownMap[field] ?? null;
+
   this.cdr.detectChanges();
 }
 
