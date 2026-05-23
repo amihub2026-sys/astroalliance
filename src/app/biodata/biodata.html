@@ -376,26 +376,24 @@
   <div class="additional-phone-wrapper">
 
     <div
-      *ngFor="
-        let mobile of formData.additionalMobile;
-        let i = index
-      "
+   *ngFor="
+  let mobile of formData.additionalMobile;
+  let i = index;
+  trackBy: trackByIndex
+"
       class="additional-mobile-row"
     >
 
 <input
   type="text"
 
-  [value]="formData.additionalMobile[i]"
+  [(ngModel)]="formData.additionalMobile[i]"
 
-  (input)="
+  (ngModelChange)="
     formData.additionalMobile[i] =
-    ($any($event.target).value || '')
+    ($event || '')
       .replace(/[^0-9]/g, '')
-      .substring(0,10);
-
-    $any($event.target).value =
-    formData.additionalMobile[i];
+      .substring(0,10)
   "
 
   [name]="'additionalMobile' + i"

@@ -519,12 +519,26 @@ onCityChange(): void {
   );
 
   this.formData.city = city?.city_name || '';
+
+  this.loadIruppidamFromCities();
+
+  this.loadPoorvegamFromCities();
+
 }
 loadIruppidamFromCities(): void {
 
-  this.iruppidamList = this.allCities;
+  this.iruppidamList =
+    this.cityList.length > 0
+      ? this.cityList
+      : this.allCities;
 
-  this.filteredIruppidamList = [...this.iruppidamList];
+  this.filteredIruppidamList = [
+    ...this.iruppidamList,
+    {
+      city_name: 'Other',
+      city_name_ta: 'மற்றவை'
+    }
+  ];
 
 }
 
@@ -1455,7 +1469,9 @@ this.selectedStateId = state?.state_id || '';
 this.cityList = this.allCities.filter(
   (c: any) => c.state_id === this.selectedStateId
 );
+this.loadIruppidamFromCities();
 
+this.loadPoorvegamFromCities();
 const city = this.allCities.find(
   (c: any) => c.city_name === data.city_text || c.city_name_ta === data.city_text
 );
