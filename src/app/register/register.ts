@@ -38,6 +38,35 @@ constructor(private router: Router) {
 
   isLoading = false;
 showTermsPopup = false;
+allowOnlyNumbers(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
+
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
+
+blockInvalidPaste(event: ClipboardEvent) {
+  const pastedText = event.clipboardData?.getData('text') || '';
+
+  if (!/^[0-9]+$/.test(pastedText)) {
+    event.preventDefault();
+  }
+}
+onProfileForChange(value: string) {
+
+  if (value === 'Daughter' || value === 'Sister') {
+    this.gender = this.tr.form.female;
+    return;
+  }
+
+  if (value === 'Son' || value === 'Brother') {
+    this.gender = this.tr.form.male;
+    return;
+  }
+
+  this.gender = '';
+}
   translations = {
     en: {
       left: {

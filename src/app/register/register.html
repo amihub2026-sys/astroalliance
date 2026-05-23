@@ -39,15 +39,16 @@
             </div>
              <div class="form-group">
               <label>{{ tr.form.phone }}</label>
-              <input
-                type="text"
-                maxlength="10"
-                pattern="[0-9]{10}"
-                inputmode="numeric"
-                [placeholder]="tr.form.phonePlaceholder"
-                [(ngModel)]="phone"
-                name="phone"
-              />
+<input
+  type="text"
+  maxlength="10"
+  inputmode="numeric"
+  [placeholder]="tr.form.phonePlaceholder"
+  [(ngModel)]="phone"
+  name="phone"
+  (keypress)="allowOnlyNumbers($event)"
+  (paste)="blockInvalidPaste($event)"
+/>
             </div>
 <!-- 
             <div class="form-group">
@@ -80,7 +81,10 @@
 
   <label>{{ tr.form.profileFor }}</label>
 
-  <select [(ngModel)]="profileFor" name="profileFor">
+  <select
+  [(ngModel)]="profileFor"
+  name="profileFor"
+  (ngModelChange)="onProfileForChange($event)">
 
     <option value="">
       {{ tr.form.profileForPlaceholder }}
