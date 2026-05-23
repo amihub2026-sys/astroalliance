@@ -76,6 +76,7 @@
   type="date"
   name="dob"
   [(ngModel)]="dob"
+  [max]="maxDate"
 />
 
 <!-- MOBILE DOB -->
@@ -92,13 +93,13 @@
     maxlength="10"
     (input)="formatDob($event)"
   />
-
-  <input
-    #mobileDatePicker
-    type="date"
-    class="real-date-picker"
-    (change)="onMobileDatePick($event)"
-  />
+<input
+  #mobileDatePicker
+  type="date"
+  class="real-date-picker"
+  [max]="maxDate"
+  (change)="onMobileDatePick($event)"
+/>
 
   <button
     type="button"
