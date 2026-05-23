@@ -29,7 +29,8 @@ isInvalid(field: string): boolean {
   return this.submitted && !!this.fieldErrors[field];
 }
   private currentUserId: string | null = null;
-  private isAdminCreated = false;
+ isAdminCreated = false;
+ maxDobDate = '';
   private existingProfileImageUrl: string | null = null;
   private existingVideoUrl: string | null = null;
   private existingHoroscopeFileUrl: string | null = null;
@@ -530,6 +531,11 @@ removeAdditionalMobile(index: number): void {
   this.formData.additionalMobile.splice(index, 1);
 
 }
+trackByIndex(index: number): number {
+
+  return index;
+
+}
   get tr() {
     return this.translations[this.currentLang];
   }
@@ -1019,22 +1025,40 @@ onChartInput(
     return { lat: null, lng: null };
   }
 async ngOnInit(): Promise<void> {
+  
 
-  (window as any).activeBiodataComponent = this;
+if (typeof window !== 'undefined') {
 
-  const adminCreatedUserId =
-  localStorage.getItem(
-    'admin_created_user_id'
-  );
+  const isAdminRoute =
+    window.location.pathname.includes('/admin');
 
-if (adminCreatedUserId) {
+  this.isAdminCreated =
+    isAdminRoute;
+    if (this.isAdminCreated) {
 
-  this.currentUserId =
-    adminCreatedUserId;
+  this.currentUserId = null;
 
-  this.isAdminCreated = true;
+  this.isEditMode = false;
 
 }
+const today = new Date();
+
+const year =
+  today.getFullYear() - 18;
+
+const month =
+  String(today.getMonth() + 1)
+    .padStart(2, '0');
+
+const day =
+  String(today.getDate())
+    .padStart(2, '0');
+
+this.maxDobDate =
+  `${year}-${month}-${day}`;
+
+}
+
 
   await this.loadReligions();
   await this.loadThisaiIruppu();
@@ -1044,22 +1068,45 @@ if (adminCreatedUserId) {
   await this.loadCities();
   await this.loadEducationLevels();
 await this.loadProfessionList();
+ if (!this.isAdminCreated) {
+
   await this.loadExistingBiodata();
+
+}
 
 if (this.currentLang === 'ta') {
   await this.prepareTamilValues();
 }
 }
-  private getStoredLoggedInUser(): any | null {
-    try {
-      const raw = localStorage.getItem('matrimony_user');
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
+ private getStoredLoggedInUser(): any | null {
+
+  if (typeof window === 'undefined') {
+    return null;
   }
 
+  try {
+
+    const raw =
+      localStorage.getItem('matrimony_user');
+
+    return raw
+      ? JSON.parse(raw)
+      : null;
+
+  } catch {
+
+    return null;
+
+  }
+
+}
   private async resolveCurrentUserId(): Promise<string | null> {
+if (this.isAdminCreated) {
+
+  return null;
+
+}
+
     if (this.currentUserId) {
   return this.currentUserId;
 }
@@ -1069,7 +1116,10 @@ if (this.currentLang === 'ta') {
       return loggedInUser.user_id;
     }
 
-    const storedAppUserId = localStorage.getItem('app_user_id');
+    const storedAppUserId =
+  typeof window !== 'undefined'
+    ? localStorage.getItem('app_user_id')
+    : null;
     if (storedAppUserId) {
       return storedAppUserId;
     }
@@ -1130,7 +1180,11 @@ if (this.currentLang === 'ta') {
         }
         return;
       }
-      this.isEditMode = true;
+      if (!this.isAdminCreated) {
+
+  this.isEditMode = true;
+
+}
       this.formData.fullName = data.full_name || '';
       this.formDataTa.fullName = data.full_name_ta || '';
       this.formData.gender = data.gender_text || '';
@@ -1357,25 +1411,57 @@ this.formDataTa.partnerExpectation = data.partner_expectation_ta || '';
     }
   }
 
-  onDobChange(): void {
-    if (!this.formData.dob) {
-      this.formData.age = '';
-      return;
-    }
+onDobChange(): void {
 
-    const birthDate = new Date(this.formData.dob);
-    const today = new Date();
+  if (!this.formData.dob) {
 
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
+    this.formData.age = '';
 
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
+    return;
 
-    this.formData.age = age > 0 ? age.toString() : '';
   }
 
+  const dob = new Date(this.formData.dob);
+
+  const today = new Date();
+
+  let age =
+    today.getFullYear() - dob.getFullYear();
+
+  const monthDiff =
+    today.getMonth() - dob.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (
+      monthDiff === 0 &&
+      today.getDate() < dob.getDate()
+    )
+  ) {
+
+    age--;
+
+  }
+
+  if (age < 18) {
+
+    this.formData.dob = '';
+
+    this.formData.age = '';
+
+    this.snackbar.error(
+      this.currentLang === 'ta'
+        ? '18 வயதுக்கு மேல் இருக்க வேண்டும்'
+        : 'Age must be 18+'
+    );
+
+    return;
+
+  }
+
+  this.formData.age = String(age);
+
+}
   onProfileImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;
 
@@ -1851,11 +1937,67 @@ const v = (en: any, ta?: any) => {
       this.cdr.detectChanges();
       return field.label;
     }
+    if (field.key === 'mobile') {
+
+  const mobile = String(field.value || '').trim();
+
+  if (!/^[0-9]{10}$/.test(mobile)) {
+
+    this.fieldErrors[field.key] = true;
+
+    this.cdr.detectChanges();
+
+    return this.currentLang === 'ta'
+      ? '10 இலக்க மொபைல் எண் மட்டும் உள்ளிடவும்'
+      : 'Enter valid 10 digit mobile number';
+
+  }
+  
+
+}
+if (field.key === 'dob') {
+
+  const dob = new Date(field.value);
+
+  const today = new Date();
+
+  let age =
+    today.getFullYear() -
+    dob.getFullYear();
+
+  const monthDiff =
+    today.getMonth() -
+    dob.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (
+      monthDiff === 0 &&
+      today.getDate() < dob.getDate()
+    )
+  ) {
+    age--;
+  }
+
+  if (age < 18) {
+
+    this.fieldErrors[field.key] = true;
+
+    this.cdr.detectChanges();
+
+    return this.currentLang === 'ta'
+      ? '18 வயதுக்கு மேல் இருக்க வேண்டும்'
+      : 'Age must be 18+';
+
+  }
+
+}
   }
 
   this.cdr.detectChanges();
   return null;
 }
+
 async onSubmit(): Promise<void> {
   
 
@@ -1884,12 +2026,21 @@ if (missingField) {
 
  this.isSaving = true;
 await this.prepareEnglishValues();
+
    try {
        
         if (this.currentLang === 'en') {
           await this.prepareAutoTamilValues();
         }
-      let appUserId = this.currentUserId || (await this.resolveCurrentUserId());
+      let appUserId: string | null = null;
+
+if (!this.isAdminCreated) {
+
+  appUserId =
+    this.currentUserId ||
+    (await this.resolveCurrentUserId());
+
+}
       let fallbackEmail = '';
       let fallbackPhone = '';
 
@@ -1912,16 +2063,31 @@ await this.prepareEnglishValues();
           .maybeSingle();
 
         if (!appUserError && appUser) {
-          appUserId = appUser.user_id;
+          if (!this.isAdminCreated) {
+
+  appUserId = appUser.user_id;
+
+}
           fallbackEmail = appUser.email || user.email || fallbackEmail;
           fallbackPhone = appUser.phone_number || fallbackPhone;
         }
       }
 
-      if (!appUserId) {
-        const storedAppUserId = localStorage.getItem('app_user_id');
-        const storedEmail = localStorage.getItem('app_user_email') || '';
-        const storedPhone = localStorage.getItem('app_user_phone') || '';
+      if (!appUserId && !this.isAdminCreated) {
+       const storedAppUserId =
+  typeof window !== 'undefined'
+    ? localStorage.getItem('app_user_id')
+    : null;
+
+const storedEmail =
+  typeof window !== 'undefined'
+    ? localStorage.getItem('app_user_email') || ''
+    : '';
+
+const storedPhone =
+  typeof window !== 'undefined'
+    ? localStorage.getItem('app_user_phone') || ''
+    : '';
 
         if (storedAppUserId) {
           appUserId = storedAppUserId;
@@ -1931,24 +2097,87 @@ await this.prepareEnglishValues();
         fallbackPhone = fallbackPhone || storedPhone;
       }
 
-      if (!appUserId) {
+if (!appUserId && !this.isAdminCreated) {
+
   this.isSaving = false;
+
   this.cdr.detectChanges();
-  this.snackbar.error(this.tr.alerts.loginRequired);
+
+  this.snackbar.error(
+    this.tr.alerts.loginRequired
+  );
+
   return;
+
 }
 
-      this.currentUserId = appUserId;
 
-      const { data: currentProfile, error: currentProfileError } = await supabase
-        .from('user_profiles')
-      .select('profile_code, profile_image_url, video_url, horoscope_file_url, additional_image_urls, latitude, longitude')
-       .eq('user_id', appUserId)
-        .maybeSingle();
 
-      if (currentProfileError) {
-        throw currentProfileError;
-      }
+// ADMIN CREATE MODE
+
+if (this.isAdminCreated) {
+
+const { data: newUser, error: newUserError } =
+  await supabase
+    .from('app_users')
+    .insert({
+      auth_user_id: crypto.randomUUID(),
+      first_name: this.safeText(this.formData.fullName),
+      last_name: '',
+     email:
+  this.safeText(this.formData.email) ||
+  `${this.safeText(this.formData.mobile)}@astroalliance.com`,
+      phone_number: this.safeText(this.formData.mobile),
+      date_of_birth: this.formData.dob || null,
+      is_active: true,
+      is_phone_verified: false,
+      is_email_verified: false
+    })
+    .select('user_id')
+    .single();
+
+if (newUserError) {
+  alert(JSON.stringify(newUserError, null, 2));
+  throw newUserError;
+}
+
+appUserId = newUser.user_id;
+
+
+  console.log('NEW ADMIN USER ID:', appUserId);
+
+} else {
+
+  this.currentUserId = appUserId;
+
+}
+     let currentProfile: any = null;
+
+if (!this.isAdminCreated) {
+
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .select(`
+      profile_code,
+      profile_image_url,
+      video_url,
+      horoscope_file_url,
+      additional_image_urls,
+      latitude,
+      longitude
+    `)
+    .eq('user_id', appUserId)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  currentProfile = data;
+
+}
+
+     
 
       let existingProfileCode: string | null = null;
 
@@ -2003,6 +2232,7 @@ console.log('SAVE CHECK:', {
 
       const payload = {
         user_id: appUserId,
+       
         profile_code: resolvedProfileCode,
 
         full_name: this.safeText(this.formData.fullName),
@@ -2051,7 +2281,7 @@ married_sisters:
 
 unmarried_sisters:
   this.safeNumber(this.formData.unmarriedSisters) || 0,
-handicap:
+handicap_status:
   this.formData.handicapStatus === 'Yes',
 
 handicap_details:
@@ -2238,7 +2468,7 @@ partner_expectation: this.safeText(this.formData.partnerExpectation),
         video_url: videoUrl || '',
 additional_image_urls: additionalImageUrls,
         completion_percentage: this.getCompletionPercentage(),
-        profile_status: 'draft',
+        profile_status: 'approved',
         is_verified: false,
         is_published: true,
         updated_at: new Date().toISOString()
@@ -2271,12 +2501,14 @@ if (existingProfile) {
 
   const { error } = await supabase
     .from('user_profiles')
-    .insert([
-      {
+  .insert([
+  this.isAdminCreated
+    ? payload
+    : {
         ...payload,
         user_id: appUserId
       }
-    ]);
+]);
 
   if (error) {
     this.snackbar.error(error.message);
@@ -2327,6 +2559,8 @@ if (this.isAdminCreated) {
   );
 
 }
+await this.loadExistingBiodata();
+this.cdr.detectChanges();
 
 this.snackbar.success(
   this.isEditMode
@@ -2342,7 +2576,21 @@ this.snackbar.success(
       )
 );
 this.isSubmitted = true;
-await this.loadExistingBiodata();
+
+if (this.isAdminCreated) {
+
+  this.resetForm();
+
+  this.isEditMode = false;
+
+} else {
+
+  await this.loadExistingBiodata();
+
+  this.isEditMode = true;
+
+}
+
 
     } catch (error: any) {
       console.error('Biodata save error:', error);
@@ -2351,7 +2599,11 @@ await this.loadExistingBiodata();
   this.isSaving = false;
   this.cdr.detectChanges();
 }
+
+
   }
+  
+  
   async loadCastes() {
 
   const { data, error } = await supabase
@@ -2404,7 +2656,7 @@ async loadThisaiIruppu(): Promise<void> {
 
   }
 
-  console.log('THISAI IRUPPU DATA', data);
+ 
 
   this.thisaiIruppuList = data || [];
 this.cdr.detectChanges();
@@ -2685,5 +2937,117 @@ toggleEducationDropdown() {
 
   }
 
+}
+resetForm(): void {
+
+  this.formData = {
+
+    additionalMobile: [''],
+
+    fullName: '',
+    gender: '',
+    dob: '',
+    age: '',
+    maritalStatus: '',
+    mobile: '',
+    email: '',
+    height: '',
+    weight: '',
+    religion: '',
+    caste: '',
+    fatherName: '',
+    motherName: '',
+    fatherOccupation: '',
+    motherOccupation: '',
+    siblings: '',
+    education: '',
+    otherEducation: '',
+    job: '',
+    otherProfession: '',
+    company: '',
+    salary: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    rasi: '',
+    nakshatra: '',
+    lagnam: '',
+    gothram: '',
+    dhosham: '',
+    birthTime: '',
+    birthPlace: '',
+    aboutMe: '',
+    partnerExpectation: '',
+    subCaste: '',
+
+    marriedBrothers: '',
+    unmarriedBrothers: '',
+
+    marriedSisters: '',
+    unmarriedSisters: '',
+
+    handicapStatus: 'No',
+    handicapDetails: '',
+
+    childrenStatus: 'No',
+    childrenCount: '',
+
+    thisai: '',
+    thisaiIruppu: '',
+    paatham: '',
+    sothukal: '',
+    poorvegam: '',
+    iruppidam: '',
+    kuladeivam: '',
+
+  };
+
+  this.formDataTa = {
+
+    fullName: '',
+    gothram: '',
+    salary: '',
+    fatherName: '',
+    motherName: '',
+    fatherOccupation: '',
+    motherOccupation: '',
+    siblings: '',
+    job: '',
+    company: '',
+    address: '',
+    birthPlace: '',
+    aboutMe: '',
+    partnerExpectation: '',
+    subCaste: '',
+    handicapDetails: '',
+    thisai: '',
+    thisaiIruppu: '',
+    paatham: '',
+    sothukal: '',
+    poorvegam: '',
+    iruppidam: '',
+    kuladeivam: '',
+
+  };
+
+  this.profilePreviewUrl = null;
+  this.videoPreviewUrl = null;
+  this.horoscopePreviewUrl = null;
+
+  this.selectedProfileImage = null;
+  this.selectedVideo = null;
+  this.selectedHoroscopeFile = null;
+
+  this.additionalImages = [];
+  this.additionalImagePreviews = [];
+
+  this.rasiChart = Array(12).fill('');
+  this.amsamChart = Array(12).fill('');
+
+  this.submitted = false;
+  this.fieldErrors = {};
+
+  this.cdr.detectChanges();
 }
 }

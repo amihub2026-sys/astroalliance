@@ -130,9 +130,14 @@ this.router.events.subscribe((event) => {
    this.isAdminPage =
   currentUrl.includes('/admin');
 
+  
+
 this.showFooter =
-  currentUrl === '/' ||
-  currentUrl.includes('/plans');
+  !this.isAdminPage &&
+  (
+    currentUrl === '/' ||
+    currentUrl.includes('/plans')
+  );
   }
   
 });
