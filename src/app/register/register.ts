@@ -27,6 +27,9 @@ constructor(private router: Router) {
   gender = '';
   age: number | null = null;
   dob = '';
+  maxDate = new Date(
+  new Date().setFullYear(new Date().getFullYear() - 18)
+).toISOString().split('T')[0];
   religion = '';
   religionList: any[] = [];
   location = '';
@@ -330,10 +333,10 @@ async loadReligions(): Promise<void> {
     //   return;
     // }
 
-    if (this.age <= 0) {
-      alert(this.tr.alerts.ageInvalid);
-      return;
-    }
+   if (!this.age || this.age < 18) {
+  alert('Age must be 18 or above');
+  return;
+}
 
     const phoneRegex = /^[0-9]{10}$/;
 
