@@ -480,6 +480,14 @@ cityList: any[] = [];
 selectedCountryId = '';
 selectedStateId = '';
 selectedCityId = '';
+iruppidamList: any[] = [];
+filteredIruppidamList: any[] = [];
+iruppidamSearch = '';
+showIruppidamDropdown = false;
+poorvegamList: any[] = [];
+filteredPoorvegamList: any[] = [];
+poorvegamSearch = '';
+showPoorvegamDropdown = false;
 isOtherCountrySelected(): boolean {
   const country = this.countryList.find(
     (c: any) => c.country_id === this.selectedCountryId
@@ -511,6 +519,160 @@ onCityChange(): void {
   );
 
   this.formData.city = city?.city_name || '';
+}
+loadIruppidamFromCities(): void {
+
+  this.iruppidamList = this.allCities;
+
+  this.filteredIruppidamList = [...this.iruppidamList];
+
+}
+
+onIruppidamSearchChange(): void {
+
+  const term =
+    this.iruppidamSearch
+      .toLowerCase()
+      .trim();
+
+  this.filteredIruppidamList =
+    this.iruppidamList.filter((city: any) =>
+
+      String(city.city_name || '')
+        .toLowerCase()
+        .includes(term)
+
+      ||
+
+      String(city.city_name_ta || '')
+        .toLowerCase()
+        .includes(term)
+
+    );
+
+  if (
+    !this.filteredIruppidamList.some(
+      (x: any) =>
+        (x.city_name || '').toLowerCase() === 'other'
+    )
+  ) {
+
+    this.filteredIruppidamList.push({
+      city_name: 'Other',
+      city_name_ta: 'மற்றவை'
+    });
+
+  }
+
+}
+selectIruppidam(city: any): void {
+
+  const selectedName = city.city_name || '';
+
+  if (selectedName.toLowerCase() === 'other') {
+    this.formData.iruppidam = 'Other';
+    this.formDataTa.iruppidam = '';
+    this.iruppidamSearch = 'Other';
+  } else {
+    this.formData.iruppidam = selectedName;
+    this.formDataTa.iruppidam = city.city_name_ta || selectedName;
+
+    this.iruppidamSearch =
+      this.currentLang === 'ta'
+        ? this.formDataTa.iruppidam
+        : this.formData.iruppidam;
+  }
+
+  this.filteredIruppidamList = [];
+  this.showIruppidamDropdown = false;
+}
+loadPoorvegamFromCities(): void {
+
+  this.poorvegamList = this.allCities;
+
+  this.filteredPoorvegamList = [
+    ...this.allCities,
+
+    {
+      city_name: 'Other',
+      city_name_ta: 'மற்றவை'
+    }
+  ];
+
+}
+
+onPoorvegamSearchChange(): void {
+
+  const term =
+    this.poorvegamSearch
+      .toLowerCase()
+      .trim();
+
+  this.filteredPoorvegamList =
+    this.poorvegamList.filter((city: any) =>
+      
+
+      String(city.city_name || '')
+        .toLowerCase()
+        .includes(term)
+
+      ||
+
+      String(city.city_name_ta || '')
+        .toLowerCase()
+        .includes(term)
+
+    );
+if (
+  !this.filteredPoorvegamList.some(
+    (x: any) =>
+      (x.city_name || '').toLowerCase() === 'other'
+  )
+) {
+
+  this.filteredPoorvegamList.push({
+    city_name: 'Other',
+    city_name_ta: 'மற்றவை'
+  });
+
+}
+}
+
+selectPoorvegam(city: any): void {
+
+  const selectedName =
+    city.city_name || '';
+
+  if (
+    selectedName.toLowerCase() === 'other'
+  ) {
+
+    this.formData.poorvegam = 'Other';
+
+    this.formDataTa.poorvegam = '';
+
+    this.poorvegamSearch = 'Other';
+
+  } else {
+
+    this.formData.poorvegam =
+      selectedName;
+
+    this.formDataTa.poorvegam =
+      city.city_name_ta ||
+      selectedName;
+
+    this.poorvegamSearch =
+      this.currentLang === 'ta'
+        ? this.formDataTa.poorvegam
+        : this.formData.poorvegam;
+
+  }
+
+  this.filteredPoorvegamList = [];
+
+  this.showPoorvegamDropdown = false;
+
 }
 educationList: any[] = [];
 filteredEducationList: any[] = [];
@@ -1066,6 +1228,7 @@ this.maxDobDate =
   await this.loadCountries();
   await this.loadStates();
   await this.loadCities();
+  this.loadPoorvegamFromCities();
   await this.loadEducationLevels();
 await this.loadProfessionList();
  if (!this.isAdminCreated) {
