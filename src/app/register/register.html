@@ -157,15 +157,13 @@
             <div class="form-group">
              <label>{{ dobLabel }}</label>
 <input
-  type="text"
-  placeholder="dd - mm - yyyy"
+  type="date"
   [(ngModel)]="dob"
   name="dob"
   [max]="maxDate"
-  onfocus="this.type='date'; this.showPicker && this.showPicker()"
-  onblur="if(!this.value) this.type='text'"
-  (change)="calculateAge()"
   (input)="calculateAge()"
+  (change)="calculateAge()"
+  class="dob-input"
 />
             </div>
 
