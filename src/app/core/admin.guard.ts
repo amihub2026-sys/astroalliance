@@ -6,16 +6,18 @@ import {
 } from '@angular/router';
 
 export const adminGuard: CanActivateFn & CanActivateChildFn = () => {
-
   const router = inject(Router);
 
-  if (typeof window !== 'undefined') {
+  // IMPORTANT: during refresh SSR has no window
+  // so don't redirect on server side
+  if (typeof window === 'undefined') {
+    return true;
+  }
 
-    const isAdmin = localStorage.getItem('is_admin');
+  const isAdmin = localStorage.getItem('is_admin');
 
-    if (isAdmin === 'true') {
-      return true;
-    }
+  if (isAdmin === 'true') {
+    return true;
   }
 
   return router.createUrlTree(['/admin-login']);
