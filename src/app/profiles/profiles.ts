@@ -1840,8 +1840,6 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
       console.warn(this.tr.alerts.geoUnavailable);
     }
 
-    
-    this.openDropdown = null;
     this.cdr.detectChanges();
   }
 
