@@ -25,6 +25,23 @@ export class Admin {
 
   sidebarOpen = false;
 
+  get currentLang(): 'en' | 'ta' {
+    if (typeof window === 'undefined') {
+      return 'en';
+    }
+
+    return (localStorage.getItem('tm_language') as 'en' | 'ta') || 'en';
+  }
+
+  changeLanguage(lang: 'en' | 'ta'): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    localStorage.setItem('tm_language', lang);
+    window.dispatchEvent(new Event('storage'));
+  }
+
   toggleSidebar(event?: Event): void {
 
     if (event) {

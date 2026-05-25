@@ -4,10 +4,28 @@
   [class.open]="sidebarOpen"
   (click)="$event.stopPropagation()">
 
-    <div class="brand">
-      <h2>ASTRO ❤ ALLIANCE</h2>
-      <p>Admin Panel</p>
-    </div>
+   <div class="brand">
+  <h2>ASTRO ❤ ALLIANCE</h2>
+  <p>{{ currentLang === 'ta' ? 'அட்மின் பேனல்' : 'Admin Panel' }}</p>
+
+  <div class="admin-language-switcher">
+
+    <button
+      type="button"
+      [class.active]="currentLang === 'en'"
+      (click)="changeLanguage('en')">
+      EN
+    </button>
+
+    <button
+      type="button"
+      [class.active]="currentLang === 'ta'"
+      (click)="changeLanguage('ta')">
+      தமிழ்
+    </button>
+
+  </div>
+</div>
 
 <nav class="nav-menu">
 
