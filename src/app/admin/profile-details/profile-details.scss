@@ -479,3 +479,489 @@ height:220px;
   }
 
 }
+.pdf-btn.photo {
+  background: linear-gradient(135deg, #166534, #22c55e);
+  color: #fff;
+}
+
+.astro-pdf{
+  width:1120px;
+  padding:24px 34px;
+}
+
+.astro-header{
+  display:grid;
+  grid-template-columns:120px 1fr 120px;
+  align-items:center;
+  border-bottom:3px solid #166534;
+  padding-bottom:14px;
+  margin-bottom:18px;
+  text-align:center;
+}
+
+.logo-side{
+  font-size:34px;
+  text-align:center;
+}
+
+.header-center h1{
+  margin:0;
+  font-size:34px;
+  color:#166534;
+  font-weight:800;
+}
+
+.header-center h2{
+  margin:6px 0 3px;
+  font-size:24px;
+}
+
+.header-center p,
+.header-center span{
+  margin:2px 0;
+  font-size:13px;
+}
+
+
+
+.astro-body{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:46px;
+  margin-top:10px;
+}
+
+.astro-column p{
+  margin:6px 0;
+  font-size:14px;
+  line-height:1.55;
+}
+
+.astro-chart-section{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:40px;
+  margin-top:18px;
+}
+
+.astro-pdf .astro-chart{
+  width:300px;
+}
+
+.astro-pdf .chart-cell{
+  width:75px;
+  height:75px;
+  font-size:13px;
+}
+
+.astro-pdf .side-cell{
+  height:150px;
+}
+
+.astro-pdf .chart-center{
+  width:150px;
+  height:150px;
+  font-size:34px;
+}
+
+.astro-footer{
+  margin-top:18px;
+  padding-top:10px;
+}
+
+.astro-footer p{
+  margin:4px 0;
+  font-size:13px;
+}
+.header-photo{
+  width:110px !important;
+  height:140px !important;
+  border:3px solid #166534 !important;
+  border-radius:8px !important;
+  overflow:hidden !important;
+  background:#fff !important;
+}
+
+.header-photo .pdf-photo-img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  display:block !important;
+}
+@media print {
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: white !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #biodataPdf,
+  #biodataPdf * {
+    visibility: visible !important;
+  }
+
+  #biodataPdf {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+
+    padding: 8mm 12mm !important;
+    margin: 0 !important;
+
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    break-after: avoid !important;
+    break-before: avoid !important;
+  }
+
+  .details-page,
+  .profile-card,
+  .back-btn {
+    display: none !important;
+  }
+  #biodataPdf .astro-chart {
+  width: 250px !important;
+}
+
+#biodataPdf .chart-cell {
+  width: 62px !important;
+  height: 62px !important;
+  font-size: 11px !important;
+}
+
+#biodataPdf .side-cell {
+  height: 124px !important;
+}
+
+#biodataPdf .chart-center {
+  width: 124px !important;
+  height: 124px !important;
+  font-size: 30px !important;
+}
+
+#biodataPdf .astro-column p {
+  margin: 4px 0 !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+#biodataPdf .astro-footer {
+  margin-top: 8px !important;
+}
+}
+/* SINGLE FORM VIEW FIX */
+
+.profile-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  border: 1px solid #f9cfe0;
+  box-shadow: 0 12px 35px rgba(233, 30, 99, 0.12);
+}
+
+.top-section {
+  display: grid !important;
+  grid-template-columns: 260px 1fr;
+  gap: 28px;
+  align-items: flex-start;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #f3c6d8;
+}
+
+.media-section {
+  width: 100% !important;
+}
+
+.main-profile-image {
+  width: 100% !important;
+  height: 300px !important;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.top-info {
+  padding-top: 0 !important;
+}
+
+.top-info h2 {
+  font-size: 30px !important;
+  margin-bottom: 8px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+
+  background: #fff;
+  border-radius: 18px;
+
+  padding: 8px 0;
+}
+
+.info-card {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 18px 22px !important;
+
+  border-right: none !important;
+  border-bottom: 1px solid #f3c6d8 !important;
+
+  box-shadow: none !important;
+}
+.info-card h3 {
+  color: #be185d;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f3c6d8;
+}
+
+.info-card p {
+  margin: 9px 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.full-width-card {
+  max-width: 1100px;
+  margin: 0 auto;
+
+  background: transparent !important;
+  border: none !important;
+
+  border-bottom: 1px solid #f3c6d8 !important;
+  border-radius: 0 !important;
+
+  box-shadow: none !important;
+}
+
+.profile-card > .full-width-card:last-child {
+  border-radius: 0 0 18px 18px;
+}
+
+.action-group {
+  margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+  .profile-card {
+    padding: 18px;
+  }
+
+  .top-section {
+    grid-template-columns: 1fr;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-card {
+    border-right: none;
+  }
+
+  .main-profile-image {
+    height: auto !important;
+  }
+}
+.pdf-corner-photo{
+  position: absolute;
+  top: 52mm;
+  right: 14mm;
+
+  width: 120px;
+  height: 145px;
+
+  border: 3px solid #166534;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  z-index: 10;
+}
+
+.pdf-corner-photo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.astro-body{
+  padding-right: 130px;
+}
+/* REMOVE BLANK SPACE FINAL FIX */
+
+.details-grid{
+  display:block !important;
+  padding:0 !important;
+}
+
+.info-card{
+  width:100% !important;
+  display:block !important;
+
+  padding:16px 20px !important;
+  margin:0 !important;
+
+  border:none !important;
+  border-bottom:1px solid #f3c6d8 !important;
+
+  min-height:auto !important;
+  height:auto !important;
+}
+
+.horoscope-chart-wrapper{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:flex-start !important;
+  gap:24px !important;
+
+  margin-top:14px !important;
+  margin-bottom:0 !important;
+}
+
+.full-width-card{
+  margin:0 !important;
+}
+
+.info-card h3{
+  margin-bottom:10px !important;
+}
+
+.info-card p{
+  margin:5px 0 !important;
+  line-height:1.45 !important;
+}
+.astro-body{
+  padding-right: 130px;
+}
+.action-group{
+  position:relative;
+}
+.print-options{
+  position:absolute;
+  top:58px;
+  left:0;
+
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+
+  background:linear-gradient(135deg,#fff0f6,#ffe4ec);
+  padding:16px;
+
+  border-radius:20px;
+
+  border:2px solid #f9a8d4;
+
+  box-shadow:0 12px 30px rgba(236,72,153,.18);
+
+  z-index:999;
+  min-width:300px;
+}
+.print-options button{
+  width:100%;
+  border:none;
+  border-radius:14px;
+
+  padding:13px 16px;
+
+  font-weight:700;
+  font-size:14px;
+
+  cursor:pointer;
+
+  background:linear-gradient(135deg,#ec4899,#db2777);
+  color:#fff;
+
+  text-align:left;
+
+  transition:.25s ease;
+}
+
+.print-options button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(236,72,153,.28);
+}
+.logo-side{
+  width:90px !important;
+  min-width:90px !important;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  gap:4px;
+}
+
+.vinagar-logo{
+  width:98px !important;
+  height:98px !important;
+
+  object-fit:contain !important;
+
+  background:transparent !important;
+
+  border:none !important;
+  padding:0 !important;
+  margin:0 auto !important;
+
+  box-shadow:none !important;
+
+  display:block;
+}
+
+.logo-side span{
+  font-size:10px;
+  font-weight:700;
+  color:#166534;
+  text-align:center;
+  line-height:1.2;
+}
+@media print {
+  .vinagar-logo{
+width:90px !important;
+height:90px !important;
+max-width:90px !important;
+max-height:90px !important;
+
+    object-fit:contain !important;
+    border:none !important;
+    padding:0 !important;
+    margin:0 !important;
+    box-shadow:none !important;
+    background:transparent !important;
+  }
+
+  .logo-side{
+   width:110px !important;
+  min-width:110px !important;
+    height:100px !important;
+    overflow:hidden !important;
+  }
+}
