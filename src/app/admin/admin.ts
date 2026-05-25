@@ -4,7 +4,8 @@ import { Component } from '@angular/core';
 
 import {
   RouterOutlet,
-  RouterModule
+  RouterModule,
+  Router
 } from '@angular/router';
 
 @Component({
@@ -24,6 +25,14 @@ import {
 export class Admin {
 
   sidebarOpen = false;
+
+  adminName = 'Admin';
+
+  constructor(private router: Router) {
+    if (typeof window !== 'undefined') {
+      this.adminName = localStorage.getItem('admin_name') || 'Admin';
+    }
+  }
 
   get currentLang(): 'en' | 'ta' {
     if (typeof window === 'undefined') {
@@ -60,5 +69,11 @@ export class Admin {
     }, 100);
 
   }
+logoutAdmin(): void {
+  localStorage.removeItem('isAdmin');
+  localStorage.removeItem('admin_token');
+  localStorage.removeItem('admin_name');
 
+  this.router.navigate(['/login']);
+}
 }

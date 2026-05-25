@@ -5,9 +5,23 @@
   (click)="$event.stopPropagation()">
 
    <div class="brand">
-  <h2>ASTRO ❤ ALLIANCE</h2>
-  <p>{{ currentLang === 'ta' ? 'அட்மின் பேனல்' : 'Admin Panel' }}</p>
+  <h2>ASTRO ALLIANCE</h2>
+  <!-- <h6>{{ currentLang === 'ta' ? 'அட்மின் பேனல்' : 'Admin Panel' }}</h6> -->
 
+  <div class="admin-profile-box">
+    <div class="admin-avatar">
+      {{ adminName.charAt(0).toUpperCase() }}
+    </div>
+
+    <div class="admin-user-details">
+      <h4>{{ adminName }}</h4>
+      <!-- <span>{{ currentLang === 'ta' ? 'நிர்வாகி' : 'Administrator' }}</span> -->
+    </div>
+
+    <button type="button" class="logout-btn" (click)="logoutAdmin()">
+      Logout
+    </button>
+  </div>
   <div class="admin-language-switcher">
 
     <button
@@ -25,6 +39,7 @@
     </button>
 
   </div>
+
 </div>
 
 <nav class="nav-menu">
