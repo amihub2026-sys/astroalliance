@@ -397,7 +397,7 @@ body{
 }
 
 .chart-example{
-  width:700px;
+  width:500px;
   text-align:center;
   display:flex;
   flex-direction:column;
@@ -505,9 +505,9 @@ body{
 
 .chart-example img{
   width:100%;
-  max-width:700px;
+  max-width:500px;
   border:3px solid #e4c7d4;
-  padding:14px;
+  padding:8px;
   background:#fff;
   border-radius:18px;
   box-shadow:0 10px 30px rgba(0,0,0,0.12);
