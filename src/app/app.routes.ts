@@ -8,6 +8,7 @@ import { Biodata } from './biodata/biodata';
 import { ProfileView } from './profile-view/profile-view';
 import { MyBiodataComponent } from './my-biodata/my-biodata';
 import { authGuard } from './core/auth.guard';
+import { adminGuard } from './core/admin.guard';
 import { PaymentPage } from './payment-page/payment-page';
 import { Terms } from './terms/terms';
 import { Admin } from './admin/admin';
@@ -28,8 +29,14 @@ export const routes: Routes = [
   { path: 'terms', component: Terms },
 { path: 'received-interests', component: ReceivedInterests },
 { path: 'sent-interests', component: SentInterests },
- {
+{
+  path: 'admin-login',
+  loadComponent: () =>
+    import('./admin-login/admin-login').then(m => m.AdminLogin)
+},
+{
   path: 'admin',
+  canActivate: [adminGuard],
   loadComponent: () =>
     import('./admin/admin').then(m => m.Admin),
   children: [
