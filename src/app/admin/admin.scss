@@ -623,7 +623,7 @@ tbody td {
 
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
 gap: 10px;
   gap: 10px;
 }
@@ -657,4 +657,62 @@ gap: 10px;
 .admin-user-details span {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.75);
+}
+.logout-btn{
+  border:none;
+  outline:none;
+
+  padding:8px 16px;
+
+  border-radius:10px;
+
+  background:linear-gradient(
+    135deg,
+    #ff4d8d,
+    #e91e63
+  );
+
+  color:#fff;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:all .25s ease;
+
+  box-shadow:0 6px 16px rgba(233,30,99,.35);
+
+  min-width:78px;
+}
+
+.logout-btn:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:0 10px 22px rgba(233,30,99,.45);
+
+  background:linear-gradient(
+    135deg,
+    #ff5c99,
+    #d81b60
+  );
+}
+
+.logout-btn:active{
+
+  transform:scale(.96);
+}
+
+@media(max-width:600px){
+
+  .logout-btn{
+
+    padding:7px 12px;
+
+    font-size:12px;
+
+    min-width:70px;
+  }
 }

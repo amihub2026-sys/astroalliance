@@ -70,10 +70,10 @@ export class Admin {
 
   }
 logoutAdmin(): void {
-  localStorage.removeItem('isAdmin');
+  localStorage.removeItem('is_admin');
   localStorage.removeItem('admin_token');
   localStorage.removeItem('admin_name');
 
-  this.router.navigate(['/login']);
+  this.router.navigate(['/admin-login']);
 }
 }
