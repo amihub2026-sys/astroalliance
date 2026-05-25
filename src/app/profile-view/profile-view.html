@@ -323,14 +323,12 @@
           <div><span>
   {{ currentLang === 'ta' ? 'பாலினம்' : 'Gender' }}
 </span><strong>{{ getText(p.gender) || '-' }}</strong></div>
-          <div>
+   <div>
   <span>
-  {{ currentLang === 'ta' ? 'பிறந்த தேதி' : 'Date of Birth' }}
-</span>
-  <strong *ngIf="unlocked">{{ p.dob || '-' }}</strong>
-<strong *ngIf="!unlocked" class="premium-heart" (click)="goToPlans()">
-  💖
-</strong>
+    {{ currentLang === 'ta' ? 'பிறந்த தேதி' : 'Date of Birth' }}
+  </span>
+
+  <strong>{{ p.dob || '-' }}</strong>
 </div>
           <div><span>
   {{ currentLang === 'ta' ? 'வயது' : 'Age' }}

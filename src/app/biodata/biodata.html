@@ -18,7 +18,7 @@
 <details class="form-accordion" open>
 
 <summary>
-  Images & Videos
+  {{ currentLang === 'ta' ? 'படங்கள் & வீடியோக்கள்' : 'Images & Videos' }}
 </summary>
 
 <div class="section-card profile-card">
@@ -146,7 +146,7 @@
  <details class="form-accordion" open>
 
 <summary>
-  Personal Details
+  {{ currentLang === 'ta' ? 'தனிப்பட்ட விவரங்கள்' : 'Personal Details' }}
 </summary>
 
 <div class="section-card">
@@ -187,7 +187,15 @@
         <!-- DOB -->
 <div class="field" [class.invalid]="isInvalid('dob')">
   <label>{{ tr.labels.dob }} <span class="required">*</span></label>
-  <input type="date" [(ngModel)]="formData.dob" name="dob" disabled>
+<input
+  type="date"
+  [(ngModel)]="formData.dob"
+  name="dob"
+  (change)="onDobChange()"
+  [class.invalid]="isInvalid('dob')"
+  [max]="maxDobDate"
+  [disabled]="!isAdminCreated && isEditMode"
+>
   <small class="field-error" *ngIf="isInvalid('dob')">Required</small>
 </div>
          <!-- BIRTH TIME -->
@@ -307,7 +315,55 @@
 <!-- MOBILE -->
 <div class="field" [class.invalid]="isInvalid('mobile')">
   <label>{{ tr.labels.mobile }} <span class="required">*</span></label>
-  <input type="text" [(ngModel)]="formData.mobile" name="mobile" disabled>
+<input
+  type="text"
+
+  [value]="formData.mobile"
+
+  (input)="
+    formData.mobile =
+    ($any($event.target).value || '')
+      .replace(/[^0-9]/g, '')
+      .substring(0,10);
+
+    $any($event.target).value =
+    formData.mobile;
+  "
+
+  name="mobile"
+
+  maxlength="10"
+
+  inputmode="numeric"
+
+  autocomplete="off"
+
+  placeholder="Enter 10 digit mobile number"
+
+  [class.invalid]="
+    formData.mobile &&
+    !/^[6-9]\d{9}$/.test(formData.mobile)
+  "
+  [disabled]="!isAdminCreated && isEditMode"
+>
+
+
+<small
+  class="field-error"
+
+  *ngIf="
+    formData.mobile &&
+    !/^[6-9]\d{9}$/.test(formData.mobile)
+  "
+>
+
+  {{
+    currentLang === 'ta'
+      ? 'சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்'
+      : 'Enter valid 10 digit mobile number'
+  }}
+
+</small>
   <small class="field-error" *ngIf="isInvalid('mobile')">Required</small>
 </div>
 
@@ -320,21 +376,61 @@
   <div class="additional-phone-wrapper">
 
     <div
-      *ngFor="
-        let mobile of formData.additionalMobile;
-        let i = index
-      "
+   *ngFor="
+  let mobile of formData.additionalMobile;
+  let i = index;
+  trackBy: trackByIndex
+"
       class="additional-mobile-row"
     >
 
-      <input
-        type="tel"
-        [(ngModel)]="formData.additionalMobile[i]"
-        [name]="'additionalMobile' + i"
-        maxlength="10"
-        inputmode="numeric"
-        placeholder="Enter 10 digit mobile number"
-      >
+<input
+  type="text"
+
+  [(ngModel)]="formData.additionalMobile[i]"
+
+  (ngModelChange)="
+    formData.additionalMobile[i] =
+    ($event || '')
+      .replace(/[^0-9]/g, '')
+      .substring(0,10)
+  "
+
+  [name]="'additionalMobile' + i"
+
+  maxlength="10"
+
+  inputmode="numeric"
+
+  autocomplete="off"
+
+  placeholder="Enter 10 digit mobile number"
+
+  [class.invalid]="
+    formData.additionalMobile[i] &&
+    !/^[6-9]\d{9}$/.test(
+      formData.additionalMobile[i]
+    )
+  "
+>
+<small
+  class="field-error"
+
+  *ngIf="
+    formData.additionalMobile[i] &&
+    !/^[6-9]\d{9}$/.test(
+      formData.additionalMobile[i]
+    )
+  "
+>
+
+  {{
+    currentLang === 'ta'
+      ? 'சரியான மொபைல் எண்ணை உள்ளிடவும்'
+      : 'Enter valid mobile number'
+  }}
+
+</small>
 
       <button
         type="button"
@@ -499,7 +595,7 @@
 <details class="form-accordion">
 
 <summary>
-  Family Details
+  {{ currentLang === 'ta' ? 'குடும்ப விவரங்கள்' : 'Family Details' }}
 </summary>
 
 <div class="section-card">
@@ -677,10 +773,11 @@
 >
 
 </div>
+<!-- POORVEGAM -->
 
 <!-- POORVEGAM -->
 
-<div class="field">
+<div class="field poorvegam-field">
 
   <label>
     {{ currentLang === 'ta'
@@ -689,11 +786,88 @@
     }}
   </label>
 
+  <div class="poorvegam-select-wrap">
+
+    <input
+      type="text"
+
+      [(ngModel)]="poorvegamSearch"
+
+      name="poorvegamSearch"
+
+      [placeholder]="
+        currentLang === 'ta'
+          ? 'பூர்வீகம் தேடவும்'
+          : 'Search Poorvegam'
+      "
+
+      autocomplete="off"
+
+      (focus)="showPoorvegamDropdown = true"
+
+      (blur)="showPoorvegamDropdown = false"
+
+      (input)="onPoorvegamSearchChange()"
+    >
+
+    <div
+      class="poorvegam-dropdown"
+      *ngIf="showPoorvegamDropdown"
+    >
+
+      <div
+        class="poorvegam-option"
+
+        *ngFor="
+          let city of filteredPoorvegamList
+        "
+
+        (mousedown)="selectPoorvegam(city)"
+      >
+
+        {{
+          currentLang === 'ta'
+
+            ? (
+                city.city_name_ta ||
+                city.city_name
+              )
+
+            : city.city_name
+        }}
+
+      </div>
+
+    </div>
+
+  </div>
+
   <input
+    *ngIf="
+      poorvegamSearch === 'Other'
+      || formData.poorvegam === 'Other'
+    "
+
     type="text"
-    [ngModel]="getTypedValue('poorvegam')"
-    (ngModelChange)="onTamilInputChange('poorvegam', $event)"
-    name="poorvegam"
+
+    [ngModel]="
+      formData.poorvegam === 'Other'
+        ? ''
+        : formData.poorvegam
+    "
+
+    (ngModelChange)="
+      formData.poorvegam = $event;
+      formDataTa.poorvegam = $event
+    "
+
+    name="otherPoorvegam"
+
+    [placeholder]="
+      currentLang === 'ta'
+        ? 'பூர்வீகத்தை உள்ளிடவும்'
+        : 'Enter Poorvegam'
+    "
   >
 
 </div>
@@ -705,11 +879,9 @@
     <!-- EDUCATION -->
 
 <details class="form-accordion">
-
 <summary>
-  Education Details
+  {{ currentLang === 'ta' ? 'கல்வி விவரங்கள்' : 'Education Details' }}
 </summary>
-
 <div class="section-card">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.education }}</h2>
@@ -828,7 +1000,7 @@
 <details class="form-accordion">
 
 <summary>
-  Address Details
+  {{ currentLang === 'ta' ? 'முகவரி விவரங்கள்' : 'Address Details' }}
 </summary>
 
 <div class="section-card">
@@ -959,7 +1131,7 @@
 
 <!-- IRUPPIDAM -->
 
-<div class="field">
+<div class="field iruppidam-field">
 
   <label>
     {{ currentLang === 'ta'
@@ -968,14 +1140,87 @@
     }}
   </label>
 
-  <input
-    type="text"
-    [ngModel]="getTypedValue('iruppidam')"
-    (ngModelChange)="onTamilInputChange('iruppidam', $event)"
-    name="iruppidam"
-  >
+  <div class="iruppidam-select-wrap">
+
+    <input
+      type="text"
+      [(ngModel)]="iruppidamSearch"
+      name="iruppidamSearch"
+
+      [placeholder]="
+        currentLang === 'ta'
+          ? 'இருப்பிடம் தேடவும்'
+          : 'Search Iruppidam'
+      "
+
+      autocomplete="off"
+
+    (focus)="showIruppidamDropdown = true"
+
+(blur)="showIruppidamDropdown = false"
+
+(input)="onIruppidamSearchChange()"
+    >
+
+    <div
+      class="iruppidam-dropdown"
+      *ngIf="showIruppidamDropdown"
+    >
+
+    <div
+  class="iruppidam-option"
+
+  *ngFor="
+    let city of filteredIruppidamList
+  "
+
+  (mousedown)="selectIruppidam(city)"
+>
+
+  {{
+    currentLang === 'ta'
+
+      ? (
+          city.city_name_ta ||
+          city.city_name
+        )
+
+      : city.city_name
+  }}
 
 </div>
+
+</div> <!-- iruppidam-dropdown -->
+
+</div> <!-- iruppidam-select-wrap -->
+<input
+  *ngIf="
+    iruppidamSearch === 'Other'
+    || formData.iruppidam === 'Other'
+  "
+
+  type="text"
+
+  [ngModel]="
+    formData.iruppidam === 'Other'
+      ? ''
+      : formData.iruppidam
+  "
+
+  (ngModelChange)="
+    formData.iruppidam = $event;
+    formDataTa.iruppidam = $event
+  "
+
+  name="otherIruppidam"
+
+  [placeholder]="
+    currentLang === 'ta'
+      ? 'இருப்பிடத்தை உள்ளிடவும்'
+      : 'Enter Iruppidam'
+  "
+>
+</div> <!-- iruppidam-field -->
 
         </div>
       </div>
@@ -985,7 +1230,7 @@
 <details class="form-accordion">
 
 <summary>
-  Horoscope Details
+  {{ currentLang === 'ta' ? 'ஜாதக விவரங்கள்' : 'Horoscope Details' }}
 </summary>
 
 <div class="section-card">

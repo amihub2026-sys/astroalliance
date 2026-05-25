@@ -25,6 +25,10 @@ cdr = inject(ChangeDetectorRef);
 
   phone = '';
   dob = '';
+  
+  maxDate = new Date(
+  new Date().setFullYear(new Date().getFullYear() - 18)
+).toISOString().split('T')[0];
   isLoading = false;
   loginType: LoginType = 'user';
 
@@ -123,7 +127,76 @@ cdr = inject(ChangeDetectorRef);
     const digits = String(value || '').replace(/\D/g, '');
     return digits.length > 10 ? digits.slice(-10) : digits;
   }
+formatDob(event: any) {
 
+  let value = event.target.value.replace(/\D/g, '');
+
+  if (value.length > 2) {
+
+    value =
+      value.substring(0, 2) +
+      '-' +
+      value.substring(2);
+  }
+
+  if (value.length > 5) {
+
+    value =
+      value.substring(0, 5) +
+      '-' +
+      value.substring(5, 9);
+  }
+
+  this.dob = value;
+
+}
+
+onMobileDatePick(event: any) {
+
+  const value = event.target.value;
+
+  if (!value) return;
+
+  const [year, month, day] =
+    value.split('-');
+
+ this.dob =
+  `${day}-${month}-${year}`;
+
+const birthDate =
+  new Date(`${year}-${month}-${day}`);
+
+const today = new Date();
+
+let age =
+  today.getFullYear() -
+  birthDate.getFullYear();
+
+const monthDifference =
+  today.getMonth() -
+  birthDate.getMonth();
+
+if (
+  monthDifference < 0 ||
+  (
+    monthDifference === 0 &&
+    today.getDate() < birthDate.getDate()
+  )
+) {
+  age--;
+}
+
+if (age < 18) {
+
+  this.dob = '';
+
+  this.snackbar.error(
+    'Age must be 18 or above'
+  );
+
+}
+
+}
   private clearOldLoginStorage(): void {
     localStorage.removeItem('matrimony_user');
     localStorage.removeItem('matrimony_user_id');
@@ -187,7 +260,11 @@ cdr = inject(ChangeDetectorRef);
   private async handleAdminLogin(): Promise<void> {
 
   const cleanPhone = this.normalizePhone(this.phone);
-  const cleanDob = this.dob;
+  const cleanDob =
+  this.dob.includes('-') &&
+  this.dob.split('-')[0].length === 2
+    ? this.dob.split('-').reverse().join('-')
+    : this.dob;
 
   const { data: admin, error } = await supabase
     .from('admin_users')
@@ -228,7 +305,44 @@ async onLogin() {
     this.snackbar.error(this.tr.alerts.fillAll);
     return;
   }
+const dobForAge =
+  this.dob.includes('-') &&
+  this.dob.split('-')[0].length === 2
+    ? this.dob.split('-').reverse().join('-')
+    : this.dob;
 
+const birthDate = new Date(dobForAge);
+
+const today = new Date();
+
+let age =
+  today.getFullYear() -
+  birthDate.getFullYear();
+
+const monthDifference =
+  today.getMonth() -
+  birthDate.getMonth();
+
+if (
+  monthDifference < 0 ||
+  (
+    monthDifference === 0 &&
+    today.getDate() < birthDate.getDate()
+  )
+) {
+  age--;
+}
+
+if (age < 18) {
+
+  this.stopLoading();
+
+  this.snackbar.error(
+    'Age must be 18 or above'
+  );
+
+  return;
+}
   this.isLoading = true;
 
   try {
@@ -239,7 +353,11 @@ async onLogin() {
     }
 
     const cleanPhone = this.normalizePhone(this.phone);
-    const cleanDob = this.dob;
+    const cleanDob =
+  this.dob.includes('-') &&
+  this.dob.split('-')[0].length === 2
+    ? this.dob.split('-').reverse().join('-')
+    : this.dob;
 
     const { data: appUser, error: appUserError } = await supabase
       .from('app_users')

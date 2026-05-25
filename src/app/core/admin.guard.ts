@@ -1,16 +1,24 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import {
+  CanActivateFn,
+  CanActivateChildFn,
+  Router
+} from '@angular/router';
 
-export const adminGuard: CanActivateFn = () => {
+export const adminGuard: CanActivateFn & CanActivateChildFn = () => {
   const router = inject(Router);
 
-  // temporary check
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
-
-  if (isAdmin) {
+  // IMPORTANT: during refresh SSR has no window
+  // so don't redirect on server side
+  if (typeof window === 'undefined') {
     return true;
   }
 
-  router.navigate(['/login']);
-  return false;
+  const isAdmin = localStorage.getItem('is_admin');
+
+  if (isAdmin === 'true') {
+    return true;
+  }
+
+  return router.createUrlTree(['/admin-login']);
 };

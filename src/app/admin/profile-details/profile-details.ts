@@ -25,6 +25,10 @@ export class ProfileDetails implements OnInit, OnChanges {
 
   isLoading = true;
   profile: any = null;
+ pdfWithPhoto = false;
+pdfWithAddress = true;
+showPrintOptions = false;
+pdfPhotoUrl = '/assets/default-avatar.png';
 get currentLang(): 'en' | 'ta' {
   if (typeof window === 'undefined') {
     return 'en';
@@ -169,52 +173,46 @@ getAmsamChart(): string[] {
     this.cdr.detectChanges();
   }
 
- async downloadBiodataPdf(): Promise<void> {
-  const element = document.getElementById('biodataPdf');
+downloadBiodataPdf(
+  withPhoto: boolean,
+  withAddress: boolean
+): void {
 
-  if (!element || !this.profile) {
-   alert(
-  this.currentLang === 'ta'
-    ? 'பயோடேட்டா தயாராக இல்லை'
-    : 'Biodata not ready'
-);
-    return;
-  }
+  this.pdfWithPhoto = withPhoto;
+  this.pdfWithAddress = withAddress;
 
-  const canvas = await html2canvas(element, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: '#ffffff'
-  });
+  const mainImg =
+    document.querySelector('.main-profile-image') as HTMLImageElement;
 
-  const imgData = canvas.toDataURL('image/png');
+  this.pdfPhotoUrl = withPhoto
+    ? mainImg?.src || '/assets/default-avatar.png'
+    : '/assets/default-avatar.png';
 
-  const pdf = new jsPDF('p', 'mm', 'a4');
+  this.cdr.detectChanges();
 
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-
-  const margin = 8;
-  const availableWidth = pageWidth - margin * 2;
-  const availableHeight = pageHeight - margin * 2;
-
-  const imgWidth = availableWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-  const finalHeight = Math.min(imgHeight, availableHeight);
-
-  pdf.addImage(
-    imgData,
-    'PNG',
-    margin,
-    margin,
-    imgWidth,
-    finalHeight
-  );
-
-  pdf.save(`${this.profile.profile_code || 'biodata'}.pdf`);
+  setTimeout(() => {
+    window.print();
+  }, 500);
 }
+async imageToBase64(url: string): Promise<string> {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
 
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return '/assets/default-avatar.png';
+  }
+}
   async updateStatus(status: string): Promise<void> {
     if (!this.profile) return;
 

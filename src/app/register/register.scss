@@ -490,3 +490,88 @@
   }
 
 }
+.dob-input{
+  appearance:auto;
+  -webkit-appearance:auto;
+  min-height:56px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .dob-input{
+
+    font-size:16px !important;
+
+    padding:16px 14px !important;
+
+    color:#111827 !important;
+
+    background:#fff !important;
+  }
+
+  .dob-input::-webkit-date-and-time-value{
+
+    text-align:left;
+  }
+
+  .dob-input::-webkit-calendar-picker-indicator{
+
+    opacity:1;
+
+    cursor:pointer;
+  }
+
+}
+.mobile-dob-wrap{
+  display:none;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .desktop-dob{
+    display:none !important;
+  }
+
+  .mobile-dob-wrap{
+    display:block !important;
+  }
+
+}
+.mobile-dob-wrap{
+  position:relative;
+}
+
+.real-date-picker{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.calendar-btn{
+
+  position:absolute;
+
+  right:10px;
+
+  top:50%;
+
+  transform:translateY(-50%);
+
+  border:none;
+
+  background:none;
+
+  font-size:20px;
+
+  cursor:pointer;
+}
+.required-star {
+  color: #e91e63;
+  font-size: 16px;
+  font-weight: 900;
+  margin-left: 2px;
+}

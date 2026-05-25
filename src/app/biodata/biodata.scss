@@ -181,6 +181,7 @@ body{
 /* FORM */
 
 .form-grid{
+  overflow:visible !important;
   display:grid;
   grid-template-columns:1fr 1fr;
   column-gap:22px;
@@ -264,9 +265,21 @@ body{
 
 .field-error,
 .upload-error{
+
+  display:block;
+
+  margin-top:6px;
+
+  margin-left:210px;
+
   color:#e11d48;
+
   font-size:12px;
+
   font-weight:700;
+
+  white-space:nowrap;
+
 }
 
 /* MEDIA */
@@ -384,7 +397,7 @@ body{
 }
 
 .chart-example{
-  width:700px;
+  width:500px;
   text-align:center;
   display:flex;
   flex-direction:column;
@@ -492,9 +505,9 @@ body{
 
 .chart-example img{
   width:100%;
-  max-width:700px;
+  max-width:500px;
   border:3px solid #e4c7d4;
-  padding:14px;
+  padding:8px;
   background:#fff;
   border-radius:18px;
   box-shadow:0 10px 30px rgba(0,0,0,0.12);
@@ -1126,6 +1139,7 @@ background:#fff;
 .form-accordion{
   margin-bottom:20px;
   border-radius:18px;
+  overflow:visible !important;
   overflow:hidden;
   border:1px solid #eee;
   background:#fff;
@@ -1366,4 +1380,160 @@ background:#fff;
 .preview-grid span{
     font-size:10px !important;
   text-align:left !important;
+}
+.invalid{
+
+  border:2px solid #e91e63 !important;
+
+  background:#fff5f8 !important;
+
+}
+.iruppidam-field{
+  position:relative;
+  z-index:9999;
+}
+
+.iruppidam-select-wrap{
+  position:relative;
+  width:100%;
+  overflow:visible !important;
+}
+
+.iruppidam-dropdown{
+
+  position:absolute;
+
+  top:100%;
+
+  left:0;
+
+  width:100%;
+
+  max-height:220px;
+
+  overflow-y:auto;
+
+  background:#fff;
+
+  border:1px solid #d5d5d5;
+
+  z-index:999999;
+
+  box-shadow:0 8px 18px rgba(0,0,0,0.12);
+
+}
+
+.iruppidam-option{
+
+  padding:10px 12px;
+
+  cursor:pointer;
+
+  font-size:14px;
+
+}
+
+.iruppidam-option:hover{
+
+  background:#fff5f8;
+
+  color:#d81b60;
+
+  font-weight:700;
+
+}
+.poorvegam-field{
+  position:relative;
+  z-index:9999;
+}
+
+.poorvegam-select-wrap{
+  position:relative;
+  width:100%;
+}
+
+.poorvegam-dropdown{
+
+  position:absolute;
+
+  top:100%;
+
+  left:0;
+
+  width:100%;
+
+  max-height:220px;
+
+  overflow-y:auto;
+
+  background:#fff;
+
+  border:1px solid #d5d5d5;
+
+  z-index:999999;
+
+  box-shadow:0 8px 18px rgba(0,0,0,0.12);
+
+}
+
+.poorvegam-option{
+
+  padding:10px 12px;
+
+  cursor:pointer;
+
+}
+
+.poorvegam-option:hover{
+
+  background:#fff5f8;
+
+  color:#d81b60;
+
+}
+/* ADMIN PAGE SAME COMPONENT FIX */
+
+:host{
+  display:block;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+.biodata-page{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+.biodata-container{
+  max-width:100%;
+}
+
+.biodata-layout{
+  grid-template-columns:minmax(0,1fr) 380px;
+}
+
+.preview-card{
+  max-width:380px;
+}
+
+@media(max-width:1400px){
+
+  .biodata-layout{
+    grid-template-columns:1fr;
+  }
+
+  .preview-side{
+    position:relative;
+    top:auto;
+    right:auto;
+    transform:none;
+    width:100%;
+    margin-top:20px;
+  }
+
+  .preview-card{
+    max-width:100%;
+  }
 }

@@ -27,6 +27,9 @@ constructor(private router: Router) {
   gender = '';
   age: number | null = null;
   dob = '';
+  maxDate = new Date(
+  new Date().setFullYear(new Date().getFullYear() - 18)
+).toISOString().split('T')[0];
   religion = '';
   religionList: any[] = [];
   location = '';
@@ -35,6 +38,35 @@ constructor(private router: Router) {
 
   isLoading = false;
 showTermsPopup = false;
+allowOnlyNumbers(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
+
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
+
+blockInvalidPaste(event: ClipboardEvent) {
+  const pastedText = event.clipboardData?.getData('text') || '';
+
+  if (!/^[0-9]+$/.test(pastedText)) {
+    event.preventDefault();
+  }
+}
+onProfileForChange(value: string) {
+
+  if (value === 'Daughter' || value === 'Sister') {
+    this.gender = this.tr.form.female;
+    return;
+  }
+
+  if (value === 'Son' || value === 'Brother') {
+    this.gender = this.tr.form.male;
+    return;
+  }
+
+  this.gender = '';
+}
   translations = {
     en: {
       left: {
@@ -271,28 +303,81 @@ calculateAge() {
     return;
   }
 
-  const birthDate = new Date(this.dob);
+  let birthDate: Date;
+
+  const parts = this.dob.split('-');
+
+  if (parts.length === 3 && parts[0].length === 2) {
+    // mobile format: dd-mm-yyyy
+    const day = Number(parts[0]);
+    const month = Number(parts[1]) - 1;
+    const year = Number(parts[2]);
+
+    birthDate = new Date(year, month, day);
+  } else {
+    // desktop format: yyyy-mm-dd
+    birthDate = new Date(this.dob);
+  }
+
+  if (isNaN(birthDate.getTime())) {
+    this.age = null;
+    return;
+  }
 
   const today = new Date();
 
-  let calculatedAge =
-    today.getFullYear() - birthDate.getFullYear();
+  let calculatedAge = today.getFullYear() - birthDate.getFullYear();
 
-  const monthDifference =
-    today.getMonth() - birthDate.getMonth();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
 
   if (
     monthDifference < 0 ||
-    (
-      monthDifference === 0 &&
-      today.getDate() < birthDate.getDate()
-    )
+    (monthDifference === 0 && today.getDate() < birthDate.getDate())
   ) {
     calculatedAge--;
   }
 
   this.age = calculatedAge;
 }
+formatDob(event: any) {
+
+  let value = event.target.value.replace(/\D/g, '');
+
+  if (value.length > 2) {
+
+    value =
+      value.substring(0, 2) +
+      '-' +
+      value.substring(2);
+  }
+
+  if (value.length > 5) {
+
+    value =
+      value.substring(0, 5) +
+      '-' +
+      value.substring(5, 9);
+  }
+
+  this.dob = value;
+  this.calculateAge();
+
+}
+onMobileDatePick(event: any) {
+
+  const value = event.target.value;
+
+  if (!value) return;
+
+  const [year, month, day] =
+    value.split('-');
+
+  this.dob =
+    `${day}-${month}-${year}`;
+    this.calculateAge();
+
+}
+
 async loadReligions(): Promise<void> {
 
   const { data, error } = await supabase
@@ -330,10 +415,10 @@ async loadReligions(): Promise<void> {
     //   return;
     // }
 
-    if (this.age <= 0) {
-      alert(this.tr.alerts.ageInvalid);
-      return;
-    }
+   if (!this.age || this.age < 18) {
+  alert('Age must be 18 or above');
+  return;
+}
 
     const phoneRegex = /^[0-9]{10}$/;
 

@@ -29,7 +29,7 @@
         <form class="register-form" (ngSubmit)="onRegister()">
           <div class="form-row">
             <div class="form-group full-width">
-              <label>{{ tr.form.firstName }}</label>
+              <label>{{ tr.form.firstName }} <span class="required-star">*</span></label>
               <input
                 type="text"
                 [placeholder]="tr.form.firstNamePlaceholder"
@@ -38,16 +38,17 @@
               />
             </div>
              <div class="form-group">
-              <label>{{ tr.form.phone }}</label>
-              <input
-                type="text"
-                maxlength="10"
-                pattern="[0-9]{10}"
-                inputmode="numeric"
-                [placeholder]="tr.form.phonePlaceholder"
-                [(ngModel)]="phone"
-                name="phone"
-              />
+              <label>{{ tr.form.phone }} <span class="required-star">*</span></label>
+<input
+  type="text"
+  maxlength="10"
+  inputmode="numeric"
+  [placeholder]="tr.form.phonePlaceholder"
+  [(ngModel)]="phone"
+  name="phone"
+  (keypress)="allowOnlyNumbers($event)"
+  (paste)="blockInvalidPaste($event)"
+/>
             </div>
 <!-- 
             <div class="form-group">
@@ -78,9 +79,12 @@
 
          <div class="form-group">
 
-  <label>{{ tr.form.profileFor }}</label>
+  <label>{{ tr.form.profileFor }} <span class="required-star">*</span></label>
 
-  <select [(ngModel)]="profileFor" name="profileFor">
+  <select
+  [(ngModel)]="profileFor"
+  name="profileFor"
+  (ngModelChange)="onProfileForChange($event)">
 
     <option value="">
       {{ tr.form.profileForPlaceholder }}
@@ -121,7 +125,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>{{ tr.form.gender }}</label>
+              <label>{{ tr.form.gender }} <span class="required-star">*</span></label>
               <select [(ngModel)]="gender" name="gender">
                 <option value="">{{ tr.form.genderPlaceholder }}</option>
                 <option [value]="tr.form.male">{{ tr.form.male }}</option>
@@ -130,7 +134,7 @@
             </div>
 
   <div class="form-group ">
-            <label>{{ tr.form.religion }}</label>
+            <label>{{ tr.form.religion }} <span class="required-star">*</span></label>
          <select [(ngModel)]="religion" name="religion">
 
   <option value="">
@@ -155,13 +159,51 @@
 
           <div class="form-row">
             <div class="form-group">
-             <label>{{ dobLabel }}</label>
-            <input
+            <label>{{ dobLabel }} <span class="required-star">*</span></label>
+<!-- DESKTOP DOB -->
+
+<input
+  class="dob-input desktop-dob"
   type="date"
   [(ngModel)]="dob"
   name="dob"
+  [max]="maxDate"
+  (input)="calculateAge()"
   (change)="calculateAge()"
 />
+
+<!-- MOBILE DOB -->
+<div class="mobile-dob-wrap">
+
+  <input
+    class="dob-input mobile-dob"
+    type="text"
+    placeholder="dd-mm-yyyy"
+    [(ngModel)]="dob"
+    name="dobMobile"
+    inputmode="numeric"
+    maxlength="10"
+    (input)="formatDob($event)"
+  />
+
+  <input
+    #mobileDatePicker
+    type="date"
+    class="real-date-picker"
+    [max]="maxDate"
+    (change)="onMobileDatePick($event)"
+  />
+
+  <button
+    type="button"
+    class="calendar-btn"
+    (click)="mobileDatePicker.showPicker()">
+
+    📅
+
+  </button>
+
+</div>
             </div>
 
                <div class="form-group">

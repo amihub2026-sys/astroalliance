@@ -4,10 +4,43 @@
   [class.open]="sidebarOpen"
   (click)="$event.stopPropagation()">
 
-    <div class="brand">
-      <h2>ASTRO ❤ ALLIANCE</h2>
-      <p>Admin Panel</p>
+   <div class="brand">
+  <h2>ASTRO ALLIANCE</h2>
+  <!-- <h6>{{ currentLang === 'ta' ? 'அட்மின் பேனல்' : 'Admin Panel' }}</h6> -->
+
+  <div class="admin-profile-box">
+    <div class="admin-avatar">
+      {{ adminName.charAt(0).toUpperCase() }}
     </div>
+
+    <div class="admin-user-details">
+      <h4>{{ adminName }}</h4>
+      <!-- <span>{{ currentLang === 'ta' ? 'நிர்வாகி' : 'Administrator' }}</span> -->
+    </div>
+
+    <button type="button" class="logout-btn" (click)="logoutAdmin()">
+      Logout
+    </button>
+  </div>
+  <div class="admin-language-switcher">
+
+    <button
+      type="button"
+      [class.active]="currentLang === 'en'"
+      (click)="changeLanguage('en')">
+      EN
+    </button>
+
+    <button
+      type="button"
+      [class.active]="currentLang === 'ta'"
+      (click)="changeLanguage('ta')">
+      தமிழ்
+    </button>
+
+  </div>
+
+</div>
 
 <nav class="nav-menu">
 
@@ -115,7 +148,7 @@
 </a>
 <a
   routerLink="/admin/create-user"
-  routerLinkActive="active"
+  routerLink="/admin/create-biodata"
   class="nav-item"
   (click)="sidebarOpen = false">
   User Registration
@@ -132,7 +165,7 @@
  <main
   class="main-content">
 
-    <header class="topbar">
+    <!-- <header class="topbar">
 
       <div class="topbar-left">
 
@@ -150,7 +183,7 @@
 
       </div>
 
-    </header>
+    </header> -->
 
     <router-outlet></router-outlet>
 

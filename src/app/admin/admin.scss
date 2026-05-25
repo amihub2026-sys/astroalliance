@@ -24,11 +24,11 @@
 
   position: fixed;
 
-  top: 120px;
+  top: 0;
 
   left: 0;
 
-  height: calc(100vh - 120px);
+  height: 100vh;
 
   overflow-y: auto;
 
@@ -587,4 +587,132 @@ tbody td {
 .main-content {
   position: relative;
   z-index: 1;
+}
+.admin-language-switcher{
+  display:flex;
+  gap:10px;
+  margin-top:16px;
+  justify-content:center;
+}
+
+.admin-language-switcher button{
+  border:none;
+  padding:8px 16px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.12);
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.admin-language-switcher button.active{
+  background:#ec4899;
+  color:#fff;
+}
+
+.admin-language-switcher button:hover{
+  background:#ec4899;
+}
+.admin-profile-box {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+gap: 10px;
+  gap: 10px;
+}
+
+.admin-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ec4899;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.admin-user-details {
+  flex: 1;
+  text-align: left;
+  margin-left: 8px;
+}
+
+.admin-user-details h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.admin-user-details span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+}
+.logout-btn{
+  border:none;
+  outline:none;
+
+  padding:8px 16px;
+
+  border-radius:10px;
+
+  background:linear-gradient(
+    135deg,
+    #ff4d8d,
+    #e91e63
+  );
+
+  color:#fff;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:all .25s ease;
+
+  box-shadow:0 6px 16px rgba(233,30,99,.35);
+
+  min-width:78px;
+}
+
+.logout-btn:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:0 10px 22px rgba(233,30,99,.45);
+
+  background:linear-gradient(
+    135deg,
+    #ff5c99,
+    #d81b60
+  );
+}
+
+.logout-btn:active{
+
+  transform:scale(.96);
+}
+
+@media(max-width:600px){
+
+  .logout-btn{
+
+    padding:7px 12px;
+
+    font-size:12px;
+
+    min-width:70px;
+  }
 }
