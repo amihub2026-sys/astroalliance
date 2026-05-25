@@ -303,22 +303,36 @@ calculateAge() {
     return;
   }
 
-  const birthDate = new Date(this.dob);
+  let birthDate: Date;
+
+  const parts = this.dob.split('-');
+
+  if (parts.length === 3 && parts[0].length === 2) {
+    // mobile format: dd-mm-yyyy
+    const day = Number(parts[0]);
+    const month = Number(parts[1]) - 1;
+    const year = Number(parts[2]);
+
+    birthDate = new Date(year, month, day);
+  } else {
+    // desktop format: yyyy-mm-dd
+    birthDate = new Date(this.dob);
+  }
+
+  if (isNaN(birthDate.getTime())) {
+    this.age = null;
+    return;
+  }
 
   const today = new Date();
 
-  let calculatedAge =
-    today.getFullYear() - birthDate.getFullYear();
+  let calculatedAge = today.getFullYear() - birthDate.getFullYear();
 
-  const monthDifference =
-    today.getMonth() - birthDate.getMonth();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
 
   if (
     monthDifference < 0 ||
-    (
-      monthDifference === 0 &&
-      today.getDate() < birthDate.getDate()
-    )
+    (monthDifference === 0 && today.getDate() < birthDate.getDate())
   ) {
     calculatedAge--;
   }
@@ -346,6 +360,7 @@ formatDob(event: any) {
   }
 
   this.dob = value;
+  this.calculateAge();
 
 }
 onMobileDatePick(event: any) {
@@ -359,6 +374,7 @@ onMobileDatePick(event: any) {
 
   this.dob =
     `${day}-${month}-${year}`;
+    this.calculateAge();
 
 }
 
