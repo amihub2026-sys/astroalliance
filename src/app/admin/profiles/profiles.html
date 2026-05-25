@@ -1,8 +1,9 @@
 <section class="content-section">
+
   <div class="section-header">
     <div>
-    <h2>{{ txt('title') }}</h2>
-<p>{{ txt('subtitle') }}</p>
+      <h2>{{ txt('title') }}</h2>
+      <p>{{ txt('subtitle') }}</p>
     </div>
 
     <button class="refresh-btn" type="button" (click)="refresh()">
@@ -10,113 +11,155 @@
     </button>
   </div>
 
-  <div class="filter-row">
-    <button
-      *ngFor="let status of statuses"
-      type="button"
-      class="filter-btn"
-      [class.active]="statusFilter === status"
-      (click)="statusFilter = status; resetPage()">
-      {{ statusText(status) }}
-    </button>
-  </div>
+  <div class="register-filter-card">
+    <div class="filter-grid">
 
-  <div class="search-card">
-    <input
-      type="text"
-[placeholder]="txt('search')"
-  [(ngModel)]="searchTerm"
-(ngModelChange)="resetPage()">
+      <div class="filter-field">
+        <label>AA ID</label>
+<input
+  type="text"
+  placeholder="AA ID"
+  [(ngModel)]="profileCodeFilter"
+  (ngModelChange)="resetPage()">      </div>
+
+      <div class="filter-field">
+        <label>Name</label>
+<input
+  type="text"
+  placeholder="Name"
+  [(ngModel)]="nameFilter"
+  (ngModelChange)="resetPage()">      </div>
+
+      <div class="filter-field">
+        <label>Phone</label>
+<input
+  type="text"
+  placeholder="Phone"
+  [(ngModel)]="phoneFilter"
+  (input)="sanitizePhoneFilter()"
+  (ngModelChange)="resetPage()">
+ </div>
+
+      <div class="filter-field">
+        <label>City</label>
+        <select [(ngModel)]="cityFilter" (ngModelChange)="resetPage()">
+          <option value="">select city</option>
+          <option *ngFor="let city of cityOptions" [value]="city">{{ city }}</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <select [(ngModel)]="religionFilter" (ngModelChange)="resetPage()">
+          <option value="">select religion</option>
+          <option *ngFor="let religion of religionOptions" [value]="religion">{{ religion }}</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <select [(ngModel)]="casteFilter" (ngModelChange)="resetPage()">
+          <option value="">select caste</option>
+          <option *ngFor="let caste of casteOptions" [value]="caste">{{ caste }}</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <select [(ngModel)]="genderFilter" (ngModelChange)="resetPage()">
+          <option value="">select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+
+      <button class="search-btn" type="button" (click)="resetPage()">
+        SEARCH
+      </button>
+
+    </div>
   </div>
 
   <p *ngIf="isLoading">{{ txt('loading') }}</p>
 
   <div class="panel-card" *ngIf="!isLoading">
     <div class="table-wrap">
+
       <table>
         <thead>
-       <tr>
-  <th>{{ txt('profileCode') }}</th>
-  <th>{{ txt('name') }}</th>
-  <th>{{ txt('age') }}</th>
-  <th>{{ txt('gender') }}</th>
-  <th>{{ txt('city') }}</th>
-  <th>{{ txt('maritalStatus') }}</th>
-  <th>{{ txt('status') }}</th>
-  <th>{{ txt('joined') }}</th>
-  <th>{{ txt('actions') }}</th>
-</tr>
+          <tr>
+  <th>Status</th>
+  <th>User Id</th>
+  <th>Photo</th>
+  <th>Name</th>
+  <th>Age</th>
+  <th>DOB</th>
+  <th>Phone No</th>
+  <th>City</th>
+  <th>Reg Date</th>
+  <th>Package</th>
+  <th>Purchased Date</th>
+  <th>Expired Date</th>
+  <th>Limits</th>
+  <th>Views</th>
+  <th>Whatsapp Share</th>
+<th style="min-width:340px;">Action</th></tr>
         </thead>
 
         <tbody>
-       <tr
- *ngFor="let profile of paginatedProfiles"
-  class="clickable-row"
-  [routerLink]="['/admin/profile', profile.profile_id]">
-            <td>{{ profile.profile_code }}</td>
-           <td>
-  {{ currentLang === 'ta' ? (profile.full_name_ta || profile.full_name) : profile.full_name }}
+          <tr *ngFor="let profile of paginatedProfiles" class="clickable-row">
+  <td>{{ statusText(profile.profile_status || 'Pending') }}</td>
+<td>{{ profile.profile_code }}</td>
+
+<td>
+  <img
+    *ngIf="profile.profile_image_url"
+    [src]="profile.profile_image_url"
+    style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+  <span *ngIf="!profile.profile_image_url">-</span>
 </td>
-            <td>{{ calculateAge(profile.dob) }}</td>
-           <td>{{ genderText(profile.gender_text) }}</td>
 
+<td>{{ currentLang === 'ta' ? (profile.full_name_ta || profile.full_name) : profile.full_name }}</td>
+<td>{{ calculateAge(profile.dob) }}</td>
+<td>{{ profile.dob || '-' }}</td>
+<td>{{ profile.mobile || '-' }}</td>
 <td>{{ cityText(profile.city_text) }}</td>
+<td>{{ dateText(profile.created_at) }}</td>
 
-<td>{{ maritalText(profile.marital_status_text) }}</td>
+<td>{{ profile.package_name || '-' }}</td>
+<td>{{ dateText(profile.purchased_date) }}</td>
+<td>{{ dateText(profile.expired_date) }}</td>
+<td>{{ profile.limits || '-' }}</td>
+<td>{{ profile.views_count || 0 }}</td>
+<td>-</td>
 
-            <td>
-              <span
-                class="status"
-                [class.approved]="profile.profile_status === 'Approved'"
-                [class.pending]="!profile.profile_status || profile.profile_status === 'Pending'"
-                [class.rejected]="profile.profile_status === 'Rejected'"
-                [class.blocked]="profile.profile_status === 'Blocked'"
-                [class.review]="profile.profile_status === 'Under Review'">
-              {{ statusText(profile.profile_status || 'Pending') }}
-              </span>
-            </td>
+<td class="action-cell">
+  <div class="action-group">
+    <button class="view-btn" type="button" (click)="viewProfile(profile, $event)">View</button>
+<button class="edit-btn" type="button" (click)="editProfile(profile, $event)">Edit</button>
+<button class="approve-btn" type="button" (click)="approveProfile(profile, $event)">Approve</button>
+<button class="package-btn" type="button" (click)="addPackage(profile, $event)">Add Package</button>
+<button class="delete-btn" type="button" (click)="deleteProfile(profile, $event)">Delete</button>
+  </div>
+</td>
 
-           <td>{{ dateText(profile.created_at) }}</td>
-
-            <td>
-              <div class="action-group">
-                <button class="approve-btn" type="button" (click)="updateStatus(profile, 'Approved')">
-                  {{ txt('approve') }}
-                </button>
-
-                <button class="review-btn" type="button" (click)="updateStatus(profile, 'Under Review')">
-                  {{ txt('review') }}
-                </button>
-
-                <button class="reject-btn" type="button" (click)="updateStatus(profile, 'Rejected')">
-                 {{ txt('reject') }}
-                </button>
-
-                <button class="block-btn" type="button" (click)="updateStatus(profile, 'Blocked')">
-                  {{ txt('block') }}
-                </button>
-              </div>
-            </td>
-          </tr>
-
+</tr>
           <tr *ngIf="filteredProfiles.length === 0">
-            <td colspan="9" class="empty-row">
-             {{ txt('noProfiles') }}
-            </td>
+<td colspan="16" class="empty-row">            </td>
           </tr>
         </tbody>
       </table>
+
       <div class="pagination" *ngIf="filteredProfiles.length > 5">
-  <button type="button" (click)="prevPage()" [disabled]="currentPage === 1">
-  {{ txt('previous') }}
-  </button>
+        <button type="button" (click)="prevPage()" [disabled]="currentPage === 1">
+          {{ txt('previous') }}
+        </button>
 
-  <span>{{ txt('page') }} {{ currentPage }} {{ txt('of') }} {{ totalPages }}</span>
+        <span>{{ txt('page') }} {{ currentPage }} {{ txt('of') }} {{ totalPages }}</span>
 
-  <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages">
-   {{ txt('next') }}
-  </button>
-</div>
+        <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          {{ txt('next') }}
+        </button>
+      </div>
+
     </div>
   </div>
+
 </section>

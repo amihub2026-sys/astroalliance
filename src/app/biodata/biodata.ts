@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { App } from '../app';
 import { supabase } from '../core/supabase.client';
+import { ActivatedRoute } from '@angular/router';
 import { SnackbarService } from '../shared/snackbar.service';
 
 @Component({
@@ -15,12 +16,18 @@ import { SnackbarService } from '../shared/snackbar.service';
 export class Biodata implements OnInit {
   app = inject(App);
   cdr = inject(ChangeDetectorRef);
-snackbar = inject(SnackbarService);
-  isExtracting = false;
+  snackbar = inject(SnackbarService);
+  route = inject(ActivatedRoute);
+
+editProfileId = '';
+
+isBrowser = typeof window !== 'undefined';
+
+isExtracting = false;
   isSaving = false;
   isSubmitted = false;
 isEditMode = false;
-  
+
   isLoadingProfile = false;
 submitted = false;
 fieldErrors: Record<string, boolean> = {};
@@ -513,7 +520,7 @@ isOtherCitySelected(): boolean {
 }
 
 onCityChange(): void {
-  
+
   const city = this.cityList.find(
     (c: any) => c.city_id === this.selectedCityId
   );
@@ -769,7 +776,7 @@ trackByIndex(index: number): number {
 };
 
 getTamilValue(
-  
+
   type: 'rasi' | 'nakshatra' | 'lagnam' | 'dhosham',
   value: string
 ): string {
@@ -1203,6 +1210,26 @@ onChartInput(
 async ngOnInit(): Promise<void> {
   
 
+<<<<<<< HEAD
+  const editId = this.route.snapshot.queryParamMap.get('id');
+
+  if (editId) {
+    this.isEditMode = true;
+    this.editProfileId = editId;
+  }
+
+  if (this.isBrowser) {
+    (window as any).activeBiodataComponent = this;
+
+    const adminCreatedUserId =
+      localStorage.getItem('admin_created_user_id');
+
+    if (adminCreatedUserId) {
+      this.currentUserId = adminCreatedUserId;
+      this.isAdminCreated = true;
+    }
+  }
+=======
 if (typeof window !== 'undefined') {
 
   const isAdminRoute =
@@ -1235,6 +1262,7 @@ this.maxDobDate =
 
 }
 
+>>>>>>> 2570c444a387aaf1d80219c9c3e72ba82727bbd5
 
   await this.loadReligions();
   await this.loadThisaiIruppu();
@@ -1244,6 +1272,25 @@ this.maxDobDate =
   await this.loadCities();
   this.loadPoorvegamFromCities();
   await this.loadEducationLevels();
+<<<<<<< HEAD
+  await this.loadProfessionList();
+
+  await this.loadExistingBiodata();
+
+  if (this.currentLang === 'ta') {
+    await this.prepareTamilValues();
+  }
+}
+  private getStoredLoggedInUser(): any | null {
+    if (!this.isBrowser) return null;
+
+    try {
+      const raw = localStorage.getItem('matrimony_user');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+=======
 await this.loadProfessionList();
  if (!this.isAdminCreated) {
 
@@ -1259,6 +1306,7 @@ if (this.currentLang === 'ta') {
 
   if (typeof window === 'undefined') {
     return null;
+>>>>>>> 2570c444a387aaf1d80219c9c3e72ba82727bbd5
   }
 
   try {
@@ -1293,11 +1341,18 @@ if (this.isAdminCreated) {
       return loggedInUser.user_id;
     }
 
+<<<<<<< HEAD
+const storedAppUserId = this.isBrowser
+  ? localStorage.getItem('app_user_id')
+  : null;
+      if (storedAppUserId) {
+=======
     const storedAppUserId =
   typeof window !== 'undefined'
     ? localStorage.getItem('app_user_id')
     : null;
     if (storedAppUserId) {
+>>>>>>> 2570c444a387aaf1d80219c9c3e72ba82727bbd5
       return storedAppUserId;
     }
 
@@ -1325,20 +1380,32 @@ if (this.isAdminCreated) {
     this.isLoadingProfile = true;
 
     try {
-      const userId = await this.resolveCurrentUserId();
+     const userId = await this.resolveCurrentUserId();
 
-      if (!userId) {
-        this.isLoadingProfile = false;
-        return;
-      }
+if (!userId && !this.editProfileId) {
 
-      this.currentUserId = userId;
+  this.isLoadingProfile = false;
 
+  return;
+
+}
+
+if (userId) {
+
+  this.currentUserId = userId;
+
+}
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
-        .eq('user_id', userId)
-        .maybeSingle();
+        .eq(
+  this.editProfileId
+    ? 'profile_id'
+    : 'user_id',
+
+  this.editProfileId || userId
+)
+.maybeSingle();
 
       if (error) {
         throw error;
@@ -1760,7 +1827,7 @@ async extractHoroscopeData(): Promise<void> {
         }
       );
 
-   
+
     if (error) {
 
       console.error(error);
@@ -2178,7 +2245,7 @@ if (field.key === 'dob') {
 }
 
 async onSubmit(): Promise<void> {
-  
+
 
   this.submitted = true;
   this.fieldErrors = {};
@@ -2207,7 +2274,7 @@ if (missingField) {
 await this.prepareEnglishValues();
 
    try {
-       
+
         if (this.currentLang === 'en') {
           await this.prepareAutoTamilValues();
         }
@@ -2252,6 +2319,12 @@ if (!this.isAdminCreated) {
         }
       }
 
+<<<<<<< HEAD
+      if (!appUserId && this.isBrowser) {
+  const storedAppUserId = localStorage.getItem('app_user_id');
+  const storedEmail = localStorage.getItem('app_user_email') || '';
+  const storedPhone = localStorage.getItem('app_user_phone') || '';
+=======
       if (!appUserId && !this.isAdminCreated) {
        const storedAppUserId =
   typeof window !== 'undefined'
@@ -2267,6 +2340,7 @@ const storedPhone =
   typeof window !== 'undefined'
     ? localStorage.getItem('app_user_phone') || ''
     : '';
+>>>>>>> 2570c444a387aaf1d80219c9c3e72ba82727bbd5
 
         if (storedAppUserId) {
           appUserId = storedAppUserId;
@@ -2276,8 +2350,12 @@ const storedPhone =
         fallbackPhone = fallbackPhone || storedPhone;
       }
 
+<<<<<<< HEAD
+      if (!appUserId && !this.editProfileId) {
+=======
 if (!appUserId && !this.isAdminCreated) {
 
+>>>>>>> 2570c444a387aaf1d80219c9c3e72ba82727bbd5
   this.isSaving = false;
 
   this.cdr.detectChanges();
@@ -2291,6 +2369,20 @@ if (!appUserId && !this.isAdminCreated) {
 }
 
 
+<<<<<<< HEAD
+      const { data: currentProfile, error: currentProfileError } = await supabase
+        .from('user_profiles')
+      .select('profile_code, profile_image_url, video_url, horoscope_file_url, additional_image_urls, latitude, longitude')
+       .eq(
+  this.editProfileId
+    ? 'profile_id'
+    : 'user_id',
+
+  this.editProfileId || appUserId
+)
+        .maybeSingle();
+=======
+>>>>>>> 2570c444a387aaf1d80219c9c3e72ba82727bbd5
 
 // ADMIN CREATE MODE
 
@@ -2656,7 +2748,10 @@ additional_image_urls: additionalImageUrls,
 const { data: existingProfile, error: existingError } = await supabase
   .from('user_profiles')
   .select('profile_id, user_id')
-  .eq('user_id', appUserId)
+  .eq(
+    this.editProfileId ? 'profile_id' : 'user_id',
+    this.editProfileId || appUserId
+  )
   .maybeSingle();
 
       if (existingError) {
@@ -2680,6 +2775,14 @@ if (existingProfile) {
 
   const { error } = await supabase
     .from('user_profiles')
+<<<<<<< HEAD
+    .insert([
+     {
+  ...payload,
+  user_id: appUserId
+}
+    ]);
+=======
   .insert([
   this.isAdminCreated
     ? payload
@@ -2688,6 +2791,7 @@ if (existingProfile) {
         user_id: appUserId
       }
 ]);
+>>>>>>> 2570c444a387aaf1d80219c9c3e72ba82727bbd5
 
   if (error) {
     this.snackbar.error(error.message);
@@ -2863,7 +2967,7 @@ async loadCountries() {
     .from('mst_countries')
     .select('*');
 
- 
+
 
   if (error) {
     console.error('Country load error:', error);
@@ -3117,6 +3221,8 @@ toggleEducationDropdown() {
   }
 
 }
+<<<<<<< HEAD
+=======
 resetForm(): void {
 
   this.formData = {
@@ -3229,4 +3335,5 @@ resetForm(): void {
 
   this.cdr.detectChanges();
 }
+>>>>>>> 2570c444a387aaf1d80219c9c3e72ba82727bbd5
 }

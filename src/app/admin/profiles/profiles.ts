@@ -13,8 +13,7 @@ import {
 } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { supabase } from '../../core/supabase.client';
-import { RouterLink } from '@angular/router';
-@Component({
+import { Router, RouterLink } from '@angular/router';@Component({
   selector: 'app-profiles',
   standalone: true,
   imports: [
@@ -30,15 +29,30 @@ private platformId = inject(PLATFORM_ID);
 private isBrowser = isPlatformBrowser(this.platformId);
 constructor(
   private ngZone: NgZone,
-  private cd: ChangeDetectorRef
+  private cd: ChangeDetectorRef,
+  private router: Router
 ) {}
   isLoading = true;
 
   searchTerm = '';
 
+  profileCodeFilter = '';
+nameFilter = '';
+phoneFilter = '';
+cityFilter = '';
+religionFilter = '';
+casteFilter = '';
+genderFilter = '';
+
+cityOptions: string[] = [];
+religionOptions: string[] = [];
+casteOptions: string[] = [];
+
   statusFilter = 'All';
 
   profiles: any[] = [];
+
+  userPlans: any[] = [];
 
   currentPage = 1;
 itemsPerPage = 5;
@@ -217,112 +231,137 @@ dateText(date: string): string {
     }
   );
 }
-  async ngOnInit(): Promise<void> {
-    await this.loadProfiles();
-  }
+async ngOnInit(): Promise<void> {
+  await this.loadProfiles();
+}
 
-  async loadProfiles(): Promise<void> {
-
+async loadProfiles(): Promise<void> {
+  this.ngZone.run(() => {
     this.isLoading = true;
+    this.cd.detectChanges();
+  });
 
+  try {
     const { data, error } = await supabase
       .from('user_profiles')
-      .select(`
-        profile_id,
-        profile_code,
-        full_name,
-full_name_ta,
-        gender_text,
-        dob,
-        city_text,
-        marital_status_text,
-        profile_status,
-        created_at
-      `)
+      .select('*')
+      .neq('profile_status', 'Deleted')
       .order('created_at', { ascending: false });
 
-  this.ngZone.run(() => {
+    if (error) {
+      console.error('Profiles error:', error);
+      alert(error.message);
+      this.profiles = [];
+      return;
+    }
 
-  if (error) {
+this.userPlans = [];
 
-    console.error('Profiles error:', error);
+    this.profiles = (data || []).map(profile => {
+      const plan = this.userPlans?.find((p: any) =>
+  p.profile_id === profile.profile_id ||
+  p.user_id === profile.user_id ||
+  p.profile_code === profile.profile_code
+) || null;
 
-    this.profiles = [];
+      return {
+        ...profile,
+        package_name: plan?.plan_name || plan?.package_name || '-',
+        purchased_date: plan?.purchased_date || plan?.created_at || '-',
+        expired_date: plan?.expired_date || plan?.expiry_date || '-',
+        limits: plan
+          ? `${plan.contact_limit || 0} contacts / ${plan.profile_view_limit || 0} views`
+          : '-',
+views_count: Number(
+  plan?.used_profile_views ||
+  plan?.profile_views_used ||
+  0
+)
+      };
+    });
 
-  } else {
+    this.cityOptions = [...new Set(this.profiles.map(p => p.city_text).filter(Boolean))];
+    this.religionOptions = [...new Set(this.profiles.map(p => p.religion_text).filter(Boolean))];
+    this.casteOptions = [...new Set(this.profiles.map(p => p.caste_text).filter(Boolean))];
 
-    this.profiles = data || [];
-
-  }
-
-  this.isLoading = false;
-
-  this.cd.detectChanges();
-
-});
-  }
-
-  get filteredProfiles(): any[] {
-
-    const term =
-      this.searchTerm
-        .trim()
-        .toLowerCase();
-
-    return this.profiles.filter(profile => {
-
-      const matchesSearch =
-
-        !term ||
-
-        String(profile.profile_code || '')
-          .toLowerCase()
-          .includes(term)
-
-        ||
-
-        String(profile.full_name || '')
-          .toLowerCase()
-          .includes(term)
-
-        ||
-
-        String(profile.gender_text || '')
-          .toLowerCase()
-          .includes(term)
-
-        ||
-
-        String(profile.city_text || '')
-          .toLowerCase()
-          .includes(term)
-
-        ||
-
-        String(profile.marital_status_text || '')
-          .toLowerCase()
-          .includes(term)
-
-        ||
-
-        String(profile.profile_status || '')
-          .toLowerCase()
-          .includes(term);
-
-      const status =
-        profile.profile_status || 'Pending';
-
-      const matchesStatus =
-
-        this.statusFilter === 'All'
-
-        ||
-
-        status === this.statusFilter;
-
-      return matchesSearch && matchesStatus;
+  } catch (err) {
+    console.error('Load profiles failed:', err);
+console.error(err);    this.profiles = [];
+  } finally {
+    this.ngZone.run(() => {
+      this.isLoading = false;
+      this.cd.detectChanges();
     });
   }
+}
+
+async refresh(): Promise<void> {
+  this.searchTerm = '';
+
+  this.profileCodeFilter = '';
+  this.nameFilter = '';
+  this.phoneFilter = '';
+  this.cityFilter = '';
+  this.religionFilter = '';
+  this.casteFilter = '';
+  this.genderFilter = '';
+
+  this.statusFilter = 'All';
+
+  this.currentPage = 1;
+
+  await this.loadProfiles();
+}
+get filteredProfiles(): any[] {
+
+  return this.profiles.filter(profile => {
+
+    const matchesCode =
+      !this.profileCodeFilter ||
+      String(profile.profile_code || '')
+        .toLowerCase()
+        .includes(this.profileCodeFilter.toLowerCase());
+
+    const matchesName =
+      !this.nameFilter ||
+      String(profile.full_name || '')
+        .toLowerCase()
+        .includes(this.nameFilter.toLowerCase());
+
+    const matchesPhone =
+  !this.phoneFilter ||
+  String(profile.mobile || profile.phone || profile.phone_number || '')
+    .toLowerCase()
+    .includes(this.phoneFilter.toLowerCase());
+
+    const matchesCity =
+      !this.cityFilter ||
+      profile.city_text === this.cityFilter;
+
+    const matchesReligion =
+      !this.religionFilter ||
+      profile.religion_text === this.religionFilter;
+
+    const matchesCaste =
+      !this.casteFilter ||
+      profile.caste_text === this.casteFilter;
+
+    const matchesGender =
+      !this.genderFilter ||
+      profile.gender_text === this.genderFilter;
+
+    return (
+  matchesCode &&
+  matchesName &&
+  matchesPhone &&
+  matchesCity &&
+  matchesReligion &&
+  matchesCaste &&
+  matchesGender
+);
+  });
+}
+
 get paginatedProfiles(): any[] {
   const start = (this.currentPage - 1) * this.itemsPerPage;
   return this.filteredProfiles.slice(start, start + this.itemsPerPage);
@@ -347,70 +386,128 @@ prevPage(): void {
 resetPage(): void {
   this.currentPage = 1;
 }
-  calculateAge(dob: string): number | string {
 
-    if (!dob) return '-';
+calculateAge(dob: string): number | string {
 
-    const birthDate = new Date(dob);
+  if (!dob) return '-';
 
-    const today = new Date();
+  const birthDate = new Date(dob);
+  const today = new Date();
 
-    let age =
-      today.getFullYear() -
-      birthDate.getFullYear();
+  let age =
+    today.getFullYear() -
+    birthDate.getFullYear();
 
-    const month =
-      today.getMonth() -
-      birthDate.getMonth();
+  const month =
+    today.getMonth() -
+    birthDate.getMonth();
 
-    if (
-      month < 0 ||
-      (
-        month === 0 &&
-        today.getDate() < birthDate.getDate()
-      )
-    ) {
-      age--;
-    }
-
-    return age;
+  if (
+    month < 0 ||
+    (
+      month === 0 &&
+      today.getDate() < birthDate.getDate()
+    )
+  ) {
+    age--;
   }
 
-  async updateStatus(
-    profile: any,
-    status: string
-  ): Promise<void> {
+  return age;
+}
 
-    const updateData: any = {
-      profile_status: status
-    };
+viewProfile(profile: any, event?: Event): void {
+  event?.stopPropagation();
 
-    if (status === 'Approved') {
-      updateData.approved_at =
-        new Date().toISOString();
-    }
+  this.router.navigate(['/admin/profile', profile.profile_id]);
+}
 
-    const { error } = await supabase
-      .from('user_profiles')
-      .update(updateData)
-      .eq('profile_id', profile.profile_id);
+editProfile(profile: any, event?: Event): void {
+  event?.stopPropagation();
 
-    if (error) {
-      console.error(
-        'Profile status update error:',
-        error
-      );
-
-      alert('Failed to update profile status');
-
-      return;
-    }
-
-    await this.loadProfiles();
+  if (!profile?.profile_id) {
+    alert('Profile id missing');
+    return;
   }
 
-  async refresh(): Promise<void> {
-    await this.loadProfiles();
+  this.router.navigate(['/admin/create-biodata'], {
+    queryParams: {
+      edit: 'true',
+      id: profile.profile_id
+    }
+  });
+}
+
+async approveProfile(profile: any, event?: Event): Promise<void> {
+  event?.stopPropagation();
+
+  const { error } = await supabase
+    .from('user_profiles')
+    .update({
+  profile_status: 'Approved'
+})
+    .eq('profile_id', profile.profile_id);
+
+  if (error) {
+    console.error('Approve error:', error);
+    alert(error.message);
+    return;
   }
 
+  profile.profile_status = 'Approved';
+  alert('Profile approved successfully');
+  await this.loadProfiles();
+}
+
+addPackage(profile: any, event?: Event): void {
+  event?.stopPropagation();
+
+  this.router.navigate(['/admin/plans'], {
+    queryParams: {
+      profile_id: profile.profile_id,
+      profile_code: profile.profile_code
+    }
+  });
+}
+
+async deleteProfile(profile: any, event?: Event): Promise<void> {
+  event?.stopPropagation();
+
+  const confirmDelete = confirm(`Delete ${profile.full_name}?`);
+
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from('user_profiles')
+   .update({
+  profile_status: 'Deleted'
+})
+    .eq('profile_id', profile.profile_id);
+
+  if (error) {
+    console.error('Delete error:', error);
+    alert(error.message);
+    return;
+  }
+
+  alert('Profile removed successfully');
+  await this.loadProfiles();
+}
+
+allowOnlyNumbers(event: KeyboardEvent): void {
+
+  const charCode = event.which
+    ? event.which
+    : event.keyCode;
+
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
+sanitizePhoneFilter(): void {
+
+  this.phoneFilter =
+    (this.phoneFilter || '')
+      .replace(/\D/g, '');
+
+}
 }
