@@ -5,7 +5,6 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
-import { SnackbarComponent } from './shared/snackbar/snackbar';
 
 type Language = 'en' | 'ta';
 
@@ -16,7 +15,7 @@ imports: [
   CommonModule,
   RouterLink,
   RouterOutlet,
-  SnackbarComponent
+
 ],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
@@ -134,7 +133,7 @@ this.showFooter =
   currentUrl === '/' ||
   currentUrl.includes('/plans');
   }
-  
+
 });
   }
 }

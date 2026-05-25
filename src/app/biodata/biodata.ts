@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { App } from '../app';
 import { supabase } from '../core/supabase.client';
+import { ActivatedRoute } from '@angular/router';
 import { SnackbarService } from '../shared/snackbar.service';
 
 @Component({
@@ -15,12 +16,18 @@ import { SnackbarService } from '../shared/snackbar.service';
 export class Biodata implements OnInit {
   app = inject(App);
   cdr = inject(ChangeDetectorRef);
-snackbar = inject(SnackbarService);
-  isExtracting = false;
+  snackbar = inject(SnackbarService);
+  route = inject(ActivatedRoute);
+
+editProfileId = '';
+
+isBrowser = typeof window !== 'undefined';
+
+isExtracting = false;
   isSaving = false;
   isSubmitted = false;
 isEditMode = false;
-  
+
   isLoadingProfile = false;
 submitted = false;
 fieldErrors: Record<string, boolean> = {};
@@ -504,7 +511,7 @@ isOtherCitySelected(): boolean {
 }
 
 onCityChange(): void {
-  
+
   const city = this.cityList.find(
     (c: any) => c.city_id === this.selectedCityId
   );
@@ -587,7 +594,7 @@ removeAdditionalMobile(index: number): void {
 };
 
 getTamilValue(
-  
+
   type: 'rasi' | 'nakshatra' | 'lagnam' | 'dhosham',
   value: string
 ): string {
@@ -1020,21 +1027,24 @@ onChartInput(
   }
 async ngOnInit(): Promise<void> {
 
-  (window as any).activeBiodataComponent = this;
+  const editId = this.route.snapshot.queryParamMap.get('id');
 
-  const adminCreatedUserId =
-  localStorage.getItem(
-    'admin_created_user_id'
-  );
+  if (editId) {
+    this.isEditMode = true;
+    this.editProfileId = editId;
+  }
 
-if (adminCreatedUserId) {
+  if (this.isBrowser) {
+    (window as any).activeBiodataComponent = this;
 
-  this.currentUserId =
-    adminCreatedUserId;
+    const adminCreatedUserId =
+      localStorage.getItem('admin_created_user_id');
 
-  this.isAdminCreated = true;
-
-}
+    if (adminCreatedUserId) {
+      this.currentUserId = adminCreatedUserId;
+      this.isAdminCreated = true;
+    }
+  }
 
   await this.loadReligions();
   await this.loadThisaiIruppu();
@@ -1043,14 +1053,17 @@ if (adminCreatedUserId) {
   await this.loadStates();
   await this.loadCities();
   await this.loadEducationLevels();
-await this.loadProfessionList();
+  await this.loadProfessionList();
+
   await this.loadExistingBiodata();
 
-if (this.currentLang === 'ta') {
-  await this.prepareTamilValues();
-}
+  if (this.currentLang === 'ta') {
+    await this.prepareTamilValues();
+  }
 }
   private getStoredLoggedInUser(): any | null {
+    if (!this.isBrowser) return null;
+
     try {
       const raw = localStorage.getItem('matrimony_user');
       return raw ? JSON.parse(raw) : null;
@@ -1069,8 +1082,10 @@ if (this.currentLang === 'ta') {
       return loggedInUser.user_id;
     }
 
-    const storedAppUserId = localStorage.getItem('app_user_id');
-    if (storedAppUserId) {
+const storedAppUserId = this.isBrowser
+  ? localStorage.getItem('app_user_id')
+  : null;
+      if (storedAppUserId) {
       return storedAppUserId;
     }
 
@@ -1098,20 +1113,32 @@ if (this.currentLang === 'ta') {
     this.isLoadingProfile = true;
 
     try {
-      const userId = await this.resolveCurrentUserId();
+     const userId = await this.resolveCurrentUserId();
 
-      if (!userId) {
-        this.isLoadingProfile = false;
-        return;
-      }
+if (!userId && !this.editProfileId) {
 
-      this.currentUserId = userId;
+  this.isLoadingProfile = false;
 
+  return;
+
+}
+
+if (userId) {
+
+  this.currentUserId = userId;
+
+}
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
-        .eq('user_id', userId)
-        .maybeSingle();
+        .eq(
+  this.editProfileId
+    ? 'profile_id'
+    : 'user_id',
+
+  this.editProfileId || userId
+)
+.maybeSingle();
 
       if (error) {
         throw error;
@@ -1495,7 +1522,7 @@ async extractHoroscopeData(): Promise<void> {
         }
       );
 
-   
+
     if (error) {
 
       console.error(error);
@@ -1857,7 +1884,7 @@ const v = (en: any, ta?: any) => {
   return null;
 }
 async onSubmit(): Promise<void> {
-  
+
 
   this.submitted = true;
   this.fieldErrors = {};
@@ -1885,7 +1912,7 @@ if (missingField) {
  this.isSaving = true;
 await this.prepareEnglishValues();
    try {
-       
+
         if (this.currentLang === 'en') {
           await this.prepareAutoTamilValues();
         }
@@ -1918,10 +1945,10 @@ await this.prepareEnglishValues();
         }
       }
 
-      if (!appUserId) {
-        const storedAppUserId = localStorage.getItem('app_user_id');
-        const storedEmail = localStorage.getItem('app_user_email') || '';
-        const storedPhone = localStorage.getItem('app_user_phone') || '';
+      if (!appUserId && this.isBrowser) {
+  const storedAppUserId = localStorage.getItem('app_user_id');
+  const storedEmail = localStorage.getItem('app_user_email') || '';
+  const storedPhone = localStorage.getItem('app_user_phone') || '';
 
         if (storedAppUserId) {
           appUserId = storedAppUserId;
@@ -1931,7 +1958,7 @@ await this.prepareEnglishValues();
         fallbackPhone = fallbackPhone || storedPhone;
       }
 
-      if (!appUserId) {
+      if (!appUserId && !this.editProfileId) {
   this.isSaving = false;
   this.cdr.detectChanges();
   this.snackbar.error(this.tr.alerts.loginRequired);
@@ -1943,7 +1970,13 @@ await this.prepareEnglishValues();
       const { data: currentProfile, error: currentProfileError } = await supabase
         .from('user_profiles')
       .select('profile_code, profile_image_url, video_url, horoscope_file_url, additional_image_urls, latitude, longitude')
-       .eq('user_id', appUserId)
+       .eq(
+  this.editProfileId
+    ? 'profile_id'
+    : 'user_id',
+
+  this.editProfileId || appUserId
+)
         .maybeSingle();
 
       if (currentProfileError) {
@@ -2247,7 +2280,10 @@ additional_image_urls: additionalImageUrls,
 const { data: existingProfile, error: existingError } = await supabase
   .from('user_profiles')
   .select('profile_id, user_id')
-  .eq('user_id', appUserId)
+  .eq(
+    this.editProfileId ? 'profile_id' : 'user_id',
+    this.editProfileId || appUserId
+  )
   .maybeSingle();
 
       if (existingError) {
@@ -2272,10 +2308,10 @@ if (existingProfile) {
   const { error } = await supabase
     .from('user_profiles')
     .insert([
-      {
-        ...payload,
-        user_id: appUserId
-      }
+     {
+  ...payload,
+  user_id: appUserId
+}
     ]);
 
   if (error) {
@@ -2432,7 +2468,7 @@ async loadCountries() {
     .from('mst_countries')
     .select('*');
 
- 
+
 
   if (error) {
     console.error('Country load error:', error);
