@@ -2,15 +2,18 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
 export const adminGuard: CanActivateFn = () => {
+
   const router = inject(Router);
 
-  // temporary check
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  if (typeof window !== 'undefined') {
 
-  if (isAdmin) {
-    return true;
+    const isAdmin = localStorage.getItem('is_admin');
+
+    if (isAdmin === 'true') {
+
+      return true;
+    }
   }
 
-  router.navigate(['/login']);
-  return false;
+  return router.createUrlTree(['/admin-login']);
 };

@@ -1,0 +1,39 @@
+<section class="login-page">
+  <div class="form-card">
+    <p class="form-mini-title">Admin Panel</p>
+    <h2>Admin Login</h2>
+    <p class="form-subtitle">Only authorized admins can access this page</p>
+
+    <form class="login-form" (ngSubmit)="onAdminLogin()">
+      <div class="form-group">
+        <label>Admin Phone Number</label>
+
+        <input
+          type="text"
+          name="phone"
+          [(ngModel)]="phone"
+          maxlength="10"
+          minlength="10"
+          pattern="[0-9]{10}"
+          required
+          placeholder="Enter admin phone number"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Admin DOB</label>
+
+        <input
+          type="date"
+          name="dob"
+          [(ngModel)]="dob"
+          required
+        />
+      </div>
+
+      <button type="submit" class="login-btn" [disabled]="isLoading">
+        {{ isLoading ? 'Checking...' : 'Admin Login' }}
+      </button>
+    </form>
+  </div>
+</section>
