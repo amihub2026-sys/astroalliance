@@ -48,7 +48,11 @@
 
       <button class="menu-toggle" (click)="toggleMenu()" type="button">☰</button>
     </div>
-
+<div
+  class="mobile-menu-overlay"
+  *ngIf="menuOpen"
+  (click)="closeMenu()">
+</div>
     <nav class="nav-links" [class.active]="menuOpen">
       <a routerLink="/" (click)="closeMenu()">{{ t.nav.home }}</a>
       <a routerLink="/profiles" (click)="closeMenu()">{{ t.nav.profiles }}</a>

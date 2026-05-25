@@ -521,7 +521,7 @@
 
   <button
     type="button"
-    class="mobile-sidebar-close"
+    class="sidebar-close-btn"
     (click)="mobileFilterOpen = false">
 
     <i class="fas fa-xmark"></i>
@@ -533,12 +533,12 @@
   *ngIf="showBiodataPopup"
 >
   <button
-    type="button"
-    class="popup-close"
-    (click)="showBiodataPopup = false"
-  >
-    ×
-  </button>
+  type="button"
+  class="biodata-popup-close"
+  (click)="showBiodataPopup = false"
+>
+  ✕
+</button>
 
   <div class="popup-heart">💖</div>
 
@@ -796,6 +796,7 @@
   </div>
 
 </div>
+<!-- profile content card   -->
 
     <div class="profiles-content">
       <div class="profiles-grid">

@@ -414,7 +414,24 @@ main {
 
   border-radius: 14px;
 }
- 
+  .mobile-menu-overlay{
+    display:block;
+    position:fixed;
+    top:72px;
+    left:0;
+    width:100vw;
+    height:calc(100vh - 72px);
+    background:transparent;
+    z-index:9998;
+  }
+
+  .nav-links{
+    z-index:9999;
+  }
+
+  .menu-toggle{
+    z-index:10000;
+  }
 }
 /* TABLET VIEW */
 
