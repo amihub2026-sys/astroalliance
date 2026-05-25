@@ -1,7 +1,11 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import {
+  CanActivateFn,
+  CanActivateChildFn,
+  Router
+} from '@angular/router';
 
-export const adminGuard: CanActivateFn = () => {
+export const adminGuard: CanActivateFn & CanActivateChildFn = () => {
 
   const router = inject(Router);
 
@@ -10,7 +14,6 @@ export const adminGuard: CanActivateFn = () => {
     const isAdmin = localStorage.getItem('is_admin');
 
     if (isAdmin === 'true') {
-
       return true;
     }
   }

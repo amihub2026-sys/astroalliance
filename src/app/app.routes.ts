@@ -14,6 +14,7 @@ import { Terms } from './terms/terms';
 import { Admin } from './admin/admin';
 import { ReceivedInterests } from './received-interests/received-interests';
 import { SentInterests } from './sent-interests/sent-interests';
+import { CanActivateChildFn } from '@angular/router';
 export const routes: Routes = [
   { path: '', component: Home },
 
@@ -37,6 +38,7 @@ export const routes: Routes = [
 {
   path: 'admin',
   canActivate: [adminGuard],
+  canActivateChild: [adminGuard],
   loadComponent: () =>
     import('./admin/admin').then(m => m.Admin),
   children: [
