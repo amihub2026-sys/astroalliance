@@ -625,7 +625,7 @@
   (ngModelChange)="onTamilInputChange('motherName', $event)"
   name="motherName"
   [placeholder]="tr.placeholders.motherName">
- 
+
 </div>
 
        <!-- FATHER OCCUPATION -->
@@ -989,13 +989,13 @@
   (ngModelChange)="onTamilInputChange('salary', $event)"
   name="salary"
   [placeholder]="tr.placeholders.salary">
- 
+
 </div>
         </div>
       </div>
 </details>
       <!-- ADDRESS -->
-    
+
 
 <details class="form-accordion">
 
@@ -1142,84 +1142,50 @@
 
   <div class="iruppidam-select-wrap">
 
-    <input
-      type="text"
-      [(ngModel)]="iruppidamSearch"
-      name="iruppidamSearch"
-
-      [placeholder]="
-        currentLang === 'ta'
-          ? 'இருப்பிடம் தேடவும்'
-          : 'Search Iruppidam'
-      "
-
-      autocomplete="off"
-
+  <input
+    type="text"
+    name="iruppidam"
+    [(ngModel)]="formData.iruppidam"
+    [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் தேடவும்' : 'Search Iruppidam'"
+    autocomplete="off"
     (focus)="showIruppidamDropdown = true"
+    (blur)="showIruppidamDropdown = false"
+    (input)="onIruppidamSearchChange()"
+  />
 
-(blur)="showIruppidamDropdown = false"
-
-(input)="onIruppidamSearchChange()"
+  <div
+    class="iruppidam-dropdown"
+    *ngIf="showIruppidamDropdown"
+  >
+    <div
+      class="iruppidam-option"
+      *ngFor="let city of filteredIruppidamList"
+      (mousedown)="selectIruppidam(city)"
     >
+      {{
+        currentLang === 'ta'
+          ? (city.city_name_ta || city.city_name)
+          : city.city_name
+      }}
+    </div>
 
     <div
-      class="iruppidam-dropdown"
-      *ngIf="showIruppidamDropdown"
+      class="iruppidam-option"
+      (mousedown)="selectIruppidam({ city_name: 'Other', city_name_ta: 'மற்றவை' })"
     >
-
-    <div
-  class="iruppidam-option"
-
-  *ngFor="
-    let city of filteredIruppidamList
-  "
-
-  (mousedown)="selectIruppidam(city)"
->
-
-  {{
-    currentLang === 'ta'
-
-      ? (
-          city.city_name_ta ||
-          city.city_name
-        )
-
-      : city.city_name
-  }}
+      {{ currentLang === 'ta' ? 'மற்றவை' : 'Other' }}
+    </div>
+  </div>
 
 </div>
 
-</div> <!-- iruppidam-dropdown -->
-
-</div> <!-- iruppidam-select-wrap -->
 <input
-  *ngIf="
-    iruppidamSearch === 'Other'
-    || formData.iruppidam === 'Other'
-  "
-
+  *ngIf="formData.iruppidam === 'Other'"
   type="text"
-
-  [ngModel]="
-    formData.iruppidam === 'Other'
-      ? ''
-      : formData.iruppidam
-  "
-
-  (ngModelChange)="
-    formData.iruppidam = $event;
-    formDataTa.iruppidam = $event
-  "
-
   name="otherIruppidam"
-
-  [placeholder]="
-    currentLang === 'ta'
-      ? 'இருப்பிடத்தை உள்ளிடவும்'
-      : 'Enter Iruppidam'
-  "
->
+  [(ngModel)]="formData.iruppidam"
+  [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் உள்ளிடவும்' : 'Enter Iruppidam'"
+/>
 </div> <!-- iruppidam-field -->
 
         </div>
@@ -1308,12 +1274,12 @@
 </option>
   </select>
 
- 
+
 </div>
 
 
 
-      
+
 
           <div class="field">
             <label>{{ tr.labels.dhosham }}</label>
@@ -1481,7 +1447,7 @@
           [ngModel]="rasiChart[1]"
           (input)="onChartInput('rasi', 1, $event)"
           name="rasiChart1"
-          class="cell-input" 
+          class="cell-input"
         ></textarea>
       <div class="cell-short">{{ rasiChart[1] }}</div>
       </div>
@@ -1737,7 +1703,7 @@
                 (change)="onHoroscopeFileChange($event)"
                 hidden
               />
-    
+
             </label>
 
             <button
@@ -1761,7 +1727,7 @@
         </div>
       </div>
 
-     
+
      <!-- ABOUT & PARTNER EXPECTATION -->
 <div class="section-card">
   <div class="section-title-wrap">
@@ -1816,7 +1782,7 @@
                 : 'Submit Biodata')
         )
   }}
- 
+
 </button>
 
 </div>
@@ -1980,7 +1946,7 @@
 
 </div>
 
-  
+
 
 </div>
 

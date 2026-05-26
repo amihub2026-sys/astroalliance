@@ -13,13 +13,12 @@ import {
 } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { supabase } from '../../core/supabase.client';
-import { Router, RouterLink } from '@angular/router';@Component({
+import { Router } from '@angular/router';@Component({
   selector: 'app-profiles',
   standalone: true,
   imports: [
   CommonModule,
-  FormsModule,
-  RouterLink
+  FormsModule
 ],
   templateUrl: './profiles.html',
   styleUrls: ['./profiles.scss']
