@@ -1,6 +1,7 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -21,6 +22,9 @@ import { supabase } from '../../core/supabase.client';
 })
 export class Shortlists
 implements OnInit {
+  constructor(
+  private cd: ChangeDetectorRef
+) {}
 
   shortlists: any[] = [];
 
@@ -101,22 +105,27 @@ profile_code
     p.profile_code === item.profile_id
   );
 
-      formatted.push({
+      if (!sender || !receiver) {
+  continue;
+}
 
-        ...item,
+formatted.push({
 
-        sender,
+  ...item,
 
-        receiver
-      });
+  sender,
+
+  receiver
+});
     }
 
     this.shortlists = formatted;
 
     this.filterShortlists();
 
-    this.isLoading = false;
-  }
+this.isLoading = false;
+
+this.cd.detectChanges();  }
 
   filterShortlists(): void {
 
@@ -159,20 +168,25 @@ profile_code
     this.filteredShortlists = result;
   }
 
-  openHistory(item: any): void {
+openHistory(item: any, event?: Event): void {
 
-    this.selectedUser = item;
+  event?.preventDefault();
+  event?.stopPropagation();
 
-    this.selectedHistory =
-      this.shortlists.filter(s =>
+  this.selectedUser = item;
 
-        s.sender?.profile_code ===
-        item.sender?.profile_code
+  this.selectedHistory =
+    this.shortlists.filter(s =>
 
-        ||
+      s.sender?.profile_code ===
+      item.sender?.profile_code
 
-        s.receiver?.profile_code ===
-        item.sender?.profile_code
-      );
-  }
+      ||
+
+      s.receiver?.profile_code ===
+      item.sender?.profile_code
+    );
+
+  this.cd.detectChanges();
+}
 }

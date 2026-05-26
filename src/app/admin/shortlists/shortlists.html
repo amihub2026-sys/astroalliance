@@ -156,18 +156,17 @@
 
           <td>
 
-            <button
-              class="history-btn"
-              (click)="openHistory(item)">
-
-            {{
-  currentLang === 'ta'
-    ? 'வரலாறு'
-    : 'View History'
-}}
-
-            </button>
-
+          <button
+  type="button"
+  class="history-btn"
+  (click)="openHistory(item, $event)"
+>
+  {{
+    currentLang === 'ta'
+      ? 'வரலாறு'
+      : 'View History'
+  }}
+</button>
           </td>
 
         </tr>

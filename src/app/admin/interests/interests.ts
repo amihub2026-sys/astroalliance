@@ -1,7 +1,7 @@
 import {
   Component,
-  OnInit
-  
+  OnInit,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -23,27 +23,28 @@ import { supabase } from '../../core/supabase.client';
 
   styleUrls: ['./interests.scss'],
 
-  
+
 
 })
 export class Interests
-
-
 implements OnInit{
 
+constructor(
+  private cd: ChangeDetectorRef
+) {}
 
   interests: any[] = [];
 filteredInterests: any[] = [];
 interestUsers: any[] = [];
 
   searchTerm = '';
- 
+
 
   selectedHistory: any[] = [];
 
   selectedSender: any = null;
 
- 
+
 
   isLoading = false;
 get currentLang(): 'en' | 'ta' {
@@ -61,23 +62,28 @@ get currentLang(): 'en' | 'ta' {
   ) || 'en';
 }
 
- async ngOnInit(): Promise<void> {
-
-
+async ngOnInit(): Promise<void> {
   await this.loadInterests();
-
-  this.prepareInterestUsers();
-
 }
 
+openHistory(
+  item: any,
+  event?: Event
+): void {
 
-openHistory(item: any): void {
+  event?.preventDefault();
+
+  event?.stopPropagation();
 
   this.selectedSender =
     item.sender;
 
   this.selectedHistory =
-    [...item.history];
+    item.history
+      ? [...item.history]
+      : [];
+
+  this.cd.detectChanges();
 
 }
  async loadInterests(): Promise<void> {
@@ -136,21 +142,27 @@ console.log('SENDER', sender);
 
 console.log('RECEIVER', receiver);
 
-    formatted.push({
+   if (!sender || !receiver) {
+  continue;
+}
 
-      ...item,
+formatted.push({
 
-      sender,
+  ...item,
 
-      receiver
-    });
+  sender,
+
+  receiver
+});
   }
 
- this.interests = formatted;
+this.interests = formatted;
 
 this.prepareInterestUsers();
 
 this.isLoading = false;
+
+this.cd.detectChanges();
 }
 prepareInterestUsers(): void {
 

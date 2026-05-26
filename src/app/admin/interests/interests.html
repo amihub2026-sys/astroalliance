@@ -149,8 +149,9 @@
       <td>
 
        <button
+  type="button"
   class="history-btn"
- (click)="openHistory(item); $event.stopPropagation()">
+  (click)="openHistory(item, $event)">
 
           {{
   currentLang === 'ta'
@@ -168,6 +169,7 @@
 </table>
 </div>
 <div
+  #historySection
   class="history-section"
   *ngIf="selectedHistory.length > 0">
   <h3>
