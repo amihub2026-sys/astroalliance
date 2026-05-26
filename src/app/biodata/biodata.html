@@ -625,7 +625,7 @@
   (ngModelChange)="onTamilInputChange('motherName', $event)"
   name="motherName"
   [placeholder]="tr.placeholders.motherName">
- 
+
 </div>
 
        <!-- FATHER OCCUPATION -->
@@ -989,13 +989,13 @@
   (ngModelChange)="onTamilInputChange('salary', $event)"
   name="salary"
   [placeholder]="tr.placeholders.salary">
- 
+
 </div>
         </div>
       </div>
 </details>
       <!-- ADDRESS -->
-    
+
 
 <details class="form-accordion">
 
@@ -1195,7 +1195,7 @@
 </div> <!-- iruppidam-select-wrap -->
 <input
   *ngIf="
-    iruppidamSearch === 'Other'
+profile.iruppidam == 'Other'
     || formData.iruppidam === 'Other'
   "
 
@@ -1308,12 +1308,12 @@
 </option>
   </select>
 
- 
+
 </div>
 
 
 
-      
+
 
           <div class="field">
             <label>{{ tr.labels.dhosham }}</label>
@@ -1481,7 +1481,7 @@
           [ngModel]="rasiChart[1]"
           (input)="onChartInput('rasi', 1, $event)"
           name="rasiChart1"
-          class="cell-input" 
+          class="cell-input"
         ></textarea>
       <div class="cell-short">{{ rasiChart[1] }}</div>
       </div>
@@ -1737,7 +1737,7 @@
                 (change)="onHoroscopeFileChange($event)"
                 hidden
               />
-    
+
             </label>
 
             <button
@@ -1761,7 +1761,7 @@
         </div>
       </div>
 
-     
+
      <!-- ABOUT & PARTNER EXPECTATION -->
 <div class="section-card">
   <div class="section-title-wrap">
@@ -1816,7 +1816,7 @@
                 : 'Submit Biodata')
         )
   }}
- 
+
 </button>
 
 </div>
@@ -1980,7 +1980,7 @@
 
 </div>
 
-  
+
 
 </div>
 
