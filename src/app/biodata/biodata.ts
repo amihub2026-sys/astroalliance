@@ -531,9 +531,16 @@ filteredEducationList: any[] = [];
 professionList: any[] = [];
 educationSearch = '';
 showEducationDropdown = false;
-  get currentLang(): 'en' | 'ta' {
-    return this.app.currentLang;
+ get currentLang(): 'en' | 'ta' {
+
+  if (typeof window === 'undefined') {
+    return 'en';
   }
+
+  return (
+    localStorage.getItem('tm_language') as 'en' | 'ta'
+  ) || 'en';
+}
 addAdditionalMobile(): void {
 
   this.formData.additionalMobile.push('');
