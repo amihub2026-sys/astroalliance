@@ -69,7 +69,7 @@ get currentLang(): 'en' | 'ta' {
 
     if (error) {
 
-      console.error(error);
+      
 
       this.isLoading = false;
 

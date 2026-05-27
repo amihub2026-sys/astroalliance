@@ -89,7 +89,7 @@ txt(en: string, ta: string): string {
 
   if (error) {
 
-    console.error('Subscriptions error:', error);
+
 
     this.subscriptions = [];
 
@@ -169,7 +169,7 @@ String(item.payment_mode || '').toLowerCase().includes(term) ||
       .eq('subscription_id', item.subscription_id);
 
     if (error) {
-      console.error('Subscription toggle error:', error);
+    
       return;
     }
 

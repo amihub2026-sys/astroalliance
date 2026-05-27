@@ -659,7 +659,7 @@ if (target === 'ta' && localMap[lower]) {
       );
 
     if (error) {
-      console.error(error);
+    
       return text;
     }
 
@@ -667,7 +667,7 @@ if (target === 'ta' && localMap[lower]) {
 
   } catch (e) {
 
-    console.error(e);
+    
 
     return text;
 
@@ -1019,7 +1019,7 @@ onChartInput(
       );
 
       if (!response.ok) {
-        console.warn('Location lookup failed with status:', response.status);
+       
         return { lat: null, lng: null };
       }
 
@@ -1035,7 +1035,7 @@ onChartInput(
         };
       }
     } catch (error) {
-      console.error('Location lookup error:', error);
+      
     }
 
     return { lat: null, lng: null };
@@ -1391,7 +1391,7 @@ this.formDataTa.partnerExpectation = data.partner_expectation_ta || '';
         this.onDobChange();
       }
     } catch (error: any) {
-      console.error('Load biodata error:', error);
+     
       this.snackbar.error(error?.message || this.tr.alerts.profileLoadFailed);
     } finally {
       this.isLoadingProfile = false;
@@ -1540,7 +1540,7 @@ async extractHoroscopeData(): Promise<void> {
 
     if (error) {
 
-      console.error(error);
+    
 
       this.snackbar.error(this.tr.alerts.horoscopeFailed);
 
@@ -1652,7 +1652,7 @@ async extractHoroscopeData(): Promise<void> {
 
   } catch (error) {
 
-    console.error(error);
+   
 
     this.snackbar.error(this.tr.alerts.horoscopeFailed);
 
@@ -1718,7 +1718,7 @@ private async uploadProfileImage(file: File): Promise<string | null> {
 
   if (error) {
 
-    console.error('R2 upload error:', error);
+    
 
     throw error;
 
@@ -1745,7 +1745,7 @@ private async uploadVideo(file: File): Promise<string | null> {
 
   if (error) {
 
-    console.error('R2 video upload error:', error);
+ 
 
     throw error;
 
@@ -1773,7 +1773,7 @@ private async uploadHoroscope(file: File): Promise<string | null> {
 
   if (error) {
 
-    console.error('R2 horoscope upload error:', error);
+
 
     throw error;
 
@@ -1804,7 +1804,7 @@ private async uploadAdditionalImages(): Promise<string[]> {
 
     if (error) {
 
-      console.error('Additional image upload error:', error);
+     
 
       continue;
 
@@ -2396,7 +2396,7 @@ this.isSubmitted = true;
 await this.loadExistingBiodata();
 
     } catch (error: any) {
-      console.error('Biodata save error:', error);
+      
       this.snackbar.error(error?.message || 'Something went wrong while saving biodata');
     } finally {
   this.isSaving = false;
@@ -2412,7 +2412,7 @@ await this.loadExistingBiodata();
 
   if (error) {
 
-    console.error('Caste load error:', error);
+ 
 
     return;
 
@@ -2430,7 +2430,6 @@ async loadReligions() {
 
   if (error) {
 
-    console.error('Religion load error:', error);
 
     return;
 
@@ -2449,13 +2448,13 @@ async loadThisaiIruppu(): Promise<void> {
 
   if (error) {
 
-    console.error('THISAI IRUPPU ERROR', error);
+    
 
     return;
 
   }
 
-  console.log('THISAI IRUPPU DATA', data);
+
 
   this.thisaiIruppuList = data || [];
 this.cdr.detectChanges();
@@ -2486,7 +2485,7 @@ async loadCountries() {
 
 
   if (error) {
-    console.error('Country load error:', error);
+    
     return;
   }
 
@@ -2504,7 +2503,6 @@ async loadStates() {
 
   if (error) {
 
-    console.error('State load error:', error);
 
     return;
 
@@ -2523,7 +2521,7 @@ async loadCities() {
 
   if (error) {
 
-    console.error('City load error:', error);
+
 
     return;
 
@@ -2585,7 +2583,7 @@ async loadProfessionList() {
     .order('sort_order', { ascending: true });
 
   if (error) {
-    console.error('Profession load error:', error.message);
+ 
     this.professionList = [];
     return;
   }
@@ -2604,7 +2602,7 @@ async loadEducationLevels() {
 
   if (error) {
 
-    console.error('Education load error:', error);
+  
 
     return;
 

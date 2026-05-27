@@ -61,7 +61,7 @@ async loadPlans(): Promise<void> {
     .order('price', { ascending: true });
 
   if (error) {
-    console.error(error);
+    
     alert(error.message);
 
     this.ngZone.run(() => {
@@ -86,17 +86,16 @@ async loadProfileUserId(): Promise<void> {
     .eq('profile_id', this.profileId)
     .maybeSingle();
 
-  console.log('PROFILE FULL DATA:', data);
-  console.log('PROFILE ERROR:', error);
+
 
   if (error) {
-    console.error(error);
+   
     return;
   }
 
   this.userId = data?.user_id || '';
 
-  console.log('FINAL USER ID:', this.userId);
+ 
 }
 askPaymentMode(plan: any): void {
   this.selectedPlan = plan;
@@ -164,7 +163,7 @@ const { error } = await supabase
     this.isAssigning = false;
 
     if (error) {
-      console.error(error);
+      
       alert(error.message);
       return;
     }

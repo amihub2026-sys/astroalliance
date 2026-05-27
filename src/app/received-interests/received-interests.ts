@@ -62,7 +62,7 @@ export class ReceivedInterests implements OnInit {
       const { data: authData, error: authError } = await supabase.auth.getUser();
 
       if (authError) {
-        console.error('Auth user error:', authError);
+    
       }
 
       const loggedUserId =
@@ -135,7 +135,7 @@ export class ReceivedInterests implements OnInit {
   
 
       if (profileError) {
-        console.error('Load sender profiles error:', profileError);
+       
       }
 
       this.interests = interestRows.map((item: any) => {
@@ -150,7 +150,7 @@ export class ReceivedInterests implements OnInit {
       });
 
     } catch (err) {
-      console.error('Received interests page error:', err);
+      
       this.showMessage('Something went wrong. Check console.');
     } finally {
       this.isLoading = false;
@@ -180,7 +180,7 @@ export class ReceivedInterests implements OnInit {
       .eq('id', item.id);
 
     if (error) {
-      console.error('Update interest error:', error);
+      
       this.showMessage('Failed to update interest');
       return;
     }

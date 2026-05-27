@@ -602,7 +602,7 @@ private async makeLangText(
         if (parsed?.user_id) return String(parsed.user_id);
       }
     } catch (error) {
-      console.error('Error reading matrimony_user from localStorage:', error);
+
     }
 
     const stored = localStorage.getItem('app_user_id');
@@ -650,7 +650,7 @@ private async makeLangText(
         this.cdr.detectChanges();
       },
       (error) => {
-        console.warn('Geolocation error:', error);
+     
         this.geoLocationReady = false;
         this.geoLocationDenied = true;
         this.cdr.detectChanges();
@@ -848,7 +848,7 @@ private async makeLangText(
 
       this.cdr.detectChanges();
     } catch (error: any) {
-      console.error('Load current plan error:', error);
+      
       this.currentPlan = {
         name: 'No Active Plan',
         limit: 0,
@@ -1083,7 +1083,7 @@ image: row.profile_image_url || 'assets/default-avatar.png',
 
       this.cdr.detectChanges();
     } catch (error) {
-      console.error('Load profiles error:', error);
+      
       this.profiles = [];
       this.cdr.detectChanges();
     } finally {
@@ -1190,7 +1190,7 @@ profession: {
 
       this.cdr.detectChanges();
     } catch (error) {
-      console.error('Load shortlisted me error:', error);
+     
       this.shortlistedMeUserIds = [];
       this.cdr.detectChanges();
     }
@@ -1210,7 +1210,7 @@ async loadShortlistedByYouFromSupabase(): Promise<void> {
     .eq('user_id', userId);
 
   if (error) {
-    console.error('Load shortlisted by you error:', error);
+   
     this.shortlistedByYouIds = [];
     return;
   }
@@ -1264,7 +1264,6 @@ async loadLikedMeProfiles(): Promise<void> {
 
   } catch (err) {
 
-    console.error(err);
 
   }
 }
@@ -1569,7 +1568,7 @@ async loadEducationOptions(): Promise<void> {
     .order('sort_order', { ascending: true });
 
   if (error) {
-    console.error('Education load error', error);
+    
     this.educationOptions = [];
     return;
   }
@@ -1836,9 +1835,16 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
 
   applyFilters(goFirst: boolean = true): void {
   this.appliedFilters = { ...this.filters };
+console-remove
+    if (this.appliedFilters.radius && !this.geoLocationReady && !this.appliedFilters.location) {
+     
+    }
+
+    this.cdr.detectChanges();
 
   if (goFirst) {
    this.openDropdown = null;
+main
   }
 
   this.cdr.detectChanges();
@@ -2011,7 +2017,7 @@ if (!alreadyUnlocked) {
         }
       });
     } catch (error: any) {
-      console.error('Update view count error:', error);
+     
       this.snackbar.error(error?.message || 'Failed to update subscription usage');
     }
   }
@@ -2038,8 +2044,7 @@ async likeProfile(profile: ProfileItem): Promise<void> {
 
     const myProfileId = String(myProfile.profile_id);
 
-    console.log('MY PROFILE ID:', myProfileId);
-    console.log('TARGET PROFILE ID:', profile.profileId);
+   
 
     // REMOVE LIKE
     if (profile.liked) {
@@ -2079,7 +2084,7 @@ async likeProfile(profile: ProfileItem): Promise<void> {
 
   } catch (err) {
 
-    console.error('LIKE ERROR:', err);
+  
 
   }
 }
@@ -2119,7 +2124,7 @@ async loadLikedProfiles(): Promise<void> {
 
   } catch (err) {
 
-    console.error(err);
+   
 
   }
 }
@@ -2146,7 +2151,7 @@ async loadLikedProfiles(): Promise<void> {
         return;
       }
 
-      console.error('Error:', error);
+      
       this.snackbar.error('Failed to send interest');
       return;
     }
@@ -2170,7 +2175,7 @@ async loadLoggedInUserProfile(): Promise<void> {
     .maybeSingle();
 
   if (error) {
-    console.error(error);
+    
     return;
   }
 

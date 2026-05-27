@@ -123,7 +123,7 @@ cityText(value: string): string {
         .limit(5);
 
       if (error) {
-        console.error('Recent profile error:', error);
+    
       }
 
     this.ngZone.run(() => {
@@ -144,7 +144,7 @@ cityText(value: string): string {
 });
 
     } catch (error) {
-      console.error('Dashboard load error:', error);
+      
     }
   }
 

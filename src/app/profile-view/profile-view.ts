@@ -222,7 +222,7 @@ private async translateToTamil(text: string): Promise<string> {
   });
 
   if (error) {
-    console.error('Translation error:', error);
+   
     return text;
   }
 
@@ -663,7 +663,7 @@ partnerExpectation: {
       }
 
       if (!this.hasRequiredAstroData(myProfile) || !this.hasRequiredAstroData(this.loadedProfileRow)) {
-        console.warn('Astrology match skipped: missing dob / birth_time / birth_place');
+      
         return;
       }
 
@@ -671,7 +671,7 @@ partnerExpectation: {
       const targetGender = this.normalizeGender(this.loadedProfileRow.gender_text);
 
       if (!myGender || !targetGender || myGender === targetGender) {
-        console.warn('Astrology match skipped: invalid or same gender pairing');
+        
         return;
       }
 
@@ -697,7 +697,7 @@ partnerExpectation: {
       
       this.cdr.detectChanges();
     } catch (error) {
-      console.error('Astro match error:', error);
+     
       this.astroMatch = null;
       this.cdr.detectChanges();
     }
@@ -831,7 +831,7 @@ await this.loadAstroMatch();
 await this.checkInterest();
 await this.checkShortlist();
     } catch (error: any) {
-      console.error('Profile load error:', error);
+      
      this.snackbar.error(error?.message || 'Failed to load profile');
       this.router.navigate(['/profiles']);
     } finally {
@@ -908,7 +908,7 @@ getText(value: string | LangText): string {
         return;
       }
 
-      console.error('Send interest error:', error);
+      
       this.snackbar.error('Failed to send interest');
       return;
     }
@@ -948,7 +948,7 @@ this.cdr.detectChanges();
         return;
       }
 
-      console.error('Shortlist error:', error);
+     
       this.snackbar.error('Failed to shortlist profile');
       return;
     }

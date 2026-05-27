@@ -45,7 +45,7 @@ export class Payments implements OnInit {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Payments error:', error);
+  
       this.payments = [];
     } else {
       this.payments = data || [];
