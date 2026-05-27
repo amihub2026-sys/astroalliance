@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { supabase } from '../core/supabase.client';
@@ -16,8 +16,10 @@ export class AdminLogin {
   dob = '';
   isLoading = false;
 
-  constructor(private router: Router) {}
-
+constructor(
+  private router: Router,
+  private ngZone: NgZone
+) {}
   async onAdminLogin() {
     if (!this.phone || !this.dob) {
       alert('Enter phone number and DOB');
@@ -43,10 +45,13 @@ export class AdminLogin {
     }
 
     localStorage.setItem('is_admin', 'true');
-    localStorage.setItem('admin_id', data.admin_id);
-    localStorage.setItem('admin_name', data.admin_name || '');
-    localStorage.setItem('admin_role', data.role || 'admin');
+localStorage.setItem('isAdmin', 'true');
 
-   this.router.navigateByUrl('/admin/dashboard');
-  }
+localStorage.setItem('admin_id', data.admin_id);
+localStorage.setItem('admin_name', data.admin_name || '');
+localStorage.setItem('admin_role', data.role || 'admin');
+
+this.ngZone.run(() => {
+  this.router.navigateByUrl('/admin/dashboard');
+});  }
 }
