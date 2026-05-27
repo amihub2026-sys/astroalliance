@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { supabase } from '../../core/supabase.client';
 
@@ -17,8 +16,9 @@ export class AdminUsers implements OnInit {
   admin_name = '';
   phone_number = '';
   dob = '';
-  role = 'admin';
+role = 'admin';
 
+constructor(private cd: ChangeDetectorRef) {}
   async ngOnInit() {
     this.loadAdmins();
   }
@@ -30,9 +30,10 @@ export class AdminUsers implements OnInit {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (!error && data) {
-      this.admins = data;
-    }
+   if (!error && data) {
+  this.admins = data;
+  this.cd.detectChanges();
+}
   }
 
   async addAdmin() {
@@ -59,8 +60,8 @@ export class AdminUsers implements OnInit {
       this.dob = '';
       this.role = 'admin';
 
-      this.loadAdmins();
-    }
+await this.loadAdmins();
+this.cd.detectChanges();    }
   }
 
   async deleteAdmin(id: string) {
@@ -70,6 +71,6 @@ export class AdminUsers implements OnInit {
       .delete()
       .eq('admin_id', id);
 
-    this.loadAdmins();
-  }
+await this.loadAdmins();
+this.cd.detectChanges();  }
 }

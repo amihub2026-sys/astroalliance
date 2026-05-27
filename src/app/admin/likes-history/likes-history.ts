@@ -37,7 +37,7 @@ export class LikesHistory implements OnInit {
 
   isLoading = true;
 
-  
+
 constructor(
   private ngZone: NgZone,
   private cdr: ChangeDetectorRef
@@ -188,8 +188,9 @@ console.log(
   this.users
 );
 
-  this.isLoading = false;
-}
+this.isLoading = false;
+
+this.cdr.detectChanges();}
 nextPage() {
 
   if (this.currentPage < this.totalPages) {
@@ -210,12 +211,15 @@ previousPage() {
   }
 }
 
-async viewHistory(user: any) {
+async viewHistory(user: any, event?: Event) {
 
- if (
-  this.selectedUser?.profile_id ===
-  user.profile_id
-) {
+  event?.preventDefault();
+  event?.stopPropagation();
+
+  if (
+    this.selectedUser?.profile_id ===
+    user.profile_id
+  ) {
 
   this.selectedUser = null;
 
