@@ -74,7 +74,7 @@ snackbar = inject(SnackbarService);
 educationOptions: LangText[] = [];
 maritalStatusOptions: LangText[] = [];
 stateOptions: LangText[] = [];
-cityOptions: LangText[] = [];
+cityOptions: (LangText & { state: string })[] = [];
 religionOptions: LangText[] = [];
 casteOptions: LangText[] = [];
 genderOptions: LangText[] = [];
@@ -759,6 +759,27 @@ private async makeLangText(
     }
     return `${distance.toFixed(1)} km`;
   }
+  getFilteredCityOptions(): (LangText & { state: string })[] {
+
+  const selectedState = this.normalizeText(this.filters.state);
+  const search = this.normalizeText(this.searchTerms.location);
+
+  return this.cityOptions.filter(city => {
+
+    const cityState = this.normalizeText(city.state);
+    const cityName = this.normalizeText(this.getText(city));
+
+    const matchesState =
+      !selectedState || cityState === selectedState;
+
+    const matchesSearch =
+      !search || cityName.includes(search);
+
+    return matchesState && matchesSearch;
+
+  });
+
+}
 
   async loadCurrentPlanFromSupabase(): Promise<void> {
     const userId = this.getLoggedInUserId();
@@ -1024,7 +1045,7 @@ return {
       age: Number(row.age || 0),
 religion: await this.makeLangText(
   row.religion_text || '-',
-  this.getTamilProfileValue('religion', row.religion_text)
+  row.religion_text_ta || row.religion_text || '-'
 ),
 
 maritalStatus: await this.makeLangText(
@@ -1384,8 +1405,8 @@ get planStatus(): string {
 }
     const result = this.profiles.filter((profile) => {
       const religion = this.normalizeText(this.getText(profile.religion));
-      const city = this.normalizeText(this.getText(profile.city));
-      const state = this.normalizeText(this.getText(profile.state));
+      const city = this.normalizeText(profile.city?.en);
+      const state = this.normalizeText(profile.state?.en);
       const education = this.normalizeText(this.getText(profile.education));
       const profession = this.normalizeText(this.getText(profile.profession));
       const maritalStatus = this.normalizeText(this.getText(profile.maritalStatus));
@@ -1620,17 +1641,22 @@ if (!maritalError) {
 
   const { data: cityData, error: cityError } = await supabase
     .from('mst_cities')
-    .select('city_name, city_name_ta')
+.select(`
+  city_name,
+  city_name_ta,
+  mst_states(state_name)
+`)
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (!cityError) {
-    this.cityOptions = (cityData || [])
-      .map((x: any) => ({
-        en: String(x.city_name || '').trim(),
-        ta: String(x.city_name_ta || x.city_name || '').trim()
-      }))
-      .filter((x: LangText) => x.en);
+   this.cityOptions = (cityData || [])
+  .map((x: any) => ({
+    en: String(x.city_name || '').trim(),
+    ta: String(x.city_name_ta || x.city_name || '').trim(),
+    state: String(x.mst_states?.state_name || '').trim()
+  }))
+  .filter((x: any) => x.en);
   }
 
   const { data: religionData, error: religionError } = await supabase
@@ -1650,17 +1676,22 @@ if (!maritalError) {
 
   const { data: casteData, error: casteError } = await supabase
     .from('mst_castes')
-    .select('caste_name, caste_name_ta')
+    .select(`
+    caste_name,
+    caste_name_ta,
+    mst_religions(religion_code)
+`   )
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (!casteError) {
-    this.casteOptions = (casteData || [])
-      .map((x: any) => ({
-        en: String(x.caste_name || '').trim(),
-        ta: String(x.caste_name_ta || x.caste_name || '').trim()
-      }))
-      .filter((x: LangText) => x.en);
+  this.casteOptions = (casteData || [])
+  .map((x: any) => ({
+    en: String(x.caste_name || '').trim(),
+    ta: String(x.caste_name_ta || x.caste_name || '').trim(),
+    religionCode: x.mst_religions?.religion_code?.toLowerCase()
+  }))
+  .filter((x: LangText) => x.en);
 
     this.casteMap = {};
 
@@ -1753,7 +1784,7 @@ selectOption(
     gender: 'maritalStatus',
     maritalStatus: 'location',
     location: 'state',
-    state: 'radius',
+    state: 'location',
     education: 'profession',
     profession: null
   };
@@ -1801,6 +1832,16 @@ setTimeout(() => {
       String(item || '').toLowerCase().includes(term)
     );
   }
+  getFilteredCasteOptions(): any[] {
+
+  const religion = this.normalizeText(this.filters.religion);
+
+  if (!religion) return this.casteOptions;
+
+return this.casteOptions.filter((item: any) =>
+  this.normalizeText(item.religionCode) === religion
+);
+}
 getFilteredLangOptions(options: LangText[], search: string): LangText[] {
   const term = String(search || '').toLowerCase().trim();
 
