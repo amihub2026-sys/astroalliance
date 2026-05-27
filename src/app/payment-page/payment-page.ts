@@ -167,6 +167,11 @@ if (parsed?.user_id) {
     if (this.isPaying) return;
 
     const userId = this.getLoggedInUserId();
+    const { data: profileData } = await supabase
+  .from('user_profiles')
+  .select('profile_id, profile_code')
+  .eq('user_id', userId)
+  .maybeSingle();
 
     if (!userId) {
       this.snackbar.error('Please login first');
@@ -239,16 +244,21 @@ if (!appUser) {
       const { error: insertError } = await supabase
         .from('user_subscriptions')
         .insert([
-          {
-            user_id: userId,
-            plan_id: dbPlan.plan_id,
-            subscription_status_id: null,
-            start_date: today,
-            end_date: endDate,
-            contacts_used: 0,
-            total_contacts_allowed: contactLimit,
-            is_active: true
-          }
+        {
+  user_id: userId,
+  plan_id: dbPlan.plan_id,
+  subscription_status_id: null,
+  start_date: today,
+  end_date: endDate,
+  contacts_used: 0,
+  total_contacts_allowed: contactLimit,
+  is_active: true,
+
+  payment_mode: 'Razorpay',
+
+profile_id: this.profileId || profileData?.profile_id || null,
+profile_code: profileData?.profile_code || null
+}
         ]);
 
       if (insertError) throw insertError;

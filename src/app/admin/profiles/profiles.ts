@@ -254,13 +254,14 @@ async loadProfiles(): Promise<void> {
       return;
     }
 
-const profileIds = (data || [])
-  .map((p: any) => p.profile_id)
+const userIds = (data || [])
+  .map((p: any) => p.user_id)
   .filter(Boolean);
 
 const { data: subsData, error: subsError } = await supabase
   .from('user_subscriptions')
 .select(`
+  user_id,
   profile_id,
   payment_mode,
   start_date,
@@ -274,7 +275,7 @@ const { data: subsData, error: subsError } = await supabase
       profile_view_limit
     )
   `)
-  .in('profile_id', profileIds)
+  .in('user_id', userIds)
   .eq('is_active', true);
 
 if (subsError) {
@@ -285,6 +286,7 @@ this.userPlans = subsData || [];
 
     this.profiles = (data || []).map(profile => {
 const plan = this.userPlans?.find((p: any) =>
+  p.user_id === profile.user_id ||
   p.profile_id === profile.profile_id
 ) || null;
 
