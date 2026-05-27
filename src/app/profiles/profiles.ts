@@ -5,7 +5,9 @@ import {
   PLATFORM_ID,
   ChangeDetectorRef,
   HostListener,
-  CUSTOM_ELEMENTS_SCHEMA
+  CUSTOM_ELEMENTS_SCHEMA,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +15,7 @@ import { Router } from '@angular/router';
 import { App } from '../app';
 import { supabase } from '../core/supabase.client';
 import { SnackbarService } from '../shared/snackbar.service';
+
 
 type TabType = 'browse' | 'liked' | 'likedMe';
 
@@ -79,6 +82,8 @@ professionOptions: LangText[] = [];
 casteMap: Record<string, string> = {};
   openDropdown: string | null = null;
   mobileFilterOpen = false;
+  
+  @ViewChild('filterBar') filterBar!: ElementRef<HTMLDivElement>;
 
   userLat: number | null = null;
   userLng: number | null = null;
@@ -1727,7 +1732,7 @@ getUniqueOptions(list: ProfileItem[], key: keyof ProfileItem): string[] {
     })
     .filter(Boolean);
 
-  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+return [...new Set(values)].sort((a, b) => a.localeCompare(b));
 }
 
   toggleDropdown(name: string, event: Event): void {
@@ -1740,33 +1745,29 @@ selectOption(
   value: string
 ): void {
 
-  this.filters[field] = value;
-
-  this.applyFilters();
+  this.filters[field] = value || null;
 
   const nextDropdownMap: Record<string, string | null> = {
-
     religion: 'caste',
-
     caste: 'gender',
-
     gender: 'maritalStatus',
-
     maritalStatus: 'location',
-
     location: 'state',
-
     state: 'radius',
-
     education: 'profession',
-
     profession: null
-
   };
 
-  this.openDropdown = nextDropdownMap[field] ?? null;
+  const nextDropdown = nextDropdownMap[field] ?? null;
 
+  this.appliedFilters = { ...this.filters };
+ this.openDropdown = null;
+this.cdr.detectChanges();
+
+setTimeout(() => {
+  this.openDropdown = nextDropdown;
   this.cdr.detectChanges();
+}, 120);
 }
 
 selectNumberOption(
@@ -1776,23 +1777,23 @@ selectNumberOption(
 
   this.filters[field] = value;
 
-  this.applyFilters();
-
   const nextDropdownMap: Record<string, string | null> = {
-
     ageFrom: 'ageTo',
-
     ageTo: 'religion',
-
     radius: 'education'
-
   };
 
-  this.openDropdown = nextDropdownMap[field] ?? null;
+  const nextDropdown = nextDropdownMap[field] ?? null;
 
+  this.appliedFilters = { ...this.filters };
+ this.openDropdown = null;
+this.cdr.detectChanges();
+
+setTimeout(() => {
+  this.openDropdown = nextDropdown;
   this.cdr.detectChanges();
+}, 120);
 }
-
   getFilteredOptions(options: string[], search: string): string[] {
     const term = String(search || '').toLowerCase().trim();
     if (!term) return options;
@@ -1832,49 +1833,71 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
     this.cdr.detectChanges();
   }
 
-  applyFilters(): void {
-    this.appliedFilters = { ...this.filters };
-
+  applyFilters(goFirst: boolean = true): void {
+  this.appliedFilters = { ...this.filters };
+console-remove
     if (this.appliedFilters.radius && !this.geoLocationReady && !this.appliedFilters.location) {
      
     }
 
     this.cdr.detectChanges();
+
+  if (goFirst) {
+   this.openDropdown = null;
+main
   }
 
-  resetFilters(): void {
-    this.filters = {
-      caste: null,
-      religion: null,
-      gender: null,
-      maritalStatus: null,
-      location: null,
-      education: null,
-      profession: null,
-      state: null,
-      ageFrom: null,
-      ageTo: null,
-      radius: null
-    };
+  this.cdr.detectChanges();
+}
 
-    this.appliedFilters = { ...this.filters };
+resetFilters(): void {
+  this.filters = {
+    caste: null,
+    religion: null,
+    gender: null,
+    maritalStatus: null,
+    location: null,
+    education: null,
+    profession: null,
+    state: null,
+    ageFrom: null,
+    ageTo: null,
+    radius: null
+  };
 
-this.searchTerms = {
-  ageFrom: '',
-  ageTo: '',
-  religion: '',
-  caste: '',
-  gender: '',
-  maritalStatus: '',
-  location: '',
-  education: '',
-   profession: '',
-  state: '',
-  radius: ''
-};
-    this.openDropdown = null;
-    this.cdr.detectChanges();
-  }
+  this.appliedFilters = { ...this.filters };
+
+  this.searchTerms = {
+    ageFrom: '',
+    ageTo: '',
+    religion: '',
+    caste: '',
+    gender: '',
+    maritalStatus: '',
+    location: '',
+    education: '',
+    profession: '',
+    state: '',
+    radius: ''
+  };
+
+       this.openDropdown = null;
+
+if (this.isBrowser) {
+
+  setTimeout(() => {
+
+    const el = this.filterBar?.nativeElement;
+
+    if (el) {
+      el.scrollLeft = 0;
+    }
+
+  }, 0);
+
+}
+  this.cdr.detectChanges();
+}
 
   async viewProfile(profile: ProfileItem): Promise<void> {
     if (!profile?.id) {

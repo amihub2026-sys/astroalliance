@@ -121,7 +121,7 @@
   </div>
 </div>
 
-  <div class="filter-bar" *ngIf="activeTab === 'browse'">
+  <div class="filter-bar" #filterBar *ngIf="activeTab === 'browse'">
     <div class="tm-dropdown">
       <div class="tm-dropdown-box" (click)="toggleDropdown('ageFrom', $event)">
         <span>{{ filters.ageFrom ?? tr.filters.ageFrom }}</span>
@@ -430,14 +430,23 @@
 
   </div>
 </div>
-    <button (click)="applyFilters()" type="button">
-      {{ tr.filters.search }}
-    </button>
 
-    <button (click)="resetFilters()" type="button">
-      {{ tr.filters.reset }}
-    </button>
+<button type="button" (click)="applyFilters(true)">
+  {{ tr.filters.search }}
+</button>
+
+<button type="button" (click)="resetFilters()">
+  {{ tr.filters.reset }}
+</button>
+
   </div>
+
+
+
+
+
+
+
 
   <div class="geo-hint" *ngIf="activeTab === 'browse' && filters.radius">
     <span *ngIf="geoLocationReady">
