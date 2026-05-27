@@ -1762,9 +1762,13 @@ selectOption(
   const nextDropdown = nextDropdownMap[field] ?? null;
 
   this.appliedFilters = { ...this.filters };
-  this.openDropdown = nextDropdown;
+ this.openDropdown = null;
+this.cdr.detectChanges();
 
+setTimeout(() => {
+  this.openDropdown = nextDropdown;
   this.cdr.detectChanges();
+}, 120);
 }
 
 selectNumberOption(
@@ -1783,9 +1787,13 @@ selectNumberOption(
   const nextDropdown = nextDropdownMap[field] ?? null;
 
   this.appliedFilters = { ...this.filters };
-  this.openDropdown = nextDropdown;
+ this.openDropdown = null;
+this.cdr.detectChanges();
 
+setTimeout(() => {
+  this.openDropdown = nextDropdown;
   this.cdr.detectChanges();
+}, 120);
 }
   getFilteredOptions(options: string[], search: string): string[] {
     const term = String(search || '').toLowerCase().trim();
