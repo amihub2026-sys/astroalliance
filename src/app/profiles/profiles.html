@@ -193,7 +193,7 @@
         <div
           class="tm-option"
         *ngFor="let item of getFilteredLangOptions(religionOptions, searchTerms.religion)"
-(click)="selectOption('religion', getText(item))"
+(click)="selectOption('religion', item.en.toLowerCase())"
 >
   {{ getText(item) }}
         </div>
@@ -218,7 +218,7 @@
 </div>
         <div
           class="tm-option"
-        *ngFor="let item of getFilteredLangOptions(casteOptions, searchTerms.caste)"
+        *ngFor="let item of getFilteredCasteOptions()"
 (click)="selectOption('caste', getText(item))"
 >
   {{ getText(item) }}
@@ -278,33 +278,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
-      <div class="tm-dropdown-box" (click)="toggleDropdown('location', $event)">
-        <span>{{ filters.location || tr.filters.location }}</span>
-        <span class="arrow">⌄</span>
-      </div>
-
-      <div class="tm-dropdown-panel" *ngIf="openDropdown === 'location'" (click)="$event.stopPropagation()">
-        <input
-          type="text"
-          class="tm-search-input"
-          [(ngModel)]="searchTerms.location"
-          [placeholder]="'Search ' + tr.filters.location"
-        />
-<div class="tm-option default-option" (click)="selectOption('location', '')">
-  All City
-</div>
-        <div
-          class="tm-option"
-         *ngFor="let item of getFilteredLangOptions(cityOptions, searchTerms.location)"
-(click)="selectOption('location', getText(item))"
->
-  {{ getText(item) }}
-        </div>
-      </div>
-    </div>
-
-    <div class="tm-dropdown">
+        <div class="tm-dropdown">
 
   <div class="tm-dropdown-box" (click)="toggleDropdown('state', $event)">
     <span>{{ filters.state || tr.filters.state }}</span>
@@ -342,6 +316,34 @@
   </div>
 
 </div>
+
+    <div class="tm-dropdown">
+      <div class="tm-dropdown-box" (click)="toggleDropdown('location', $event)">
+        <span>{{ filters.location || tr.filters.location }}</span>
+        <span class="arrow">⌄</span>
+      </div>
+
+      <div class="tm-dropdown-panel" *ngIf="openDropdown === 'location'" (click)="$event.stopPropagation()">
+        <input
+          type="text"
+          class="tm-search-input"
+          [(ngModel)]="searchTerms.location"
+          [placeholder]="'Search ' + tr.filters.location"
+        />
+<div class="tm-option default-option" (click)="selectOption('location', '')">
+  All City
+</div>
+        <div
+          class="tm-option"
+         *ngFor="let item of getFilteredCityOptions()"
+(click)="selectOption('location', getText(item))"
+>
+  {{ getText(item) }}
+        </div>
+      </div>
+    </div>
+
+
 
     <div class="tm-dropdown">
       <div class="tm-dropdown-box" (click)="toggleDropdown('radius', $event)">
