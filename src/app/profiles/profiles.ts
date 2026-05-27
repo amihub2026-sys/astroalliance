@@ -1876,7 +1876,7 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
 
   applyFilters(goFirst: boolean = true): void {
   this.appliedFilters = { ...this.filters };
-console-remove
+
     if (this.appliedFilters.radius && !this.geoLocationReady && !this.appliedFilters.location) {
      
     }
@@ -1885,7 +1885,7 @@ console-remove
 
   if (goFirst) {
    this.openDropdown = null;
-main
+
   }
 
   this.cdr.detectChanges();
