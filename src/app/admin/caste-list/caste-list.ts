@@ -90,7 +90,7 @@ constructor(
 
   } else {
 
-    console.error('Caste load error:', error);
+  
 
     this.castes = [];
 
@@ -169,7 +169,7 @@ return;
 
 if (error) {
 
-  console.error(error);
+ 
 
   alert(error.message);
 

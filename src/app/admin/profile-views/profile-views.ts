@@ -74,10 +74,7 @@ v(en: any, ta: any): string {
     changes: SimpleChanges
   ): void {
 
-    console.log(
-      'Profile view changes',
-      changes
-    );
+   
 
     this.cdr.detectChanges();
   }
@@ -188,7 +185,7 @@ viewed:user_profiles!fk_profile_views_viewed (
 
       if (error) {
 
-        console.error(error);
+    
 
         this.isLoading = false;
 
@@ -199,7 +196,6 @@ viewed:user_profiles!fk_profile_views_viewed (
 
       this.views = data || [];
 
-      console.log(this.views);
 
       this.isLoading = false;
 

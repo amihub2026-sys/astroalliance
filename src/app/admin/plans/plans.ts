@@ -81,7 +81,7 @@ txt(en: string, ta: string): string {
 
   if (error) {
 
-    console.error('Plans error:', error);
+ 
 
     this.plans = [];
 
@@ -99,7 +99,7 @@ txt(en: string, ta: string): string {
   }
   
   async togglePlan(plan: any): Promise<void> {
-console.log('PLAN BEFORE:', plan.is_active);
+
     const { error } = await supabase
       .from('mst_plans')
       .update({
@@ -109,7 +109,6 @@ console.log('PLAN BEFORE:', plan.is_active);
 
    if (error) {
 
-  console.error('Toggle error:', error);
 
   alert(
     this.currentLang === 'ta'
@@ -120,7 +119,7 @@ console.log('PLAN BEFORE:', plan.is_active);
   return;
 }
 
-console.log('PLAN UPDATED');
+
 
 alert(
   !plan.is_active
@@ -213,7 +212,7 @@ const formattedCode = this.editingPlan
 
  if (error) {
 
- console.error('FULL ERROR:', error);
+
 
 alert(error.message);
 
@@ -238,7 +237,7 @@ alert(error.message);
 
   if (error) {
 
- console.error('FULL ERROR:', error);
+
 
 alert(error.message);
 

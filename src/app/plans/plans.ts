@@ -153,7 +153,7 @@ plans: any[] = [];
         if (parsed?.user_id) return String(parsed.user_id);
       }
     } catch (error) {
-      console.error('Error reading matrimony_user:', error);
+      
     }
 
     const stored = localStorage.getItem('app_user_id');
@@ -227,7 +227,7 @@ this.plans = [];
 }));
 this.cdr.detectChanges();
     } catch (error) {
-      console.error('Load DB plans error:', error);
+     
       this.dbPlans = [];
 } finally {
 

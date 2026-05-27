@@ -97,7 +97,7 @@ async loadUsers() {
 
   if (error) {
 
-    console.error(error);
+
 
     this.isLoading = false;
 
@@ -138,8 +138,7 @@ const uniqueIds = Array.from(
     this.pageSize
   )
 );
-console.log('UNIQUE IDS', uniqueIds);
-console.log('PAGINATED IDS', paginatedIds);
+
   // LOAD ONLY LIKE RELATED USERS
   const { data: profiles } = await supabase
     .from('user_profiles')
@@ -158,10 +157,7 @@ profile_image_url
   ).map(id => String(id).trim())
 )
   const profilesList = profiles || [];
-console.log(
-  'PROFILES LIST',
-  profilesList
-);
+
  this.users = (profilesList || []).map(
   (profile: any) => {
     const sent = likes.filter(
@@ -183,10 +179,6 @@ console.log(
   }
 );
 
-console.log(
-  'FINAL USERS',
-  this.users
-);
 
 this.isLoading = false;
 
@@ -254,11 +246,11 @@ const { data, error } = await supabase
 
   if (error) {
 
-    console.error(error);
+   
 
     return;
   }
-  console.log('LIKES DATA', data);
+
 
   const profileIds = Array.from(
   new Set([

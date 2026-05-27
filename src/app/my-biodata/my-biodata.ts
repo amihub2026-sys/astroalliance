@@ -85,7 +85,7 @@ async ngOnInit(): Promise<void> {
 
       return null;
     } catch (error) {
-      console.error('resolveCurrentUserId error:', error);
+      
       return null;
     }
   }
@@ -396,7 +396,7 @@ partner_expectation_ta: data?.partner_expectation_ta || '',
   this.cdr.detectChanges();
 });
     } catch (error: any) {
-      console.error('Load my biodata error:', error);
+    
       this.errorMessage = error?.message || 'Unable to load biodata.';
     } finally {
   this.zone.run(() => {

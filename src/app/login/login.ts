@@ -470,7 +470,7 @@ setTimeout(() => {
 
 return;
   } catch (error: any) {
-    console.error('LOGIN ERROR:', error);
+   
     this.stopLoading();
     this.snackbar.error(error?.message || this.tr.alerts.somethingWrong);
   }
@@ -488,7 +488,7 @@ return;
         throw error;
       }
     } catch (error: any) {
-      console.error('GOOGLE LOGIN ERROR:', error);
+      
       this.snackbar.error(error?.message || this.tr.alerts.googleLoginFailed);
     }
   }

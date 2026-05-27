@@ -248,7 +248,7 @@ async loadProfiles(): Promise<void> {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Profiles error:', error);
+     
       alert(error.message);
       this.profiles = [];
       return;
@@ -279,7 +279,7 @@ const { data: subsData, error: subsError } = await supabase
   .eq('is_active', true);
 
 if (subsError) {
-  console.error('Subscriptions error:', subsError);
+  
 }
 
 this.userPlans = subsData || [];
@@ -312,8 +312,8 @@ views_count: Number(plan?.contacts_used || 0)
     this.casteOptions = [...new Set(this.profiles.map(p => p.caste_text).filter(Boolean))];
 
   } catch (err) {
-    console.error('Load profiles failed:', err);
-console.error(err);    this.profiles = [];
+
+
   } finally {
     this.ngZone.run(() => {
       this.isLoading = false;
@@ -475,7 +475,7 @@ async approveProfile(profile: any, event?: Event): Promise<void> {
     .eq('profile_id', profile.profile_id);
 
   if (error) {
-    console.error('Approve error:', error);
+   
     alert(error.message);
     return;
   }
@@ -511,7 +511,7 @@ async deleteProfile(profile: any, event?: Event): Promise<void> {
     .eq('profile_id', profile.profile_id);
 
   if (error) {
-    console.error('Delete error:', error);
+    
     alert(error.message);
     return;
   }

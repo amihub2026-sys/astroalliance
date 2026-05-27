@@ -65,7 +65,7 @@ if (parsed?.user_id) {
   return String(parsed.user_id);
 }      }
     } catch (error) {
-      console.error('Error reading matrimony_user:', error);
+      
     }
 
     const stored = localStorage.getItem('app_user_id');
@@ -97,7 +97,7 @@ if (parsed?.user_id) {
       const rows = Array.isArray(data) ? data : [];
       this.dbPlans = rows.filter((row: any) => row?.is_active === true);
     } catch (error) {
-      console.error('Load DB plans error:', error);
+      
       this.dbPlans = [];
     }
   }
@@ -270,7 +270,7 @@ this.snackbar.success('Payment completed successfully');
 
 this.cdr.detectChanges();
     } catch (error: any) {
-      console.error('Payment error:', error);
+      
      this.snackbar.error(error?.message || 'Payment failed');
       this.isPaying = false;
       this.cdr.detectChanges();

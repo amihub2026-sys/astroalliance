@@ -97,12 +97,11 @@ openHistory(
       ascending: false
     });
 
-    console.log('INTEREST DATA', data);
-console.log('INTEREST ERROR', error);
+  
 
   if (error) {
 
-    console.error(error);
+ 
 
     this.isLoading = false;
 
@@ -138,9 +137,7 @@ const receiver =
     item.to_profile_id?.trim()
   );
 
-console.log('SENDER', sender);
 
-console.log('RECEIVER', receiver);
 
    if (!sender || !receiver) {
   continue;

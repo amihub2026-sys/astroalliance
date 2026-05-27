@@ -553,7 +553,7 @@ else {
 
 }
     } catch (error: any) {
-      console.error('Register error:', error);
+     
       alert(error?.message || this.tr.alerts.somethingWrong);
     } finally {
       this.isLoading = false;

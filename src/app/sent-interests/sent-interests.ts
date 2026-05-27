@@ -70,7 +70,7 @@ export class SentInterests implements OnInit, OnDestroy {
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
 
       if (sessionError) {
-        console.error('Session error:', sessionError);
+     
       }
 
       const loggedUserId =
@@ -124,7 +124,7 @@ export class SentInterests implements OnInit, OnDestroy {
    
 
       if (receiverError) {
-        console.error('Receiver profiles error:', receiverError);
+        
       }
 
       this.interests = interestRows.map((item: any) => {
@@ -139,8 +139,7 @@ export class SentInterests implements OnInit, OnDestroy {
       });
 
     } catch (err) {
-      console.error(err);
-      this.showMessage('Something went wrong');
+      
     } finally {
       this.isLoading = false;
       this.cdr.detectChanges();
