@@ -37,6 +37,9 @@
   <tr>
 
     <th>{{ txt('User ID', 'பயனர் ID') }}</th>
+    <th>{{ txt('Profile ID', 'சுயவிவர ID') }}</th>
+
+<th>{{ txt('Payment Mode', 'கட்டண முறை') }}</th>
 
     <th>{{ txt('Plan', 'திட்டம்') }}</th>
 
@@ -67,9 +70,17 @@
         <tbody>
 <tr *ngFor="let item of paginatedSubscriptions">
 
-  <td>
-    {{ item.user_id }}
-  </td>
+ <td>
+  {{ item.user_id || '-' }}
+</td>
+
+<td>
+{{ item.user_profiles?.profile_code || '-' }}
+</td>
+
+<td>
+  {{ item.payment_mode || '-' }}
+</td>
 
   <td>
     {{ item.mst_plans?.plan_name || '-' }}
@@ -145,7 +156,7 @@
 </tr>
 
           <tr *ngIf="filteredSubscriptions.length === 0">
-          <td colspan="12" class="empty-row">
+       <td colspan="14" class="empty-row">
               No subscriptions found
             </td>
           </tr>

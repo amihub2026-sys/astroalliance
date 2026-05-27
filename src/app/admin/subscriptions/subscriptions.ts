@@ -58,25 +58,31 @@ txt(en: string, ta: string): string {
 
     const { data, error } = await supabase
       .from('user_subscriptions')
-      .select(`
-        subscription_id,
-        user_id,
-        plan_id,
-        start_date,
-        end_date,
-        contacts_used,
-        total_contacts_allowed,
-        is_active,
-        created_at,
-mst_plans (
-  plan_name,
-  plan_code,
-  price,
-  duration_months,
-  contact_limit,
-  profile_view_limit
-)
-      `)
+.select(`
+  subscription_id,
+  user_id,
+  payment_mode,
+  plan_id,
+  start_date,
+  end_date,
+  contacts_used,
+  total_contacts_allowed,
+  is_active,
+  created_at,
+
+  mst_plans (
+    plan_name,
+    plan_code,
+    price,
+    duration_months,
+    contact_limit,
+    profile_view_limit
+  ),
+
+  user_profiles (
+    profile_code
+  )
+`)
       .order('created_at', { ascending: false });
 
  this.ngZone.run(() => {
@@ -146,7 +152,9 @@ prevPage(): void {
     if (!term) return this.subscriptions;
 
     return this.subscriptions.filter(item =>
-      String(item.user_id || '').toLowerCase().includes(term) ||
+     String(item.user_id || '').toLowerCase().includes(term) ||
+String(item.profile_id || '').toLowerCase().includes(term) ||
+String(item.payment_mode || '').toLowerCase().includes(term) ||
       String(item.mst_plans?.plan_name || '').toLowerCase().includes(term) ||
       String(item.mst_plans?.plan_code || '').toLowerCase().includes(term)
     );
