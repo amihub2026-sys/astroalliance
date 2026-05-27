@@ -254,28 +254,54 @@ async loadProfiles(): Promise<void> {
       return;
     }
 
-this.userPlans = [];
+const profileIds = (data || [])
+  .map((p: any) => p.profile_id)
+  .filter(Boolean);
+
+const { data: subsData, error: subsError } = await supabase
+  .from('user_subscriptions')
+.select(`
+  profile_id,
+  payment_mode,
+  start_date,
+  end_date,
+    total_contacts_allowed,
+    contacts_used,
+    is_active,
+    mst_plans (
+      plan_name,
+      contact_limit,
+      profile_view_limit
+    )
+  `)
+  .in('profile_id', profileIds)
+  .eq('is_active', true);
+
+if (subsError) {
+  console.error('Subscriptions error:', subsError);
+}
+
+this.userPlans = subsData || [];
 
     this.profiles = (data || []).map(profile => {
-      const plan = this.userPlans?.find((p: any) =>
-  p.profile_id === profile.profile_id ||
-  p.user_id === profile.user_id ||
-  p.profile_code === profile.profile_code
+const plan = this.userPlans?.find((p: any) =>
+  p.profile_id === profile.profile_id
 ) || null;
+
+const planData = Array.isArray(plan?.mst_plans)
+  ? plan.mst_plans[0]
+  : plan?.mst_plans;
 
       return {
         ...profile,
-        package_name: plan?.plan_name || plan?.package_name || '-',
-        purchased_date: plan?.purchased_date || plan?.created_at || '-',
-        expired_date: plan?.expired_date || plan?.expiry_date || '-',
-        limits: plan
-          ? `${plan.contact_limit || 0} contacts / ${plan.profile_view_limit || 0} views`
-          : '-',
-views_count: Number(
-  plan?.used_profile_views ||
-  plan?.profile_views_used ||
-  0
-)
+package_name: planData?.plan_name || '-',
+payment_mode: plan?.payment_mode || '-',
+purchased_date: plan?.start_date || '-',
+expired_date: plan?.end_date || '-',
+limits: plan
+  ? `${plan?.total_contacts_allowed || 0} contacts / ${planData?.profile_view_limit || 0} views`
+  : '-',
+views_count: Number(plan?.contacts_used || 0)
       };
     });
 
@@ -460,7 +486,7 @@ async approveProfile(profile: any, event?: Event): Promise<void> {
 addPackage(profile: any, event?: Event): void {
   event?.stopPropagation();
 
-  this.router.navigate(['/admin/plans'], {
+  this.router.navigate(['/admin/user-plans'], {
     queryParams: {
       profile_id: profile.profile_id,
       profile_code: profile.profile_code

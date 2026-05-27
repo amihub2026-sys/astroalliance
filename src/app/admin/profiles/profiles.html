@@ -95,6 +95,7 @@
   <th>City</th>
   <th>Reg Date</th>
   <th>Package</th>
+  <th>Payment Method</th>
   <th>Purchased Date</th>
   <th>Expired Date</th>
   <th>Limits</th>
@@ -124,6 +125,7 @@
 <td>{{ dateText(profile.created_at) }}</td>
 
 <td>{{ profile.package_name || '-' }}</td>
+<td>{{ profile.payment_mode || '-' }}</td>
 <td>{{ dateText(profile.purchased_date) }}</td>
 <td>{{ dateText(profile.expired_date) }}</td>
 <td>{{ profile.limits || '-' }}</td>
