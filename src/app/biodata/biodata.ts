@@ -362,9 +362,10 @@ childrenCount: 'குழந்தைகள் எண்ணிக்கை',
     maritalStatus: '',
     mobile: '',
     email: '',
-    height: '',
-    weight: '',
-    religion: '',
+   height: '',
+weight: '',
+color: '',
+religion: '',
     caste: '',
     fatherName: '',
     motherName: '',
@@ -1218,6 +1219,7 @@ if (!data) {
       this.formData.email = data.email || '';
       this.formData.height = data.height_text || (data.height_cm ? String(data.height_cm) : '');
       this.formData.weight = data.weight_text || (data.weight_kg ? String(data.weight_kg) : '');
+      this.formData.color = data.color_text || '';
       this.formData.religion = data.religion_text || '';
       this.formData.caste = data.caste_text || '';
       this.formData.subCaste =
@@ -2185,7 +2187,7 @@ console.log('PAYLOAD USER ID:', appUserId);
 
         weight_kg: this.safeNumber(this.formData.weight),
         weight_text: this.safeText(this.formData.weight),
-
+color_text: this.safeText(this.formData.color),
         religion_id: null,
      religion_text: this.safeText(
   this.religionList.find(

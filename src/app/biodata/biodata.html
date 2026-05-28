@@ -485,6 +485,59 @@
   >
 
 </div>
+<!-- COLOR -->
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'நிறம்'
+      : 'Color'
+    }}
+  </label>
+
+  <select
+    [(ngModel)]="formData.color"
+    name="color"
+  >
+
+    <option value="">
+      {{ currentLang === 'ta'
+        ? 'நிறத்தை தேர்வு செய்யவும்'
+        : 'Select Color'
+      }}
+    </option>
+
+    <option value="Fair">
+      {{ currentLang === 'ta'
+        ? 'வெள்ளை'
+        : 'Fair'
+      }}
+    </option>
+
+    <option value="Wheatish">
+      {{ currentLang === 'ta'
+        ? 'கோதுமை நிறம்'
+        : 'Wheatish'
+      }}
+    </option>
+
+    <option value="Medium">
+      {{ currentLang === 'ta'
+        ? 'மாநிறம்'
+        : 'Medium'
+      }}
+    </option>
+
+    <option value="Dark">
+      {{ currentLang === 'ta'
+        ? 'கருப்பு'
+        : 'Dark'
+      }}
+    </option>
+
+  </select>
+
+</div>
 
           <!-- RELIGION -->
 <div class="field" [class.invalid]="isInvalid('religion')">
