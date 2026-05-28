@@ -1537,3 +1537,41 @@ background:#fff;
     max-width:100%;
   }
 }
+.thisai-iruppu-field{
+  align-items:flex-start;
+}
+
+.thisai-iruppu-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:18px;
+  width:100%;
+}
+
+.iruppu-box{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.iruppu-box span{
+  color:#666;
+  font-size:14px;
+  font-weight:600;
+}
+
+.iruppu-box input{
+  border:none !important;
+  border-bottom:2px solid #bbb !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  padding:6px 0 !important;
+  height:36px !important;
+}
+
+@media(max-width:600px){
+  .thisai-iruppu-wrap{
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+  }
+}
