@@ -4,6 +4,7 @@ import {
   ElementRef,
   inject,
   NgZone,
+  ChangeDetectorRef,
   OnDestroy,
   OnInit,
   PLATFORM_ID
@@ -25,6 +26,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   activeForm: ActiveForm = 'none';
   currentLang: Language = 'en';
@@ -362,15 +364,19 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     window.removeEventListener('app-language-changed', this.handleLanguageChange);
   }
 
-  private readonly handleLanguageChange = (event: Event): void => {
-    const customEvent = event as CustomEvent<Language>;
-    const lang = customEvent.detail;
+private readonly handleLanguageChange = (event: Event): void => {
+  const customEvent = event as CustomEvent<Language>;
+  const lang = customEvent.detail;
 
-    if (lang === 'en' || lang === 'ta') {
-      this.currentLang = lang;
-    }
-  };
+  if (lang === 'en' || lang === 'ta') {
+    this.currentLang = lang;
+    this.cdr.detectChanges();
 
+    setTimeout(() => {
+      this.refreshRevealAnimations();
+    }, 0);
+  }
+};
   showForm(type: Exclude<ActiveForm, 'none'>): void {
     this.activeForm = type;
   }
@@ -454,6 +460,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (!this.isBrowser || typeof IntersectionObserver === 'undefined') {
       return;
     }
+    
 
     const revealElements =
       this.elementRef.nativeElement.querySelectorAll<HTMLElement>('.reveal');
@@ -481,7 +488,20 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       this.revealObserver?.observe(element);
     });
   }
+private refreshRevealAnimations(): void {
+  if (!this.isBrowser) return;
 
+  this.destroyRevealObserver();
+
+  const revealElements =
+    this.elementRef.nativeElement.querySelectorAll<HTMLElement>('.reveal');
+
+  revealElements.forEach((element) => {
+    element.classList.add('active');
+  });
+
+  this.initRevealAnimations();
+}
   private destroyRevealObserver(): void {
     if (this.revealObserver) {
       this.revealObserver.disconnect();
