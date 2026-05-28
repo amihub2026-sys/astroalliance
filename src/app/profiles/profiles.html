@@ -122,7 +122,7 @@
 </div>
 
   <div class="filter-bar" #filterBar *ngIf="activeTab === 'browse'">
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="ageFrom">
       <div class="tm-dropdown-box" (click)="toggleDropdown('ageFrom', $event)">
         <span>{{ filters.ageFrom ?? tr.filters.ageFrom }}</span>
         <span class="arrow">⌄</span>
@@ -148,7 +148,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+   <div class="tm-dropdown" data-filter="ageTo">
       <div class="tm-dropdown-box" (click)="toggleDropdown('ageTo', $event)">
         <span>{{ filters.ageTo ?? tr.filters.ageTo }}</span>
         <span class="arrow">⌄</span>
@@ -174,7 +174,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="religion">
       <div class="tm-dropdown-box" (click)="toggleDropdown('religion', $event)">
         <span>{{ filters.religion || tr.filters.religion }}</span>
         <span class="arrow">⌄</span>
@@ -200,7 +200,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+   <div class="tm-dropdown" data-filter="caste">
       <div class="tm-dropdown-box" (click)="toggleDropdown('caste', $event)">
         <span>{{ filters.caste || tr.filters.caste }}</span>
         <span class="arrow">⌄</span>
@@ -226,7 +226,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="gender">
       <div class="tm-dropdown-box" (click)="toggleDropdown('gender', $event)">
         <span>{{ filters.gender || tr.filters.gender }}</span>
         <span class="arrow">⌄</span>
@@ -252,7 +252,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="maritalStatus">
       <div class="tm-dropdown-box" (click)="toggleDropdown('maritalStatus', $event)">
         <span>{{ filters.maritalStatus || tr.filters.maritalStatus }}</span>
         <span class="arrow">⌄</span>
@@ -278,7 +278,7 @@
       </div>
     </div>
 
-        <div class="tm-dropdown">
+        <div class="tm-dropdown" data-filter="state">
 
   <div class="tm-dropdown-box" (click)="toggleDropdown('state', $event)">
     <span>{{ filters.state || tr.filters.state }}</span>
@@ -317,7 +317,7 @@
 
 </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="location">
       <div class="tm-dropdown-box" (click)="toggleDropdown('location', $event)">
         <span>{{ filters.location || tr.filters.location }}</span>
         <span class="arrow">⌄</span>
@@ -345,7 +345,7 @@
 
 
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="radius">
       <div class="tm-dropdown-box" (click)="toggleDropdown('radius', $event)">
         <span>{{ filters.radius ? (filters.radius + ' km') : tr.filters.radius }}</span>
         <span class="arrow">⌄</span>
@@ -371,7 +371,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="education">
       <div class="tm-dropdown-box" (click)="toggleDropdown('education', $event)">
         <span>{{ filters.education || tr.filters.education }}</span>
         <span class="arrow">⌄</span>
@@ -396,7 +396,7 @@
         </div>
       </div>
     </div>
-<div class="tm-dropdown">
+<div class="tm-dropdown" data-filter="profession">
   <div class="tm-dropdown-box" (click)="toggleDropdown('profession', $event)">
   <span>{{ filters.profession || tr.profile.profession }}</span>
     <span class="arrow">⌄</span>
@@ -433,11 +433,17 @@
   </div>
 </div>
 
-<button type="button" (click)="applyFilters(true)">
+<button
+  data-filter="apply"
+  type="button"
+  (click)="applyFilters()">
   {{ tr.filters.search }}
 </button>
 
-<button type="button" (click)="resetFilters()">
+<button
+  data-filter="reset"
+  type="button"
+  (click)="resetFilters()">
   {{ tr.filters.reset }}
 </button>
 
@@ -865,9 +871,8 @@
 </p>
 <p class="profile-detail-item mobile-show-detail">
   <i class="fas fa-location-dot"></i>
-  {{ getText(profile.location) || '-' }}
+{{ getText(profile.city) || '-' }}
 </p>
-
 <p class="profile-detail-item mobile-show-detail">
   <i class="fas fa-star"></i>
   {{ getText(profile.nakshatra) || '-' }}

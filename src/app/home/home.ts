@@ -59,7 +59,21 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           register: 'Register',
           login: 'Login',
           match: 'Find Your Match'
-        }
+        },
+{
+  title1: 'Together Forever',
+  title2: 'Starts Here',
+  register: 'Register',
+  login: 'Login',
+  match: 'Find Your Match'
+},
+{
+  title1: 'Meet Your Dream',
+  title2: 'Soulmate Today',
+  register: 'Register',
+  login: 'Login',
+  match: 'Find Your Match'
+}
       ],
       popup: {
         registerTitle: 'Create Account',
@@ -185,7 +199,21 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           register: 'பதிவு செய்யவும்',
           login: 'உள்நுழையவும்',
           match: 'உங்கள் இணையை காண்க'
-        }
+        },
+{
+  title1: 'என்றும் இணையும்',
+  title2: 'அழகான உறவு',
+  register: 'பதிவு செய்யவும்',
+  login: 'உள்நுழையவும்',
+  match: 'உங்கள் இணையை காண்க'
+},
+{
+  title1: 'உங்கள் கனவு',
+  title2: 'இணையை இன்று சந்திக்கவும்',
+  register: 'பதிவு செய்யவும்',
+  login: 'உள்நுழையவும்',
+  match: 'உங்கள் இணையை காண்க'
+}
       ],
       popup: {
         registerTitle: 'கணக்கு உருவாக்கு',
@@ -289,7 +317,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   currentSlide = 0;
-  readonly totalSlides = 4;
+  readonly totalSlides = 6;
   private heroIntervalId: ReturnType<typeof setInterval> | null = null;
   private readonly heroSlideDelay = 5000;
 
