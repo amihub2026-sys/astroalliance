@@ -159,6 +159,7 @@ childrenCount: 'Children Count',
         education: 'Enter education',
         occupation: 'Enter occupation',
         company: 'Enter company name',
+        workPlace: 'Enter work place',
         salary: 'Enter salary',
         address: 'Enter address',
         city: 'Enter city',
@@ -255,6 +256,7 @@ childrenCount: 'Children Count',
         education: 'கல்வி',
         occupation: 'தொழில்',
         company: 'நிறுவனம்',
+        workPlace: 'பணியிடம்',
         salary: 'சம்பளம்',
         address: 'முகவரி',
         city: 'நகரம்',
@@ -308,6 +310,7 @@ childrenCount: 'குழந்தைகள் எண்ணிக்கை',
         education: 'கல்வியை உள்ளிடவும்',
         occupation: 'தொழிலை உள்ளிடவும்',
         company: 'நிறுவனப் பெயரை உள்ளிடவும்',
+        workPlace: 'பணியிடத்தை உள்ளிடவும்',
         salary: 'சம்பளத்தை உள்ளிடவும்',
         address: 'முகவரியை உள்ளிடவும்',
         city: 'நகரத்தை உள்ளிடவும்',
@@ -373,6 +376,7 @@ childrenCount: 'குழந்தைகள் எண்ணிக்கை',
     job: '',
     otherProfession: '',
     company: '',
+    workPlace: '',
     salary: '',
     address: '',
     city: '',
@@ -419,6 +423,7 @@ formDataTa = {
   siblings: '',
   job: '',
   company: '',
+  workPlace: '',
   address: '',
   birthPlace: '',
   aboutMe: '',
@@ -824,6 +829,8 @@ const convert = async (taValue: string, enValue: string) => {
   this.formData.siblings = await convert(this.formDataTa.siblings, this.formData.siblings);
   this.formData.job = await convert(this.formDataTa.job, this.formData.job);
   this.formData.company = await convert(this.formDataTa.company, this.formData.company);
+  this.formData.workPlace =
+  await convert(this.formDataTa.workPlace, this.formData.workPlace);
   this.formData.address = await convert(this.formDataTa.address, this.formData.address);
   this.formData.birthPlace = await convert(this.formDataTa.birthPlace, this.formData.birthPlace);
   this.formData.aboutMe = await convert(this.formDataTa.aboutMe, this.formData.aboutMe);
@@ -912,6 +919,8 @@ async prepareAutoTamilValues(): Promise<void> {
   this.formDataTa.siblings = await convert(this.formData.siblings, this.formDataTa.siblings);
   this.formDataTa.job = await convert(this.formData.job, this.formDataTa.job);
   this.formDataTa.company = await convert(this.formData.company, this.formDataTa.company);
+  this.formDataTa.workPlace =
+  await convert(this.formData.workPlace, this.formDataTa.workPlace);
   this.formDataTa.address = await convert(this.formData.address, this.formDataTa.address);
   this.formDataTa.birthPlace = await convert(this.formData.birthPlace, this.formDataTa.birthPlace);
   this.formDataTa.aboutMe = await convert(this.formData.aboutMe, this.formDataTa.aboutMe);
@@ -1267,6 +1276,7 @@ this.formData.kuladeivam =
       this.formData.education = data.education_text || '';
       this.formData.job = data.occupation_text || '';
       this.formData.company = data.company_name || '';
+      this.formData.workPlace = data.work_place || '';
       this.formData.salary = data.salary_text || (data.salary_amount ? String(data.salary_amount) : '');
       this.formData.address = data.address_line || '';
       this.formData.city = data.city_text || '';
@@ -1371,6 +1381,7 @@ this.formDataTa.motherOccupation = data.mother_occupation_ta || '';
 this.formDataTa.siblings = data.siblings_ta || '';
 this.formDataTa.job = data.occupation_text_ta || '';
 this.formDataTa.company = data.company_name_ta || '';
+this.formDataTa.workPlace = data.work_place_ta || '';
 this.formDataTa.aboutMe = data.about_me_ta || '';
 this.formDataTa.partnerExpectation = data.partner_expectation_ta || '';
 this.formDataTa.address = data.address_line_ta || '';
@@ -2274,6 +2285,8 @@ occupation_text: this.safeText(
     : this.formData.job
 ),
 company_name: this.safeText(this.formData.company),
+work_place: this.safeText(this.formData.workPlace),
+work_place_ta: this.safeText(this.formDataTa.workPlace),
         salary_amount: this.safeNumber(this.formData.salary),
         salary_currency: 'INR',
         salary_text: this.safeText(this.formData.salary),
