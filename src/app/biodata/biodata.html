@@ -1341,27 +1341,56 @@
 
 <!-- THISAI IRUPPU -->
 
-<!-- THISAI IRUPPU -->
-<div class="field thisai-iruppu-field">
+<div class="field">
 
   <label>
     {{ currentLang === 'ta' ? 'திசை இருப்பு' : 'Thisai Iruppu' }}
   </label>
 
+  <select
+    [(ngModel)]="formData.thisaiIruppu"
+    name="thisaiIruppu"
+  >
+    <option value="">
+      {{ currentLang === 'ta' ? 'திசை இருப்பை தேர்வு செய்யவும்' : 'Select Thisai Iruppu' }}
+    </option>
+
+    <option
+      *ngFor="let item of thisaiIruppuList"
+      [value]="item.thisai_iruppu_name"
+    >
+      {{
+        currentLang === 'ta'
+          ? (item.thisai_iruppu_name_ta || item.thisai_iruppu_name)
+          : item.thisai_iruppu_name
+      }}
+    </option>
+  </select>
+
+</div>
+
+<!-- THISAI -->
+
+<div class="field thisai-iruppu-field">
+
+  <label>
+    {{ currentLang === 'ta' ? 'திசை' : 'Thisai' }}
+  </label>
+
   <div class="thisai-iruppu-wrap">
 
     <div class="iruppu-box">
-      <span>வருடம்</span>
+      <span>{{ currentLang === 'ta' ? 'வருடம்' : 'Year' }}</span>
       <input type="number" [(ngModel)]="formData.thisaiYear" name="thisaiYear">
     </div>
 
     <div class="iruppu-box">
-      <span>மாதம்</span>
+      <span>{{ currentLang === 'ta' ? 'மாதம்' : 'Month' }}</span>
       <input type="number" [(ngModel)]="formData.thisaiMonth" name="thisaiMonth">
     </div>
 
     <div class="iruppu-box">
-      <span>நாள்</span>
+      <span>{{ currentLang === 'ta' ? 'நாள்' : 'Day' }}</span>
       <input type="number" [(ngModel)]="formData.thisaiDay" name="thisaiDay">
     </div>
 
@@ -1369,24 +1398,8 @@
 
 </div>
 
-<!-- THISAI -->
 
-<div class="field">
 
-  <label>
-    {{ currentLang === 'ta'
-      ? 'திசை'
-      : 'Thisai'
-    }}
-  </label>
-
-<input
-  type="date"
-  [(ngModel)]="formData.thisai"
-  name="thisai"
->
-
-</div>
 
  </div>
 
