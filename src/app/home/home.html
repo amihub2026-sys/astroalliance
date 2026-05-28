@@ -56,8 +56,7 @@
   <div
     class="hero-slide"
     [class.active]="currentSlide === 3"
-    style="background-image: url('/assets/caro-05.jpg');"
-  >
+    style="background-image: url('/assets/caro-05.jpg');">
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1 class="hero-title">
@@ -70,6 +69,35 @@
       </div>
     </div>
   </div>
+<div
+  class="hero-slide"
+  [class.active]="currentSlide === 4"
+  style="background-image: url('/assets/caro-07.jpg');"
+>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">
+      {{ t.hero[0].title1 }}
+      <span>{{ t.hero[0].title2 }}</span>
+    </h1>
+  </div>
+</div>
+
+<div
+  class="hero-slide"
+  [class.active]="currentSlide === 5"
+  style="background-image: url('/assets/caro-08.jpg');"
+>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">
+      {{ t.hero[1].title1 }}
+      <span>{{ t.hero[1].title2 }}</span>
+    </h1>
+  </div>
+</div>
 
   <button class="carousel-arrow prev" (click)="prevSlide()" type="button">&#10094;</button>
   <button class="carousel-arrow next" (click)="nextSlide()" type="button">&#10095;</button>
@@ -79,6 +107,8 @@
     <span class="dot" [class.active]="currentSlide === 1" (click)="goToSlide(1)"></span>
     <span class="dot" [class.active]="currentSlide === 2" (click)="goToSlide(2)"></span>
     <span class="dot" [class.active]="currentSlide === 3" (click)="goToSlide(3)"></span>
+    <span class="dot" [class.active]="currentSlide === 4" (click)="goToSlide(4)"></span>
+    <span class="dot" [class.active]="currentSlide === 5" (click)="goToSlide(5)"></span>
   </div>
 </section>
 

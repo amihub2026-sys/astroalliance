@@ -16,7 +16,6 @@ import { App } from '../app';
 import { supabase } from '../core/supabase.client';
 import { SnackbarService } from '../shared/snackbar.service';
 
-
 type TabType = 'browse' | 'liked' | 'likedMe';
 
 interface LangText {
@@ -28,6 +27,7 @@ interface ProfileItem {
   profileId: string;
   id: string;
   userId: string;
+  dob?: string | null;
   name: LangText;
   age: number;
   religion: LangText;
@@ -39,13 +39,12 @@ interface ProfileItem {
   maritalStatus: LangText;
   caste: LangText;
   gender: LangText;
+  nakshatra: LangText;
   image: string;
   liked: boolean;
   latitude: number | null;
   longitude: number | null;
   distanceKm?: number | null;
-  dob: string;
-  nakshatra: LangText;
 }
 
 @Component({
@@ -76,14 +75,13 @@ maritalStatusOptions: LangText[] = [];
 stateOptions: LangText[] = [];
 cityOptions: (LangText & { state: string })[] = [];
 religionOptions: LangText[] = [];
-casteOptions: LangText[] = [];
+casteOptions: (LangText & { religion: string })[] = [];
 genderOptions: LangText[] = [];
 professionOptions: LangText[] = [];
 casteMap: Record<string, string> = {};
   openDropdown: string | null = null;
   mobileFilterOpen = false;
-  
-  @ViewChild('filterBar') filterBar!: ElementRef<HTMLDivElement>;
+  @ViewChild('filterBar') filterBarRef?: ElementRef<HTMLDivElement>;
 
   userLat: number | null = null;
   userLng: number | null = null;
@@ -602,7 +600,7 @@ private async makeLangText(
         if (parsed?.user_id) return String(parsed.user_id);
       }
     } catch (error) {
-
+      console.error('Error reading matrimony_user from localStorage:', error);
     }
 
     const stored = localStorage.getItem('app_user_id');
@@ -650,7 +648,7 @@ private async makeLangText(
         this.cdr.detectChanges();
       },
       (error) => {
-     
+        console.warn('Geolocation error:', error);
         this.geoLocationReady = false;
         this.geoLocationDenied = true;
         this.cdr.detectChanges();
@@ -759,27 +757,6 @@ private async makeLangText(
     }
     return `${distance.toFixed(1)} km`;
   }
-  getFilteredCityOptions(): (LangText & { state: string })[] {
-
-  const selectedState = this.normalizeText(this.filters.state);
-  const search = this.normalizeText(this.searchTerms.location);
-
-  return this.cityOptions.filter(city => {
-
-    const cityState = this.normalizeText(city.state);
-    const cityName = this.normalizeText(this.getText(city));
-
-    const matchesState =
-      !selectedState || cityState === selectedState;
-
-    const matchesSearch =
-      !search || cityName.includes(search);
-
-    return matchesState && matchesSearch;
-
-  });
-
-}
 
   async loadCurrentPlanFromSupabase(): Promise<void> {
     const userId = this.getLoggedInUserId();
@@ -869,7 +846,7 @@ private async makeLangText(
 
       this.cdr.detectChanges();
     } catch (error: any) {
-      
+      console.error('Load current plan error:', error);
       this.currentPlan = {
         name: 'No Active Plan',
         limit: 0,
@@ -894,7 +871,7 @@ private async makeLangText(
   user_id,
   profile_id,
   profile_code,
-
+  dob,
   full_name,
   full_name_ta,
 
@@ -915,12 +892,6 @@ private async makeLangText(
   caste_text,
 
   gender_text,
-
-  dob,
-
-  nakshatra_text,
-
-  nakshatra_text_ta,
 
   city_text,
 
@@ -1041,11 +1012,12 @@ return {
   id: String(row.profile_code || '').trim(),
   profileId: String(row.profile_id || '').trim(),
   userId: String(row.user_id || '').trim(),
+  dob: row.dob || null,
       name: await this.makeLangText(row.full_name, row.full_name_ta),
       age: Number(row.age || 0),
 religion: await this.makeLangText(
   row.religion_text || '-',
-  row.religion_text_ta || row.religion_text || '-'
+  this.getTamilProfileValue('religion', row.religion_text)
 ),
 
 maritalStatus: await this.makeLangText(
@@ -1062,15 +1034,15 @@ gender: await this.makeLangText(
   row.gender_text || '-',
   this.getTamilProfileValue('gender', row.gender_text)
 ),
-
-dob: row.dob || '',
-
 nakshatra: await this.makeLangText(
   row.nakshatra_text || '-',
-  row.nakshatra_text_ta || row.nakshatra_text
+  row.nakshatra_text_ta || row.nakshatra_text || '-'
 ),
 
-location: await this.makeLangText(row.location_text, row.location_text),
+location: await this.makeLangText(
+  row.city_text || row.location_text,
+  row.city_text || row.location_text
+),
 city: await this.makeLangText(row.city_text, row.city_text),
 state: await this.makeLangText(row.state_text, row.state_text),
 
@@ -1104,7 +1076,7 @@ image: row.profile_image_url || 'assets/default-avatar.png',
 
       this.cdr.detectChanges();
     } catch (error) {
-      
+      console.error('Load profiles error:', error);
       this.profiles = [];
       this.cdr.detectChanges();
     } finally {
@@ -1211,7 +1183,7 @@ profession: {
 
       this.cdr.detectChanges();
     } catch (error) {
-     
+      console.error('Load shortlisted me error:', error);
       this.shortlistedMeUserIds = [];
       this.cdr.detectChanges();
     }
@@ -1231,7 +1203,7 @@ async loadShortlistedByYouFromSupabase(): Promise<void> {
     .eq('user_id', userId);
 
   if (error) {
-   
+    console.error('Load shortlisted by you error:', error);
     this.shortlistedByYouIds = [];
     return;
   }
@@ -1285,6 +1257,7 @@ async loadLikedMeProfiles(): Promise<void> {
 
   } catch (err) {
 
+    console.error(err);
 
   }
 }
@@ -1405,8 +1378,8 @@ get planStatus(): string {
 }
     const result = this.profiles.filter((profile) => {
       const religion = this.normalizeText(this.getText(profile.religion));
-      const city = this.normalizeText(profile.city?.en);
-      const state = this.normalizeText(profile.state?.en);
+      const city = this.normalizeText(this.getText(profile.city));
+      const state = this.normalizeText(this.getText(profile.state));
       const education = this.normalizeText(this.getText(profile.education));
       const profession = this.normalizeText(this.getText(profile.profession));
       const maritalStatus = this.normalizeText(this.getText(profile.maritalStatus));
@@ -1478,8 +1451,8 @@ get planStatus(): string {
   return profile.liked === true || this.shortlistedByYouIds.includes(profile.id);
 }
 
-   if (this.sidebarFilter === 'shortlistedMe') {
- return this.shortlistedMeUserIds.includes(profile.profileId);
+    if (this.sidebarFilter === 'shortlistedMe') {
+ return this.shortlistedMeUserIds.includes(profile.id);
 }
 
       if (this.sidebarFilter === 'viewedByYou' || this.sidebarFilter === 'viewed') {
@@ -1549,14 +1522,7 @@ get planStatus(): string {
           distanceKm
         };
       })
-    .sort((a, b) => {
-  const ageFromActive = this.appliedFilters.ageFrom !== null;
-  const ageToActive = this.appliedFilters.ageTo !== null;
-
-  if (ageFromActive || ageToActive) {
-    return Number(a.age || 0) - Number(b.age || 0);
-  }
-
+     .sort((a, b) => {
   const myCaste = this.normalizeText(this.userCaste);
 
   const casteA = this.normalizeText(this.getText(a.caste));
@@ -1573,7 +1539,6 @@ get planStatus(): string {
 
   const aDistance = a.distanceKm ?? Number.MAX_SAFE_INTEGER;
   const bDistance = b.distanceKm ?? Number.MAX_SAFE_INTEGER;
-
   return aDistance - bDistance;
 });
   }
@@ -1589,7 +1554,7 @@ async loadEducationOptions(): Promise<void> {
     .order('sort_order', { ascending: true });
 
   if (error) {
-    
+    console.error('Education load error', error);
     this.educationOptions = [];
     return;
   }
@@ -1641,10 +1606,12 @@ if (!maritalError) {
 
   const { data: cityData, error: cityError } = await supabase
     .from('mst_cities')
-.select(`
+    .select(`
   city_name,
   city_name_ta,
-  mst_states(state_name)
+  mst_states (
+    state_name
+  )
 `)
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
@@ -1654,9 +1621,9 @@ if (!maritalError) {
   .map((x: any) => ({
     en: String(x.city_name || '').trim(),
     ta: String(x.city_name_ta || x.city_name || '').trim(),
-    state: String(x.mst_states?.state_name || '').trim()
+    state: String(x.mst_states?.state_name || '').toLowerCase().trim()
   }))
-  .filter((x: any) => x.en);
+      .filter((x: LangText) => x.en);
   }
 
   const { data: religionData, error: religionError } = await supabase
@@ -1675,23 +1642,25 @@ if (!maritalError) {
   }
 
   const { data: casteData, error: casteError } = await supabase
-    .from('mst_castes')
-    .select(`
-    caste_name,
-    caste_name_ta,
-    mst_religions(religion_code)
-`   )
+   .from('mst_castes')
+.select(`
+  caste_name,
+  caste_name_ta,
+  mst_religions (
+    religion_name
+  )
+`)
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (!casteError) {
-  this.casteOptions = (casteData || [])
+ this.casteOptions = (casteData || [])
   .map((x: any) => ({
     en: String(x.caste_name || '').trim(),
     ta: String(x.caste_name_ta || x.caste_name || '').trim(),
-    religionCode: x.mst_religions?.religion_code?.toLowerCase()
+    religion: String(x.mst_religions?.religion_name || '').toLowerCase().trim()
   }))
-  .filter((x: LangText) => x.en);
+  .filter((x: LangText & { religion: string }) => x.en);
 
     this.casteMap = {};
 
@@ -1734,11 +1703,33 @@ if (!professionError) {
 }
   this.cdr.detectChanges();
 }
+getFilteredCasteOptions(): (LangText & { religion: string })[] {
+  const search = String(this.searchTerms.caste || '').toLowerCase().trim();
+  const selectedReligion = String(this.filters.religion || '').toLowerCase().trim();
+
+  return this.casteOptions.filter((item) => {
+    const casteName = this.getText(item).toLowerCase();
+    const matchesSearch = !search || casteName.includes(search);
+    const matchesReligion = !selectedReligion || item.religion === selectedReligion;
+
+    return matchesSearch && matchesReligion;
+  });
+}
   getText(value: string | LangText): string {
     if (typeof value === 'string') return value;
     return value?.[this.currentLang] || value?.en || '';
   }
+getDistrictOnly(location: string): string {
 
+  if (!location) return '-';
+
+  const parts = location
+    .split(',')
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  return parts[0] || '-';
+}
 getUniqueOptions(list: ProfileItem[], key: keyof ProfileItem): string[] {
   const values = list
     .map(item => this.getText(item[key] as string | LangText))
@@ -1763,42 +1754,74 @@ getUniqueOptions(list: ProfileItem[], key: keyof ProfileItem): string[] {
     })
     .filter(Boolean);
 
-return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
 }
 
   toggleDropdown(name: string, event: Event): void {
     event.stopPropagation();
     this.openDropdown = this.openDropdown === name ? null : name;
   }
+private getNextDropdown(field: string): string | null {
 
+  const order: Record<string, string | null> = {
+
+    ageFrom: 'ageTo',
+
+    ageTo: 'religion',
+
+    religion: 'caste',
+
+    caste: 'gender',
+
+    gender: 'maritalStatus',
+
+    maritalStatus: 'state',
+
+    state: 'location',
+
+    location: 'radius',
+
+    radius: 'education',
+
+    education: 'profession',
+
+    profession: null
+
+  };
+
+  return order[field] || null;
+}
 selectOption(
-  field: 'caste' | 'religion' | 'gender' | 'maritalStatus' | 'location' | 'education' | 'profession' | 'state',
+  field:
+    | 'caste'
+    | 'religion'
+    | 'gender'
+    | 'maritalStatus'
+    | 'location'
+    | 'education'
+    | 'profession'
+    | 'state',
+
   value: string
 ): void {
 
-  this.filters[field] = value || null;
+  this.filters[field] = value;
 
-  const nextDropdownMap: Record<string, string | null> = {
-    religion: 'caste',
-    caste: 'gender',
-    gender: 'maritalStatus',
-    maritalStatus: 'location',
-    location: 'state',
-    state: 'location',
-    education: 'profession',
-    profession: null
+  this.appliedFilters = {
+    ...this.filters
   };
 
-  const nextDropdown = nextDropdownMap[field] ?? null;
+const next = this.getNextDropdown(field);
 
-  this.appliedFilters = { ...this.filters };
- this.openDropdown = null;
+this.openDropdown = next;
+
 this.cdr.detectChanges();
 
-setTimeout(() => {
-  this.openDropdown = nextDropdown;
-  this.cdr.detectChanges();
-}, 120);
+if (next) {
+  this.scrollFilterToDropdown(next);
+} else {
+  this.scrollFilterToDropdown('apply');
+}
 }
 
 selectNumberOption(
@@ -1808,22 +1831,21 @@ selectNumberOption(
 
   this.filters[field] = value;
 
-  const nextDropdownMap: Record<string, string | null> = {
-    ageFrom: 'ageTo',
-    ageTo: 'religion',
-    radius: 'education'
+  this.appliedFilters = {
+    ...this.filters
   };
 
-  const nextDropdown = nextDropdownMap[field] ?? null;
+const next = this.getNextDropdown(field);
 
-  this.appliedFilters = { ...this.filters };
- this.openDropdown = null;
+this.openDropdown = next;
+
 this.cdr.detectChanges();
 
-setTimeout(() => {
-  this.openDropdown = nextDropdown;
-  this.cdr.detectChanges();
-}, 120);
+if (next) {
+  this.scrollFilterToDropdown(next);
+} else {
+  this.scrollFilterToDropdown('apply');
+}
 }
   getFilteredOptions(options: string[], search: string): string[] {
     const term = String(search || '').toLowerCase().trim();
@@ -1832,16 +1854,6 @@ setTimeout(() => {
       String(item || '').toLowerCase().includes(term)
     );
   }
-  getFilteredCasteOptions(): any[] {
-
-  const religion = this.normalizeText(this.filters.religion);
-
-  if (!religion) return this.casteOptions;
-
-return this.casteOptions.filter((item: any) =>
-  this.normalizeText(item.religionCode) === religion
-);
-}
 getFilteredLangOptions(options: LangText[], search: string): LangText[] {
   const term = String(search || '').toLowerCase().trim();
 
@@ -1850,6 +1862,25 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
   return options.filter(item =>
     this.getText(item).toLowerCase().includes(term)
   );
+}
+getFilteredCityOptions(): LangText[] {
+  const search = String(this.searchTerms.location || '').toLowerCase().trim();
+  const selectedState = String(this.filters.state || '').toLowerCase().trim();
+
+  return this.cityOptions.filter((item: any) => {
+
+    const cityName = this.getText(item).toLowerCase();
+
+    const cityState = String(item.state || '').toLowerCase().trim();
+
+    const matchesSearch =
+      !search || cityName.includes(search);
+
+    const matchesState =
+      !selectedState || cityState === selectedState;
+
+    return matchesSearch && matchesState;
+  });
 }
   getFilteredNumberOptions(options: number[], search: string): number[] {
     const term = String(search || '').toLowerCase().trim();
@@ -1867,6 +1898,30 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
   trackByProfile(index: number, profile: ProfileItem): string {
     return profile.id || String(index);
   }
+private scrollFilterToStart(): void {
+  setTimeout(() => {
+    const el = this.filterBarRef?.nativeElement as any;
+
+    if (el) {
+      el.scrollLeft = 0;
+    }
+  }, 150);
+}
+private scrollFilterToDropdown(name: string): void {
+  setTimeout(() => {
+    const item = document.querySelector(
+      `[data-filter="${name}"]`
+    ) as HTMLElement | null;
+
+    if (item) {
+      item.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'start',
+        block: 'nearest'
+      });
+    }
+  }, 100);
+}
 
   setTab(tab: TabType): void {
     this.activeTab = tab;
@@ -1874,71 +1929,62 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
     this.cdr.detectChanges();
   }
 
-  applyFilters(goFirst: boolean = true): void {
+applyFilters(forceClose?: boolean): void {
+
   this.appliedFilters = { ...this.filters };
-console-remove
-    if (this.appliedFilters.radius && !this.geoLocationReady && !this.appliedFilters.location) {
-     
-    }
 
-    this.cdr.detectChanges();
-
-  if (goFirst) {
-   this.openDropdown = null;
-main
+  if (
+    this.appliedFilters.radius &&
+    !this.geoLocationReady &&
+    !this.appliedFilters.location
+  ) {
+    console.warn(this.tr.alerts.geoUnavailable);
   }
 
+  this.openDropdown = null;
+
   this.cdr.detectChanges();
+
+  this.scrollFilterToStart();
 }
+  
 
-resetFilters(): void {
-  this.filters = {
-    caste: null,
-    religion: null,
-    gender: null,
-    maritalStatus: null,
-    location: null,
-    education: null,
-    profession: null,
-    state: null,
-    ageFrom: null,
-    ageTo: null,
-    radius: null
-  };
+  resetFilters(): void {
+    this.filters = {
+      caste: null,
+      religion: null,
+      gender: null,
+      maritalStatus: null,
+      location: null,
+      education: null,
+      profession: null,
+      state: null,
+      ageFrom: null,
+      ageTo: null,
+      radius: null
+    };
 
-  this.appliedFilters = { ...this.filters };
+    this.appliedFilters = { ...this.filters };
 
-  this.searchTerms = {
-    ageFrom: '',
-    ageTo: '',
-    religion: '',
-    caste: '',
-    gender: '',
-    maritalStatus: '',
-    location: '',
-    education: '',
-    profession: '',
-    state: '',
-    radius: ''
-  };
+this.searchTerms = {
+  ageFrom: '',
+  ageTo: '',
+  religion: '',
+  caste: '',
+  gender: '',
+  maritalStatus: '',
+  location: '',
+  education: '',
+   profession: '',
+  state: '',
+  radius: ''
+};
+   this.openDropdown = null;
+this.mobileFilterOpen = false;
+this.cdr.detectChanges();
 
-       this.openDropdown = null;
-
-if (this.isBrowser) {
-
-  setTimeout(() => {
-
-    const el = this.filterBar?.nativeElement;
-
-    if (el) {
-      el.scrollLeft = 0;
-    }
-
-  }, 0);
-
-}
-  this.cdr.detectChanges();
-}
+this.scrollFilterToStart();
+  }
 
   async viewProfile(profile: ProfileItem): Promise<void> {
     if (!profile?.id) {
@@ -2058,7 +2104,7 @@ if (!alreadyUnlocked) {
         }
       });
     } catch (error: any) {
-     
+      console.error('Update view count error:', error);
       this.snackbar.error(error?.message || 'Failed to update subscription usage');
     }
   }
@@ -2085,7 +2131,8 @@ async likeProfile(profile: ProfileItem): Promise<void> {
 
     const myProfileId = String(myProfile.profile_id);
 
-   
+    console.log('MY PROFILE ID:', myProfileId);
+    console.log('TARGET PROFILE ID:', profile.profileId);
 
     // REMOVE LIKE
     if (profile.liked) {
@@ -2125,7 +2172,7 @@ async likeProfile(profile: ProfileItem): Promise<void> {
 
   } catch (err) {
 
-  
+    console.error('LIKE ERROR:', err);
 
   }
 }
@@ -2165,7 +2212,7 @@ async loadLikedProfiles(): Promise<void> {
 
   } catch (err) {
 
-   
+    console.error(err);
 
   }
 }
@@ -2192,7 +2239,7 @@ async loadLikedProfiles(): Promise<void> {
         return;
       }
 
-      
+      console.error('Error:', error);
       this.snackbar.error('Failed to send interest');
       return;
     }
@@ -2216,7 +2263,7 @@ async loadLoggedInUserProfile(): Promise<void> {
     .maybeSingle();
 
   if (error) {
-    
+    console.error(error);
     return;
   }
 
