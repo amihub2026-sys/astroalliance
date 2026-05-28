@@ -414,6 +414,7 @@ sothukal: '',
 poorvegam: '',
 iruppidam: '',
 kuladeivam: '',
+kudumbaNilai: '',
   };
 formDataTa = {
   fullName: '',
@@ -441,7 +442,16 @@ poorvegam: '',
 iruppidam: '',
 kuladeivam: '',
 
+kudumbaNilai: '',
 };
+kudumbaNilaiOptions = [
+  { en: 'Middle Class', ta: 'நடுத்தர குடும்பம்' },
+  { en: 'Upper Middle Class', ta: 'உயர் நடுத்தர குடும்பம்' },
+  { en: 'Rich', ta: 'பணக்கார குடும்பம்' },
+  { en: 'Poor', ta: 'ஏழ்மை குடும்பம்' },
+  { en: 'Traditional', ta: 'பாரம்பரிய குடும்பம்' },
+  { en: 'Orthodox', ta: 'ஆசாரமான குடும்பம்' }
+];
   horoscopeHints = [
     { no: 1, label: 'வியாழன்' },
     { no: 2, label: 'கேது' },
@@ -895,6 +905,11 @@ this.formData.kuladeivam =
     this.formDataTa.kuladeivam,
     this.formData.kuladeivam
   );
+  this.formData.kudumbaNilai =
+  await convert(
+    this.formDataTa.kudumbaNilai,
+    this.formData.kudumbaNilai
+  );
 }
 async onLanguageSwitch(lang: 'en' | 'ta'): Promise<void> {
   if (lang === 'en') {
@@ -932,6 +947,11 @@ async prepareAutoTamilValues(): Promise<void> {
   this.formDataTa.salary = await convert(this.formData.salary, this.formDataTa.salary);
 
 this.formDataTa.gothram = await convert(this.formData.gothram, this.formDataTa.gothram);
+this.formDataTa.kudumbaNilai =
+  await convert(
+    this.formData.kudumbaNilai,
+    this.formDataTa.kudumbaNilai
+  );
 }
 onChartInput(
   type: 'rasi' | 'amsam',
@@ -1273,6 +1293,9 @@ this.formData.iruppidam =
 
 this.formData.kuladeivam =
   data.kuladeivam || '';
+
+  this.formData.kudumbaNilai =
+  data.kudumba_nilai || '';
       this.formData.motherName = data.mother_name || '';
       this.formData.fatherOccupation = data.father_occupation_text || data.father_occupation || '';
       this.formData.motherOccupation = data.mother_occupation_text || data.mother_occupation || '';
@@ -2209,6 +2232,8 @@ married_sisters:
 
 unmarried_sisters:
   this.safeNumber(this.formData.unmarriedSisters) || 0,
+kudumba_nilai: this.safeText(this.formData.kudumbaNilai),
+
 handicap_status:
   this.formData.handicapStatus === 'Yes',
 
