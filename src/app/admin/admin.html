@@ -51,7 +51,14 @@
   (click)="sidebarOpen = false">
   Dashboard
 </a>
-
+<a
+  [routerLink]="['/admin/create-biodata']"
+  [queryParams]="{ adminCreate: 'true' }"
+  routerLinkActive="active"
+  class="nav-item"
+  (click)="sidebarOpen = false">
+  User Registration
+</a>
 <a
   routerLink="/admin/profiles"
   routerLinkActive="active"
@@ -146,14 +153,7 @@
   (click)="sidebarOpen = false">
   Admin Users
 </a>
-<a
-  [routerLink]="['/admin/create-biodata']"
-  [queryParams]="{ adminCreate: 'true' }"
-  routerLinkActive="active"
-  class="nav-item"
-  (click)="sidebarOpen = false">
-  User Registration
-</a>
+
 
 </nav>
 
