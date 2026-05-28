@@ -1179,7 +1179,7 @@ const storedAppUserId = this.isBrowser
 
   async loadExistingBiodata(): Promise<void> {
     this.isLoadingProfile = true;
-if (this.isAdminCreated) {
+if (this.isAdminCreated && !this.editProfileId) {
   this.isLoadingProfile = false;
   return;
 }
@@ -2014,7 +2014,7 @@ await this.prepareEnglishValues();
 let appUserId = this.currentUserId || '';
 
 /* ADMIN CREATE MODE */
-if (this.isAdminCreated) {
+if (this.isAdminCreated && !this.editProfileId) {
 
 const adminEmail =
   this.safeText(this.formData.email) ||
@@ -2474,34 +2474,35 @@ const { data: existingProfile, error: existingError } = await supabase
         return;
       }
 
-if (this.isAdminCreated) {
+if (existingProfile) {
 
-  const { error } = await supabase
-    .from('user_profiles')
-    .insert([payload]);
-
-  if (error) {
-    this.snackbar.error(error.message);
-    return;
-  }
-
-} else if (existingProfile) {
-
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('user_profiles')
     .update(payload)
-    .eq('profile_id', existingProfile.profile_id);
+    .eq('profile_id', existingProfile.profile_id)
+    .select();
+
+  console.log('USER PROFILE UPDATE DATA:', data);
+  console.log('USER PROFILE UPDATE ERROR:', error);
 
   if (error) {
+    console.log('ERROR MESSAGE:', error.message);
+    console.log('ERROR DETAILS:', error.details);
+    console.log('ERROR HINT:', error.hint);
+
     this.snackbar.error(error.message);
     return;
   }
 
 } else {
 
-  const { error } = await supabase
-    .from('user_profiles')
-    .insert([payload]);
+ const { data, error } = await supabase
+  .from('user_profiles')
+  .insert([payload])
+  .select();
+
+console.log('USER PROFILE INSERT DATA:', data);
+console.log('USER PROFILE INSERT ERROR:', error);
 
   if (error) {
     this.snackbar.error(error.message);
@@ -2509,7 +2510,6 @@ if (this.isAdminCreated) {
   }
 
 }
-
 const successMessage = this.isEditMode
   ? (
       this.currentLang === 'ta'
