@@ -789,6 +789,39 @@
   >
 
 </div>
+<!-- KUDUMBA NILAI -->
+
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'குடும்ப நிலை'
+      : 'Kudumba Nilai'
+    }}
+  </label>
+
+  <select
+    [(ngModel)]="formData.kudumbaNilai"
+    name="kudumbaNilai"
+  >
+
+    <option value="">
+      {{ currentLang === 'ta'
+        ? 'குடும்ப நிலையை தேர்வு செய்யவும்'
+        : 'Select Kudumba Nilai'
+      }}
+    </option>
+
+    <option
+      *ngFor="let item of kudumbaNilaiOptions"
+      [value]="item.en"
+    >
+      {{ currentLang === 'ta' ? item.ta : item.en }}
+    </option>
+
+  </select>
+
+</div>
 
   <!-- SOTHUKAL -->
 
@@ -924,6 +957,65 @@
   >
 
 </div>
+
+<!-- IRUPPIDAM -->
+
+<div class="field iruppidam-field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'இருப்பிடம்'
+      : 'Iruppidam'
+    }}
+  </label>
+
+  <div class="iruppidam-select-wrap">
+
+  <input
+    type="text"
+    name="iruppidam"
+    [(ngModel)]="formData.iruppidam"
+    [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் தேடவும்' : 'Search Iruppidam'"
+    autocomplete="off"
+    (focus)="showIruppidamDropdown = true"
+    (blur)="showIruppidamDropdown = false"
+    (input)="onIruppidamSearchChange()"
+  />
+
+  <div
+    class="iruppidam-dropdown"
+    *ngIf="showIruppidamDropdown"
+  >
+    <div
+      class="iruppidam-option"
+      *ngFor="let city of filteredIruppidamList"
+      (mousedown)="selectIruppidam(city)"
+    >
+      {{
+        currentLang === 'ta'
+          ? (city.city_name_ta || city.city_name)
+          : city.city_name
+      }}
+    </div>
+
+    <div
+      class="iruppidam-option"
+      (mousedown)="selectIruppidam({ city_name: 'Other', city_name_ta: 'மற்றவை' })"
+    >
+      {{ currentLang === 'ta' ? 'மற்றவை' : 'Other' }}
+    </div>
+  </div>
+
+</div>
+
+<input
+  *ngIf="formData.iruppidam === 'Other'"
+  type="text"
+  name="otherIruppidam"
+  [(ngModel)]="formData.iruppidam"
+  [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் உள்ளிடவும்' : 'Enter Iruppidam'"
+/>
+</div> 
 
         </div>
       </div>
@@ -1199,64 +1291,7 @@
 </div>
 
 
-<!-- IRUPPIDAM -->
-
-<div class="field iruppidam-field">
-
-  <label>
-    {{ currentLang === 'ta'
-      ? 'இருப்பிடம்'
-      : 'Iruppidam'
-    }}
-  </label>
-
-  <div class="iruppidam-select-wrap">
-
-  <input
-    type="text"
-    name="iruppidam"
-    [(ngModel)]="formData.iruppidam"
-    [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் தேடவும்' : 'Search Iruppidam'"
-    autocomplete="off"
-    (focus)="showIruppidamDropdown = true"
-    (blur)="showIruppidamDropdown = false"
-    (input)="onIruppidamSearchChange()"
-  />
-
-  <div
-    class="iruppidam-dropdown"
-    *ngIf="showIruppidamDropdown"
-  >
-    <div
-      class="iruppidam-option"
-      *ngFor="let city of filteredIruppidamList"
-      (mousedown)="selectIruppidam(city)"
-    >
-      {{
-        currentLang === 'ta'
-          ? (city.city_name_ta || city.city_name)
-          : city.city_name
-      }}
-    </div>
-
-    <div
-      class="iruppidam-option"
-      (mousedown)="selectIruppidam({ city_name: 'Other', city_name_ta: 'மற்றவை' })"
-    >
-      {{ currentLang === 'ta' ? 'மற்றவை' : 'Other' }}
-    </div>
-  </div>
-
-</div>
-
-<input
-  *ngIf="formData.iruppidam === 'Other'"
-  type="text"
-  name="otherIruppidam"
-  [(ngModel)]="formData.iruppidam"
-  [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் உள்ளிடவும்' : 'Enter Iruppidam'"
-/>
-</div> <!-- iruppidam-field -->
+<!-- iruppidam-field -->
 
         </div>
       </div>
@@ -1962,7 +1997,7 @@
       <p><strong>Sothukal:</strong><span>{{ formData.sothukal || '-' }}</span></p>
 
       <p><strong>Kuladeivam:</strong><span>{{ formData.kuladeivam || '-' }}</span></p>
-
+<p><strong>Kudumba Nilai:</strong><span>{{ formData.kudumbaNilai || '-' }}</span></p>
     </div>
 
   </div>
