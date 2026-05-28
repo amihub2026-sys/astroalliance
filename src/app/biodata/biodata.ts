@@ -404,7 +404,8 @@ handicapDetails: '',
 
 childrenStatus: 'No',
 childrenCount: '',
-
+kalappuThirumanam: 'No',
+kalappuThirumanamDetails: '',
 thisai: '',
 thisaiIruppu: '',
 thisaiYear: '',
@@ -442,7 +443,7 @@ sothukal: '',
 poorvegam: '',
 iruppidam: '',
 kuladeivam: '',
-
+kalappuThirumanamDetails: '',
 kudumbaNilai: '',
 };
 kudumbaNilaiOptions = [
@@ -911,6 +912,11 @@ this.formData.kuladeivam =
     this.formDataTa.kudumbaNilai,
     this.formData.kudumbaNilai
   );
+  this.formData.kalappuThirumanamDetails =
+  await convert(
+    this.formDataTa.kalappuThirumanamDetails,
+    this.formData.kalappuThirumanamDetails
+  );
 }
 async onLanguageSwitch(lang: 'en' | 'ta'): Promise<void> {
   if (lang === 'en') {
@@ -952,6 +958,11 @@ this.formDataTa.kudumbaNilai =
   await convert(
     this.formData.kudumbaNilai,
     this.formDataTa.kudumbaNilai
+  );
+  this.formDataTa.kalappuThirumanamDetails =
+  await convert(
+    this.formData.kalappuThirumanamDetails,
+    this.formDataTa.kalappuThirumanamDetails
   );
 }
 onChartInput(
@@ -1273,6 +1284,16 @@ this.formData.childrenStatus =
 
 this.formData.childrenCount =
   data.children_count || '';
+
+this.formData.kalappuThirumanam =
+  data.kalappu_thirumanam ? 'Yes' : 'No';
+
+this.formData.kalappuThirumanamDetails =
+  data.kalappu_thirumanam_details || '';
+
+this.formDataTa.kalappuThirumanamDetails =
+  data.kalappu_thirumanam_details_ta || '';
+
       this.formData.fatherName = data.father_name || '';
 
 this.formData.thisai =
@@ -2250,6 +2271,16 @@ children_status:
 
 children_count:
   this.formData.childrenCount || 0,
+
+kalappu_thirumanam:
+  this.formData.kalappuThirumanam === 'Yes',
+
+kalappu_thirumanam_details:
+  this.safeText(this.formData.kalappuThirumanamDetails),
+
+kalappu_thirumanam_details_ta:
+  this.safeText(this.formDataTa.kalappuThirumanamDetails),
+
 father_name: this.safeText(this.formData.fatherName),
 
 mother_name: this.safeText(this.formData.motherName),
