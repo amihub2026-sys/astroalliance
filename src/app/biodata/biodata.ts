@@ -1042,23 +1042,27 @@ onChartInput(
   }
 async ngOnInit(): Promise<void> {
 
-  const editId = this.route.snapshot.queryParamMap.get('id');
+const editId = this.route.snapshot.queryParamMap.get('id');
 
-  if (editId) {
-    this.isEditMode = true;
-    this.editProfileId = editId;
-  }
-
+if (editId && editId !== 'new') {
+  this.isEditMode = true;
+  this.editProfileId = editId;
+}
   if (this.isBrowser) {
     (window as any).activeBiodataComponent = this;
 
     const adminCreatedUserId =
       localStorage.getItem('admin_created_user_id');
 
-    if (adminCreatedUserId) {
-      this.currentUserId = adminCreatedUserId;
-      this.isAdminCreated = true;
-    }
+   const isAdminCreatePage =
+  this.route.snapshot.queryParamMap.get('adminCreate') === 'true';
+
+if (!editId && isAdminCreatePage) {
+
+  this.currentUserId = adminCreatedUserId || null;
+  this.isAdminCreated = true;
+
+}
   }
 
   await this.loadReligions();
@@ -1086,6 +1090,11 @@ async ngOnInit(): Promise<void> {
       return null;
     }
   }
+
+  private getAdminCreatedUserId(): string {
+  if (!this.isBrowser) return '';
+  return localStorage.getItem('admin_created_user_id') || '';
+}
 
   private async resolveCurrentUserId(): Promise<string | null> {
     if (this.currentUserId) {
@@ -1126,7 +1135,10 @@ const storedAppUserId = this.isBrowser
 
   async loadExistingBiodata(): Promise<void> {
     this.isLoadingProfile = true;
-
+if (this.isAdminCreated) {
+  this.isLoadingProfile = false;
+  return;
+}
     try {
      const userId = await this.resolveCurrentUserId();
 
@@ -1159,9 +1171,15 @@ if (userId) {
         throw error;
       }
 
-      if (!data) {
-        const loggedInUser = this.getStoredLoggedInUser();
-        if (loggedInUser) {
+if (!data) {
+
+  if (this.isAdminCreated) {
+    this.isLoadingProfile = false;
+    return;
+  }
+
+  const loggedInUser = this.getStoredLoggedInUser();
+  if (loggedInUser) {
           this.formData.fullName = loggedInUser.full_name || '';
           this.formData.email = loggedInUser.email || '';
           this.formData.mobile = loggedInUser.phone_number || '';
@@ -1906,7 +1924,8 @@ async onSubmit(): Promise<void> {
 
  const missingField = this.markRequiredErrors();
 
-
+console.log(this.fieldErrors);
+console.log(this.formData);
 if (missingField) {
   this.isSaving = false;
 
@@ -1922,7 +1941,9 @@ if (missingField) {
     (x: any) => x.city_id === this.selectedCityId
   );
 
-  this.formData.city = selectedCity?.city_name || '';
+ if (selectedCity) {
+  this.formData.city = selectedCity.city_name || '';
+}
 
  this.isSaving = true;
 await this.prepareEnglishValues();
@@ -1931,7 +1952,76 @@ await this.prepareEnglishValues();
         if (this.currentLang === 'en') {
           await this.prepareAutoTamilValues();
         }
-      let appUserId = this.currentUserId || (await this.resolveCurrentUserId());
+let appUserId = this.currentUserId || '';
+
+/* ADMIN CREATE MODE */
+if (this.isAdminCreated) {
+
+const adminEmail =
+  this.safeText(this.formData.email) ||
+  `${this.safeText(this.formData.mobile)}@astroalliance.com`;
+
+const { data: alreadyUser } = await supabase
+  .from('app_users')
+  .select('user_id')
+  .eq('email', adminEmail)
+  .maybeSingle();
+
+if (alreadyUser) {
+
+ this.isSaving = false;
+this.cdr.detectChanges();
+
+setTimeout(() => {
+  this.snackbar.error('This mobile/email already exists');
+}, 0);
+
+return;
+}
+
+const { data: newUser, error: newUserError } =
+  await supabase
+    .from('app_users')
+    .insert({
+      auth_user_id: crypto.randomUUID(),
+      first_name: this.safeText(this.formData.fullName),
+      last_name: '',
+      email: adminEmail,
+      phone_number: this.safeText(this.formData.mobile),
+      date_of_birth: this.formData.dob || null,
+      is_active: true
+    })
+    .select('user_id')
+    .single();
+console.log(
+  'APP USERS INSERT ERROR:',
+  JSON.stringify(newUserError, null, 2)
+);
+console.log('APP USERS DATA:', newUser);
+  if (newUserError) {
+
+    this.isSaving = false;
+
+    this.cdr.detectChanges();
+
+setTimeout(() => {
+  this.snackbar.error(newUserError.message);
+}, 0);
+
+    return;
+
+  }
+
+  appUserId = newUser.user_id;
+
+}
+/* NORMAL USER MODE */
+else if (!appUserId) {
+
+  appUserId =
+    await this.resolveCurrentUserId() || '';
+
+}
       let fallbackEmail = '';
       let fallbackPhone = '';
 
@@ -1946,7 +2036,7 @@ await this.prepareEnglishValues();
         error: userError
       } = await supabase.auth.getUser();
 
-      if (!userError && user) {
+    if (!this.isAdminCreated && !userError && user) {
         const { data: appUser, error: appUserError } = await supabase
           .from('app_users')
           .select('user_id, auth_user_id, email, phone_number')
@@ -1954,13 +2044,14 @@ await this.prepareEnglishValues();
           .maybeSingle();
 
         if (!appUserError && appUser) {
-          appUserId = appUser.user_id;
+          if (!this.isAdminCreated) {
+  appUserId = appUser.user_id;
+}
           fallbackEmail = appUser.email || user.email || fallbackEmail;
           fallbackPhone = appUser.phone_number || fallbackPhone;
         }
       }
-
-      if (!appUserId && this.isBrowser) {
+if (!this.isAdminCreated && !appUserId && this.isBrowser) {
   const storedAppUserId = localStorage.getItem('app_user_id');
   const storedEmail = localStorage.getItem('app_user_email') || '';
   const storedPhone = localStorage.getItem('app_user_phone') || '';
@@ -1972,13 +2063,17 @@ await this.prepareEnglishValues();
         fallbackEmail = fallbackEmail || storedEmail;
         fallbackPhone = fallbackPhone || storedPhone;
       }
-
+console.log('APP USER ID:', appUserId);
+console.log('IS ADMIN CREATED:', this.isAdminCreated);
       if (!appUserId && !this.editProfileId) {
   this.isSaving = false;
   this.cdr.detectChanges();
   this.snackbar.error(this.tr.alerts.loginRequired);
   return;
 }
+console.log('FINAL USER ID:', appUserId);
+console.log('EDIT MODE:', this.isEditMode);
+console.log('ADMIN CREATED:', this.isAdminCreated);
 
       this.currentUserId = appUserId;
 
@@ -2048,7 +2143,7 @@ console.log('SAVE CHECK:', {
   en: this.formData,
   ta: taSnapshot
 });
-
+console.log('PAYLOAD USER ID:', appUserId);
       const payload = {
         user_id: appUserId,
         profile_code: resolvedProfileCode,
@@ -2099,7 +2194,7 @@ married_sisters:
 
 unmarried_sisters:
   this.safeNumber(this.formData.unmarriedSisters) || 0,
-handicap:
+handicap_status:
   this.formData.handicapStatus === 'Yes',
 
 handicap_details:
@@ -2286,7 +2381,7 @@ partner_expectation: this.safeText(this.formData.partnerExpectation),
         video_url: videoUrl || '',
 additional_image_urls: additionalImageUrls,
         completion_percentage: this.getCompletionPercentage(),
-        profile_status: 'draft',
+       profile_status: 'Pending',
         is_verified: false,
         is_published: true,
         updated_at: new Date().toISOString()
@@ -2306,7 +2401,18 @@ const { data: existingProfile, error: existingError } = await supabase
         return;
       }
 
-if (existingProfile) {
+if (this.isAdminCreated) {
+
+  const { error } = await supabase
+    .from('user_profiles')
+    .insert([payload]);
+
+  if (error) {
+    this.snackbar.error(error.message);
+    return;
+  }
+
+} else if (existingProfile) {
 
   const { error } = await supabase
     .from('user_profiles')
@@ -2322,12 +2428,7 @@ if (existingProfile) {
 
   const { error } = await supabase
     .from('user_profiles')
-    .insert([
-     {
-  ...payload,
-  user_id: appUserId
-}
-    ]);
+    .insert([payload]);
 
   if (error) {
     this.snackbar.error(error.message);
@@ -2336,64 +2437,40 @@ if (existingProfile) {
 
 }
 
-      this.existingProfileImageUrl = profileImageUrl;
-      this.existingVideoUrl = videoUrl;
-      this.existingHoroscopeFileUrl = horoscopeFileUrl;
-      this.existingLatitude = resolvedLatitude;
-      this.existingLongitude = resolvedLongitude;
-      this.profilePreviewUrl = profileImageUrl;
-      this.videoPreviewUrl = videoUrl;
-      this.selectedProfileImage = null;
-      this.selectedVideo = null;
-      this.selectedHoroscopeFile = null;
+const successMessage = this.isEditMode
+  ? (
+      this.currentLang === 'ta'
+        ? 'பயோடேட்டா வெற்றிகரமாக புதுப்பிக்கப்பட்டது'
+        : 'Biodata Updated Successfully'
+    )
+  : (
+      this.currentLang === 'ta'
+        ? 'பயோடேட்டா வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது'
+        : 'Biodata Submitted Successfully'
+    );
 
-      localStorage.setItem('app_user_id', String(appUserId));
-      if (payload.email) {
-        localStorage.setItem('app_user_email', payload.email);
-      }
-      if (payload.mobile) {
-        localStorage.setItem('app_user_phone', payload.mobile);
-      }
+this.isSaving = false;
+this.cdr.detectChanges();
 
-const savedUser = this.getStoredLoggedInUser();
-
-if (savedUser) {
-  savedUser.user_id = appUserId;
-  savedUser.full_name = payload.full_name;
-  savedUser.email = payload.email;
-  savedUser.phone_number = payload.mobile;
-  savedUser.dob = payload.dob;
-
-  localStorage.setItem(
-    'matrimony_user',
-    JSON.stringify(savedUser)
-  );
-}
-
-// ADMIN FLOW CLEANUP
+setTimeout(() => {
+  this.snackbar.success(successMessage);
+}, 0);
 if (this.isAdminCreated) {
+  localStorage.removeItem('admin_created_user_id');
 
-  localStorage.removeItem(
-    'admin_created_user_id'
-  );
+setTimeout(() => {
+  window.location.href =
+    '/admin/create-biodata?adminCreate=true';
+}, 1200);
 
+return;
 }
 
-this.snackbar.success(
-  this.isEditMode
-    ? (
-       this.currentLang === 'ta'
-          ? 'பயோடேட்டா வெற்றிகரமாக புதுப்பிக்கப்பட்டது'
-          : 'Biodata Updated Successfully'
-      )
-    : (
-       this.currentLang === 'ta'
-          ? 'பயோடேட்டா வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது'
-          : 'Biodata Submitted Successfully'
-      )
-);
 this.isSubmitted = true;
-await this.loadExistingBiodata();
+
+setTimeout(async () => {
+  await this.loadExistingBiodata();
+}, 1200);
 
     } catch (error: any) {
       
