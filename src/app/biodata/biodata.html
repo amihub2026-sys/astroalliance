@@ -1297,18 +1297,30 @@
 
 
 
+<div class="field">
+  <label>{{ tr.labels.dhosham }}</label>
 
-          <div class="field">
-            <label>{{ tr.labels.dhosham }}</label>
-            <select [(ngModel)]="formData.dhosham" name="dhosham">
-              <option value="">{{ tr.labels.selectDhosham }}</option>
-              <option
-  *ngFor="let d of translations.en.options.dhoshamList"
-  [value]="d">
-  {{ getTamilValue('dhosham', d) }}
-</option>
-            </select>
-          </div>
+  <select [(ngModel)]="formData.dhosham" name="dhosham">
+    <option value="">
+      {{
+        currentLang === 'ta'
+          ? 'தோஷத்தை தேர்வு செய்யவும்'
+          : 'Select Dhosham'
+      }}
+    </option>
+
+    <option
+      *ngFor="let d of dhoshamDbList"
+      [value]="d.dhosham_name"
+    >
+      {{
+        currentLang === 'ta'
+          ? (d.dhosham_name_ta || d.dhosham_name)
+          : d.dhosham_name
+      }}
+    </option>
+  </select>
+</div>
 
 
 

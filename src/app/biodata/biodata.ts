@@ -484,6 +484,7 @@ kuladeivam: '',
   horoscopePreviewUrl: string | null = null;
   casteList: any[] = [];
   religionList: any[] = [];
+  dhoshamDbList: any[] = [];
   thisaiIruppuList: any[] = [];
   thisaiList: any[] = [];
 allCastes: any[] = [];
@@ -1082,7 +1083,7 @@ if (!editId && isAdminCreatePage) {
   await this.loadCities();
   await this.loadEducationLevels();
   await this.loadProfessionList();
-
+await this.loadDhoshamList();
   await this.loadExistingBiodata();
 
   if (this.currentLang === 'ta') {
@@ -2681,6 +2682,21 @@ async loadProfessionList() {
 
   this.professionList = data || [];
   this.cdr.detectChanges();
+}
+async loadDhoshamList(): Promise<void> {
+  const { data, error } = await supabase
+    .from('mst_dhosham')
+    .select('dhosham_id, dhosham_name, dhosham_name_ta, sort_order, is_active')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  if (error) {
+    console.error('Dhosham load error:', error);
+    this.dhoshamDbList = [];
+    return;
+  }
+
+  this.dhoshamDbList = data || [];
 }
 async loadEducationLevels() {
 
