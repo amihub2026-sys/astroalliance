@@ -979,7 +979,24 @@
 
   <!-- <small class="field-error" *ngIf="isInvalid('company')">Required</small> -->
 </div>
+<!-- WORK PLACE -->
+<div class="field">
+  <label>
+    {{ currentLang === 'ta'
+      ? 'பணியிடம்'
+      : 'Work Place'
+    }}
+    <span class="optional">(Optional)</span>
+  </label>
 
+  <input
+    type="text"
+    [ngModel]="getTypedValue('workPlace')"
+    (ngModelChange)="onTamilInputChange('workPlace', $event)"
+    name="workPlace"
+    [placeholder]="tr.placeholders.workPlace"
+  >
+</div>
          <!-- SALARY -->
 <div class="field" [class.invalid]="isInvalid('salary')">
   <label>{{ tr.labels.salary }} </label>
@@ -1901,6 +1918,10 @@
 
       <p><strong>Company:</strong><span>{{ formData.company || '-' }}</span></p>
 
+<p>
+  <strong>Work Place:</strong>
+  <span>{{ formData.workPlace || '-' }}</span>
+</p>
       <p><strong>Salary:</strong><span>{{ formData.salary || '-' }}</span></p>
 
     </div>
