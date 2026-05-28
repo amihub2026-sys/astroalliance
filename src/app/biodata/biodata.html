@@ -227,6 +227,8 @@
   </select>
   <small class="field-error" *ngIf="isInvalid('maritalStatus')">Required</small>
 </div>
+
+
 <!-- CHILDREN STATUS -->
 
 <div
@@ -272,7 +274,55 @@
   >
 
 </div>
+<!-- KALAPPU THIRUMANAM -->
 
+<div class="field">
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'கலப்பு திருமணம்'
+      : 'Kalappu Thirumanam'
+    }}
+  </label>
+
+  <select
+    [(ngModel)]="formData.kalappuThirumanam"
+    name="kalappuThirumanam"
+  >
+
+    <option value="No">
+      {{ currentLang === 'ta' ? 'இல்லை' : 'No' }}
+    </option>
+
+    <option value="Yes">
+      {{ currentLang === 'ta' ? 'ஆம்' : 'Yes' }}
+    </option>
+
+  </select>
+
+</div>
+<!-- KALAPPU THIRUMANAM DETAILS -->
+
+<div
+  class="field"
+  *ngIf="formData.kalappuThirumanam === 'Yes'"
+>
+
+  <label>
+    {{ currentLang === 'ta'
+      ? 'கலப்பு திருமணம் விவரம்'
+      : 'Kalappu Thirumanam Details'
+    }}
+  </label>
+
+  <input
+  type="text"
+  [ngModel]="getTypedValue('kalappuThirumanamDetails')"
+  (ngModelChange)="onTamilInputChange('kalappuThirumanamDetails', $event)"
+  name="kalappuThirumanamDetails"
+>
+
+</div>
 <!-- HANDICAP -->
 
 <div class="field">
@@ -367,7 +417,7 @@
   <small class="field-error" *ngIf="isInvalid('mobile')">Required</small>
 </div>
 
-<div class="field full-width additional-phone-field">
+<div class="field additional-phone-field">
 
   <label>
     {{ tr.labels.additionalMobile }}
