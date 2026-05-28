@@ -147,7 +147,8 @@
   Admin Users
 </a>
 <a
-  routerLink="/admin/create-biodata"
+  [routerLink]="['/admin/create-biodata']"
+  [queryParams]="{ adminCreate: 'true' }"
   routerLinkActive="active"
   class="nav-item"
   (click)="sidebarOpen = false">
