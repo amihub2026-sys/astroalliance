@@ -115,6 +115,9 @@ casteMap: Record<string, string> = {};
 
   profiles: ProfileItem[] = [];
   likedMeProfiles: ProfileItem[] = [];
+  visibleProfileCount = 9;
+visibleProfileTimer: any = null;
+showProfileLoading = false;
   shortlistedMeUserIds: string[] = [];
     userProfileImage = '';
 userProfileName = '';
@@ -1080,13 +1083,13 @@ image: row.profile_image_url || 'assets/default-avatar.png',
       this.profiles = [];
       this.cdr.detectChanges();
     } finally {
-      this.isLoading = false;
-      this.cdr.detectChanges();
+  this.isLoading = false;
 
-      setTimeout(() => {
-        this.cdr.detectChanges();
-      }, 0);
-    }
+  setTimeout(() => {
+    this.startProfileBatchLoading();
+    this.cdr.detectChanges();
+  }, 0);
+}
   }
 private getTamilProfileValue(
   type: string,
@@ -1261,7 +1264,56 @@ async loadLikedMeProfiles(): Promise<void> {
 
   }
 }
+startProfileBatchLoading(): void {
+  if (!this.isBrowser) return;
 
+  if (this.visibleProfileTimer) {
+    clearTimeout(this.visibleProfileTimer);
+    this.visibleProfileTimer = null;
+  }
+
+  this.visibleProfileCount = 9;
+  this.cdr.detectChanges();
+}
+loadMoreProfilesAfterScroll(): void {
+  if (!this.isBrowser) return;
+  if (this.visibleProfileTimer) return;
+  if (this.visibleProfileCount >= this.filteredProfiles.length) return;
+
+  this.showProfileLoading = true;
+  this.cdr.detectChanges();
+
+  this.visibleProfileTimer = setTimeout(() => {
+    this.visibleProfileCount += 9;
+    this.showProfileLoading = false;
+    this.visibleProfileTimer = null;
+
+    this.cdr.detectChanges();
+    this.cdr.markForCheck();
+  }, 1500);
+}
+@HostListener('window:scroll', [])
+onWindowScroll(): void {
+
+  if (!this.isBrowser) return;
+
+  if (this.activeTab !== 'browse') return;
+
+  if (this.isLoading) return;
+
+  const scrollPosition = window.innerHeight + window.scrollY;
+
+  const pageHeight = document.documentElement.scrollHeight;
+
+  if (scrollPosition >= pageHeight - 300) {
+
+    this.loadMoreProfilesAfterScroll();
+
+    this.cdr.detectChanges();
+
+  }
+
+}
 
   applySidebarFilter(type: string): void {
     const protectedFilters = [
