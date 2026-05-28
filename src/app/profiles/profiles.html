@@ -819,7 +819,7 @@
       <div class="profiles-grid">
         <div
           class="profile-card"
-          *ngFor="let profile of filteredProfiles; trackBy: trackByProfile"
+*ngFor="let profile of filteredProfiles.slice(0, visibleProfileCount); trackBy: trackByProfile"
         >
           <div class="profile-image">
           <img
@@ -915,8 +915,19 @@
           </div>
         </div>
       </div>
-    </div>
+      <div class="profile-loading" *ngIf="showProfileLoading">
 
+  <div class="loader-circle"></div>
+
+  <p>
+    {{ currentLang === 'ta'
+      ? 'மேலும் சுயவிவரங்கள் ஏற்றப்படுகிறது...'
+      : 'Loading more profiles...'
+    }}
+  </p>
+
+</div>
+    </div>
   </div>
 
   <div *ngIf="activeTab === 'liked'">
@@ -1028,7 +1039,9 @@
            
           </div>
         </div>
+        
       </div>
     </div>
+    
   </div>
 </section>
