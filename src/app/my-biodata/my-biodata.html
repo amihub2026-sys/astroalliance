@@ -69,6 +69,35 @@
         readonly
       >
     </div>
+    <div class="field">
+  <label>
+    {{ currentLang === 'ta' ? 'உட்பிரிவு' : 'Sub Caste' }}
+  </label>
+  <input
+    [value]="showLangValue(profile.sub_caste, profile.sub_caste_ta)"
+    readonly
+  >
+</div>
+
+<div class="field">
+  <label>
+    {{ currentLang === 'ta' ? 'கலப்பு திருமணம்' : 'Kalappu Thirumanam' }}
+  </label>
+  <input
+    [value]="profile.kalappu_thirumanam || '-'"
+    readonly
+  >
+</div>
+
+<div class="field">
+  <label>
+    {{ currentLang === 'ta' ? 'கலப்பு திருமணம் விவரம்' : 'Kalappu Thirumanam Details' }}
+  </label>
+  <input
+    [value]="profile.kalappu_thirumanam_details || '-'"
+    readonly
+  >
+</div>
 
     <div class="field">
       <label>
@@ -141,18 +170,48 @@
 
 <div class="field">
   <label>
-  {{ currentLang === 'ta' ? 'கோத்திரம்' : 'Gothram' }}
-</label>
+    {{ currentLang === 'ta' ? 'திசை' : 'Thisai' }}
+  </label>
+<input
+  [value]="showLangValue(profile.thisai, profile.thisai_ta)"
+  readonly
+>
+</div>
+
+<div class="field">
+  <label>
+    {{ currentLang === 'ta' ? 'திசை இருப்பு' : 'Thisai Iruppu' }}
+  </label>
   <input
-    [value]="showLangValue(profile.gothram, profile.gothram_ta)"
+   [value]="showLangValue(profile.thisai_iruppu, profile.thisai_iruppu_ta)"
     readonly
   >
 </div>
 
 <div class="field">
- <label>
-  {{ currentLang === 'ta' ? 'குலதெய்வம்' : 'Kuladeivam' }}
-</label>
+  <label>
+    {{ currentLang === 'ta' ? 'பாதம்' : 'Paatham' }}
+  </label>
+  <input
+   [value]="showLangValue(profile.paatham, profile.paatham_ta)"
+    readonly
+  >
+</div>
+
+<div class="field">
+  <label>
+    {{ currentLang === 'ta' ? 'சொத்துகள்' : 'Sothukal' }}
+  </label>
+  <input
+    [value]="profile.sothukal || '-'"
+    readonly
+  >
+</div>
+
+<div class="field">
+  <label>
+    {{ currentLang === 'ta' ? 'குலதெய்வம்' : 'Kuladeivam' }}
+  </label>
   <input
     [value]="profile.kuladeivam || '-'"
     readonly
@@ -161,33 +220,35 @@
 
 <div class="field">
   <label>
-  {{ currentLang === 'ta' ? 'பூர்வீகம்' : 'Poorvegam' }}
-</label>
+    {{ currentLang === 'ta' ? 'பூர்வீகம்' : 'Poorvegam' }}
+  </label>
   <input
-    [value]="showLangValue(profile.poorvegam, profile.poorvegam_ta)"
+    [value]="profile.poorvegam || '-'"
     readonly
   >
 </div>
 
 <div class="field">
   <label>
-  {{ currentLang === 'ta' ? 'இருப்பிடம்' : 'Iruppidam' }}
-</label>
+    {{ currentLang === 'ta' ? 'இருப்பிடம்' : 'Iruppidam' }}
+  </label>
   <input
-    [value]="showLangValue(profile.iruppidam, profile.iruppidam_ta)"
+    [value]="profile.iruppidam || '-'"
     readonly
   >
 </div>
 
 <div class="field">
   <label>
-  {{ currentLang === 'ta' ? 'சொத்துகள்' : 'Sothukal' }}
+  {{ currentLang === 'ta' ? 'கோத்திரம்' : 'Gothram' }}
 </label>
   <input
-    [value]="profile.sothukal || '-'"
+    [value]="showLangValue(profile.gothram, profile.gothram_ta)"
     readonly
   >
 </div>
+
+
     <div class="field">
       <label>
   {{ currentLang === 'ta' ? 'தந்தை பெயர்' : 'Father Name' }}
@@ -281,6 +342,16 @@
     </div>
 
     <div class="field">
+  <label>
+    {{ currentLang === 'ta' ? 'குடும்ப நிலை' : 'Kudumba Nilai' }}
+  </label>
+  <input
+    [value]="profile.kudumba_nilai || '-'"
+    readonly
+  >
+</div>
+
+    <div class="field">
       <label>
   {{ currentLang === 'ta' ? 'கல்வி' : 'Education' }}
 </label>
@@ -309,6 +380,16 @@
         readonly
       >
     </div>
+
+    <div class="field">
+  <label>
+    {{ currentLang === 'ta' ? 'பணியிடம்' : 'Work Place' }}
+  </label>
+  <input
+    [value]="showLangValue(profile.work_place, profile.work_place_ta)"
+    readonly
+  >
+</div>
 
     <div class="field">
      <label>
@@ -342,7 +423,7 @@
 
 <div class="field">
   <label>
-  {{ currentLang === 'ta' ? 'உடல் குறைபாடு' : 'Handicap' }}
+  {{ currentLang === 'ta' ? 'மாற்றுத் திறனாளி' : 'Differently Abled' }}
 </label>
   <input
     [value]="profile.handicap_status || '-'"
@@ -353,8 +434,8 @@
 <div class="field">
 <label>
   {{ currentLang === 'ta'
-    ? 'உடல் குறைபாடு விவரம்'
-    : 'Handicap Details'
+    ? 'மாற்றுத் திறனாளி விவரம்'
+    : 'Differently Abled Details'
   }}
 </label>
   <input
