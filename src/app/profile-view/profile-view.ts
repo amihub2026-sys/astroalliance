@@ -22,6 +22,13 @@ interface ProfileViewItem {
   dob: string;
   age: number;
   maritalStatus: LangText;
+  childrenStatus: string;
+childrenCount: string;
+kalappuThirumanam: string;
+kalappuThirumanamDetails: LangText;
+handicapStatus: string;
+handicapDetails: LangText;
+subCaste: LangText;
   mobile: string;
   additionalMobile: string;
   email: string;
@@ -35,10 +42,17 @@ motherName: LangText;
 fatherOccupation: LangText;
 motherOccupation: LangText;
 siblings: LangText;
-
+marriedBrothers: string;
+unmarriedBrothers: string;
+marriedSisters: string;
+unmarriedSisters: string;
+kudumbaNilai: LangText;
+poorvegam: LangText;
+iruppidam: LangText;
   education: LangText;
   job: LangText;
   company: LangText;
+  workPlace: LangText;
   salary: string;
 
   address: LangText;
@@ -453,6 +467,27 @@ gender: { en: row.gender_text || '', ta: row.gender_text === 'Male' ? 'ஆண்
   en: row.marital_status_text || '',
   ta: row.marital_status_text_ta || row.marital_status_text || ''
 },
+childrenStatus: row.children_status ?? false,
+childrenCount: row.children_count || '',
+kalappuThirumanam: row.kalappu_thirumanam ?? false,
+kalappuThirumanamDetails: {
+  en: row.kalappu_thirumanam_details || '',
+  ta: row.kalappu_thirumanam_details_ta || row.kalappu_thirumanam_details || ''
+},
+handicapStatus: row.handicap_status ?? row.handicap ?? false,
+handicapDetails: {
+  en: row.handicap_details || '',
+  ta: row.handicap_details_ta || row.handicap_details || ''
+},
+subCaste: {
+  en: row.sub_caste_text || row.sub_caste || '',
+  ta:
+    row.sub_caste_text_ta ||
+    row.sub_caste_ta ||
+    row.sub_caste_text ||
+    row.sub_caste ||
+    ''
+},
 mobile: row.mobile || '',
 additionalMobile: row.additional_mobile || '',
 email: row.email || '',
@@ -501,6 +536,23 @@ siblings: {
   ta: row.siblings_ta || row.siblings_text || ''
 },
 
+marriedBrothers: row.married_brothers || '',
+unmarriedBrothers: row.unmarried_brothers || '',
+marriedSisters: row.married_sisters || '',
+unmarriedSisters: row.unmarried_sisters || '',
+kudumbaNilai: {
+  en: row.kudumba_nilai || '',
+  ta: row.kudumba_nilai_ta || row.kudumba_nilai || ''
+},
+poorvegam: {
+  en: row.poorvegam || '',
+  ta: row.poorvegam_ta || row.poorvegam || ''
+},
+iruppidam: {
+  en: row.iruppidam || '',
+  ta: row.iruppidam_ta || row.iruppidam || ''
+},
+
 education: {
   en: row.education_text || '',
   ta: row.education_text_ta || row.education_text || ''
@@ -514,6 +566,10 @@ job: {
 company: {
   en: row.company_name || '',
   ta: row.company_name_ta || row.company_name || ''
+},
+workPlace: {
+  en: row.work_place || '',
+  ta: row.work_place_ta || row.work_place || ''
 },
 salary: this.formatSalary(row),
 address: {
@@ -861,7 +917,26 @@ getText(value: string | LangText): string {
 
   return value?.en || value?.ta || '-';
 }
+yesNo(value: any): string {
+  const isYes =
+    value === true ||
+    value === 'true' ||
+    value === 'Yes' ||
+    value === 'yes';
 
+  return isYes
+    ? (this.currentLang === 'ta' ? 'ஆம்' : 'Yes')
+    : (this.currentLang === 'ta' ? 'இல்லை' : 'No');
+}
+
+isYes(value: any): boolean {
+  return (
+    value === true ||
+    value === 'true' ||
+    value === 'Yes' ||
+    value === 'yes'
+  );
+}
   goBack(): void {
     this.router.navigate(['/profiles']);
   }
