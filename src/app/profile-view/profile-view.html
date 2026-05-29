@@ -13,7 +13,12 @@
 
 </div>
 
-  <div class="profile-hero">
+<div class="profile-layout" [class.with-plan]="unlocked" [class.without-plan]="!unlocked">
+
+  <!-- LEFT SIDE -->
+  <div class="left-column">
+
+  
   <div class="profile-photo-wrap">
     <div class="profile-image-card">
       <img [src]="p.profileImage" [alt]="getText(p.fullName)" />
@@ -28,77 +33,63 @@
     </button>
 
 
-<div
-  class="media-row no-pdf"
-  *ngIf="p.galleryImages.length || p.videoUrl"
->
+<div class="left-media-section no-pdf">
 
   <!-- ADDITIONAL PHOTOS -->
-
   <div class="side-gallery" *ngIf="p.galleryImages.length">
-
     <h3>
-      {{
-        currentLang === 'ta'
-          ? 'கூடுதல் புகைப்படங்கள்'
-          : 'Additional Photos'
-      }}
+      {{ currentLang === 'ta' ? 'கூடுதல் புகைப்படங்கள்' : 'Additional Photos' }}
     </h3>
 
-    <div class="side-gallery-item single-preview">
-
+    <div class="side-gallery-grid">
       <img
-        [src]="p.galleryImages[0]"
+        *ngFor="let img of p.galleryImages | slice:0:4"
+        [src]="img"
         alt="Additional photo"
-        (click)="openPhoto(p.galleryImages[0])"
+        (click)="openPhoto(img)"
       />
-
-      <button
-        type="button"
-        class="see-additional-btn"
-        (click)="openAdditionalPhotos()"
-      >
-        {{
-          currentLang === 'ta'
-            ? 'கூடுதல் புகைப்படங்கள் பார்க்க'
-            : 'See Additional Photos'
-        }}
-      </button>
-
     </div>
 
+    <button
+      type="button"
+      class="side-action-btn"
+      (click)="openAdditionalPhotos()"
+    >
+      {{
+        currentLang === 'ta'
+          ? 'அனைத்து புகைப்படங்கள் பார்க்க'
+          : 'See Additional Photos (' + p.galleryImages.length + ')'
+      }}
+    </button>
   </div>
 
   <!-- VIDEO -->
-
   <div class="side-video" *ngIf="p.videoUrl">
-
     <h3>
-      {{
-        currentLang === 'ta'
-          ? 'சுயவிவர வீடியோ'
-          : 'Profile Video'
-      }}
+      {{ currentLang === 'ta' ? 'சுயவிவர வீடியோ' : 'Profile Video' }}
     </h3>
 
-    <div
-      class="video-thumb"
-      (click)="openVideoPopup()"
-    >
-
-      <video
-        [src]="p.videoUrl"
-        muted
-      ></video>
-
+    <div class="video-thumb" (click)="openVideoPopup()">
+      <video [src]="p.videoUrl" muted playsinline></video>
       <div class="play-overlay">▶</div>
-
     </div>
 
+    <button
+      type="button"
+      class="side-action-btn"
+      (click)="openVideoPopup()"
+    >
+      {{ currentLang === 'ta' ? 'முழு வீடியோ பார்க்க' : 'Watch Full Video' }}
+    </button>
   </div>
 
 </div>
-  </div>
+</div>
+
+</div> <!-- LEFT COLUMN END -->
+
+<!-- RIGHT SIDE -->
+<div class="right-column">
 
  <div class="full-photo-popup" *ngIf="openFullPhoto">
 
@@ -292,19 +283,9 @@
   </div>
 </div>
 
-    <div class="detail-card full-width">
-      <h2>{{ currentLang === 'ta' ? 'என்னை பற்றி' : 'About Me' }}</h2>
-      <p class="about-text">
-      {{ getText(p.about) || (currentLang === 'ta' ? 'என்னை பற்றி சேர்க்கப்படவில்லை.' : 'No about me added yet.') }}
-      </p>
+   
 
-      <h2 style="margin-top: 24px;">{{ currentLang === 'ta' ? 'துணை எதிர்பார்ப்பு' : 'Partner Expectation' }}</h2>
-      <p class="about-text">
-       {{ getText(p.partnerExpectation) || (currentLang === 'ta' ? 'துணை எதிர்பார்ப்பு சேர்க்கப்படவில்லை.' : 'No partner expectation added yet.') }}
-      </p>
-    </div>
-
- <div class="details-grid">
+<div class="details-grid profile-image-style-details">
 
       <div class="detail-card">
         <h2>
@@ -336,6 +317,35 @@
           <div><span>
   {{ currentLang === 'ta' ? 'திருமண நிலை' : 'Marital Status' }}
 </span><strong>{{ getText(p.maritalStatus) || '-' }}</strong></div>
+<div *ngIf="getText(p.maritalStatus) === 'Divorced' || getText(p.maritalStatus) === 'Widowed'">
+  <span>{{ currentLang === 'ta' ? 'குழந்தைகள்' : 'Children' }}</span>
+<strong>{{ yesNo(p.childrenStatus) }}</strong>
+</div>
+
+<div *ngIf="isYes(p.childrenStatus)">
+  <span>{{ currentLang === 'ta' ? 'குழந்தைகள் எண்ணிக்கை' : 'Children Count' }}</span>
+  <strong>{{ p.childrenCount || '-' }}</strong>
+</div>
+
+<div>
+  <span>{{ currentLang === 'ta' ? 'கலப்பு திருமணம்' : 'Kalappu Thirumanam' }}</span>
+  <strong>{{ yesNo(p.kalappuThirumanam) }}</strong>
+</div>
+
+<div *ngIf="isYes(p.kalappuThirumanam)">
+  <span>{{ currentLang === 'ta' ? 'கலப்பு திருமணம் விவரம்' : 'Kalappu Thirumanam Details' }}</span>
+  <strong>{{ getText(p.kalappuThirumanamDetails) || '-' }}</strong>
+</div>
+
+<div>
+  <span>{{ currentLang === 'ta' ? 'மாற்றுத்திறனாளி' : 'Handicap' }}</span>
+ <strong>{{ yesNo(p.handicapStatus) }}</strong>
+</div>
+
+<div *ngIf="isYes(p.handicapStatus)">
+  <span>{{ currentLang === 'ta' ? 'மாற்றுத்திறனாளி விவரம்' : 'Handicap Details' }}</span>
+  <strong>{{ getText(p.handicapDetails) || '-' }}</strong>
+</div>
           <div><span>
   {{ currentLang === 'ta' ? 'உயரம்' : 'Height' }}
 </span><strong>{{ p.height || '-' }}</strong></div>
@@ -348,48 +358,15 @@
           <div><span>
   {{ currentLang === 'ta' ? 'ஜாதி' : 'Caste' }}
 </span><strong>{{ getText(p.caste) || '-' }}</strong></div>
-        </div>
-      </div>
-
-      <div class="detail-card">
-      <h2>
-  {{ currentLang === 'ta'
-    ? 'கல்வி மற்றும் தொழில்'
-    : 'Education & Career'
-  }}
-</h2>
-        <div class="detail-list">
-          <div><span>
-  {{ currentLang === 'ta' ? 'கல்வி' : 'Education' }}
-</span><strong>{{ getText(p.education) || '-' }}</strong></div>
-          <div><span>
-  {{ currentLang === 'ta' ? 'தொழில்' : 'Occupation' }}
-</span><strong>{{ getText(p.job) || '-' }}</strong></div>
-          <div>
-  <span>
-  {{ currentLang === 'ta' ? 'நிறுவனம்' : 'Company' }}
-</span>
-<strong *ngIf="unlocked">{{ getText(p.company) || '-' }}</strong>
-  <strong *ngIf="!unlocked" class="premium-heart" (click)="goToPlans()">
-  💖
-</strong>
+<div>
+  <span>{{ currentLang === 'ta' ? 'உப ஜாதி' : 'Sub Caste' }}</span>
+  <strong>{{ getText(p.subCaste) || '-' }}</strong>
 </div>
-          <div><span>
-  {{ currentLang === 'ta' ? 'சம்பளம்' : 'Salary' }}
-</span><strong>{{ p.salary || '-' }}</strong></div>
-          <div><span>
-  {{ currentLang === 'ta' ? 'நகரம்' : 'City' }}
-</span><strong>{{ getText(p.city) || '-' }}</strong></div>
-          <div><span>
-  {{ currentLang === 'ta' ? 'மாநிலம்' : 'State' }}
-</span><strong>{{ getText(p.state) || '-' }}</strong></div>
-          <div><span>
-  {{ currentLang === 'ta' ? 'நாடு' : 'Country' }}
-</span><strong>{{ getText(p.country) || '-' }}</strong></div>
         </div>
       </div>
 
-      <div class="detail-card">
+
+ <div class="detail-card">
         <h2>
   {{ currentLang === 'ta'
     ? 'குடும்ப விவரங்கள்'
@@ -415,35 +392,49 @@
     : 'Mother Occupation'
   }}
 </span><strong>{{ getText(p.motherOccupation) || '-' }}</strong></div>
-          <div><span>
+          <!-- <div><span>
   {{ currentLang === 'ta' ? 'உடன்பிறப்புகள்' : 'Siblings' }}
-</span><strong>{{ getText(p.siblings) || '-' }}</strong></div>
+</span>
+<strong>{{ getText(p.siblings) || '-' }}</strong>
+</div> -->
+<div>
+  <span>{{ currentLang === 'ta' ? 'திருமணமான சகோதரர்கள்' : 'Married Brothers' }}</span>
+  <strong>{{ p.marriedBrothers || '-' }}</strong>
+</div>
+
+<div>
+  <span>{{ currentLang === 'ta' ? 'திருமணம் ஆகாத சகோதரர்கள்' : 'Unmarried Brothers' }}</span>
+  <strong>{{ p.unmarriedBrothers || '-' }}</strong>
+</div>
+
+<div>
+  <span>{{ currentLang === 'ta' ? 'திருமணமான சகோதரிகள்' : 'Married Sisters' }}</span>
+  <strong>{{ p.marriedSisters || '-' }}</strong>
+</div>
+
+<div>
+  <span>{{ currentLang === 'ta' ? 'திருமணம் ஆகாத சகோதரிகள்' : 'Unmarried Sisters' }}</span>
+  <strong>{{ p.unmarriedSisters || '-' }}</strong>
+</div>
+
+<div>
+  <span>{{ currentLang === 'ta' ? 'குடும்ப நிலை' : 'Kudumba Nilai' }}</span>
+  <strong>{{ getText(p.kudumbaNilai) || '-' }}</strong>
+</div>
+
+<div>
+  <span>{{ currentLang === 'ta' ? 'பூர்வீகம்' : 'Poorvegam' }}</span>
+  <strong>{{ getText(p.poorvegam) || '-' }}</strong>
+</div>
+
+<div>
+  <span>{{ currentLang === 'ta' ? 'இருப்பிடம்' : 'Iruppidam' }}</span>
+  <strong>{{ getText(p.iruppidam) || '-' }}</strong>
+</div>
         </div>
       </div>
 
-   <div class="detail-card">
-  {{ currentLang === 'ta' ? 'முகவரி விவரங்கள்' : 'Address Details' }}
-
-  <div *ngIf="unlocked" class="detail-list">
-    <div><span>{{ currentLang === 'ta' ? 'முகவரி' : 'Address' }}</span><strong>{{ getText(p.address) || '-' }}</strong></div>
-    <div><span>{{ currentLang === 'ta' ? 'நகரம்' : 'City' }}</span><strong>{{ getText(p.city) || '-' }}</strong></div>
-    <div><span>{{ currentLang === 'ta' ? 'மாநிலம்' : 'State' }}</span><strong>{{ getText(p.state) || '-' }}</strong></div>
-    <div><span>{{ currentLang === 'ta' ? 'நாடு' : 'Country' }}</span><strong>{{ getText(p.country) || '-' }}</strong></div>
-  </div>
-
- <div *ngIf="!unlocked" class="premium-lock-box">
-  <div class="lock-icon">💖</div>
-  {{ currentLang === 'ta' ? 'முகவரி மறைக்கப்பட்டுள்ளது' : 'Address Hidden' }}
-  <p>{{
-  currentLang === 'ta'
-    ? 'முழு முகவரி விவரங்களை பார்க்க உங்கள் திட்டத்தை மேம்படுத்தவும்.'
-    : 'Upgrade your plan to view full address details securely.'
-}}</p>
-  <button class="unlock-premium-btn" (click)="goToPlans()">
-    {{ currentLang === 'ta' ? 'இப்போது திறக்கவும்' : 'Unlock Now' }}
-  </button>
-</div>
-</div>
+     
 
       <div class="detail-card">
        <h2>
@@ -551,6 +542,110 @@
       </div>
 
       <div class="detail-card">
+      <h2>
+  {{ currentLang === 'ta'
+    ? 'கல்வி மற்றும் தொழில்'
+    : 'Education & Career'
+  }}
+</h2>
+        <div class="detail-list">
+          <div><span>
+  {{ currentLang === 'ta' ? 'கல்வி' : 'Education' }}
+</span><strong>{{ getText(p.education) || '-' }}</strong></div>
+          <div><span>
+  {{ currentLang === 'ta' ? 'தொழில்' : 'Occupation' }}
+</span><strong>{{ getText(p.job) || '-' }}</strong></div>
+          <div>
+  <span>
+  {{ currentLang === 'ta' ? 'நிறுவனம்' : 'Company' }}
+</span>
+<strong *ngIf="unlocked">{{ getText(p.company) || '-' }}</strong>
+  <strong *ngIf="!unlocked" class="premium-heart" (click)="goToPlans()">
+  💖
+</strong>
+</div>
+<div>
+  <span>{{ currentLang === 'ta' ? 'பணியிடம்' : 'Work Place' }}</span>
+  <strong *ngIf="unlocked">{{ getText(p.workPlace) || '-' }}</strong>
+  <strong *ngIf="!unlocked" class="premium-heart" (click)="goToPlans()">💖</strong>
+</div>
+          <div><span>
+  {{ currentLang === 'ta' ? 'சம்பளம்' : 'Salary' }}
+</span><strong>{{ p.salary || '-' }}</strong></div>
+          <div><span>
+  {{ currentLang === 'ta' ? 'நகரம்' : 'City' }}
+</span><strong>{{ getText(p.city) || '-' }}</strong></div>
+          <div><span>
+  {{ currentLang === 'ta' ? 'மாநிலம்' : 'State' }}
+</span><strong>{{ getText(p.state) || '-' }}</strong></div>
+          <div><span>
+  {{ currentLang === 'ta' ? 'நாடு' : 'Country' }}
+</span><strong>{{ getText(p.country) || '-' }}</strong></div>
+        </div>
+      </div>
+
+      <div class="detail-card">
+  <h2>{{ currentLang === 'ta' ? 'முகவரி விவரங்கள்' : 'Address Details' }}</h2>
+
+  <div *ngIf="unlocked" class="detail-list">
+    <div><span>{{ currentLang === 'ta' ? 'முகவரி' : 'Address' }}</span><strong>{{ getText(p.address) || '-' }}</strong></div>
+    <div><span>{{ currentLang === 'ta' ? 'நகரம்' : 'City' }}</span><strong>{{ getText(p.city) || '-' }}</strong></div>
+    <div><span>{{ currentLang === 'ta' ? 'மாநிலம்' : 'State' }}</span><strong>{{ getText(p.state) || '-' }}</strong></div>
+    <div><span>{{ currentLang === 'ta' ? 'நாடு' : 'Country' }}</span><strong>{{ getText(p.country) || '-' }}</strong></div>
+  </div>
+
+ <div *ngIf="!unlocked" class="premium-lock-box">
+  <div class="lock-icon">💖</div>
+  {{ currentLang === 'ta' ? 'முகவரி மறைக்கப்பட்டுள்ளது' : 'Address Hidden' }}
+  <p>{{
+  currentLang === 'ta'
+    ? 'முழு முகவரி விவரங்களை பார்க்க உங்கள் திட்டத்தை மேம்படுத்தவும்.'
+    : 'Upgrade your plan to view full address details securely.'
+}}</p>
+  <button class="unlock-premium-btn" (click)="goToPlans()">
+    {{ currentLang === 'ta' ? 'இப்போது திறக்கவும்' : 'Unlock Now' }}
+  </button>
+</div>
+</div>
+     <div class="detail-card contact-card">
+      <h2>
+  {{ currentLang === 'ta'
+    ? 'தொடர்பு விவரங்கள்'
+    : 'Contact Details'
+  }}
+</h2>
+
+        <div *ngIf="unlocked" class="detail-list">
+          <div> <span>
+      {{ currentLang === 'ta' ? 'மொபைல்' : 'Mobile' }}
+    </span><strong>{{ p.mobile || '-' }}</strong></div>
+            <!-- <div>   <span>
+      {{ currentLang === 'ta'
+        ? 'கூடுதல் மொபைல்'
+        : 'Additional Mobile'
+      }}
+    </span><strong>{{ p.additionalMobile || '-' }}</strong></div> -->
+
+          <div> <span>
+      {{ currentLang === 'ta' ? 'மின்னஞ்சல்' : 'Email' }}
+    </span><strong>{{ p.email || '-' }}</strong></div>
+        </div>
+
+       <div *ngIf="!unlocked" class="premium-lock-box">
+  <div class="lock-icon">💖</div>
+  <h3>{{ currentLang === 'ta' ? 'தொடர்பு விவரங்கள் பூட்டப்பட்டுள்ளது' : 'Contact Details Locked' }}</h3>
+  <p>{{
+  currentLang === 'ta'
+    ? 'தொலைபேசி எண் மற்றும் மின்னஞ்சலை பார்க்க திட்டத்தை மேம்படுத்தவும்.'
+    : 'Upgrade to view phone number and email instantly.'
+}}</p>
+  <button class="unlock-premium-btn" (click)="goToPlans()">
+    {{ currentLang === 'ta' ? 'திட்டங்களை பார்க்க' : 'View Plans' }}
+  </button>
+</div>
+      </div>
+
+      <div class="detail-card">
         <h2>{{ currentLang === 'ta' ? 'ஜாதக பொருத்தம்' : 'Astrology Match' }}</h2>
 
         <div *ngIf="astroMatch; else noAstroMatch" class="astro-match-box">
@@ -591,6 +686,18 @@
           </div>
         </ng-template>
       </div>
+      
+ <div class="detail-card">
+      <!-- <h2>{{ currentLang === 'ta' ? 'என்னை பற்றி' : 'About Me' }}</h2>
+      <p class="about-text">
+      {{ getText(p.about) || (currentLang === 'ta' ? 'என்னை பற்றி சேர்க்கப்படவில்லை.' : 'No about me added yet.') }}
+      </p> -->
+
+      <h2 style="margin-top: 24px;">{{ currentLang === 'ta' ? 'துணை எதிர்பார்ப்பு' : 'Partner Expectation' }}</h2>
+      <p class="about-text">
+       {{ getText(p.partnerExpectation) || (currentLang === 'ta' ? 'துணை எதிர்பார்ப்பு சேர்க்கப்படவில்லை.' : 'No partner expectation added yet.') }}
+      </p>
+    </div>
 
    <div class="detail-card" *ngIf="p.horoscopeImage">
 
@@ -707,44 +814,7 @@
 </div>
       </div>
        
-      <div class="detail-card contact-card full-width">
-      <h2>
-  {{ currentLang === 'ta'
-    ? 'தொடர்பு விவரங்கள்'
-    : 'Contact Details'
-  }}
-</h2>
-
-        <div *ngIf="unlocked" class="detail-list">
-          <div> <span>
-      {{ currentLang === 'ta' ? 'மொபைல்' : 'Mobile' }}
-    </span><strong>{{ p.mobile || '-' }}</strong></div>
-            <div>   <span>
-      {{ currentLang === 'ta'
-        ? 'கூடுதல் மொபைல்'
-        : 'Additional Mobile'
-      }}
-    </span><strong>{{ p.additionalMobile || '-' }}</strong></div>
-
-          <div> <span>
-      {{ currentLang === 'ta' ? 'மின்னஞ்சல்' : 'Email' }}
-    </span><strong>{{ p.email || '-' }}</strong></div>
-        </div>
-
-       <div *ngIf="!unlocked" class="premium-lock-box">
-  <div class="lock-icon">💖</div>
-  <h3>{{ currentLang === 'ta' ? 'தொடர்பு விவரங்கள் பூட்டப்பட்டுள்ளது' : 'Contact Details Locked' }}</h3>
-  <p>{{
-  currentLang === 'ta'
-    ? 'தொலைபேசி எண் மற்றும் மின்னஞ்சலை பார்க்க திட்டத்தை மேம்படுத்தவும்.'
-    : 'Upgrade to view phone number and email instantly.'
-}}</p>
-  <button class="unlock-premium-btn" (click)="goToPlans()">
-    {{ currentLang === 'ta' ? 'திட்டங்களை பார்க்க' : 'View Plans' }}
-  </button>
-</div>
-      </div>
-
+ 
   <div class="top-action-buttons">
 
     <button
@@ -774,10 +844,15 @@
 
   </div>
 
-    </div>
-  </div>
 
-  <div class="container" *ngIf="!isLoading && !profile">
-    <p>{{ currentLang === 'ta' ? 'சுயவிவரம் கிடைக்கவில்லை.' : 'Profile not found.' }}</p>
-  </div>
+</div> <!-- DETAILS GRID END -->
+
+</div> <!-- RIGHT COLUMN END -->
+
+</div> <!-- PROFILE LAYOUT END -->
+
+<div class="container" *ngIf="!isLoading && !profile">
+  <p>{{ currentLang === 'ta' ? 'சுயவிவரம் கிடைக்கவில்லை.' : 'Profile not found.' }}</p>
+</div>
+
 </section>

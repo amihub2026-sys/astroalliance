@@ -843,7 +843,7 @@ const convert = async (taValue: string, enValue: string) => {
   this.formData.fatherOccupation = await convert(this.formDataTa.fatherOccupation, this.formData.fatherOccupation);
   this.formData.motherOccupation = await convert(this.formDataTa.motherOccupation, this.formData.motherOccupation);
   this.formData.siblings = await convert(this.formDataTa.siblings, this.formData.siblings);
-  this.formData.job = await convert(this.formDataTa.job, this.formData.job);
+  // this.formData.job = await convert(this.formDataTa.job, this.formData.job);
   this.formData.company = await convert(this.formDataTa.company, this.formData.company);
   this.formData.workPlace =
   await convert(this.formDataTa.workPlace, this.formData.workPlace);
@@ -2415,8 +2415,13 @@ birth_place: this.safeText(this.formData.birthPlace),
 
 
 
-thisai: this.safeText(this.formData.thisai),
-thisai_ta: this.safeText(this.formDataTa.thisai),
+thisai: this.safeText(
+  `${this.formData.thisaiYear || 0} Year ${this.formData.thisaiMonth || 0} Month ${this.formData.thisaiDay || 0} Day`
+),
+
+thisai_ta: this.safeText(
+  `${this.formData.thisaiYear || 0} வருடம் ${this.formData.thisaiMonth || 0} மாதம் ${this.formData.thisaiDay || 0} நாள்`
+),
 
 thisai_iruppu: this.safeText(this.formData.thisaiIruppu),
 thisai_iruppu_ta: this.safeText(this.formDataTa.thisaiIruppu),
@@ -2921,12 +2926,14 @@ onPoorvegamSearchChange(): void {
 }
 
 selectPoorvegam(city: any): void {
-  this.poorvegamSearch = this.currentLang === 'ta'
-    ? (city.city_name_ta || city.city_name)
-    : city.city_name;
+  this.poorvegamSearch =
+    this.currentLang === 'ta'
+      ? (city.city_name_ta || city.city_name)
+      : city.city_name;
 
   this.formData.poorvegam = city.city_name;
   this.formDataTa.poorvegam = city.city_name_ta || city.city_name;
+
   this.showPoorvegamDropdown = false;
 }
 
@@ -2945,12 +2952,14 @@ onIruppidamSearchChange(): void {
 }
 
 selectIruppidam(city: any): void {
-  this.iruppidamSearch = this.currentLang === 'ta'
-    ? (city.city_name_ta || city.city_name)
-    : city.city_name;
+  this.iruppidamSearch =
+    this.currentLang === 'ta'
+      ? (city.city_name_ta || city.city_name)
+      : city.city_name;
 
   this.formData.iruppidam = city.city_name;
   this.formDataTa.iruppidam = city.city_name_ta || city.city_name;
+
   this.showIruppidamDropdown = false;
 }
 }
