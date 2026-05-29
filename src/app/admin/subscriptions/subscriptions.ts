@@ -21,7 +21,7 @@ export class Subscriptions implements OnInit {
   subscriptions: any[] = [];
   currentPage = 1;
 
-itemsPerPage = 10;
+itemsPerPage = 5;
 constructor(
   private ngZone: NgZone,
   private cd: ChangeDetectorRef
@@ -52,61 +52,47 @@ txt(en: string, ta: string): string {
   async ngOnInit(): Promise<void> {
     await this.loadSubscriptions();
   }
+async loadSubscriptions(): Promise<void> {
+  try {
 
-  async loadSubscriptions(): Promise<void> {
     this.isLoading = true;
 
     const { data, error } = await supabase
       .from('user_subscriptions')
-.select(`
-  subscription_id,
-  user_id,
-  payment_mode,
-  plan_id,
-  start_date,
-  end_date,
-  contacts_used,
-  total_contacts_allowed,
-  is_active,
-  created_at,
-
-  mst_plans (
-    plan_name,
-    plan_code,
-    price,
-    duration_months,
-    contact_limit,
-    profile_view_limit
-  ),
-
-  user_profiles (
-    profile_code
-  )
-`)
+      .select(`
+        *,
+        mst_plans (
+          plan_name,
+          plan_code,
+          price,
+          duration_months,
+          profile_view_limit
+        ),
+        user_profiles (
+          profile_code
+        )
+      `)
       .order('created_at', { ascending: false });
 
- this.ngZone.run(() => {
+    if (error) {
+      console.error(error);
+      this.subscriptions = [];
+    } else {
+      this.subscriptions = data || [];
+    }
 
-  if (error) {
+  } catch (e) {
 
-
-
+    console.error(e);
     this.subscriptions = [];
 
-  } else {
-
-    this.subscriptions = data || [];
-
-  }
-
-  this.isLoading = false;
-
-  this.cd.detectChanges();
-
-});
+  } finally {
 
     this.isLoading = false;
+    this.cd.detectChanges();
+
   }
+}
 get totalPages(): number {
 
   return Math.ceil(
@@ -153,7 +139,7 @@ prevPage(): void {
 
     return this.subscriptions.filter(item =>
      String(item.user_id || '').toLowerCase().includes(term) ||
-String(item.profile_id || '').toLowerCase().includes(term) ||
+String(item.profile_code || item.user_profiles?.profile_code || '').toLowerCase().includes(term) ||
 String(item.payment_mode || '').toLowerCase().includes(term) ||
       String(item.mst_plans?.plan_name || '').toLowerCase().includes(term) ||
       String(item.mst_plans?.plan_code || '').toLowerCase().includes(term)
@@ -175,11 +161,9 @@ String(item.payment_mode || '').toLowerCase().includes(term) ||
 
     await this.loadSubscriptions();
 
-this.ngZone.run(() => {
 
   this.cd.detectChanges();
 
-});
   }
 
   async refresh(): Promise<void> {
