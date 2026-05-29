@@ -1473,10 +1473,10 @@ get planStatus(): string {
   }
 
   get filteredProfiles(): ProfileItem[] {
- if (this.sidebarFilter === 'shortlistedMe') {
+if (this.sidebarFilter === 'shortlistedMe') {
   return this.profiles.filter(profile =>
- this.shortlistedMeUserIds.includes(profile.profileId)
-);
+    this.shortlistedMeUserIds.includes(profile.userId)
+  );
 }
 if (this.sidebarFilter === 'shortlistedByYou') {
   return this.profiles.filter(profile =>
