@@ -330,8 +330,16 @@ sothukal_ta: data?.sothukal_ta || '',
 kuladeivam: data?.kuladeivam || '',
 kuladeivam_ta: data?.kuladeivam_ta || '',
 
-sub_caste: data?.sub_caste || '',
-sub_caste_ta: data?.sub_caste_ta || '',
+sub_caste: data?.sub_caste || data?.sub_caste_text || '',
+sub_caste_ta: data?.sub_caste_ta || data?.sub_caste_text_ta || '',
+
+kalappu_thirumanam: data?.kalappu_thirumanam || '',
+kalappu_thirumanam_details: data?.kalappu_thirumanam_details || '',
+
+kudumba_nilai: data?.kudumba_nilai || '',
+
+work_place: data?.work_place || '',
+work_place_ta: data?.work_place_ta || '',
 
 handicap_status: data?.handicap_status || '',
 handicap_details: data?.handicap_details || '',

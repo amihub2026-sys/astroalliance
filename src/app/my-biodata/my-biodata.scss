@@ -613,9 +613,8 @@
 .form-grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:22px;
+  gap:10px 20px;
 }
-
 .field{
   display:flex;
   flex-direction:column;
@@ -642,10 +641,17 @@
   box-shadow:none;
 }
 .field textarea{
-  min-height:80px;
+  min-height:40px;
+  height:40px;
   resize:none;
+  overflow:hidden;
 }
-
+.field.full-width textarea{
+  min-height:50px;
+  height:auto;
+  padding-top:6px;
+  padding-bottom:6px;
+}
 .full-width{
   grid-column:1 / -1;
 }
