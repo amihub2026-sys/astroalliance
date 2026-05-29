@@ -484,8 +484,9 @@ kudumbaNilaiOptions = [
     '12': 'வ'
   };
 
-  rasiChart: string[] = Array(12).fill('');
-  amsamChart: string[] = Array(12).fill('');
+rasiChart: string[] = Array(12).fill('');
+amsamChart: string[] = Array(12).fill('');
+
 
   selectedProfileImage: File | null = null;
   profilePreviewUrl: string | null = null;
@@ -971,53 +972,99 @@ onChartInput(
   event: Event
 ): void {
 
-  const input =
-    event.target as HTMLInputElement;
+  const input = event.target as HTMLTextAreaElement;
+  let value = input.value.trim();
 
-  // get raw typed value
-  let rawValue = input.value;
-
-  // convert tamil back to numbers first
-  Object.entries(this.planetShortMap).forEach(([num, tamil]) => {
-
-    rawValue = rawValue.replaceAll(
-      tamil,
-      num
-    );
-
-  });
-
-  // allow only numbers and /
- rawValue = rawValue.replace(/[^0-9\/]/g, '');
-
-  // split values
- const numbers = rawValue
-  .split('/')
-  .map(v => v.trim());
-
-  // convert numbers → tamil
-  const converted = numbers.map(num => {
-
-    return this.planetShortMap[num] || num;
-
-  });
-
-  const finalValue =
-    converted.join('/');
-
-  // keep showing tamil text
-  input.value = finalValue;
-
-  if (type === 'rasi') {
-
-    this.rasiChart[index] = finalValue;
-
-  } else {
-
-    this.amsamChart[index] = finalValue;
-
+  if (!value) {
+    input.value = '';
+    type === 'rasi'
+      ? this.rasiChart[index] = ''
+      : this.amsamChart[index] = '';
+    return;
   }
 
+  const tamilToNumber = Object.entries(this.planetShortMap)
+    .sort((a, b) => b[1].length - a[1].length);
+
+  tamilToNumber.forEach(([num, tamil]) => {
+    value = value.replaceAll(tamil, num);
+  });
+
+  value = value.replace(/[^0-9/]/g, '');
+
+  const finalValue = value
+    .split('/')
+    .map(v => v.trim())
+    .map(num => num ? (this.planetShortMap[num] || num) : '')
+    .join('/');
+
+  input.value = finalValue;
+
+  type === 'rasi'
+    ? this.rasiChart[index] = finalValue
+    : this.amsamChart[index] = finalValue;
+}
+onChartKeydown(
+  type: 'rasi' | 'amsam',
+  index: number,
+  event: KeyboardEvent
+): void {
+
+  if (event.key !== 'Backspace' && event.key !== 'Delete') {
+    return;
+  }
+
+  const input = event.target as HTMLTextAreaElement;
+  const value = input.value;
+
+  const start = input.selectionStart ?? value.length;
+  const end = input.selectionEnd ?? value.length;
+
+  // only handle normal single-cursor delete
+  if (start !== end) return;
+
+  const planetValues = Object.values(this.planetShortMap)
+    .sort((a, b) => b.length - a.length);
+
+  // BACKSPACE: delete full planet before cursor
+  if (event.key === 'Backspace') {
+    const beforeCursor = value.substring(0, start);
+
+    const matched = planetValues.find(p => beforeCursor.endsWith(p));
+
+    if (matched) {
+      event.preventDefault();
+
+      const newValue =
+        value.substring(0, start - matched.length) +
+        value.substring(start);
+
+      input.value = newValue;
+
+      if (type === 'rasi') this.rasiChart[index] = newValue;
+      else this.amsamChart[index] = newValue;
+    }
+  }
+
+  // DELETE: delete full planet after cursor
+  if (event.key === 'Delete') {
+    const afterCursor = value.substring(start);
+
+    const matched = planetValues.find(p => afterCursor.startsWith(p));
+
+    if (matched) {
+      event.preventDefault();
+
+      const newValue =
+        value.substring(0, start) +
+        value.substring(start + matched.length);
+
+      input.value = newValue;
+
+      if (type === 'rasi') this.rasiChart[index] = newValue;
+      else this.amsamChart[index] = newValue;
+    }
+  }
 }
   getPlanetShort(value: string | number | null | undefined): string {
     if (value === null || value === undefined) return '';
