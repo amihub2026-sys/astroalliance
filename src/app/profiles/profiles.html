@@ -19,11 +19,12 @@
       (click)="setTab('liked')"
       type="button"
     >
-      {{ tr.tabs.liked }} ({{ likedProfiles.length }})
+{{ tr.tabs.liked }} ({{ likedProfilesCount }})
     </button>
 
     <button
       [class.active]="activeTab === 'likedMe'"
+
       (click)="setTab('likedMe')"
       type="button"
     >
@@ -636,7 +637,8 @@
   <div class="sidebar-section">
    <h3>{{ tr.sidebar.basedOnActivity }}</h3>
 
-   <div class="match-filter-item" [class.active]="sidebarFilter === 'liked'" (click)="applySidebarFilter('liked'); mobileFilterOpen = false">
+   <div class="match-filter-item" [class.active]="sidebarFilter === 'shortlistedByYou'"
+(click)="applySidebarFilter('shortlistedByYou'); mobileFilterOpen = false">
       <span class="filter-icon">★</span>
       <div>
      <h4>{{ tr.sidebar.shortlistedByYou }}</h4>
@@ -830,11 +832,10 @@
   (error)="profile.image = 'assets/default-avatar.png'"
 />
 
-         <button
-  class="like-icon"
-  [class.liked]="profile.liked"
-  (click)="likeProfile(profile); $event.stopPropagation()"
+      <button
   type="button"
+  class="like-icon"
+  (click)="instantLike($event, profile)"
 >
   {{ profile.liked ? '♥' : '♡' }}
 </button>
@@ -901,11 +902,10 @@
                 {{ tr.profile.viewProfile }}
               </button>
 
-          <button
-  class="like-btn"
-  [class.liked-btn]="profile.liked"
-  (click)="likeProfile(profile); $event.stopPropagation()"
+<button
   type="button"
+  class="like-btn"
+  (click)="instantLike($event, profile)"
 >
   {{ profile.liked ? tr.profile.liked : tr.profile.like }}
 </button>
@@ -972,10 +972,10 @@
               {{ tr.profile.viewProfile }}
             </button>
 
-           <button
+          <button
   class="like-btn liked-btn"
-  (click)="likeProfile(profile); $event.stopPropagation()"
   type="button"
+  (click)="instantLike($event, profile)"
 >
   {{ tr.profile.removeLike }}
 </button>
@@ -1028,13 +1028,13 @@
               {{ tr.profile.viewProfile }}
             </button>
 
-            <button
-              class="like-btn"
-              (click)="likeProfile(profile)"
-              type="button"
-            >
-              {{ tr.profile.likeBack }}
-            </button>
+          <button
+  type="button"
+  class="like-btn"
+  (click)="instantLike($event, profile)"
+>
+  {{ profile.liked ? 'Remove Like' : 'Like' }}
+</button>
 
            
           </div>
