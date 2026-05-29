@@ -113,8 +113,10 @@ casteMap: Record<string, string> = {};
   currentSubscriptionId = '';
   currentPlanId = '';
 
-  profiles: ProfileItem[] = [];
-  likedMeProfiles: ProfileItem[] = [];
+ profiles: ProfileItem[] = [];
+likedMeProfiles: ProfileItem[] = [];
+likedProfilesCount = 0;
+likedProfileIdSet = new Set<string>();
   visibleProfileCount = 9;
 visibleProfileTimer: any = null;
 showProfileLoading = false;
@@ -498,13 +500,12 @@ await Promise.all([
 ]);
 
 
+await this.loadProfilesFromSupabase();
+
 await this.loadLikedProfiles();
 await this.loadLikedMeProfiles();
 
-await this.loadProfilesFromSupabase();
-
 this.loadShortlistedByYouFromSupabase();
-this.loadShortlistedMeFromSupabase();
 this.loadShortlistedMeFromSupabase();
 
 
@@ -1215,12 +1216,67 @@ async loadShortlistedByYouFromSupabase(): Promise<void> {
     .map((x: any) => String(x.profile_id || '').trim())
     .filter(Boolean);
 
+this.profiles = this.profiles.map(profile => ({
+  ...profile
+}));
+
+  this.cdr.detectChanges();
+}
+async loadLikedProfiles(): Promise<void> {
+  const userId = this.getLoggedInUserId();
+
+  if (!userId) {
+    this.likedProfilesCount = 0;
+    this.likedProfileIdSet.clear();
+    return;
+  }
+
+  try {
+    const { data: myProfile, error: myProfileError } = await supabase
+      .from('user_profiles')
+      .select('profile_id')
+      .eq('user_id', userId)
+      .single();
+
+    if (myProfileError) throw myProfileError;
+    if (!myProfile?.profile_id) return;
+
+    const myProfileId = String(myProfile.profile_id);
+
+    const { data, error } = await supabase
+      .from('profile_likes')
+      .select('to_profile_id')
+      .eq('from_profile_id', myProfileId);
+
+    if (error) throw error;
+
+    const likedIds = (data || []).map((x: any) => String(x.to_profile_id));
+    if (likedIds.length === 0) {
+  this.likedProfilesCount = 0;
+
   this.profiles = this.profiles.map(profile => ({
     ...profile,
-    liked: this.shortlistedByYouIds.includes(profile.id)
+    liked: false
   }));
 
   this.cdr.detectChanges();
+  return;
+}
+
+    this.likedProfileIdSet = new Set(likedIds);
+   this.likedProfilesCount = this.profiles.filter(
+  profile => this.likedProfileIdSet.has(profile.profileId)
+).length;
+
+    this.profiles = this.profiles.map(profile => ({
+      ...profile,
+      liked: this.likedProfileIdSet.has(profile.profileId)
+    }));
+
+    this.cdr.detectChanges();
+  } catch (err) {
+    console.error('Load liked profiles error:', err);
+  }
 }
 async loadLikedMeProfiles(): Promise<void> {
 
@@ -1422,11 +1478,13 @@ get planStatus(): string {
  this.shortlistedMeUserIds.includes(profile.profileId)
 );
 }
-
-  if (this.sidebarFilter === 'liked') {
+if (this.sidebarFilter === 'shortlistedByYou') {
   return this.profiles.filter(profile =>
-  this.shortlistedByYouIds.includes(profile.profileId) || profile.liked === true
+    this.shortlistedByYouIds.includes(profile.id)
   );
+}
+if (this.sidebarFilter === 'liked') {
+  return this.profiles.filter(profile => profile.liked === true);
 }
     const result = this.profiles.filter((profile) => {
       const religion = this.normalizeText(this.getText(profile.religion));
@@ -1499,8 +1557,8 @@ get planStatus(): string {
     const sidebarFiltered = result.filter((profile) => {
       if (this.sidebarFilter === 'all') return true;
 
-    if (this.sidebarFilter === 'liked') {
-  return profile.liked === true || this.shortlistedByYouIds.includes(profile.id);
+ if (this.sidebarFilter === 'liked') {
+  return profile.liked === true;
 }
 
     if (this.sidebarFilter === 'shortlistedMe') {
@@ -2159,9 +2217,13 @@ if (!alreadyUnlocked) {
       this.snackbar.error(error?.message || 'Failed to update subscription usage');
     }
   }
+instantLike(event: MouseEvent, profile: ProfileItem): void {
+  event.preventDefault();
+  event.stopPropagation();
 
+  this.likeProfile(profile);
+}
 async likeProfile(profile: ProfileItem): Promise<void> {
-
   const userId = this.getLoggedInUserId();
 
   if (!userId) {
@@ -2169,9 +2231,22 @@ async likeProfile(profile: ProfileItem): Promise<void> {
     return;
   }
 
-  try {
+  const oldLiked = profile.liked;
+  const targetProfileId = String(profile.profileId);
 
-    // GET MY PROFILE
+  // FAST UI UPDATE FIRST
+  profile.liked = !oldLiked;
+
+  if (profile.liked) {
+    this.likedProfileIdSet.add(targetProfileId);
+  } else {
+    this.likedProfileIdSet.delete(targetProfileId);
+  }
+
+  this.likedProfilesCount = this.likedProfileIdSet.size;
+  this.cdr.detectChanges();
+
+  try {
     const { data: myProfile, error: myProfileError } = await supabase
       .from('user_profiles')
       .select('profile_id')
@@ -2179,92 +2254,49 @@ async likeProfile(profile: ProfileItem): Promise<void> {
       .single();
 
     if (myProfileError) throw myProfileError;
+    if (!myProfile?.profile_id) throw new Error('My profile not found');
 
     const myProfileId = String(myProfile.profile_id);
 
-    console.log('MY PROFILE ID:', myProfileId);
-    console.log('TARGET PROFILE ID:', profile.profileId);
-
-    // REMOVE LIKE
     if (profile.liked) {
+      const { error } = await supabase
+        .from('profile_likes')
+        .upsert(
+          {
+            from_profile_id: myProfileId,
+            to_profile_id: targetProfileId
+          },
+          { onConflict: 'from_profile_id,to_profile_id' }
+        );
 
+      if (error) throw error;
+    } else {
       const { error } = await supabase
         .from('profile_likes')
         .delete()
         .eq('from_profile_id', myProfileId)
-        .eq('to_profile_id', profile.profileId);
+        .eq('to_profile_id', targetProfileId);
 
       if (error) throw error;
-
-      profile.liked = false;
-
-    }
-
-    // ADD LIKE
-    else {
-
-      const { error } = await supabase
-        .from('profile_likes')
-        .insert({
-          from_profile_id: myProfileId,
-          to_profile_id: profile.profileId
-        });
-
-      if (error) throw error;
-
-      profile.liked = true;
-
     }
 
     await this.loadLikedProfiles();
-    await this.loadLikedMeProfiles();
 
+  } catch (err: any) {
+    // rollback if failed
+    profile.liked = oldLiked;
+
+    if (oldLiked) {
+      this.likedProfileIdSet.add(targetProfileId);
+    } else {
+      this.likedProfileIdSet.delete(targetProfileId);
+    }
+
+    this.likedProfilesCount = this.likedProfileIdSet.size;
     this.cdr.detectChanges();
 
-  } catch (err) {
-
     console.error('LIKE ERROR:', err);
-
-  }
-}
-async loadLikedProfiles(): Promise<void> {
-
-  const userId = this.getLoggedInUserId();
-
-  if (!userId) return;
-
-  try {
-
-    const { data: myProfile } = await supabase
-      .from('user_profiles')
-      .select('profile_id')
-      .eq('user_id', userId)
-      .single();
-
-    if (!myProfile) return;
-
-    const myProfileId = String(myProfile.profile_id);
-
-    const { data, error } = await supabase
-      .from('profile_likes')
-      .select('to_profile_id')
-      .eq('from_profile_id', myProfileId);
-
-    if (error) throw error;
-
-    const likedIds = (data || []).map((x: any) =>
-      String(x.to_profile_id)
-    );
-
-    this.profiles = this.profiles.map(profile => ({
-      ...profile,
-     liked: likedIds.includes(profile.profileId)
-    }));
-
-  } catch (err) {
-
-    console.error(err);
-
+    this.snackbar.error(err?.message || 'Failed to update like');
   }
 }
   async sendInterest(profile: ProfileItem): Promise<void> {
