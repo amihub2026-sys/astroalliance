@@ -588,7 +588,7 @@
 
   <!-- DEFAULT MALE IMAGE -->
   <img
-    *ngIf="!userProfileImage && userGender === 'Male'"
+    *ngIf="!userProfileImage && userGender.toLowerCase() === 'male'"
     src="assets/mat-02.jpg"
     class="sidebar-user-image"
     alt="Male User"
@@ -596,7 +596,7 @@
 
   <!-- DEFAULT FEMALE IMAGE -->
   <img
-    *ngIf="!userProfileImage && userGender === 'Female'"
+   *ngIf="!userProfileImage && userGender.toLowerCase() === 'female'"
     src="assets/mat-03.jpg"
     class="sidebar-user-image"
     alt="Female User"
