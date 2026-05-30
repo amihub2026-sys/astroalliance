@@ -2467,11 +2467,11 @@ birth_place: this.safeText(this.formData.birthPlace),
 
 
 thisai: this.safeText(
-  `${this.formData.thisaiYear || ''} Year ${this.formData.thisaiMonth || ''} Month ${this.formData.thisaiDay || ''} Day`
+  `${this.formData.thisaiYear || ''} Y ${this.formData.thisaiMonth || ''} M ${this.formData.thisaiDay || ''} D`
 ),
 
 thisai_ta: this.safeText(
-  `${this.formData.thisaiYear || ''} வருடம் ${this.formData.thisaiMonth || ''} மாதம் ${this.formData.thisaiDay || ''} நாள்`
+  `${this.formData.thisaiYear || ''} வ ${this.formData.thisaiMonth || ''} மா ${this.formData.thisaiDay || ''} நா`
 ),
 
 thisai_iruppu: this.safeText(this.formData.thisaiIruppu),
