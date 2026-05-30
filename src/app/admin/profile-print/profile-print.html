@@ -41,10 +41,27 @@
 <p><strong>தாயின் பெயர் :</strong> {{ v(profile.mother_name, profile.mother_name_ta) }}</p>
 <p><strong>திருமணமான சகோதரர்கள் :</strong> {{ profile.married_brothers || 0 }}</p>
 <p><strong>திருமணமாகாத சகோதரர்கள் :</strong> {{ profile.unmarried_brothers || 0 }}</p>
-<p><strong>மாற்றுத்திறனாளி :</strong> {{ profile.handicap_status ? 'ஆம்' : 'இல்லை' }}</p>
-<p><strong>மாற்றுத்திறனாளி விவரம் :</strong> {{ v(profile.handicap_details, profile.handicap_details_ta) || '-' }}</p>
-<p><strong>கலப்பு திருமணமா? :</strong> {{ profile.kalappu_thirumanam === 'true' || profile.kalappu_thirumanam === true ? 'ஆம்' : 'இல்லை' }}</p>
-<p><strong>கலப்பு திருமண விவரம் :</strong> {{ v(profile.kalappu_thirumanam_details, profile.kalappu_thirumanam_details_ta) || '-' }}</p>
+<p *ngIf="profile.handicap_status">
+  <strong>மாற்றுத்திறனாளி :</strong> ஆம்
+</p>
+
+<p *ngIf="profile.handicap_status && (profile.handicap_details || profile.handicap_details_ta)">
+  <strong>மாற்றுத்திறனாளி விவரம் :</strong>
+  {{ v(profile.handicap_details, profile.handicap_details_ta) }}
+</p>
+
+<p *ngIf="profile.kalappu_thirumanam === true || profile.kalappu_thirumanam === 'true'">
+  <strong>கலப்பு திருமணமா? :</strong> ஆம்
+</p>
+
+<p *ngIf="
+(profile.kalappu_thirumanam === true || profile.kalappu_thirumanam === 'true')
+&&
+(profile.kalappu_thirumanam_details || profile.kalappu_thirumanam_details_ta)
+">
+  <strong>கலப்பு திருமண விவரம் :</strong>
+  {{ v(profile.kalappu_thirumanam_details, profile.kalappu_thirumanam_details_ta) }}
+</p>
 
 <p class="expectation-line">
   <strong>எதிர்பார்ப்பு :</strong>
@@ -78,7 +95,39 @@
 <p><strong>இருப்பிடம் :</strong> {{ v(profile.iruppidam, profile.iruppidam_ta) }}</p>
 <p><strong>குலதெய்வம் :</strong> {{ v(profile.kuladeivam, profile.kuladeivam_ta) }}</p>
 <p><strong>சொத்துக்கள் :</strong> {{ v(profile.sothukal, profile.sothukal_ta) }}</p>
+<!-- Children Details (Only for Divorced / Widowed / Second Marriage) -->
 
+<p *ngIf="profile.children_status">
+  <strong>குழந்தைகள் :</strong> ஆம்
+</p>
+
+<p *ngIf="
+  profile.marital_status_text !== '1st Marriage' &&
+  profile.marital_status_text !== 'First Marriage' &&
+  profile.children_status &&
+  profile.children_count
+">
+  <strong>குழந்தைகள் எண்ணிக்கை :</strong>
+  {{ profile.children_count }}
+</p>
+
+<p *ngIf="
+  profile.marital_status_text !== '1st Marriage' &&
+  profile.marital_status_text !== 'First Marriage' &&
+  profile.children_details
+">
+  <strong>குழந்தைகள் விவரம் :</strong>
+  {{ profile.children_details }}
+</p>
+
+<p *ngIf="
+  profile.marital_status_text !== '1st Marriage' &&
+  profile.marital_status_text !== 'First Marriage' &&
+  (profile.second_marriage_reason || profile.second_marriage_reason_ta)
+">
+  <strong>இரண்டாம் திருமண காரணம் :</strong>
+  {{ v(profile.second_marriage_reason, profile.second_marriage_reason_ta) }}
+</p>
 
     </div>
 
