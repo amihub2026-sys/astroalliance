@@ -65,6 +65,16 @@ v(en: any, ta: any): string {
   return ta || en || '-';
 }
 
+formatThisaiIruppu(value: string): string {
+  return (value || '')
+    .replaceAll('வருடம்', 'வ')
+    .replaceAll('மாதம்', 'மா')
+    .replaceAll('நாள்', 'நா')
+    .replaceAll('Year', 'Y')
+    .replaceAll('Month', 'M')
+    .replaceAll('Day', 'D');
+}
+
 getRasiChart(): string[] {
 
   const chart = this.profile?.rasi_chart;
