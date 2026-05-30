@@ -8,10 +8,9 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { supabase } from '../../core/supabase.client';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+
 
 @Component({
   selector: 'app-profile-details',
@@ -25,10 +24,10 @@ export class ProfileDetails implements OnInit, OnChanges {
 
   isLoading = true;
   profile: any = null;
- pdfWithPhoto = false;
-pdfWithAddress = true;
+//  pdfWithPhoto = false;
+// pdfWithAddress = true;
 showPrintOptions = false;
-pdfPhotoUrl = '/assets/default-avatar.png';
+// pdfPhotoUrl = '/assets/default-avatar.png';
 get currentLang(): 'en' | 'ta' {
   if (typeof window === 'undefined') {
     return 'en';
@@ -64,7 +63,10 @@ statusText(status: string): string {
 
   return map[status || 'Pending'] || status;
 }
-  constructor(private cdr: ChangeDetectorRef) {}
+ constructor(
+  private cdr: ChangeDetectorRef,
+  private router: Router
+) {}
 
   ngOnInit(): void {
     if (typeof window === 'undefined') {
@@ -173,46 +175,21 @@ getAmsamChart(): string[] {
     this.cdr.detectChanges();
   }
 
-downloadBiodataPdf(
-  withPhoto: boolean,
-  withAddress: boolean
-): void {
 
-  this.pdfWithPhoto = withPhoto;
-  this.pdfWithAddress = withAddress;
+goToPrint(withPhoto: boolean, withAddress: boolean): void {
+  if (!this.profile?.profile_id) return;
 
-  const mainImg =
-    document.querySelector('.main-profile-image') as HTMLImageElement;
-
-  this.pdfPhotoUrl = withPhoto
-    ? mainImg?.src || '/assets/default-avatar.png'
-    : '/assets/default-avatar.png';
-
-  this.cdr.detectChanges();
-
-  setTimeout(() => {
-    window.print();
-  }, 500);
+  this.router.navigate(
+    ['/admin/profile-print', this.profile.profile_id],
+    {
+      queryParams: {
+        photo: withPhoto ? '1' : '0',
+        address: withAddress ? '1' : '0'
+      }
+    }
+  );
 }
-async imageToBase64(url: string): Promise<string> {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
 
-    return await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        resolve(reader.result as string);
-      };
-
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch {
-    return '/assets/default-avatar.png';
-  }
-}
   async updateStatus(status: string): Promise<void> {
     if (!this.profile) return;
 

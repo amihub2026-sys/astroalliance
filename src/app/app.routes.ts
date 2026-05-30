@@ -136,6 +136,12 @@ export const routes: Routes = [
     import('./admin/profile-details/profile-details')
       .then(m => m.ProfileDetails)
 },
+{
+  path: 'profile-print/:id',
+  loadComponent: () =>
+    import('./admin/profile-print/profile-print')
+      .then(m => m.ProfilePrint)
+},
   ]
 },
 
