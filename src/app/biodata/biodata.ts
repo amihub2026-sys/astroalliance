@@ -359,8 +359,9 @@ childrenCount: 'குழந்தைகள் எண்ணிக்கை',
     gender: '',
     dob: '',
     age: '',
-    maritalStatus: '',
-    mobile: '',
+  maritalStatus: '',
+secondMarriageReason: '',
+mobile: '',
     email: '',
     height: '',
     weight: '',
@@ -498,7 +499,9 @@ amsamChart: string[] = Array(12).fill('');
   selectedHoroscopeFile: File | null = null;
   horoscopePreviewUrl: string | null = null;
   casteList: any[] = [];
-  religionList: any[] = [];
+religionList: any[] = [];
+genderList: any[] = [];
+maritalStatusList: any[] = [];
   dhoshamDbList: any[] = [];
   thisaiIruppuList: any[] = [];
   thisaiList: any[] = [];
@@ -695,33 +698,7 @@ if (target === 'ta' && localMap[lower]) {
   }
 
 }
-getTamilPersonalValue(
-  type: 'gender' | 'maritalStatus',
-  value: string
-): string {
 
-  if (this.currentLang !== 'ta') {
-    return value;
-  }
-
-  const map: any = {
-
-    gender: {
-      Male: 'ஆண்',
-      Female: 'பெண்'
-    },
-
-    maritalStatus: {
-      Unmarried: 'திருமணம் ஆகாதவர்',
-      Divorced: 'விவாகரத்து',
-      Widowed: 'விதவை / விதவன்'
-    }
-
-  };
-
-  return map[type]?.[value] || value;
-
-}
 // async translateFormToTamil(): Promise<void> {
 // alert('Biodata translating');
 //   this.formData.fullName =
@@ -1156,8 +1133,10 @@ if (!editId && isAdminCreatePage) {
 }
   }
 
-  await this.loadReligions();
-  await this.loadThisaiIruppu();
+await this.loadGenders();
+await this.loadReligions();
+await this.loadMaritalStatuses();
+await this.loadThisaiIruppu();
   await this.loadCastes();
   await this.loadCountries();
   await this.loadStates();
@@ -1288,6 +1267,15 @@ if (!data) {
       this.formData.dob = data.dob || '';
       this.formData.age = data.age ? String(data.age) : '';
       this.formData.maritalStatus = data.marital_status_text || '';
+      if (data.marital_status_text === 'Divorced') {
+  this.formData.maritalStatus = 'Second Marriage';
+  this.formData.secondMarriageReason = 'Divorced';
+}
+
+if (data.marital_status_text === 'Widowed') {
+  this.formData.maritalStatus = 'Second Marriage';
+  this.formData.secondMarriageReason = 'Widowed';
+}
       this.formData.mobile = data.mobile || '';
       this.formData.additionalMobile =
   Array.isArray(data.additional_mobile)
@@ -2639,6 +2627,29 @@ async loadReligions() {
 
   this.religionList = data || [];
 
+}
+async loadMaritalStatuses(): Promise<void> {
+  const { data, error } = await supabase
+    .from('mst_marital_statuses')
+    .select('marital_status_id, status_code, status_name, status_name_ta, sort_order, is_active')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  if (error) {
+    this.maritalStatusList = [];
+    return;
+  }
+
+  this.maritalStatusList = data || [];
+}
+async loadGenders(): Promise<void> {
+  const { data, error } = await supabase
+    .from('mst_genders')
+    .select('gender_id, gender_code, gender_name, gender_name_ta, sort_order')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  this.genderList = error ? [] : (data || []);
 }
 async loadThisaiIruppu(): Promise<void> {
 
