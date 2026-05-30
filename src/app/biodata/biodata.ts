@@ -1335,8 +1335,8 @@ this.formData.thisai =
 this.formData.thisaiIruppu =
   data.thisai_iruppu || '';
 
-  const thisaiMatch = String(
-  data.thisai_iruppu || ''
+const thisaiMatch = String(
+  data.thisai || ''
 ).match(/(\d+)\s*Year\s*(\d+)\s*Month\s*(\d+)\s*Day/i);
 
 this.formData.thisaiYear = thisaiMatch?.[1] || '';
@@ -2055,11 +2055,7 @@ if (missingField) {
 
 this.isSaving = true;
 
-this.formData.thisaiIruppu =
-  `${this.formData.thisaiYear || 0} Year ${this.formData.thisaiMonth || 0} Month ${this.formData.thisaiDay || 0} Day`;
 
-this.formDataTa.thisaiIruppu =
-  `${this.formData.thisaiYear || 0} வருடம் ${this.formData.thisaiMonth || 0} மாதம் ${this.formData.thisaiDay || 0} நாள்`;
 
 await this.prepareEnglishValues();
    try {
@@ -2468,17 +2464,21 @@ gothram: this.safeText(
 birth_place: this.safeText(this.formData.birthPlace),
 
 
-
 thisai: this.safeText(
-  `${this.formData.thisaiYear || 0} Year ${this.formData.thisaiMonth || 0} Month ${this.formData.thisaiDay || 0} Day`
+  `${this.formData.thisaiYear || ''} Year ${this.formData.thisaiMonth || ''} Month ${this.formData.thisaiDay || ''} Day`
 ),
 
 thisai_ta: this.safeText(
-  `${this.formData.thisaiYear || 0} வருடம் ${this.formData.thisaiMonth || 0} மாதம் ${this.formData.thisaiDay || 0} நாள்`
+  `${this.formData.thisaiYear || ''} வருடம் ${this.formData.thisaiMonth || ''} மாதம் ${this.formData.thisaiDay || ''} நாள்`
 ),
 
 thisai_iruppu: this.safeText(this.formData.thisaiIruppu),
-thisai_iruppu_ta: this.safeText(this.formDataTa.thisaiIruppu),
+
+thisai_iruppu_ta: this.safeText(
+  this.thisaiIruppuList.find(
+    (x: any) => x.thisai_iruppu_name === this.formData.thisaiIruppu
+  )?.thisai_iruppu_name_ta || this.formData.thisaiIruppu
+),
 
 paatham: this.safeText(this.formData.paatham),
 paatham_ta: this.safeText(this.formDataTa.paatham),

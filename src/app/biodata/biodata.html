@@ -1495,17 +1495,32 @@ formData.secondMarriageReason === 'Widowed'
 
     <div class="iruppu-box">
       <span>{{ currentLang === 'ta' ? 'வருடம்' : 'Year' }}</span>
-      <input type="number" [(ngModel)]="formData.thisaiYear" name="thisaiYear">
+     <input
+  type="text"
+  [(ngModel)]="formData.thisaiYear"
+  name="thisaiYear"
+  inputmode="numeric"
+>
     </div>
 
     <div class="iruppu-box">
       <span>{{ currentLang === 'ta' ? 'மாதம்' : 'Month' }}</span>
-      <input type="number" [(ngModel)]="formData.thisaiMonth" name="thisaiMonth">
+   <input
+  type="text"
+  [(ngModel)]="formData.thisaiMonth"
+  name="thisaiMonth"
+  inputmode="numeric"
+>
     </div>
 
     <div class="iruppu-box">
       <span>{{ currentLang === 'ta' ? 'நாள்' : 'Day' }}</span>
-      <input type="number" [(ngModel)]="formData.thisaiDay" name="thisaiDay">
+     <input
+  type="text"
+  [(ngModel)]="formData.thisaiDay"
+  name="thisaiDay"
+  inputmode="numeric"
+>
     </div>
 
   </div>
