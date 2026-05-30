@@ -457,16 +457,13 @@
 
 
 
-  <div class="geo-hint" *ngIf="activeTab === 'browse' && filters.radius">
-    <span *ngIf="geoLocationReady">
-      📍 {{ tr.filters.nearbyOnly }}: {{ filters.radius }} km
-    </span>
+<div
+  class="geo-hint"
+  *ngIf="activeTab === 'browse' && filters.radius && geoLocationReady">
 
-    <span *ngIf="!geoLocationReady">
-      📍 Radius selected, but current device location is not available. City filter will be used as fallback.
-    </span>
-  </div>
+  📍 {{ tr.filters.nearbyOnly }}: {{ filters.radius }} km
 
+</div>
 
 
 <div

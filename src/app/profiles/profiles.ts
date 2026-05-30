@@ -487,9 +487,7 @@ assistedMatchesText:
     this.isLoading = true;
     this.cdr.detectChanges();
 
-setTimeout(() => {
-  this.tryGetUserLocation();
-}, 2000);
+
     await this.loadCurrentPlanFromSupabase();
     await this.loadLoggedInUserProfile();
     await this.refreshUserProfileLanguage();
@@ -638,23 +636,30 @@ private async makeLangText(
   }
 
   tryGetUserLocation(): void {
-    if (!this.isBrowser || !('geolocation' in navigator)) {
-      this.geoLocationReady = false;
-      return;
-    }
+  if (!this.isBrowser || !('geolocation' in navigator)) {
+  return;
+}
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.userLat = position.coords.latitude;
-        this.userLng = position.coords.longitude;
-        this.geoLocationReady = true;
-        this.geoLocationDenied = false;
-        this.cdr.detectChanges();
-      },
+  navigator.geolocation.getCurrentPosition(
+  (position) => {
+    this.userLat = position.coords.latitude;
+    this.userLng = position.coords.longitude;
+    this.geoLocationReady = true;
+    this.geoLocationDenied = false;
+
+    // ✅ ADD THIS PART ONLY
+    this.profiles = this.profiles.map(profile => ({
+      ...profile,
+      distanceKm: this.getDistanceForProfile(profile)
+    }));
+
+    this.applyFilters?.();
+
+    this.cdr.detectChanges();
+  },
       (error) => {
         console.warn('Geolocation error:', error);
-        this.geoLocationReady = false;
-        this.geoLocationDenied = true;
+     // do nothing
         this.cdr.detectChanges();
       },
       {
@@ -1069,13 +1074,6 @@ image: row.profile_image_url || 'assets/default-avatar.png',
   })
 );
 
-
-      this.profiles = this.profiles.map((profile) => ({
-        ...profile,
-        distanceKm: this.getDistanceForProfile(profile)
-        
-      }));
-
       this.likedMeProfiles = [];
 
       this.cdr.detectChanges();
@@ -1473,6 +1471,9 @@ get planStatus(): string {
   }
 
   get filteredProfiles(): ProfileItem[] {
+    const radius = this.appliedFilters.radius;
+const userLat = this.userLat;
+const userLng = this.userLng;
 if (this.sidebarFilter === 'shortlistedMe') {
   return this.profiles.filter(profile =>
     this.shortlistedMeUserIds.includes(profile.userId)
@@ -1518,27 +1519,36 @@ if (this.sidebarFilter === 'liked') {
       const matchesAgeTo =
         this.appliedFilters.ageTo === null || profile.age <= this.appliedFilters.ageTo;
 
-      let matchesLocation = true;
+     
+let matchesLocation = true;
 
-      if (radiusFilter !== null && radiusFilter > 0) {
-        const cityDistance = this.getDistanceFromSelectedCity(profile);
+if (locationFilter) {
+  matchesLocation = city === locationFilter;
+}
 
-        if (locationFilter && cityDistance !== null) {
-          matchesLocation = cityDistance <= radiusFilter;
-        } else if (locationFilter) {
-          matchesLocation = city === locationFilter;
-        } else {
-          const deviceDistance = this.getDistanceForProfile(profile);
+if (matchesLocation && radiusFilter !== null && radiusFilter > 0) {
 
-          if (deviceDistance !== null) {
-            matchesLocation = deviceDistance <= radiusFilter;
-          } else {
-            matchesLocation = true;
-          }
-        }
-      } else {
-        matchesLocation = !locationFilter || city === locationFilter;
-      }
+  if (
+    this.userLat == null ||
+    this.userLng == null ||
+    profile.latitude == null ||
+    profile.longitude == null
+  ) {
+    matchesLocation = false;
+  } else {
+
+    const distance = this.calculateDistanceKm(
+      this.userLat,
+      this.userLng,
+      profile.latitude,
+      profile.longitude
+    );
+
+    profile.distanceKm = distance;
+
+    matchesLocation = distance <= radiusFilter;
+  }
+}
 
       return (
         matchesCaste &&
@@ -2043,14 +2053,6 @@ applyFilters(forceClose?: boolean): void {
 
   this.appliedFilters = { ...this.filters };
 
-  if (
-    this.appliedFilters.radius &&
-    !this.geoLocationReady &&
-    !this.appliedFilters.location
-  ) {
-    console.warn(this.tr.alerts.geoUnavailable);
-  }
-
   this.openDropdown = null;
 
   this.cdr.detectChanges();
@@ -2341,7 +2343,7 @@ async loadLoggedInUserProfile(): Promise<void> {
 
   const { data, error } = await supabase
     .from('user_profiles')
-    .select('full_name, full_name_ta, profile_image_url, gender_text, caste_text')
+ .select('full_name, full_name_ta, profile_image_url, gender_text, caste_text, latitude, longitude')
     .eq('user_id', userId)
     .maybeSingle();
 
@@ -2357,6 +2359,12 @@ this.userProfileName =
       this.userProfileImage = data?.profile_image_url || '';
  this.userGender = data?.gender_text || '';
 this.userCaste = data?.caste_text || '';
+this.userLat = this.toNullableNumber(data?.latitude);
+this.userLng = this.toNullableNumber(data?.longitude);
+console.log('USER LAT:', this.userLat);
+console.log('USER LNG:', this.userLng);
+console.log('PROFILE DATA:', data);
+this.geoLocationReady = this.userLat !== null && this.userLng !== null;
   this.cdr.detectChanges();
 }
   renewPlan(): void {
