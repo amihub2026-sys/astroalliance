@@ -6,7 +6,7 @@ import {
   NgZone,
   ChangeDetectorRef
 } from '@angular/core';
-
+import { SnackbarService } from '../../shared/snackbar.service';
 import {
   CommonModule,
   isPlatformBrowser
@@ -29,7 +29,8 @@ private isBrowser = isPlatformBrowser(this.platformId);
 constructor(
   private ngZone: NgZone,
   private cd: ChangeDetectorRef,
-  private router: Router
+  private router: Router,
+  private snackbar: SnackbarService
 ) {}
   isLoading = true;
 
@@ -249,7 +250,7 @@ async loadProfiles(): Promise<void> {
 
     if (error) {
      
-      alert(error.message);
+     this.snackbar.error(error.message);
       this.profiles = [];
       return;
     }
@@ -452,7 +453,7 @@ editProfile(profile: any, event?: Event): void {
   event?.stopPropagation();
 
   if (!profile?.profile_id) {
-    alert('Profile id missing');
+    this.snackbar.error('Profile id missing');
     return;
   }
 
@@ -476,12 +477,12 @@ async approveProfile(profile: any, event?: Event): Promise<void> {
 
   if (error) {
    
-    alert(error.message);
+    this.snackbar.error(error.message);
     return;
   }
 
   profile.profile_status = 'Approved';
-  alert('Profile approved successfully');
+  this.snackbar.success('Profile approved successfully');
   await this.loadProfiles();
 }
 
@@ -499,27 +500,35 @@ addPackage(profile: any, event?: Event): void {
 async deleteProfile(profile: any, event?: Event): Promise<void> {
   event?.stopPropagation();
 
-  const confirmDelete = confirm(`Delete ${profile.full_name}?`);
+  const confirmDelete = confirm(
+    `Are you sure you want to permanently delete ${profile.full_name || profile.profile_code}?`
+  );
 
   if (!confirmDelete) return;
 
-  const { error } = await supabase
-    .from('user_profiles')
-   .update({
-  profile_status: 'Deleted'
-})
-    .eq('profile_id', profile.profile_id);
+  const { error: viewsError } = await supabase
+    .from('profile_views')
+    .delete()
+    .or(`viewer_profile_id.eq.${profile.profile_id},viewed_profile_id.eq.${profile.profile_id}`);
 
-  if (error) {
-    
-    alert(error.message);
+  if (viewsError) {
+    this.snackbar.error(viewsError.message);
     return;
   }
 
-  alert('Profile removed successfully');
+  const { error } = await supabase
+    .from('user_profiles')
+    .delete()
+    .eq('profile_id', profile.profile_id);
+
+  if (error) {
+   this.snackbar.error(error.message);
+    return;
+  }
+
+ this.snackbar.success('Profile deleted successfully');
   await this.loadProfiles();
 }
-
 allowOnlyNumbers(event: KeyboardEvent): void {
 
   const charCode = event.which
