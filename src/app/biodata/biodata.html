@@ -173,11 +173,15 @@
   <label>{{ tr.labels.gender }} <span class="required">*</span></label>
             <select [(ngModel)]="formData.gender" name="gender">
               <option value="">{{ tr.labels.selectGender }}</option>
-              <option
-  *ngFor="let g of translations.en.options.genders"
-  [value]="g">
+<option
+  *ngFor="let g of genderList"
+  [value]="g.gender_name">
 
-  {{ getTamilPersonalValue('gender', g) }}
+  {{
+    currentLang === 'ta'
+      ? (g.gender_name_ta || g.gender_name)
+      : g.gender_name
+  }}
 
 </option>
             </select>
@@ -217,25 +221,50 @@
   <label>{{ tr.labels.maritalStatus }} <span class="required">*</span></label>
   <select [(ngModel)]="formData.maritalStatus" name="maritalStatus">
     <option value="">{{ tr.labels.selectStatus }}</option>
-   <option
-  *ngFor="let status of translations.en.options.maritalStatuses"
-  [value]="status">
+<option
+  *ngFor="let status of maritalStatusList"
+  [value]="status.status_name">
 
-  {{ getTamilPersonalValue('maritalStatus', status) }}
+  {{
+    currentLang === 'ta'
+      ? (status.status_name_ta || status.status_name)
+      : status.status_name
+  }}
 
 </option>
   </select>
   <small class="field-error" *ngIf="isInvalid('maritalStatus')">Required</small>
 </div>
 
+<div class="field" *ngIf="formData.maritalStatus === 'Second Marriage'">
+  <label>
+    {{ currentLang === 'ta' ? 'இரண்டாம் திருமண காரணம்' : 'Marriage Type' }}
+  </label>
 
+  <select
+    [(ngModel)]="formData.secondMarriageReason"
+    name="secondMarriageReason"
+  >
+    <option value="">
+      {{ currentLang === 'ta' ? 'தேர்வு செய்யவும்' : 'Select' }}
+    </option>
+
+    <option value="Divorced">
+      {{ currentLang === 'ta' ? 'விவாகரத்து' : 'Divorced' }}
+    </option>
+
+    <option value="Widowed">
+      {{ currentLang === 'ta' ? 'துணையை இழந்தவர்' : 'Widowed' }}
+    </option>
+  </select>
+</div>
 <!-- CHILDREN STATUS -->
 
 <div
   class="field"
   *ngIf="
-    formData.maritalStatus === 'Divorced' ||
-    formData.maritalStatus === 'Widowed'
+   formData.secondMarriageReason === 'Divorced' ||
+formData.secondMarriageReason === 'Widowed'
   "
 >
 
