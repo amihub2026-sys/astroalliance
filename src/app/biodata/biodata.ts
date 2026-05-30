@@ -1335,6 +1335,14 @@ this.formData.thisai =
 this.formData.thisaiIruppu =
   data.thisai_iruppu || '';
 
+  const thisaiMatch = String(
+  data.thisai_iruppu || ''
+).match(/(\d+)\s*Year\s*(\d+)\s*Month\s*(\d+)\s*Day/i);
+
+this.formData.thisaiYear = thisaiMatch?.[1] || '';
+this.formData.thisaiMonth = thisaiMatch?.[2] || '';
+this.formData.thisaiDay = thisaiMatch?.[3] || '';
+
 this.formData.paatham =
   data.paatham || '';
 
@@ -1345,6 +1353,12 @@ this.formData.poorvegam =
   data.poorvegam || '';
 
 this.formData.iruppidam =
+  data.iruppidam || '';
+
+this.poorvegamSearch =
+  data.poorvegam || '';
+
+this.iruppidamSearch =
   data.iruppidam || '';
 
 this.formData.kuladeivam =
@@ -2039,7 +2053,14 @@ if (missingField) {
   this.formData.city = selectedCity.city_name || '';
 }
 
- this.isSaving = true;
+this.isSaving = true;
+
+this.formData.thisaiIruppu =
+  `${this.formData.thisaiYear || 0} Year ${this.formData.thisaiMonth || 0} Month ${this.formData.thisaiDay || 0} Day`;
+
+this.formDataTa.thisaiIruppu =
+  `${this.formData.thisaiYear || 0} வருடம் ${this.formData.thisaiMonth || 0} மாதம் ${this.formData.thisaiDay || 0} நாள்`;
+
 await this.prepareEnglishValues();
    try {
 
