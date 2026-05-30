@@ -62,23 +62,29 @@
 }
 
 .column p {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+grid-template-columns: 135px 1fr;
+  column-gap: 6px;
   margin: 0 0 4px;
   font-size: 13px;
   line-height: 1.22;
   color: #0000aa;
-}
-.column strong {
- width: 250px;
-  min-width: 250px;
-  color: #008000;
-  font-weight: 900;
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
+  align-items: start;
 }
 
+.column strong {
+  color: #008000;
+  font-weight: 900;
+  white-space: normal;
+  overflow: visible;
+  display: block;
+}
+.column p span,
+.astro-details-row p span,
+.contact-section p span {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
 .expectation-line {
   color: #0000aa;
   font-size: 14px;
@@ -200,8 +206,13 @@ h3 {
 }
 
 .contact-section p {
+  display: grid;
+  grid-template-columns: 135px 1fr;
+  column-gap: 6px;
   margin: 0 0 3px !important;
   font-size: 12px !important;
+  line-height: 1.25;
+  color: #0000aa;
 }
 @media print {
   @page {
@@ -241,19 +252,20 @@ h3 {
 }
 
 .astro-details-row p {
-  display: flex;
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  column-gap: 6px;
   margin: 0 0 4px;
   font-size: 13px;
   line-height: 1.22;
   color: #0000aa;
 }
-
 .astro-details-row strong {
-  width: 170px;
-  min-width: 170px;
+  width: auto;
+  min-width: auto;
   color: #008000;
   font-weight: 900;
-  white-space: nowrap;
+  white-space: normal;
 }
 .reg-no {
   white-space: nowrap;
