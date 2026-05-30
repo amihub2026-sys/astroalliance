@@ -156,8 +156,12 @@
     <p><strong>பாதம் :</strong><span>{{ v(profile.paatham, profile.paatham_ta) }}</span></p>
 
    
- <p><strong>திசை இருப்பு :</strong><span>{{ v(profile.thisai_iruppu, profile.thisai_iruppu_ta) }}</span></p>
-
+<p>
+  <strong>திசை இருப்பு :</strong>
+ <span>
+  {{ formatThisaiIruppu(v(profile.thisai_iruppu, profile.thisai_iruppu_ta)) }}
+</span>
+</p>
   </div>
 
   <div>
