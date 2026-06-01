@@ -5,7 +5,9 @@ import {
   PLATFORM_ID,
   ChangeDetectorRef,
   HostListener,
-  CUSTOM_ELEMENTS_SCHEMA
+  CUSTOM_ELEMENTS_SCHEMA,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -25,6 +27,7 @@ interface ProfileItem {
   profileId: string;
   id: string;
   userId: string;
+  dob?: string | null;
   name: LangText;
   age: number;
   religion: LangText;
@@ -36,13 +39,12 @@ interface ProfileItem {
   maritalStatus: LangText;
   caste: LangText;
   gender: LangText;
+  nakshatra: LangText;
   image: string;
   liked: boolean;
   latitude: number | null;
   longitude: number | null;
   distanceKm?: number | null;
-  dob: string;
-  nakshatra: LangText;
 }
 
 @Component({
@@ -71,14 +73,15 @@ snackbar = inject(SnackbarService);
 educationOptions: LangText[] = [];
 maritalStatusOptions: LangText[] = [];
 stateOptions: LangText[] = [];
-cityOptions: LangText[] = [];
+cityOptions: (LangText & { state: string })[] = [];
 religionOptions: LangText[] = [];
-casteOptions: LangText[] = [];
+casteOptions: (LangText & { religion: string })[] = [];
 genderOptions: LangText[] = [];
 professionOptions: LangText[] = [];
 casteMap: Record<string, string> = {};
   openDropdown: string | null = null;
   mobileFilterOpen = false;
+  @ViewChild('filterBar') filterBarRef?: ElementRef<HTMLDivElement>;
 
   userLat: number | null = null;
   userLng: number | null = null;
@@ -110,8 +113,13 @@ casteMap: Record<string, string> = {};
   currentSubscriptionId = '';
   currentPlanId = '';
 
-  profiles: ProfileItem[] = [];
-  likedMeProfiles: ProfileItem[] = [];
+ profiles: ProfileItem[] = [];
+likedMeProfiles: ProfileItem[] = [];
+likedProfilesCount = 0;
+likedProfileIdSet = new Set<string>();
+  visibleProfileCount = 9;
+visibleProfileTimer: any = null;
+showProfileLoading = false;
   shortlistedMeUserIds: string[] = [];
     userProfileImage = '';
 userProfileName = '';
@@ -479,9 +487,7 @@ assistedMatchesText:
     this.isLoading = true;
     this.cdr.detectChanges();
 
-setTimeout(() => {
-  this.tryGetUserLocation();
-}, 2000);
+
     await this.loadCurrentPlanFromSupabase();
     await this.loadLoggedInUserProfile();
     await this.refreshUserProfileLanguage();
@@ -492,13 +498,12 @@ await Promise.all([
 ]);
 
 
+await this.loadProfilesFromSupabase();
+
 await this.loadLikedProfiles();
 await this.loadLikedMeProfiles();
 
-await this.loadProfilesFromSupabase();
-
 this.loadShortlistedByYouFromSupabase();
-this.loadShortlistedMeFromSupabase();
 this.loadShortlistedMeFromSupabase();
 
 
@@ -597,7 +602,7 @@ private async makeLangText(
         if (parsed?.user_id) return String(parsed.user_id);
       }
     } catch (error) {
-
+      console.error('Error reading matrimony_user from localStorage:', error);
     }
 
     const stored = localStorage.getItem('app_user_id');
@@ -631,23 +636,30 @@ private async makeLangText(
   }
 
   tryGetUserLocation(): void {
-    if (!this.isBrowser || !('geolocation' in navigator)) {
-      this.geoLocationReady = false;
-      return;
-    }
+  if (!this.isBrowser || !('geolocation' in navigator)) {
+  return;
+}
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.userLat = position.coords.latitude;
-        this.userLng = position.coords.longitude;
-        this.geoLocationReady = true;
-        this.geoLocationDenied = false;
-        this.cdr.detectChanges();
-      },
+  navigator.geolocation.getCurrentPosition(
+  (position) => {
+    this.userLat = position.coords.latitude;
+    this.userLng = position.coords.longitude;
+    this.geoLocationReady = true;
+    this.geoLocationDenied = false;
+
+    // ✅ ADD THIS PART ONLY
+    this.profiles = this.profiles.map(profile => ({
+      ...profile,
+      distanceKm: this.getDistanceForProfile(profile)
+    }));
+
+    this.applyFilters?.();
+
+    this.cdr.detectChanges();
+  },
       (error) => {
-     
-        this.geoLocationReady = false;
-        this.geoLocationDenied = true;
+        console.warn('Geolocation error:', error);
+     // do nothing
         this.cdr.detectChanges();
       },
       {
@@ -843,7 +855,7 @@ private async makeLangText(
 
       this.cdr.detectChanges();
     } catch (error: any) {
-      
+      console.error('Load current plan error:', error);
       this.currentPlan = {
         name: 'No Active Plan',
         limit: 0,
@@ -868,7 +880,7 @@ private async makeLangText(
   user_id,
   profile_id,
   profile_code,
-
+  dob,
   full_name,
   full_name_ta,
 
@@ -889,12 +901,6 @@ private async makeLangText(
   caste_text,
 
   gender_text,
-
-  dob,
-
-  nakshatra_text,
-
-  nakshatra_text_ta,
 
   city_text,
 
@@ -1015,6 +1021,7 @@ return {
   id: String(row.profile_code || '').trim(),
   profileId: String(row.profile_id || '').trim(),
   userId: String(row.user_id || '').trim(),
+  dob: row.dob || null,
       name: await this.makeLangText(row.full_name, row.full_name_ta),
       age: Number(row.age || 0),
 religion: await this.makeLangText(
@@ -1036,15 +1043,15 @@ gender: await this.makeLangText(
   row.gender_text || '-',
   this.getTamilProfileValue('gender', row.gender_text)
 ),
-
-dob: row.dob || '',
-
 nakshatra: await this.makeLangText(
   row.nakshatra_text || '-',
-  row.nakshatra_text_ta || row.nakshatra_text
+  row.nakshatra_text_ta || row.nakshatra_text || '-'
 ),
 
-location: await this.makeLangText(row.location_text, row.location_text),
+location: await this.makeLangText(
+  row.city_text || row.location_text,
+  row.city_text || row.location_text
+),
 city: await this.makeLangText(row.city_text, row.city_text),
 state: await this.makeLangText(row.state_text, row.state_text),
 
@@ -1067,28 +1074,21 @@ image: row.profile_image_url || 'assets/default-avatar.png',
   })
 );
 
-
-      this.profiles = this.profiles.map((profile) => ({
-        ...profile,
-        distanceKm: this.getDistanceForProfile(profile)
-        
-      }));
-
       this.likedMeProfiles = [];
 
       this.cdr.detectChanges();
     } catch (error) {
-      
+      console.error('Load profiles error:', error);
       this.profiles = [];
       this.cdr.detectChanges();
     } finally {
-      this.isLoading = false;
-      this.cdr.detectChanges();
+  this.isLoading = false;
 
-      setTimeout(() => {
-        this.cdr.detectChanges();
-      }, 0);
-    }
+  setTimeout(() => {
+    this.startProfileBatchLoading();
+    this.cdr.detectChanges();
+  }, 0);
+}
   }
 private getTamilProfileValue(
   type: string,
@@ -1185,7 +1185,7 @@ profession: {
 
       this.cdr.detectChanges();
     } catch (error) {
-     
+      console.error('Load shortlisted me error:', error);
       this.shortlistedMeUserIds = [];
       this.cdr.detectChanges();
     }
@@ -1205,7 +1205,7 @@ async loadShortlistedByYouFromSupabase(): Promise<void> {
     .eq('user_id', userId);
 
   if (error) {
-   
+    console.error('Load shortlisted by you error:', error);
     this.shortlistedByYouIds = [];
     return;
   }
@@ -1214,12 +1214,67 @@ async loadShortlistedByYouFromSupabase(): Promise<void> {
     .map((x: any) => String(x.profile_id || '').trim())
     .filter(Boolean);
 
+this.profiles = this.profiles.map(profile => ({
+  ...profile
+}));
+
+  this.cdr.detectChanges();
+}
+async loadLikedProfiles(): Promise<void> {
+  const userId = this.getLoggedInUserId();
+
+  if (!userId) {
+    this.likedProfilesCount = 0;
+    this.likedProfileIdSet.clear();
+    return;
+  }
+
+  try {
+    const { data: myProfile, error: myProfileError } = await supabase
+      .from('user_profiles')
+      .select('profile_id')
+      .eq('user_id', userId)
+      .single();
+
+    if (myProfileError) throw myProfileError;
+    if (!myProfile?.profile_id) return;
+
+    const myProfileId = String(myProfile.profile_id);
+
+    const { data, error } = await supabase
+      .from('profile_likes')
+      .select('to_profile_id')
+      .eq('from_profile_id', myProfileId);
+
+    if (error) throw error;
+
+    const likedIds = (data || []).map((x: any) => String(x.to_profile_id));
+    if (likedIds.length === 0) {
+  this.likedProfilesCount = 0;
+
   this.profiles = this.profiles.map(profile => ({
     ...profile,
-    liked: this.shortlistedByYouIds.includes(profile.id)
+    liked: false
   }));
 
   this.cdr.detectChanges();
+  return;
+}
+
+    this.likedProfileIdSet = new Set(likedIds);
+   this.likedProfilesCount = this.profiles.filter(
+  profile => this.likedProfileIdSet.has(profile.profileId)
+).length;
+
+    this.profiles = this.profiles.map(profile => ({
+      ...profile,
+      liked: this.likedProfileIdSet.has(profile.profileId)
+    }));
+
+    this.cdr.detectChanges();
+  } catch (err) {
+    console.error('Load liked profiles error:', err);
+  }
 }
 async loadLikedMeProfiles(): Promise<void> {
 
@@ -1259,10 +1314,60 @@ async loadLikedMeProfiles(): Promise<void> {
 
   } catch (err) {
 
+    console.error(err);
 
   }
 }
+startProfileBatchLoading(): void {
+  if (!this.isBrowser) return;
 
+  if (this.visibleProfileTimer) {
+    clearTimeout(this.visibleProfileTimer);
+    this.visibleProfileTimer = null;
+  }
+
+  this.visibleProfileCount = 9;
+  this.cdr.detectChanges();
+}
+loadMoreProfilesAfterScroll(): void {
+  if (!this.isBrowser) return;
+  if (this.visibleProfileTimer) return;
+  if (this.visibleProfileCount >= this.filteredProfiles.length) return;
+
+  this.showProfileLoading = true;
+  this.cdr.detectChanges();
+
+  this.visibleProfileTimer = setTimeout(() => {
+    this.visibleProfileCount += 9;
+    this.showProfileLoading = false;
+    this.visibleProfileTimer = null;
+
+    this.cdr.detectChanges();
+    this.cdr.markForCheck();
+  }, 1500);
+}
+@HostListener('window:scroll', [])
+onWindowScroll(): void {
+
+  if (!this.isBrowser) return;
+
+  if (this.activeTab !== 'browse') return;
+
+  if (this.isLoading) return;
+
+  const scrollPosition = window.innerHeight + window.scrollY;
+
+  const pageHeight = document.documentElement.scrollHeight;
+
+  if (scrollPosition >= pageHeight - 300) {
+
+    this.loadMoreProfilesAfterScroll();
+
+    this.cdr.detectChanges();
+
+  }
+
+}
 
   applySidebarFilter(type: string): void {
     const protectedFilters = [
@@ -1366,16 +1471,21 @@ get planStatus(): string {
   }
 
   get filteredProfiles(): ProfileItem[] {
- if (this.sidebarFilter === 'shortlistedMe') {
+    const radius = this.appliedFilters.radius;
+const userLat = this.userLat;
+const userLng = this.userLng;
+if (this.sidebarFilter === 'shortlistedMe') {
   return this.profiles.filter(profile =>
- this.shortlistedMeUserIds.includes(profile.profileId)
-);
-}
-
-  if (this.sidebarFilter === 'liked') {
-  return this.profiles.filter(profile =>
-  this.shortlistedByYouIds.includes(profile.profileId) || profile.liked === true
+    this.shortlistedMeUserIds.includes(profile.userId)
   );
+}
+if (this.sidebarFilter === 'shortlistedByYou') {
+  return this.profiles.filter(profile =>
+    this.shortlistedByYouIds.includes(profile.id)
+  );
+}
+if (this.sidebarFilter === 'liked') {
+  return this.profiles.filter(profile => profile.liked === true);
 }
     const result = this.profiles.filter((profile) => {
       const religion = this.normalizeText(this.getText(profile.religion));
@@ -1409,27 +1519,36 @@ get planStatus(): string {
       const matchesAgeTo =
         this.appliedFilters.ageTo === null || profile.age <= this.appliedFilters.ageTo;
 
-      let matchesLocation = true;
+     
+let matchesLocation = true;
 
-      if (radiusFilter !== null && radiusFilter > 0) {
-        const cityDistance = this.getDistanceFromSelectedCity(profile);
+if (locationFilter) {
+  matchesLocation = city === locationFilter;
+}
 
-        if (locationFilter && cityDistance !== null) {
-          matchesLocation = cityDistance <= radiusFilter;
-        } else if (locationFilter) {
-          matchesLocation = city === locationFilter;
-        } else {
-          const deviceDistance = this.getDistanceForProfile(profile);
+if (matchesLocation && radiusFilter !== null && radiusFilter > 0) {
 
-          if (deviceDistance !== null) {
-            matchesLocation = deviceDistance <= radiusFilter;
-          } else {
-            matchesLocation = true;
-          }
-        }
-      } else {
-        matchesLocation = !locationFilter || city === locationFilter;
-      }
+  if (
+    this.userLat == null ||
+    this.userLng == null ||
+    profile.latitude == null ||
+    profile.longitude == null
+  ) {
+    matchesLocation = false;
+  } else {
+
+    const distance = this.calculateDistanceKm(
+      this.userLat,
+      this.userLng,
+      profile.latitude,
+      profile.longitude
+    );
+
+    profile.distanceKm = distance;
+
+    matchesLocation = distance <= radiusFilter;
+  }
+}
 
       return (
         matchesCaste &&
@@ -1448,12 +1567,12 @@ get planStatus(): string {
     const sidebarFiltered = result.filter((profile) => {
       if (this.sidebarFilter === 'all') return true;
 
-    if (this.sidebarFilter === 'liked') {
-  return profile.liked === true || this.shortlistedByYouIds.includes(profile.id);
+ if (this.sidebarFilter === 'liked') {
+  return profile.liked === true;
 }
 
-   if (this.sidebarFilter === 'shortlistedMe') {
- return this.shortlistedMeUserIds.includes(profile.profileId);
+    if (this.sidebarFilter === 'shortlistedMe') {
+ return this.shortlistedMeUserIds.includes(profile.id);
 }
 
       if (this.sidebarFilter === 'viewedByYou' || this.sidebarFilter === 'viewed') {
@@ -1523,14 +1642,7 @@ get planStatus(): string {
           distanceKm
         };
       })
-    .sort((a, b) => {
-  const ageFromActive = this.appliedFilters.ageFrom !== null;
-  const ageToActive = this.appliedFilters.ageTo !== null;
-
-  if (ageFromActive || ageToActive) {
-    return Number(a.age || 0) - Number(b.age || 0);
-  }
-
+     .sort((a, b) => {
   const myCaste = this.normalizeText(this.userCaste);
 
   const casteA = this.normalizeText(this.getText(a.caste));
@@ -1547,7 +1659,6 @@ get planStatus(): string {
 
   const aDistance = a.distanceKm ?? Number.MAX_SAFE_INTEGER;
   const bDistance = b.distanceKm ?? Number.MAX_SAFE_INTEGER;
-
   return aDistance - bDistance;
 });
   }
@@ -1563,7 +1674,7 @@ async loadEducationOptions(): Promise<void> {
     .order('sort_order', { ascending: true });
 
   if (error) {
-    
+    console.error('Education load error', error);
     this.educationOptions = [];
     return;
   }
@@ -1615,16 +1726,23 @@ if (!maritalError) {
 
   const { data: cityData, error: cityError } = await supabase
     .from('mst_cities')
-    .select('city_name, city_name_ta')
+    .select(`
+  city_name,
+  city_name_ta,
+  mst_states (
+    state_name
+  )
+`)
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (!cityError) {
-    this.cityOptions = (cityData || [])
-      .map((x: any) => ({
-        en: String(x.city_name || '').trim(),
-        ta: String(x.city_name_ta || x.city_name || '').trim()
-      }))
+   this.cityOptions = (cityData || [])
+  .map((x: any) => ({
+    en: String(x.city_name || '').trim(),
+    ta: String(x.city_name_ta || x.city_name || '').trim(),
+    state: String(x.mst_states?.state_name || '').toLowerCase().trim()
+  }))
       .filter((x: LangText) => x.en);
   }
 
@@ -1644,18 +1762,25 @@ if (!maritalError) {
   }
 
   const { data: casteData, error: casteError } = await supabase
-    .from('mst_castes')
-    .select('caste_name, caste_name_ta')
+   .from('mst_castes')
+.select(`
+  caste_name,
+  caste_name_ta,
+  mst_religions (
+    religion_name
+  )
+`)
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (!casteError) {
-    this.casteOptions = (casteData || [])
-      .map((x: any) => ({
-        en: String(x.caste_name || '').trim(),
-        ta: String(x.caste_name_ta || x.caste_name || '').trim()
-      }))
-      .filter((x: LangText) => x.en);
+ this.casteOptions = (casteData || [])
+  .map((x: any) => ({
+    en: String(x.caste_name || '').trim(),
+    ta: String(x.caste_name_ta || x.caste_name || '').trim(),
+    religion: String(x.mst_religions?.religion_name || '').toLowerCase().trim()
+  }))
+  .filter((x: LangText & { religion: string }) => x.en);
 
     this.casteMap = {};
 
@@ -1698,11 +1823,33 @@ if (!professionError) {
 }
   this.cdr.detectChanges();
 }
+getFilteredCasteOptions(): (LangText & { religion: string })[] {
+  const search = String(this.searchTerms.caste || '').toLowerCase().trim();
+  const selectedReligion = String(this.filters.religion || '').toLowerCase().trim();
+
+  return this.casteOptions.filter((item) => {
+    const casteName = this.getText(item).toLowerCase();
+    const matchesSearch = !search || casteName.includes(search);
+    const matchesReligion = !selectedReligion || item.religion === selectedReligion;
+
+    return matchesSearch && matchesReligion;
+  });
+}
   getText(value: string | LangText): string {
     if (typeof value === 'string') return value;
     return value?.[this.currentLang] || value?.en || '';
   }
+getDistrictOnly(location: string): string {
 
+  if (!location) return '-';
+
+  const parts = location
+    .split(',')
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  return parts[0] || '-';
+}
 getUniqueOptions(list: ProfileItem[], key: keyof ProfileItem): string[] {
   const values = list
     .map(item => this.getText(item[key] as string | LangText))
@@ -1734,17 +1881,13 @@ getUniqueOptions(list: ProfileItem[], key: keyof ProfileItem): string[] {
     event.stopPropagation();
     this.openDropdown = this.openDropdown === name ? null : name;
   }
+private getNextDropdown(field: string): string | null {
 
-selectOption(
-  field: 'caste' | 'religion' | 'gender' | 'maritalStatus' | 'location' | 'education' | 'profession' | 'state',
-  value: string
-): void {
+  const order: Record<string, string | null> = {
 
-  this.filters[field] = value;
+    ageFrom: 'ageTo',
 
-  this.applyFilters();
-
-  const nextDropdownMap: Record<string, string | null> = {
+    ageTo: 'religion',
 
     religion: 'caste',
 
@@ -1752,11 +1895,13 @@ selectOption(
 
     gender: 'maritalStatus',
 
-    maritalStatus: 'location',
+    maritalStatus: 'state',
 
-    location: 'state',
+    state: 'location',
 
-    state: 'radius',
+    location: 'radius',
+
+    radius: 'education',
 
     education: 'profession',
 
@@ -1764,9 +1909,39 @@ selectOption(
 
   };
 
-  this.openDropdown = nextDropdownMap[field] ?? null;
+  return order[field] || null;
+}
+selectOption(
+  field:
+    | 'caste'
+    | 'religion'
+    | 'gender'
+    | 'maritalStatus'
+    | 'location'
+    | 'education'
+    | 'profession'
+    | 'state',
 
-  this.cdr.detectChanges();
+  value: string
+): void {
+
+  this.filters[field] = value;
+
+  this.appliedFilters = {
+    ...this.filters
+  };
+
+const next = this.getNextDropdown(field);
+
+this.openDropdown = next;
+
+this.cdr.detectChanges();
+
+if (next) {
+  this.scrollFilterToDropdown(next);
+} else {
+  this.scrollFilterToDropdown('apply');
+}
 }
 
 selectNumberOption(
@@ -1776,23 +1951,22 @@ selectNumberOption(
 
   this.filters[field] = value;
 
-  this.applyFilters();
-
-  const nextDropdownMap: Record<string, string | null> = {
-
-    ageFrom: 'ageTo',
-
-    ageTo: 'religion',
-
-    radius: 'education'
-
+  this.appliedFilters = {
+    ...this.filters
   };
 
-  this.openDropdown = nextDropdownMap[field] ?? null;
+const next = this.getNextDropdown(field);
 
-  this.cdr.detectChanges();
+this.openDropdown = next;
+
+this.cdr.detectChanges();
+
+if (next) {
+  this.scrollFilterToDropdown(next);
+} else {
+  this.scrollFilterToDropdown('apply');
 }
-
+}
   getFilteredOptions(options: string[], search: string): string[] {
     const term = String(search || '').toLowerCase().trim();
     if (!term) return options;
@@ -1808,6 +1982,25 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
   return options.filter(item =>
     this.getText(item).toLowerCase().includes(term)
   );
+}
+getFilteredCityOptions(): LangText[] {
+  const search = String(this.searchTerms.location || '').toLowerCase().trim();
+  const selectedState = String(this.filters.state || '').toLowerCase().trim();
+
+  return this.cityOptions.filter((item: any) => {
+
+    const cityName = this.getText(item).toLowerCase();
+
+    const cityState = String(item.state || '').toLowerCase().trim();
+
+    const matchesSearch =
+      !search || cityName.includes(search);
+
+    const matchesState =
+      !selectedState || cityState === selectedState;
+
+    return matchesSearch && matchesState;
+  });
 }
   getFilteredNumberOptions(options: number[], search: string): number[] {
     const term = String(search || '').toLowerCase().trim();
@@ -1825,6 +2018,30 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
   trackByProfile(index: number, profile: ProfileItem): string {
     return profile.id || String(index);
   }
+private scrollFilterToStart(): void {
+  setTimeout(() => {
+    const el = this.filterBarRef?.nativeElement as any;
+
+    if (el) {
+      el.scrollLeft = 0;
+    }
+  }, 150);
+}
+private scrollFilterToDropdown(name: string): void {
+  setTimeout(() => {
+    const item = document.querySelector(
+      `[data-filter="${name}"]`
+    ) as HTMLElement | null;
+
+    if (item) {
+      item.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'start',
+        block: 'nearest'
+      });
+    }
+  }, 100);
+}
 
   setTab(tab: TabType): void {
     this.activeTab = tab;
@@ -1832,15 +2049,16 @@ getFilteredLangOptions(options: LangText[], search: string): LangText[] {
     this.cdr.detectChanges();
   }
 
-  applyFilters(): void {
-    this.appliedFilters = { ...this.filters };
+applyFilters(forceClose?: boolean): void {
 
-    if (this.appliedFilters.radius && !this.geoLocationReady && !this.appliedFilters.location) {
-     
-    }
+  this.appliedFilters = { ...this.filters };
 
-    this.cdr.detectChanges();
-  }
+  this.openDropdown = null;
+
+  this.cdr.detectChanges();
+
+  this.scrollFilterToStart();
+}
 
   resetFilters(): void {
     this.filters = {
@@ -1872,8 +2090,11 @@ this.searchTerms = {
   state: '',
   radius: ''
 };
-    this.openDropdown = null;
-    this.cdr.detectChanges();
+   this.openDropdown = null;
+this.mobileFilterOpen = false;
+this.cdr.detectChanges();
+
+this.scrollFilterToStart();
   }
 
   async viewProfile(profile: ProfileItem): Promise<void> {
@@ -1994,13 +2215,17 @@ if (!alreadyUnlocked) {
         }
       });
     } catch (error: any) {
-     
+      console.error('Update view count error:', error);
       this.snackbar.error(error?.message || 'Failed to update subscription usage');
     }
   }
+instantLike(event: MouseEvent, profile: ProfileItem): void {
+  event.preventDefault();
+  event.stopPropagation();
 
+  this.likeProfile(profile);
+}
 async likeProfile(profile: ProfileItem): Promise<void> {
-
   const userId = this.getLoggedInUserId();
 
   if (!userId) {
@@ -2008,9 +2233,22 @@ async likeProfile(profile: ProfileItem): Promise<void> {
     return;
   }
 
-  try {
+  const oldLiked = profile.liked;
+  const targetProfileId = String(profile.profileId);
 
-    // GET MY PROFILE
+  // FAST UI UPDATE FIRST
+  profile.liked = !oldLiked;
+
+  if (profile.liked) {
+    this.likedProfileIdSet.add(targetProfileId);
+  } else {
+    this.likedProfileIdSet.delete(targetProfileId);
+  }
+
+  this.likedProfilesCount = this.likedProfileIdSet.size;
+  this.cdr.detectChanges();
+
+  try {
     const { data: myProfile, error: myProfileError } = await supabase
       .from('user_profiles')
       .select('profile_id')
@@ -2018,91 +2256,49 @@ async likeProfile(profile: ProfileItem): Promise<void> {
       .single();
 
     if (myProfileError) throw myProfileError;
+    if (!myProfile?.profile_id) throw new Error('My profile not found');
 
     const myProfileId = String(myProfile.profile_id);
 
-   
-
-    // REMOVE LIKE
     if (profile.liked) {
+      const { error } = await supabase
+        .from('profile_likes')
+        .upsert(
+          {
+            from_profile_id: myProfileId,
+            to_profile_id: targetProfileId
+          },
+          { onConflict: 'from_profile_id,to_profile_id' }
+        );
 
+      if (error) throw error;
+    } else {
       const { error } = await supabase
         .from('profile_likes')
         .delete()
         .eq('from_profile_id', myProfileId)
-        .eq('to_profile_id', profile.profileId);
+        .eq('to_profile_id', targetProfileId);
 
       if (error) throw error;
-
-      profile.liked = false;
-
-    }
-
-    // ADD LIKE
-    else {
-
-      const { error } = await supabase
-        .from('profile_likes')
-        .insert({
-          from_profile_id: myProfileId,
-          to_profile_id: profile.profileId
-        });
-
-      if (error) throw error;
-
-      profile.liked = true;
-
     }
 
     await this.loadLikedProfiles();
-    await this.loadLikedMeProfiles();
 
+  } catch (err: any) {
+    // rollback if failed
+    profile.liked = oldLiked;
+
+    if (oldLiked) {
+      this.likedProfileIdSet.add(targetProfileId);
+    } else {
+      this.likedProfileIdSet.delete(targetProfileId);
+    }
+
+    this.likedProfilesCount = this.likedProfileIdSet.size;
     this.cdr.detectChanges();
 
-  } catch (err) {
-
-  
-
-  }
-}
-async loadLikedProfiles(): Promise<void> {
-
-  const userId = this.getLoggedInUserId();
-
-  if (!userId) return;
-
-  try {
-
-    const { data: myProfile } = await supabase
-      .from('user_profiles')
-      .select('profile_id')
-      .eq('user_id', userId)
-      .single();
-
-    if (!myProfile) return;
-
-    const myProfileId = String(myProfile.profile_id);
-
-    const { data, error } = await supabase
-      .from('profile_likes')
-      .select('to_profile_id')
-      .eq('from_profile_id', myProfileId);
-
-    if (error) throw error;
-
-    const likedIds = (data || []).map((x: any) =>
-      String(x.to_profile_id)
-    );
-
-    this.profiles = this.profiles.map(profile => ({
-      ...profile,
-     liked: likedIds.includes(profile.profileId)
-    }));
-
-  } catch (err) {
-
-   
-
+    console.error('LIKE ERROR:', err);
+    this.snackbar.error(err?.message || 'Failed to update like');
   }
 }
   async sendInterest(profile: ProfileItem): Promise<void> {
@@ -2128,7 +2324,7 @@ async loadLikedProfiles(): Promise<void> {
         return;
       }
 
-      
+      console.error('Error:', error);
       this.snackbar.error('Failed to send interest');
       return;
     }
@@ -2147,12 +2343,12 @@ async loadLoggedInUserProfile(): Promise<void> {
 
   const { data, error } = await supabase
     .from('user_profiles')
-    .select('full_name, full_name_ta, profile_image_url, gender_text, caste_text')
+ .select('full_name, full_name_ta, profile_image_url, gender_text, caste_text, latitude, longitude')
     .eq('user_id', userId)
     .maybeSingle();
 
   if (error) {
-    
+    console.error(error);
     return;
   }
 
@@ -2163,6 +2359,12 @@ this.userProfileName =
       this.userProfileImage = data?.profile_image_url || '';
  this.userGender = data?.gender_text || '';
 this.userCaste = data?.caste_text || '';
+this.userLat = this.toNullableNumber(data?.latitude);
+this.userLng = this.toNullableNumber(data?.longitude);
+console.log('USER LAT:', this.userLat);
+console.log('USER LNG:', this.userLng);
+console.log('PROFILE DATA:', data);
+this.geoLocationReady = this.userLat !== null && this.userLng !== null;
   this.cdr.detectChanges();
 }
   renewPlan(): void {

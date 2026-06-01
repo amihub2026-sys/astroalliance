@@ -24,7 +24,8 @@
     <input
       type="text"
       placeholder="Search by user id, plan name, plan code..."
-      [(ngModel)]="searchTerm">
+      [(ngModel)]="searchTerm"
+(ngModelChange)="currentPage = 1">
   </div>
 
   <p *ngIf="isLoading">Loading subscriptions...</p>
@@ -70,12 +71,11 @@
         <tbody>
 <tr *ngFor="let item of paginatedSubscriptions">
 
- <td>
+<td class="user-id">
   {{ item.user_id || '-' }}
 </td>
-
 <td>
-{{ item.user_profiles?.profile_code || '-' }}
+{{ item.profile_code || item.user_profiles?.profile_code || '-' }}
 </td>
 
 <td>
@@ -137,20 +137,18 @@
   </td>
 
   <td>
+<button
+  class="action-btn"
+  type="button"
+  (click)="toggleSubscription(item)">
 
-    <button
-      class="action-btn"
-      type="button"
-      (mousedown)="toggleSubscription(item)">
+  {{
+    item.is_active
+      ? txt('Deactivate', 'முடக்கு')
+      : txt('Activate', 'இயக்கு')
+  }}
 
-     {{
-  item.is_active
-    ? txt('Deactivate', 'முடக்கு')
-    : txt('Activate', 'இயக்கு')
-}}
-
-    </button>
-
+</button>
   </td>
 
 </tr>
@@ -168,7 +166,7 @@
 
   <button
     type="button"
-    (mousedown)="prevPage()"
+   (click)="prevPage()"
     [disabled]="currentPage === 1">
 
    {{ txt('Previous', 'முந்தைய') }}
@@ -188,7 +186,7 @@
 
   <button
     type="button"
-    (mousedown)="nextPage()"
+    (click)="nextPage()"
     [disabled]="currentPage === totalPages">
 
     {{ txt('Next', 'அடுத்து') }}

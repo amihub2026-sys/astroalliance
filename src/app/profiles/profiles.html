@@ -19,11 +19,12 @@
       (click)="setTab('liked')"
       type="button"
     >
-      {{ tr.tabs.liked }} ({{ likedProfiles.length }})
+{{ tr.tabs.liked }} ({{ likedProfilesCount }})
     </button>
 
     <button
       [class.active]="activeTab === 'likedMe'"
+
       (click)="setTab('likedMe')"
       type="button"
     >
@@ -121,8 +122,8 @@
   </div>
 </div>
 
-  <div class="filter-bar" *ngIf="activeTab === 'browse'">
-    <div class="tm-dropdown">
+  <div class="filter-bar" #filterBar *ngIf="activeTab === 'browse'">
+    <div class="tm-dropdown" data-filter="ageFrom">
       <div class="tm-dropdown-box" (click)="toggleDropdown('ageFrom', $event)">
         <span>{{ filters.ageFrom ?? tr.filters.ageFrom }}</span>
         <span class="arrow">⌄</span>
@@ -148,7 +149,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+   <div class="tm-dropdown" data-filter="ageTo">
       <div class="tm-dropdown-box" (click)="toggleDropdown('ageTo', $event)">
         <span>{{ filters.ageTo ?? tr.filters.ageTo }}</span>
         <span class="arrow">⌄</span>
@@ -174,7 +175,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="religion">
       <div class="tm-dropdown-box" (click)="toggleDropdown('religion', $event)">
         <span>{{ filters.religion || tr.filters.religion }}</span>
         <span class="arrow">⌄</span>
@@ -193,14 +194,14 @@
         <div
           class="tm-option"
         *ngFor="let item of getFilteredLangOptions(religionOptions, searchTerms.religion)"
-(click)="selectOption('religion', getText(item))"
+(click)="selectOption('religion', item.en.toLowerCase())"
 >
   {{ getText(item) }}
         </div>
       </div>
     </div>
 
-    <div class="tm-dropdown">
+   <div class="tm-dropdown" data-filter="caste">
       <div class="tm-dropdown-box" (click)="toggleDropdown('caste', $event)">
         <span>{{ filters.caste || tr.filters.caste }}</span>
         <span class="arrow">⌄</span>
@@ -218,7 +219,7 @@
 </div>
         <div
           class="tm-option"
-        *ngFor="let item of getFilteredLangOptions(casteOptions, searchTerms.caste)"
+        *ngFor="let item of getFilteredCasteOptions()"
 (click)="selectOption('caste', getText(item))"
 >
   {{ getText(item) }}
@@ -226,7 +227,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="gender">
       <div class="tm-dropdown-box" (click)="toggleDropdown('gender', $event)">
         <span>{{ filters.gender || tr.filters.gender }}</span>
         <span class="arrow">⌄</span>
@@ -252,7 +253,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="maritalStatus">
       <div class="tm-dropdown-box" (click)="toggleDropdown('maritalStatus', $event)">
         <span>{{ filters.maritalStatus || tr.filters.maritalStatus }}</span>
         <span class="arrow">⌄</span>
@@ -278,33 +279,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
-      <div class="tm-dropdown-box" (click)="toggleDropdown('location', $event)">
-        <span>{{ filters.location || tr.filters.location }}</span>
-        <span class="arrow">⌄</span>
-      </div>
-
-      <div class="tm-dropdown-panel" *ngIf="openDropdown === 'location'" (click)="$event.stopPropagation()">
-        <input
-          type="text"
-          class="tm-search-input"
-          [(ngModel)]="searchTerms.location"
-          [placeholder]="'Search ' + tr.filters.location"
-        />
-<div class="tm-option default-option" (click)="selectOption('location', '')">
-  All City
-</div>
-        <div
-          class="tm-option"
-         *ngFor="let item of getFilteredLangOptions(cityOptions, searchTerms.location)"
-(click)="selectOption('location', getText(item))"
->
-  {{ getText(item) }}
-        </div>
-      </div>
-    </div>
-
-    <div class="tm-dropdown">
+        <div class="tm-dropdown" data-filter="state">
 
   <div class="tm-dropdown-box" (click)="toggleDropdown('state', $event)">
     <span>{{ filters.state || tr.filters.state }}</span>
@@ -343,7 +318,35 @@
 
 </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="location">
+      <div class="tm-dropdown-box" (click)="toggleDropdown('location', $event)">
+        <span>{{ filters.location || tr.filters.location }}</span>
+        <span class="arrow">⌄</span>
+      </div>
+
+      <div class="tm-dropdown-panel" *ngIf="openDropdown === 'location'" (click)="$event.stopPropagation()">
+        <input
+          type="text"
+          class="tm-search-input"
+          [(ngModel)]="searchTerms.location"
+          [placeholder]="'Search ' + tr.filters.location"
+        />
+<div class="tm-option default-option" (click)="selectOption('location', '')">
+  All City
+</div>
+        <div
+          class="tm-option"
+         *ngFor="let item of getFilteredCityOptions()"
+(click)="selectOption('location', getText(item))"
+>
+  {{ getText(item) }}
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="tm-dropdown" data-filter="radius">
       <div class="tm-dropdown-box" (click)="toggleDropdown('radius', $event)">
         <span>{{ filters.radius ? (filters.radius + ' km') : tr.filters.radius }}</span>
         <span class="arrow">⌄</span>
@@ -369,7 +372,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown">
+    <div class="tm-dropdown" data-filter="education">
       <div class="tm-dropdown-box" (click)="toggleDropdown('education', $event)">
         <span>{{ filters.education || tr.filters.education }}</span>
         <span class="arrow">⌄</span>
@@ -394,7 +397,7 @@
         </div>
       </div>
     </div>
-<div class="tm-dropdown">
+<div class="tm-dropdown" data-filter="profession">
   <div class="tm-dropdown-box" (click)="toggleDropdown('profession', $event)">
   <span>{{ filters.profession || tr.profile.profession }}</span>
     <span class="arrow">⌄</span>
@@ -430,25 +433,37 @@
 
   </div>
 </div>
-    <button (click)="applyFilters()" type="button">
-      {{ tr.filters.search }}
-    </button>
 
-    <button (click)="resetFilters()" type="button">
-      {{ tr.filters.reset }}
-    </button>
+<button
+  data-filter="apply"
+  type="button"
+  (click)="applyFilters()">
+  {{ tr.filters.search }}
+</button>
+
+<button
+  data-filter="reset"
+  type="button"
+  (click)="resetFilters()">
+  {{ tr.filters.reset }}
+</button>
+
   </div>
 
-  <div class="geo-hint" *ngIf="activeTab === 'browse' && filters.radius">
-    <span *ngIf="geoLocationReady">
-      📍 {{ tr.filters.nearbyOnly }}: {{ filters.radius }} km
-    </span>
 
-    <span *ngIf="!geoLocationReady">
-      📍 Radius selected, but current device location is not available. City filter will be used as fallback.
-    </span>
-  </div>
 
+
+
+
+
+
+<div
+  class="geo-hint"
+  *ngIf="activeTab === 'browse' && filters.radius && geoLocationReady">
+
+  📍 {{ tr.filters.nearbyOnly }}: {{ filters.radius }} km
+
+</div>
 
 
 <div
@@ -570,7 +585,7 @@
 
   <!-- DEFAULT MALE IMAGE -->
   <img
-    *ngIf="!userProfileImage && userGender === 'Male'"
+    *ngIf="!userProfileImage && userGender.toLowerCase() === 'male'"
     src="assets/mat-02.jpg"
     class="sidebar-user-image"
     alt="Male User"
@@ -578,7 +593,7 @@
 
   <!-- DEFAULT FEMALE IMAGE -->
   <img
-    *ngIf="!userProfileImage && userGender === 'Female'"
+   *ngIf="!userProfileImage && userGender.toLowerCase() === 'female'"
     src="assets/mat-03.jpg"
     class="sidebar-user-image"
     alt="Female User"
@@ -619,7 +634,8 @@
   <div class="sidebar-section">
    <h3>{{ tr.sidebar.basedOnActivity }}</h3>
 
-   <div class="match-filter-item" [class.active]="sidebarFilter === 'liked'" (click)="applySidebarFilter('liked'); mobileFilterOpen = false">
+   <div class="match-filter-item" [class.active]="sidebarFilter === 'shortlistedByYou'"
+(click)="applySidebarFilter('shortlistedByYou'); mobileFilterOpen = false">
       <span class="filter-icon">★</span>
       <div>
      <h4>{{ tr.sidebar.shortlistedByYou }}</h4>
@@ -802,7 +818,7 @@
       <div class="profiles-grid">
         <div
           class="profile-card"
-          *ngFor="let profile of filteredProfiles; trackBy: trackByProfile"
+*ngFor="let profile of filteredProfiles.slice(0, visibleProfileCount); trackBy: trackByProfile"
         >
           <div class="profile-image">
           <img
@@ -813,11 +829,10 @@
   (error)="profile.image = 'assets/default-avatar.png'"
 />
 
-         <button
-  class="like-icon"
-  [class.liked]="profile.liked"
-  (click)="likeProfile(profile); $event.stopPropagation()"
+      <button
   type="button"
+  class="like-icon"
+  (click)="instantLike($event, profile)"
 >
   {{ profile.liked ? '♥' : '♡' }}
 </button>
@@ -854,9 +869,8 @@
 </p>
 <p class="profile-detail-item mobile-show-detail">
   <i class="fas fa-location-dot"></i>
-  {{ getText(profile.location) || '-' }}
+{{ getText(profile.city) || '-' }}
 </p>
-
 <p class="profile-detail-item mobile-show-detail">
   <i class="fas fa-star"></i>
   {{ getText(profile.nakshatra) || '-' }}
@@ -885,11 +899,10 @@
                 {{ tr.profile.viewProfile }}
               </button>
 
-          <button
-  class="like-btn"
-  [class.liked-btn]="profile.liked"
-  (click)="likeProfile(profile); $event.stopPropagation()"
+<button
   type="button"
+  class="like-btn"
+  (click)="instantLike($event, profile)"
 >
   {{ profile.liked ? tr.profile.liked : tr.profile.like }}
 </button>
@@ -899,8 +912,19 @@
           </div>
         </div>
       </div>
-    </div>
+      <div class="profile-loading" *ngIf="showProfileLoading">
 
+  <div class="loader-circle"></div>
+
+  <p>
+    {{ currentLang === 'ta'
+      ? 'மேலும் சுயவிவரங்கள் ஏற்றப்படுகிறது...'
+      : 'Loading more profiles...'
+    }}
+  </p>
+
+</div>
+    </div>
   </div>
 
   <div *ngIf="activeTab === 'liked'">
@@ -945,10 +969,10 @@
               {{ tr.profile.viewProfile }}
             </button>
 
-           <button
+          <button
   class="like-btn liked-btn"
-  (click)="likeProfile(profile); $event.stopPropagation()"
   type="button"
+  (click)="instantLike($event, profile)"
 >
   {{ tr.profile.removeLike }}
 </button>
@@ -1001,18 +1025,20 @@
               {{ tr.profile.viewProfile }}
             </button>
 
-            <button
-              class="like-btn"
-              (click)="likeProfile(profile)"
-              type="button"
-            >
-              {{ tr.profile.likeBack }}
-            </button>
+          <button
+  type="button"
+  class="like-btn"
+  (click)="instantLike($event, profile)"
+>
+  {{ profile.liked ? 'Remove Like' : 'Like' }}
+</button>
 
            
           </div>
         </div>
+        
       </div>
     </div>
+    
   </div>
 </section>
