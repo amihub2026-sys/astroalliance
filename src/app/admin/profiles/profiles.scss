@@ -391,3 +391,23 @@ table{
 .action-cell{
   min-width:340px;
 }
+.status-cell{
+  text-align:center;
+}
+
+.status-icon{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.status-icon.approved{
+  color:#16a34a;
+}
+
+.status-icon.pending{
+  color:#f59e0b;
+}
+.dob-col{
+  width: 1%;
+  white-space: nowrap;
+}

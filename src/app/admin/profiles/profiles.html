@@ -90,7 +90,7 @@
   <th>Photo</th>
   <th>Name</th>
   <th>Age</th>
-  <th>DOB</th>
+ <th class="dob-col">DOB</th>
   <th>Phone No</th>
   <th>City</th>
   <th>Reg Date</th>
@@ -106,7 +106,27 @@
 
         <tbody>
           <tr *ngFor="let profile of paginatedProfiles" class="clickable-row">
-  <td>{{ statusText(profile.profile_status || 'Pending') }}</td>
+  <td class="status-cell">
+
+  <span
+    *ngIf="profile.profile_status === 'Approved'"
+    class="status-icon approved"
+    title="Approved">
+
+    ✔
+
+  </span>
+
+  <span
+    *ngIf="!profile.profile_status || profile.profile_status === 'Pending'"
+    class="status-icon pending"
+    title="Pending">
+
+    ⏳
+
+  </span>
+
+</td>
 <td>{{ profile.profile_code }}</td>
 
 <td>
@@ -119,7 +139,9 @@
 
 <td>{{ currentLang === 'ta' ? (profile.full_name_ta || profile.full_name) : profile.full_name }}</td>
 <td>{{ calculateAge(profile.dob) }}</td>
-<td>{{ profile.dob || '-' }}</td>
+<td class="dob-col">
+  {{ profile.dob || '-' }}
+</td>
 <td>{{ profile.mobile || '-' }}</td>
 <td>{{ cityText(profile.city_text) }}</td>
 <td>{{ dateText(profile.created_at) }}</td>

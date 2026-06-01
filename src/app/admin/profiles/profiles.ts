@@ -285,7 +285,27 @@ if (subsError) {
 
 this.userPlans = subsData || [];
 
-    this.profiles = (data || []).map(profile => {
+   this.profiles = (data || [])
+  .sort((a: any, b: any) => {
+
+    const aPending =
+      (a.profile_status || 'Pending') === 'Pending';
+
+    const bPending =
+      (b.profile_status || 'Pending') === 'Pending';
+
+    if (aPending && !bPending) return -1;
+    if (!aPending && bPending) return 1;
+
+    return new Date(
+      b.updated_at || b.created_at
+    ).getTime() -
+    new Date(
+      a.updated_at || a.created_at
+    ).getTime();
+
+  })
+  .map(profile => {
 const plan = this.userPlans?.find((p: any) =>
   p.user_id === profile.user_id ||
   p.profile_id === profile.profile_id
