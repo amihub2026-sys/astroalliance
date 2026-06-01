@@ -649,18 +649,16 @@
         <h2>{{ currentLang === 'ta' ? 'ஜாதக பொருத்தம்' : 'Astrology Match' }}</h2>
 
         <div *ngIf="astroMatch; else noAstroMatch" class="astro-match-box">
-          <div class="astro-score">
-            ⭐
-            {{
-              astroMatch?.guna_milan?.total_points ||
-              astroMatch?.total_points ||
-              0
-            }} / 36
-          </div>
+        <div class="astro-score">
+  ⭐
+  {{
+    astroMatch?.score || 0
+  }} / 36
+</div>
 
-          <div class="astro-message" *ngIf="astroMatch?.guna_milan?.message">
-            {{ astroMatch?.guna_milan?.message }}
-          </div>
+          <div class="astro-message" *ngIf="astroMatch?.message?.description">
+  {{ astroMatch?.message?.description }}
+</div>
 
           <div class="astro-sub" *ngIf="astroMatch?.guna_milan">
            {{
