@@ -2674,19 +2674,16 @@ setTimeout(async () => {
   this.cdr.detectChanges();
 }
   }
-  async loadCastes() {
+async loadCastes() {
 
   const { data, error } = await supabase
     .from('mst_castes')
     .select('*')
+    .eq('is_active', true)
     .order('caste_name');
 
   if (error) {
-
- 
-
     return;
-
   }
 
   this.allCastes = data || [];
