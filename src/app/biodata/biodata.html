@@ -1398,10 +1398,14 @@ formData.secondMarriageReason === 'Widowed'
 
   <select [(ngModel)]="formData.nakshatra" name="nakshatra">
     <option value="">{{ tr.labels.selectNakshatra }}</option>
-   <option
-  *ngFor="let n of translations.en.options.nakshatraList"
-  [value]="n">
-  {{ getTamilValue('nakshatra', n) }}
+  <option
+  *ngFor="let n of nakshatraDbList"
+  [value]="n.nakshatra_name">
+  {{
+    currentLang === 'ta'
+      ? (n.nakshatra_name_ta || n.nakshatra_name)
+      : n.nakshatra_name
+  }}
 </option>
   </select>
 
@@ -1433,10 +1437,14 @@ formData.secondMarriageReason === 'Widowed'
   <label>{{ tr.labels.rasi }}</label>
   <select [(ngModel)]="formData.rasi" name="rasi">
     <option value="">{{ tr.labels.selectRasi }}</option>
-   <option
-  *ngFor="let r of translations.en.options.rasiList"
-  [value]="r">
-  {{ getTamilValue('rasi', r) }}
+<option
+  *ngFor="let r of rasiDbList"
+  [value]="r.rasi_name">
+  {{
+    currentLang === 'ta'
+      ? (r.rasi_name_ta || r.rasi_name)
+      : r.rasi_name
+  }}
 </option>
   </select>
 
@@ -1451,10 +1459,14 @@ formData.secondMarriageReason === 'Widowed'
 
   <select [(ngModel)]="formData.lagnam" name="lagnam">
     <option value="">{{ tr.labels.selectLagnam }}</option>
-   <option
-  *ngFor="let l of translations.en.options.lagnamList"
-  [value]="l">
-  {{ getTamilValue('lagnam', l) }}
+<option
+  *ngFor="let l of lagnamDbList"
+  [value]="l.lagnam_name">
+  {{
+    currentLang === 'ta'
+      ? (l.lagnam_name_ta || l.lagnam_name)
+      : l.lagnam_name
+  }}
 </option>
   </select>
 
