@@ -966,12 +966,11 @@ formData.secondMarriageReason === 'Widowed'
 
       name="poorvegamSearch"
 
-      [placeholder]="
-        currentLang === 'ta'
-          ? 'பூர்வீகம் தேடவும்'
-          : 'Search Poorvegam'
-      "
-
+    [placeholder]="
+  currentLang === 'ta'
+    ? 'மாவட்டத்தை உள்ளிடவும்'
+    : 'Enter district'
+"
       autocomplete="off"
 
       (focus)="showPoorvegamDropdown = true"
@@ -1059,8 +1058,10 @@ formData.secondMarriageReason === 'Widowed'
   <input
     type="text"
     name="iruppidam"
-    [(ngModel)]="formData.iruppidam"
-    [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் தேடவும்' : 'Search Iruppidam'"
+    [(ngModel)]="iruppidamSearch"
+   [placeholder]="currentLang === 'ta'
+  ? 'மாவட்டத்தை உள்ளிடவும்'
+  : 'Enter district'"
     autocomplete="off"
     (focus)="showIruppidamDropdown = true"
     (blur)="showIruppidamDropdown = false"
@@ -1350,7 +1351,7 @@ formData.secondMarriageReason === 'Widowed'
     (change)="onCityChange()">
 
     <option value="">
-      {{ currentLang === 'ta' ? 'நகரத்தை தேர்வு செய்யவும்' : 'Select City' }}
+      {{ currentLang === 'ta' ? 'மாவட்டத்தை தேர்வு செய்யவும்' : 'Select City' }}
     </option>
 
     <option
@@ -1369,7 +1370,7 @@ formData.secondMarriageReason === 'Widowed'
     type="text"
     [(ngModel)]="formData.city"
     name="otherCity"
-    [placeholder]="currentLang === 'ta' ? 'நகரத்தை உள்ளிடவும்' : 'Enter city'"
+    [placeholder]="currentLang === 'ta' ? 'மாவட்டத்தை உள்ளிடவும்' : 'Enter city'"
   >
 
   <small class="field-error" *ngIf="isInvalid('city')">Required</small>
