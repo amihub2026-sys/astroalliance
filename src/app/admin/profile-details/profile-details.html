@@ -147,6 +147,16 @@
   <strong>{{ txt('Occupation', 'தொழில்') }}:</strong>
  {{ v(profile.occupation_text, profile.occupation_text_ta) }}
 </p>
+
+<p>
+  <strong>{{ txt('Color', 'நிறம்') }}:</strong>
+  {{ v(profile.color_text, profile.color_text_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Sub Caste', 'உட்பிரிவு') }}:</strong>
+  {{ v(profile.sub_caste_text, profile.sub_caste_text_ta) }}
+</p>
       </div>
 
 
@@ -181,6 +191,50 @@
 <p>
   <strong>{{ txt('Siblings', 'உடன்பிறப்புகள்') }}:</strong>
   {{ v(profile.siblings_text, profile.siblings_text_ta) }}
+</p>
+<p>
+  <strong>{{ txt('Married Brothers', 'திருமணமான சகோதரர்கள்') }}:</strong>
+  {{ profile.married_brothers || '0' }}
+</p>
+
+<p>
+  <strong>{{ txt('Unmarried Brothers', 'திருமணம் ஆகாத சகோதரர்கள்') }}:</strong>
+  {{ profile.unmarried_brothers || '0' }}
+</p>
+
+<p>
+  <strong>{{ txt('Married Sisters', 'திருமணமான சகோதரிகள்') }}:</strong>
+  {{ profile.married_sisters || '0' }}
+</p>
+
+<p>
+  <strong>{{ txt('Unmarried Sisters', 'திருமணம் ஆகாத சகோதரிகள்') }}:</strong>
+  {{ profile.unmarried_sisters || '0' }}
+</p>
+
+<p>
+  <strong>{{ txt('Kudumba Nilai', 'குடும்ப நிலை') }}:</strong>
+  {{ v(profile.kudumba_nilai, profile.kudumba_nilai_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Sothukal', 'சொத்துகள்') }}:</strong>
+  {{ v(profile.sothukal, profile.sothukal_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Kuladeivam', 'குலதெய்வம்') }}:</strong>
+  {{ v(profile.kuladeivam, profile.kuladeivam_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Poorvegam', 'பூர்வீகம்') }}:</strong>
+  {{ v(profile.poorvegam, profile.poorvegam_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Iruppidam', 'இருப்பிடம்') }}:</strong>
+  {{ v(profile.iruppidam, profile.iruppidam_ta) }}
 </p>
 
       </div>
@@ -217,6 +271,10 @@
   {{ v(profile.occupation_text, profile.occupation_text_ta) }}
 </p>
 <p>
+  <strong>{{ txt('Work Place', 'பணியிடம்') }}:</strong>
+  {{ v(profile.work_place, profile.work_place_ta) }}
+</p>
+<p>
   <strong>{{ txt('Age', 'வயது') }}:</strong>
   {{ profile.age || '-' }}
 </p>
@@ -240,14 +298,49 @@
   <strong>{{ txt('Marital Status', 'திருமண நிலை') }}:</strong>
   {{ v(profile.marital_status_text, profile.marital_status_text_ta) }}
 </p>
+
+<p *ngIf="profile.second_marriage_reason">
+  <strong>{{ txt('Marriage Type', 'இரண்டாம் திருமண காரணம்') }}:</strong>
+  {{ profile.second_marriage_reason }}
+</p>
+
+<p>
+  <strong>{{ txt('Children', 'குழந்தைகள்') }}:</strong>
+  {{ profile.children_status || '-' }}
+</p>
+
+<p *ngIf="profile.children_details">
+  <strong>{{ txt('Children Details', 'குழந்தைகள் விவரம்') }}:</strong>
+  {{ v(profile.children_details, profile.children_details_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Kalappu Thirumanam', 'கலப்பு திருமணம்') }}:</strong>
+  {{ profile.kalappu_thirumanam || '-' }}
+</p>
+
+<p *ngIf="profile.kalappu_thirumanam === 'Yes'">
+  <strong>{{ txt('Kalappu Details', 'கலப்பு திருமணம் விவரம்') }}:</strong>
+  {{ v(profile.kalappu_thirumanam_details, profile.kalappu_thirumanam_details_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Handicap', 'மாற்றுத்திறனாளி') }}:</strong>
+  {{ profile.handicap_status || '-' }}
+</p>
+
+<p *ngIf="profile.handicap_status === 'Yes'">
+  <strong>{{ txt('Handicap Details', 'விவரம்') }}:</strong>
+  {{ v(profile.handicap_details, profile.handicap_details_ta) }}
+</p>
 <p *ngIf="profile.children_status">
   <strong>{{ txt('Children', 'குழந்தைகள்') }}:</strong>
   {{ txt('Yes', 'ஆம்') }}
 </p>
 
-<p *ngIf="profile.children_status && profile.children_details">
+<p *ngIf="profile.children_details">
   <strong>{{ txt('Children Details', 'குழந்தைகள் விவரம்') }}:</strong>
-  {{ profile.children_details }}
+  {{ v(profile.children_details, profile.children_details_ta) }}
 </p>
 <p>
   <strong>{{ txt('Salary', 'சம்பளம்') }}:</strong>
@@ -321,6 +414,38 @@
 <p>
  <strong>{{ txt('Dhosham', 'தோஷம்') }}:</strong>
 {{ dhoshamText(profile.dhosham_text) }}
+</p>
+
+<p>
+  <strong>{{ txt('Birth Time', 'பிறந்த நேரம்') }}:</strong>
+  {{ profile.birth_time || '-' }}
+</p>
+
+<p>
+  <strong>{{ txt('Birth Place', 'பிறந்த இடம்') }}:</strong>
+  {{ v(profile.birth_place, profile.birth_place_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Thisai', 'திசை') }}:</strong>
+  {{ v(profile.thisai, profile.thisai_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Thisai Iruppu', 'திசை இருப்பு') }}:</strong>
+  {{ v(profile.thisai_iruppu, profile.thisai_iruppu_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Paatham', 'பாதம்') }}:</strong>
+  {{ v(profile.paatham, profile.paatham_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Dhisai Balance', 'திசை இருப்பு காலம்') }}:</strong>
+  {{ profile.thisai_year || '0' }} வ
+  {{ profile.thisai_month || '0' }} மா
+  {{ profile.thisai_day || '0' }} நா
 </p>
 
 <div class="horoscope-chart-wrapper">
