@@ -346,7 +346,7 @@ handicap_details: data?.handicap_details || '',
 handicap_details_ta: data?.handicap_details_ta || '',
 
 children_status: data?.children_status || '',
-children_count: data?.children_count || '',
+children_details: data?.children_details || '',
 
 poorvegam: data?.poorvegam || '',
 poorvegam_ta: data?.poorvegam_ta || '',

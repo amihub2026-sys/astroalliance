@@ -21,13 +21,22 @@ export class AdminLogin implements OnInit {
     private ngZone: NgZone
   ) {}
 
-  ngOnInit() {
-    const isAdmin = localStorage.getItem('is_admin');
-
-    if (isAdmin === 'true') {
-      this.router.navigateByUrl('/admin/dashboard');
-    }
+ngOnInit(): void {
+  if (typeof window === 'undefined') {
+    return;
   }
+
+  const savedEmail = localStorage.getItem('admin_email');
+  const savedPassword = localStorage.getItem('admin_password');
+
+  if (savedEmail) {
+    this.email = savedEmail;
+  }
+
+  if (savedPassword) {
+    this.password = savedPassword;
+  }
+}
 
   async onAdminLogin() {
     if (!this.email || !this.password) {
