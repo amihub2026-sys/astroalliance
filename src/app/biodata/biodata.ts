@@ -169,27 +169,7 @@ childrenCount: 'Children Count',
         birthPlace: 'Enter birth place'
       },
       options: {
-        genders: ['Male', 'Female'],
-        maritalStatuses: ['Unmarried', 'Divorced', 'Widowed'],
-        dhoshamList: ['No', 'Yes', 'Dont Know'],
-        rasiList: [
-          'Mesham', 'Rishabam', 'Mithunam', 'Kadagam',
-          'Simmam', 'Kanni', 'Thulam', 'Viruchigam',
-          'Dhanusu', 'Magaram', 'Kumbam', 'Meenam'
-        ],
-        nakshatraList: [
-          'Ashwini', 'Bharani', 'Karthigai', 'Rohini', 'Mirugasirisham',
-          'Thiruvathirai', 'Punarpoosam', 'Poosam', 'Ayilyam',
-          'Magam', 'Pooram', 'Uthiram', 'Hastham', 'Chithirai',
-          'Swathi', 'Visakam', 'Anusham', 'Kettai',
-          'Moolam', 'Pooradam', 'Uthiradam', 'Thiruvonam',
-          'Avittam', 'Sathayam', 'Poorattathi', 'Uthirattathi', 'Revathi'
-        ],
-        lagnamList: [
-          'Mesham', 'Rishabam', 'Mithunam', 'Kadagam',
-          'Simmam', 'Kanni', 'Thulam', 'Viruchigam',
-          'Dhanusu', 'Magaram', 'Kumbam', 'Meenam'
-        ]
+       
       },
       alerts: {
         uploadHoroscopeFirst: 'Please upload a horoscope file first.',
@@ -320,27 +300,7 @@ childrenCount: 'குழந்தைகள் எண்ணிக்கை',
         birthPlace: 'பிறந்த இடத்தை உள்ளிடவும்'
       },
       options: {
-        genders: ['ஆண்', 'பெண்'],
-        maritalStatuses: ['திருமணம் ஆகாதவர்', 'விவாகரத்து', 'விதவை / விதவன்'],
-        dhoshamList: ['இல்லை', 'உண்டு', 'தெரியாது'],
-        rasiList: [
-          'மேஷம்', 'ரிஷபம்', 'மிதுனம்', 'கடகம்',
-          'சிம்மம்', 'கன்னி', 'துலாம்', 'விருச்சிகம்',
-          'தனுசு', 'மகரம்', 'கும்பம்', 'மீனம்'
-        ],
-        nakshatraList: [
-          'அஸ்வினி', 'பரணி', 'கார்த்திகை', 'ரோகிணி', 'மிருகசீரிடம்',
-          'திருவாதிரை', 'புனர்பூசம்', 'பூசம்', 'ஆயில்யம்',
-          'மகம்', 'பூரம்', 'உத்திரம்', 'ஹஸ்தம்', 'சித்திரை',
-          'சுவாதி', 'விசாகம்', 'அனுஷம்', 'கேட்டை',
-          'மூலம்', 'பூராடம்', 'உத்திராடம்', 'திருவோணம்',
-          'அவிட்டம்', 'சதயம்', 'பூரட்டாதி', 'உத்திரட்டாதி', 'ரேவதி'
-        ],
-        lagnamList: [
-          'மேஷம்', 'ரிஷபம்', 'மிதுனம்', 'கடகம்',
-          'சிம்மம்', 'கன்னி', 'துலாம்', 'விருச்சிகம்',
-          'தனுசு', 'மகரம்', 'கும்பம்', 'மீனம்'
-        ]
+     
       },
       alerts: {
         uploadHoroscopeFirst: 'முதலில் ஜாதக கோப்பை பதிவேற்றவும்.',
@@ -503,6 +463,9 @@ religionList: any[] = [];
 genderList: any[] = [];
 maritalStatusList: any[] = [];
   dhoshamDbList: any[] = [];
+  rasiDbList: any[] = [];
+nakshatraDbList: any[] = [];
+lagnamDbList: any[] = [];
   thisaiIruppuList: any[] = [];
   thisaiList: any[] = [];
 allCastes: any[] = [];
@@ -744,29 +707,7 @@ if (target === 'ta' && localMap[lower]) {
 //   this.cdr.detectChanges();
 
 // }
- get genders(): string[] {
-  return this.translations.en.options.genders;
-}
 
-get maritalStatuses(): string[] {
-  return this.translations.en.options.maritalStatuses;
-}
-
-get dhoshamList(): string[] {
-  return this.translations.en.options.dhoshamList;
-}
-
-get rasiList(): string[] {
-  return this.translations.en.options.rasiList;
-}
-
-get nakshatraList(): string[] {
-  return this.translations.en.options.nakshatraList;
-}
-
-get lagnamList(): string[] {
-  return this.translations.en.options.lagnamList;
-}
 getTypedValue(field: keyof typeof this.formDataTa): string {
   if (this.currentLang === 'ta') {
     return this.formDataTa[field] || '';
@@ -824,7 +765,9 @@ const convert = async (taValue: string, enValue: string) => {
   this.formData.company = await convert(this.formDataTa.company, this.formData.company);
   this.formData.workPlace =
   await convert(this.formDataTa.workPlace, this.formData.workPlace);
-  this.formData.address = await convert(this.formDataTa.address, this.formData.address);
+ if (this.currentLang === 'ta') {
+  this.formData.address = this.formDataTa.address || this.formData.address;
+}
   this.formData.birthPlace = await convert(this.formDataTa.birthPlace, this.formData.birthPlace);
   this.formData.aboutMe = await convert(this.formDataTa.aboutMe, this.formData.aboutMe);
   this.formData.partnerExpectation = await convert(this.formDataTa.partnerExpectation, this.formData.partnerExpectation);
@@ -1108,6 +1051,35 @@ onChartKeydown(
 
     return { lat: null, lng: null };
   }
+  async loadRasiList(): Promise<void> {
+  const { data, error } = await supabase
+    .from('mst_rasi')
+    .select('rasi_id, rasi_name, rasi_name_ta, sort_order')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  if (!error) this.rasiDbList = data || [];
+}
+
+async loadNakshatraList(): Promise<void> {
+  const { data, error } = await supabase
+    .from('mst_nakshatra')
+    .select('nakshatra_id, nakshatra_name, nakshatra_name_ta, sort_order')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  if (!error) this.nakshatraDbList = data || [];
+}
+
+async loadLagnamList(): Promise<void> {
+  const { data, error } = await supabase
+    .from('mst_lagnam')
+    .select('lagnam_id, lagnam_name, lagnam_name_ta, sort_order')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  if (!error) this.lagnamDbList = data || [];
+}
 async ngOnInit(): Promise<void> {
 
 const editId = this.route.snapshot.queryParamMap.get('id');
@@ -1144,6 +1116,9 @@ await this.loadThisaiIruppu();
   await this.loadEducationLevels();
   await this.loadProfessionList();
 await this.loadDhoshamList();
+await this.loadRasiList();
+await this.loadNakshatraList();
+await this.loadLagnamList();
   await this.loadExistingBiodata();
 
   if (this.currentLang === 'ta') {
@@ -1682,7 +1657,7 @@ async extractHoroscopeData(): Promise<void> {
       extractedText.toLowerCase();
 
     // AUTO DETECT RASI
-    for (const rasi of this.rasiList) {
+    for (const rasi of this.rasiDbList.map((x: any) => x.rasi_name)) {
 
       if (
         text.includes(rasi.toLowerCase())
@@ -1697,7 +1672,7 @@ async extractHoroscopeData(): Promise<void> {
     }
 
     // AUTO DETECT NAKSHATRA
-    for (const star of this.nakshatraList) {
+    for (const star of this.nakshatraDbList.map((x: any) => x.nakshatra_name)) {
 
       if (
         text.includes(star.toLowerCase())
@@ -1712,7 +1687,7 @@ async extractHoroscopeData(): Promise<void> {
     }
 
     // AUTO DETECT LAGNAM
-    for (const lag of this.lagnamList) {
+   for (const lag of this.lagnamDbList.map((x: any) => x.lagnam_name)) {
 
       if (
         text.includes(lag.toLowerCase())
@@ -1727,30 +1702,33 @@ async extractHoroscopeData(): Promise<void> {
     }
 
     // GENDER
-    if (text.includes('male')) {
+  // GENDER
+if (text.includes('female')) {
+  const female = this.genderList.find(
+    (x: any) => x.gender_name?.toLowerCase() === 'female'
+  );
 
-      this.formData.gender =
-        this.genders[0];
+  this.formData.gender = female?.gender_name || '';
+} 
+else if (text.includes('male')) {
+  const male = this.genderList.find(
+    (x: any) => x.gender_name?.toLowerCase() === 'male'
+  );
 
-    }
+  this.formData.gender = male?.gender_name || '';
+}
 
-    if (text.includes('female')) {
+   // DHOSHAM
+if (
+  text.includes('dhosham') ||
+  text.includes('dosham')
+) {
+  const dhosham = this.dhoshamDbList.find(
+    (x: any) => x.dhosham_name?.toLowerCase().includes('dhosham')
+  );
 
-      this.formData.gender =
-        this.genders[1];
-
-    }
-
-    // DHOSHAM
-    if (
-      text.includes('dhosham') ||
-      text.includes('dosham')
-    ) {
-
-      this.formData.dhosham =
-        this.dhoshamList[1];
-
-    }
+  this.formData.dhosham = dhosham?.dhosham_name || '';
+}
 
     // DEFAULT VALUES
     this.formData.birthPlace =
@@ -2052,7 +2030,55 @@ if (missingField) {
  if (selectedCity) {
   this.formData.city = selectedCity.city_name || '';
 }
+const selectedGender = this.genderList.find(
+  (x: any) => x.gender_name === this.formData.gender
+);
 
+const selectedMaritalStatus = this.maritalStatusList.find(
+  (x: any) => x.status_name === this.formData.maritalStatus
+);
+
+const selectedReligion = this.religionList.find(
+  (x: any) => x.religion_id === this.selectedReligionId
+);
+
+const selectedCaste = this.casteList.find(
+  (x: any) => x.caste_name === this.formData.caste
+);
+
+const selectedCountry = this.countryList.find(
+  (x: any) => x.country_id === this.selectedCountryId
+);
+
+const selectedState = this.stateList.find(
+  (x: any) => x.state_id === this.selectedStateId
+);
+
+const selectedEducation = this.educationList.find(
+  (x: any) => x.education_name === this.formData.education
+);
+
+const selectedOccupation = this.professionList.find(
+  (x: any) =>
+    x.profession_name === this.formData.job ||
+    x.occupation_name === this.formData.job
+);
+
+const selectedDhosham = this.dhoshamDbList.find(
+  (x: any) => x.dhosham_name === this.formData.dhosham
+);
+
+const selectedRasi = this.rasiDbList.find(
+  (x: any) => x.rasi_name === this.formData.rasi
+);
+
+const selectedNakshatra = this.nakshatraDbList.find(
+  (x: any) => x.nakshatra_name === this.formData.nakshatra
+);
+
+const selectedLagnam = this.lagnamDbList.find(
+  (x: any) => x.lagnam_name === this.formData.lagnam
+);
 this.isSaving = true;
 
 
@@ -2254,20 +2280,36 @@ console.log('SAVE CHECK:', {
   en: this.formData,
   ta: taSnapshot
 });
+const selectedEducation = this.educationList.find(
+  (x: any) => x.education_name === this.formData.education
+);
+
+const selectedOccupation = this.professionList.find(
+  (x: any) =>
+    x.profession_name === this.formData.job ||
+    x.occupation_name === this.formData.job
+);
+
+const selectedDhosham = this.dhoshamDbList.find(
+  (x: any) => x.dhosham_name === this.formData.dhosham
+);
 console.log('PAYLOAD USER ID:', appUserId);
+
       const payload = {
         user_id: appUserId,
         profile_code: resolvedProfileCode,
 
         full_name: this.safeText(this.formData.fullName),
 
-        gender_id: null,
+       gender_id: selectedGender?.gender_id || null,
+
         gender_text: this.safeText(this.formData.gender),
 
         dob: this.formData.dob || null,
         age: this.safeNumber(this.formData.age),
 
-        marital_status_id: null,
+     marital_status_id: selectedMaritalStatus?.marital_status_id || null,
+
         marital_status_text: this.safeText(this.formData.maritalStatus),
 
         mobile: this.safeText(this.formData.mobile || fallbackPhone),
@@ -2282,14 +2324,16 @@ console.log('PAYLOAD USER ID:', appUserId);
         weight_kg: this.safeNumber(this.formData.weight),
         weight_text: this.safeText(this.formData.weight),
 
-        religion_id: null,
+       religion_id: this.selectedReligionId || null,
+
      religion_text: this.safeText(
   this.religionList.find(
     (r: any) => r.religion_id === this.selectedReligionId
   )?.religion_name || this.formData.religion
 ),
 
-caste_id: null,
+caste_id: selectedCaste?.caste_id || null,
+
 caste_text: this.safeText(this.formData.caste),
 sub_caste_text: this.safeText(this.formData.subCaste),
 sub_caste_text_ta: this.safeText(this.formDataTa.subCaste),
@@ -2377,7 +2421,8 @@ mother_occupation_text: this.safeText(this.formData.motherOccupation),
 mother_occupation: this.safeText(this.formData.motherOccupation),
 
 siblings_text: this.safeText(this.formData.siblings),
-education_id: null,
+education_id: selectedEducation?.education_id || null,
+
 
 education_text: this.safeText(
   this.formData.education === 'Other'
@@ -2389,7 +2434,8 @@ education_text_ta: this.safeText(
     ? await this.translateText(this.formData.otherEducation, 'ta')
     : this.getTamilEducationName(this.formData.education)
 ),
-occupation_id: null,
+occupation_id: selectedOccupation?.profession_id || null,
+
 
 occupation_text: this.safeText(
   this.formData.job === 'Other'
@@ -2415,21 +2461,23 @@ address_line: this.safeText(this.formData.address),
             .join(', ')
         ),
 
-        city_id: null,
+        city_id: this.selectedCityId || null,
+
       city_text: this.safeText(
   this.cityList.find(
     (c: any) => c.city_id === this.selectedCityId
   )?.city_name || this.formData.city
 ),
 
-state_id: null,
+state_id: this.selectedStateId || null,
+
 state_text: this.safeText(
   this.stateList.find(
     (s: any) => s.state_id === this.selectedStateId
   )?.state_name || this.formData.state
 ),
 
-country_id: null,
+country_id: this.selectedCountryId || null,
 country_text: this.safeText(
   this.countryList.find(
     (c: any) => c.country_id === this.selectedCountryId
@@ -2438,14 +2486,17 @@ country_text: this.safeText(
         latitude: resolvedLatitude,
         longitude: resolvedLongitude,
 
-        rasi_id: null,
-        rasi_text: this.safeText(this.formData.rasi),
+      rasi_id: selectedRasi?.rasi_id || null,
+rasi_text: this.safeText(selectedRasi?.rasi_name || this.formData.rasi),
+rasi_text_ta: this.safeText(selectedRasi?.rasi_name_ta || ''),
 
-        nakshatra_id: null,
-        nakshatra_text: this.safeText(this.formData.nakshatra),
+nakshatra_id: selectedNakshatra?.nakshatra_id || null,
+nakshatra_text: this.safeText(selectedNakshatra?.nakshatra_name || this.formData.nakshatra),
+nakshatra_text_ta: this.safeText(selectedNakshatra?.nakshatra_name_ta || ''),
 
-        lagnam_id: null,
-        lagnam_text: this.safeText(this.formData.lagnam),
+lagnam_id: selectedLagnam?.lagnam_id || null,
+lagnam_text: this.safeText(selectedLagnam?.lagnam_name || this.formData.lagnam),
+lagnam_text_ta: this.safeText(selectedLagnam?.lagnam_name_ta || ''),
 
 gothram: this.safeText(
   this.currentLang === 'ta'
@@ -2457,8 +2508,9 @@ gothram: this.safeText(
       ) || this.formData.gothram
     : this.formData.gothram
 ),
-    dhosham_id: null,
-        dhosham_text: this.safeText(this.formData.dhosham),
+    dhosham_id: selectedDhosham?.dhosham_id || null,
+      dhosham_text: this.safeText(selectedDhosham?.dhosham_name || this.formData.dhosham),
+dhosham_text_ta: this.safeText(selectedDhosham?.dhosham_name_ta || ''),
 
         birth_time: this.formData.birthTime || null,
 birth_place: this.safeText(this.formData.birthPlace),
@@ -2812,7 +2864,7 @@ onStateChange(): void {
 async loadProfessionList() {
   const { data, error } = await supabase
     .from('mst_professions')
-    .select('profession_name, profession_name_ta, sort_order, is_active')
+   .select('profession_id, profession_name, profession_name_ta, sort_order, is_active')
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
