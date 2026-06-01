@@ -22,8 +22,8 @@ interface ProfileViewItem {
   dob: string;
   age: number;
   maritalStatus: LangText;
-  childrenStatus: string;
-childrenCount: string;
+childrenStatus: string;
+childrenDetails: string;
 kalappuThirumanam: string;
 kalappuThirumanamDetails: LangText;
 handicapStatus: string;
@@ -468,7 +468,7 @@ gender: { en: row.gender_text || '', ta: row.gender_text === 'Male' ? 'ஆண்
   ta: row.marital_status_text_ta || row.marital_status_text || ''
 },
 childrenStatus: row.children_status ?? false,
-childrenCount: row.children_count || '',
+childrenDetails: row.children_details || '',
 kalappuThirumanam: row.kalappu_thirumanam ?? false,
 kalappuThirumanamDetails: {
   en: row.kalappu_thirumanam_details || '',

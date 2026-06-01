@@ -286,22 +286,28 @@ formData.secondMarriageReason === 'Widowed'
 
 <!-- CHILDREN COUNT -->
 
+<!-- CHILDREN DETAILS -->
+
 <div
   class="field"
   *ngIf="formData.childrenStatus === 'Yes'"
 >
-
   <label>
-    {{ tr.labels.childrenCount }}
+    {{ currentLang === 'ta'
+      ? 'குழந்தைகள் விவரம்'
+      : 'Children Details'
+    }}
   </label>
 
-  <input
-    type="number"
-    [(ngModel)]="formData.childrenCount"
-    name="childrenCount"
-    min="1"
-  >
-
+  <textarea
+    [ngModel]="getTypedValue('childrenDetails')"
+    (ngModelChange)="onTamilInputChange('childrenDetails', $event)"
+    name="childrenDetails"
+    rows="3"
+    [placeholder]="currentLang === 'ta'
+      ? 'குழந்தைகள் விவரத்தை உள்ளிடவும்'
+      : 'Enter children details'"
+  ></textarea>
 </div>
 <!-- KALAPPU THIRUMANAM -->
 

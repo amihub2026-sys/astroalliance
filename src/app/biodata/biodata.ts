@@ -141,7 +141,7 @@ handicap: 'Physically Challenged',
 handicapDetails: 'Handicap Details',
 
 children: 'Children',
-childrenCount: 'Children Count',
+childrenDetails: 'Children Details',
       },
       placeholders: {
         fullName: 'Enter full name',
@@ -272,7 +272,7 @@ handicap: 'மாற்றுத்திறனாளி',
 handicapDetails: 'விவரம்',
 
 children: 'குழந்தைகள்',
-childrenCount: 'குழந்தைகள் எண்ணிக்கை',
+childrenDetails: 'குழந்தைகள் விவரம்',
       },
       placeholders: {
         fullName: 'முழு பெயரை உள்ளிடவும்',
@@ -364,7 +364,8 @@ handicapStatus: 'No',
 handicapDetails: '',
 
 childrenStatus: 'No',
-childrenCount: '',
+childrenDetails: '',
+
 kalappuThirumanam: 'No',
 kalappuThirumanamDetails: '',
 thisai: '',
@@ -397,6 +398,7 @@ formDataTa = {
   partnerExpectation: '',
   subCaste: '',
 handicapDetails: '',
+childrenDetails: '',
 thisai: '',
 thisaiIruppu: '',
 paatham: '',
@@ -786,7 +788,11 @@ this.formData.handicapDetails =
     this.formDataTa.handicapDetails,
     this.formData.handicapDetails
   );
-
+this.formData.childrenDetails =
+  await convert(
+    this.formDataTa.childrenDetails,
+    this.formData.childrenDetails
+  );
 this.formData.thisai =
   await convert(
     this.formDataTa.thisai,
@@ -1292,9 +1298,10 @@ this.formDataTa.handicapDetails =
 this.formData.childrenStatus =
   data.children_status ? 'Yes' : 'No';
 
-this.formData.childrenCount =
-  data.children_count || '';
-
+this.formData.childrenDetails =
+  data.children_details || '';
+this.formDataTa.childrenDetails =
+  data.children_details || '';
 this.formData.kalappuThirumanam =
   data.kalappu_thirumanam ? 'Yes' : 'No';
 
@@ -2365,8 +2372,7 @@ handicap_details_ta:
 children_status:
   this.formData.childrenStatus === 'Yes',
 
-children_count:
-  this.formData.childrenCount || 0,
+children_details: this.formData.childrenDetails || null,
 
 kalappu_thirumanam:
   this.formData.kalappuThirumanam === 'Yes',

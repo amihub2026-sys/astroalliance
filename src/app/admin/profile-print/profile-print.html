@@ -124,12 +124,7 @@
   <span>ஆம்</span>
 </p>
 
-<p *ngIf="profile.children_status && profile.children_count">
-  <strong>குழந்தைகள் எண்ணிக்கை :</strong>
-  <span>{{ profile.children_count }}</span>
-</p>
-
-<p *ngIf="profile.children_details">
+<p *ngIf="profile.children_status && profile.children_details">
   <strong>குழந்தைகள் விவரம் :</strong>
   <span>{{ profile.children_details }}</span>
 </p>
