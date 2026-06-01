@@ -125,6 +125,7 @@ showProfileLoading = false;
 userProfileName = '';
 userGender = '';
 userCaste = '';
+userNakshatra = '';
   shortlistedByYouIds: string[] = [];
 
 showBiodataPopup = true;
@@ -901,6 +902,8 @@ private async makeLangText(
   caste_text,
 
   gender_text,
+  nakshatra_text,
+nakshatra_text_ta,
 
   city_text,
 
@@ -1044,8 +1047,8 @@ gender: await this.makeLangText(
   this.getTamilProfileValue('gender', row.gender_text)
 ),
 nakshatra: await this.makeLangText(
-  row.nakshatra_text || '-',
-  row.nakshatra_text_ta || row.nakshatra_text || '-'
+  row.nakshatra_text,
+  row.nakshatra_text_ta || row.nakshatra_text
 ),
 
 location: await this.makeLangText(
@@ -1496,7 +1499,6 @@ if (this.sidebarFilter === 'liked') {
       const maritalStatus = this.normalizeText(this.getText(profile.maritalStatus));
       const caste = this.normalizeText(this.getText(profile.caste));
       const gender = this.normalizeText(this.getText(profile.gender));
-
       const casteFilter = this.normalizeText(this.appliedFilters.caste);
       const religionFilter = this.normalizeText(this.appliedFilters.religion);
       const genderFilter = this.normalizeText(this.appliedFilters.gender);
@@ -1586,6 +1588,7 @@ if (matchesLocation && radiusFilter !== null && radiusFilter > 0) {
       }
 
       if (this.sidebarFilter === 'newlyJoined') {
+        
         return true;
       }
 
@@ -1621,6 +1624,17 @@ if (matchesLocation && radiusFilter !== null && radiusFilter > 0) {
       if (this.sidebarFilter === 'lookingForYou') {
         return true;
       }
+      if (this.sidebarFilter === 'star') {
+  const myStar = this.normalizeText(this.userNakshatra);
+  const profileStarEn = this.normalizeText(profile.nakshatra?.en);
+  const profileStarTa = this.normalizeText(profile.nakshatra?.ta);
+
+  if (!myStar) {
+    return false;
+  }
+
+  return profileStarEn === myStar || profileStarTa === myStar;
+}
 
       return true;
     });
@@ -2343,7 +2357,17 @@ async loadLoggedInUserProfile(): Promise<void> {
 
   const { data, error } = await supabase
     .from('user_profiles')
- .select('full_name, full_name_ta, profile_image_url, gender_text, caste_text, latitude, longitude')
+ .select(`
+  full_name,
+  full_name_ta,
+  profile_image_url,
+  gender_text,
+  caste_text,
+  nakshatra_text,
+  nakshatra_text_ta,
+  latitude,
+  longitude
+`)
     .eq('user_id', userId)
     .maybeSingle();
 
@@ -2359,6 +2383,10 @@ this.userProfileName =
       this.userProfileImage = data?.profile_image_url || '';
  this.userGender = data?.gender_text || '';
 this.userCaste = data?.caste_text || '';
+this.userNakshatra =
+  data?.nakshatra_text ||
+  data?.nakshatra_text_ta ||
+  '';
 this.userLat = this.toNullableNumber(data?.latitude);
 this.userLng = this.toNullableNumber(data?.longitude);
 console.log('USER LAT:', this.userLat);
