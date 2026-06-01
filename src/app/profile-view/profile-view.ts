@@ -635,73 +635,101 @@ partnerExpectation: {
     );
   }
 
-  async loadAstroMatch(): Promise<void> {
-    try {
-      this.astroMatch = null;
+async loadAstroMatch(): Promise<void> {
+  try {
+    this.astroMatch = null;
 
-      const loggedInUser = this.getStoredLoggedInUser();
-      if (!loggedInUser?.user_id) {
-        return;
-      }
+    const loggedInUser = this.getStoredLoggedInUser();
 
-      if (!this.loadedProfileRow) {
-        return;
-      }
-
-      const { data: myProfile, error: myProfileError } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', loggedInUser.user_id)
-        .maybeSingle();
-
-      if (myProfileError) {
-        throw myProfileError;
-      }
-
-      if (!myProfile) {
-        return;
-      }
-
-      if (!this.hasRequiredAstroData(myProfile) || !this.hasRequiredAstroData(this.loadedProfileRow)) {
-      
-        return;
-      }
-
-      const myGender = this.normalizeGender(myProfile.gender_text);
-      const targetGender = this.normalizeGender(this.loadedProfileRow.gender_text);
-
-      if (!myGender || !targetGender || myGender === targetGender) {
-        
-        return;
-      }
-
-      const maleProfile = myGender === 'male' ? myProfile : this.loadedProfileRow;
-      const femaleProfile = myGender === 'female' ? myProfile : this.loadedProfileRow;
-
-      const malePayload = {
-        date_of_birth: this.formatDateForApi(maleProfile.dob),
-        time_of_birth: this.normalizeTimeForApi(maleProfile.birth_time),
-        place: this.normalizePlaceForApi(maleProfile.birth_place)
-      };
-
-      const femalePayload = {
-        date_of_birth: this.formatDateForApi(femaleProfile.dob),
-        time_of_birth: this.normalizeTimeForApi(femaleProfile.birth_time),
-        place: this.normalizePlaceForApi(femaleProfile.birth_place)
-      };
-
-
-      const result = await this.astroService.getMatch(malePayload, femalePayload);
-
-      this.astroMatch = result || null;
-      
-      this.cdr.detectChanges();
-    } catch (error) {
-     
-      this.astroMatch = null;
-      this.cdr.detectChanges();
+    if (!loggedInUser?.user_id) {
+      console.log('NO LOGGED USER');
+      return;
     }
+
+    if (!this.loadedProfileRow) {
+      console.log('NO VIEWED PROFILE');
+      return;
+    }
+
+    const { data: myProfile, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', loggedInUser.user_id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!myProfile) {
+      console.log('MY PROFILE NOT FOUND');
+      return;
+    }
+
+    const myGender = this.normalizeGender(myProfile.gender_text);
+    const targetGender = this.normalizeGender(this.loadedProfileRow.gender_text);
+
+    console.log('MY GENDER:', myGender);
+    console.log('TARGET GENDER:', targetGender);
+
+    if (!myGender || !targetGender) {
+      this.snackbar.error('Gender missing for astrology match');
+      return;
+    }
+
+    if (myGender === targetGender) {
+      this.snackbar.error('Astrology match needs one male and one female profile');
+      return;
+    }
+
+    if (!this.hasRequiredAstroData(myProfile)) {
+      console.log('MY PROFILE ASTRO DATA MISSING', myProfile);
+      this.snackbar.error('Please update your DOB, Birth Time and Birth Place');
+      return;
+    }
+
+    if (!this.hasRequiredAstroData(this.loadedProfileRow)) {
+      console.log('VIEWED PROFILE ASTRO DATA MISSING', this.loadedProfileRow);
+      this.snackbar.error('Viewed profile DOB, Birth Time or Birth Place is missing');
+      return;
+    }
+
+    const maleProfile =
+      myGender === 'male' ? myProfile : this.loadedProfileRow;
+
+    const femaleProfile =
+      myGender === 'female' ? myProfile : this.loadedProfileRow;
+
+    const malePayload = {
+      date_of_birth: this.formatDateForApi(maleProfile.dob),
+      time_of_birth: this.normalizeTimeForApi(maleProfile.birth_time),
+      place: this.normalizePlaceForApi(maleProfile.birth_place)
+    };
+
+    const femalePayload = {
+      date_of_birth: this.formatDateForApi(femaleProfile.dob),
+      time_of_birth: this.normalizeTimeForApi(femaleProfile.birth_time),
+      place: this.normalizePlaceForApi(femaleProfile.birth_place)
+    };
+
+    console.log('MALE PAYLOAD:', malePayload);
+    console.log('FEMALE PAYLOAD:', femalePayload);
+
+    const result = await this.astroService.getMatch(
+      malePayload,
+      femalePayload
+    );
+
+    console.log('PROKERALA RESULT:', result);
+
+    this.astroMatch = result || null;
+    this.cdr.detectChanges();
+
+  } catch (error) {
+    console.error('PROKERALA ERROR:', error);
+    this.snackbar.error('Failed to load astrology match');
+    this.astroMatch = null;
+    this.cdr.detectChanges();
   }
+}
 
   async loadProfile(): Promise<void> {
     this.isLoading = true;
@@ -822,10 +850,6 @@ if (
 if (this.currentLang === 'ta') {
   await this.translateProfileValuesToTamil();
 }
-
-await this.loadAstroMatch();
-
-await this.checkInterest();
 
 await this.loadAstroMatch();
 await this.checkInterest();

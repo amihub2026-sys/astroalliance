@@ -125,6 +125,7 @@ showProfileLoading = false;
 userProfileName = '';
 userGender = '';
 userCaste = '';
+userRasi = '';
 userNakshatra = '';
   shortlistedByYouIds: string[] = [];
 
@@ -902,6 +903,7 @@ private async makeLangText(
   caste_text,
 
   gender_text,
+  rasi_text,
   nakshatra_text,
 nakshatra_text_ta,
 
@@ -1473,6 +1475,39 @@ get planStatus(): string {
     return this.profiles.filter(profile => profile.liked);
   }
 
+  private isRasiNakshatraMatch(profile: ProfileItem): boolean {
+  const myRasi = this.normalizeText(this.userRasi);
+  const myStar = this.normalizeText(this.userNakshatra);
+
+  const profileStar = this.normalizeText(this.getText(profile.nakshatra));
+
+  if (!myRasi || !myStar || !profileStar) return false;
+
+  if (myRasi.includes('rishab') && myStar.includes('rohini')) {
+    return [
+      'mirugasirisham',
+      'thiruvathirai',
+      'punarpoosam',
+      'poosam',
+      'ayilyam',
+      'magham',
+      'uthiram',
+      'hastham',
+      'chithirai',
+      'swathi',
+      'anusham',
+      'uthiradam',
+      'thiruvonam',
+      'avittam',
+      'sathayam',
+      'uthiratadhi',
+      'revathi'
+    ].some(star => profileStar.includes(star));
+  }
+
+  return false;
+}
+
   get filteredProfiles(): ProfileItem[] {
     const radius = this.appliedFilters.radius;
 const userLat = this.userLat;
@@ -1624,16 +1659,8 @@ if (matchesLocation && radiusFilter !== null && radiusFilter > 0) {
       if (this.sidebarFilter === 'lookingForYou') {
         return true;
       }
-      if (this.sidebarFilter === 'star') {
-  const myStar = this.normalizeText(this.userNakshatra);
-  const profileStarEn = this.normalizeText(profile.nakshatra?.en);
-  const profileStarTa = this.normalizeText(profile.nakshatra?.ta);
-
-  if (!myStar) {
-    return false;
-  }
-
-  return profileStarEn === myStar || profileStarTa === myStar;
+    if (this.sidebarFilter === 'star') {
+  return this.isRasiNakshatraMatch(profile);
 }
 
       return true;
@@ -2363,6 +2390,7 @@ async loadLoggedInUserProfile(): Promise<void> {
   profile_image_url,
   gender_text,
   caste_text,
+  rasi_text,
   nakshatra_text,
   nakshatra_text_ta,
   latitude,
@@ -2383,6 +2411,7 @@ this.userProfileName =
       this.userProfileImage = data?.profile_image_url || '';
  this.userGender = data?.gender_text || '';
 this.userCaste = data?.caste_text || '';
+this.userRasi = data?.rasi_text || '';
 this.userNakshatra =
   data?.nakshatra_text ||
   data?.nakshatra_text_ta ||
