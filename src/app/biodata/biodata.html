@@ -161,11 +161,12 @@
 <input
   id="fullName"
   type="text"
+  (keypress)="tamilKeypress($event)"
   [ngModel]="currentLang === 'ta'
     ? (formDataTa.fullName || formData.fullName)
     : formData.fullName"
   (ngModelChange)="onTamilInputChange('fullName', $event)"
-  (keyup)="onSpaceConvert($event, 'fullName')"
+  
   name="fullName"
   [placeholder]="tr.placeholders.fullName">
             <small class="field-error" *ngIf="isInvalid('fullName')">Required</small>
@@ -304,7 +305,7 @@ formData.secondMarriageReason === 'Widowed'
   <textarea
     [ngModel]="getTypedValue('childrenDetails')"
     (ngModelChange)="onTamilInputChange('childrenDetails', $event)"
-(keyup)="onSpaceConvert($event, 'childrenDetails')"
+(keypress)="tamilKeypress($event)"
     name="childrenDetails"
     rows="3"
     [placeholder]="currentLang === 'ta'
@@ -357,7 +358,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('kalappuThirumanamDetails')"
   (ngModelChange)="onTamilInputChange('kalappuThirumanamDetails', $event)"
-(keyup)="onSpaceConvert($event, 'kalappuThirumanamDetails')"
+(keypress)="tamilKeypress($event)"
   name="kalappuThirumanamDetails"
 >
 
@@ -397,7 +398,7 @@ formData.secondMarriageReason === 'Widowed'
     type="text"
     [ngModel]="getTypedValue('handicapDetails')"
    (ngModelChange)="onTamilInputChange('handicapDetails', $event)"
-(keyup)="onSpaceConvert($event, 'handicapDetails')"
+(keypress)="tamilKeypress($event)"
     name="handicapDetails"
   >
 
@@ -714,7 +715,7 @@ formData.secondMarriageReason === 'Widowed'
     type="text"
     [ngModel]="getTypedValue('subCaste')"
     (ngModelChange)="onTamilInputChange('subCaste', $event)"
-(keyup)="onSpaceConvert($event, 'subCaste')"
+(keypress)="tamilKeypress($event)"
     name="subCaste"
   >
 
@@ -726,7 +727,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('gothram')"
   (ngModelChange)="onTamilInputChange('gothram', $event)"
-(keyup)="onSpaceConvert($event, 'gothram')"
+(keypress)="tamilKeypress($event)"
   name="gothram"
   [placeholder]="tr.placeholders.gothram">
           </div>
@@ -756,7 +757,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('fatherName')"
  (ngModelChange)="onTamilInputChange('fatherName', $event)"
-(keyup)="onSpaceConvert($event, 'fatherName')"
+(keypress)="tamilKeypress($event)"
   name="fatherName"
   [placeholder]="tr.placeholders.fatherName">
 
@@ -769,7 +770,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('motherName')"
  (ngModelChange)="onTamilInputChange('motherName', $event)"
-(keyup)="onSpaceConvert($event, 'motherName')"
+(keypress)="tamilKeypress($event)"
   name="motherName"
   [placeholder]="tr.placeholders.motherName">
 
@@ -782,7 +783,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('fatherOccupation')"
 (ngModelChange)="onTamilInputChange('fatherOccupation', $event)"
-(keyup)="onSpaceConvert($event, 'fatherOccupation')"
+(keypress)="tamilKeypress($event)"
   name="fatherOccupation"
   [placeholder]="tr.placeholders.fatherOccupation">
 
@@ -796,7 +797,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('motherOccupation')"
  (ngModelChange)="onTamilInputChange('motherOccupation', $event)"
-(keyup)="onSpaceConvert($event, 'motherOccupation')"
+(keypress)="tamilKeypress($event)"
   name="motherOccupation"
   [placeholder]="tr.placeholders.motherOccupation">
           </div>
@@ -933,7 +934,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('sothukal')"
   (ngModelChange)="onTamilInputChange('sothukal', $event)"
-  (keyup)="onSpaceConvert($event, 'sothukal')"
+ (keypress)="tamilKeypress($event)"
   name="sothukal"
 >
 
@@ -953,7 +954,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('kuladeivam')"
   (ngModelChange)="onTamilInputChange('kuladeivam', $event)"
-  (keyup)="onSpaceConvert($event, 'kuladeivam')"
+ (keypress)="tamilKeypress($event)"
   name="kuladeivam"
 >
 
@@ -1044,7 +1045,7 @@ formData.secondMarriageReason === 'Widowed'
       formData.poorvegam = $event;
       formDataTa.poorvegam = $event
     "
-(keyup)="onSpaceConvert($event, 'poorvegam')"
+(keypress)="tamilKeypress($event)"
     name="otherPoorvegam"
 
     [placeholder]="
@@ -1113,7 +1114,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   name="otherIruppidam"
   [(ngModel)]="formData.iruppidam"
-  (keyup)="onSpaceConvert($event, 'iruppidam')"
+  (keypress)="tamilKeypress($event)"
   [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் உள்ளிடவும்' : 'Enter Iruppidam'"
 />
 </div> 
@@ -1220,7 +1221,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('company')"
 (ngModelChange)="onTamilInputChange('company', $event)"
-(keyup)="onSpaceConvert($event, 'company')"
+(keypress)="tamilKeypress($event)"
   name="company"
   [placeholder]="tr.placeholders.company">
 
@@ -1240,7 +1241,7 @@ formData.secondMarriageReason === 'Widowed'
     type="text"
     [ngModel]="getTypedValue('workPlace')"
     (ngModelChange)="onTamilInputChange('workPlace', $event)"
-(keyup)="onSpaceConvert($event, 'workPlace')"
+(keypress)="tamilKeypress($event)"
     name="workPlace"
     [placeholder]="tr.placeholders.workPlace"
   >
@@ -1252,7 +1253,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('salary')"
   (ngModelChange)="onTamilInputChange('salary', $event)"
-  (keyup)="onSpaceConvert($event, 'salary')"
+  (keypress)="tamilKeypress($event)"
   name="salary"
   [placeholder]="tr.placeholders.salary">
 
@@ -1281,7 +1282,7 @@ formData.secondMarriageReason === 'Widowed'
  <textarea
   [ngModel]="getTypedValue('address')"
   (ngModelChange)="onTamilInputChange('address', $event)"
-(keyup)="onSpaceConvert($event, 'address')"
+(keypress)="tamilKeypress($event)"
   name="address"
   rows="4"
   [placeholder]="tr.placeholders.address">
@@ -1538,7 +1539,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [ngModel]="getTypedValue('birthPlace')"
  (ngModelChange)="onTamilInputChange('birthPlace', $event)"
-(keyup)="onSpaceConvert($event, 'birthPlace')"
+(keypress)="tamilKeypress($event)"
   name="birthPlace"
   [placeholder]="tr.placeholders.birthPlace">
 
@@ -2027,7 +2028,7 @@ formData.secondMarriageReason === 'Widowed'
       <textarea
         [ngModel]="currentLang === 'ta' ? (formDataTa.partnerExpectation || formData.partnerExpectation) : formData.partnerExpectation"
         (ngModelChange)="onTamilInputChange('partnerExpectation', $event)"
-(keyup)="onSpaceConvert($event, 'partnerExpectation')"
+(keypress)="tamilKeypress($event)"
         name="partnerExpectation"
         rows="4"
         [placeholder]="currentLang === 'ta' ? 'எதிர்பார்க்கும் துணையை பற்றி எழுதுங்கள்...' : 'Describe your expected partner...'"
