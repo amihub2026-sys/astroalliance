@@ -1587,3 +1587,35 @@ background:#fff;
 .full-width{
   grid-column:1 / -1;
 }
+.additional-phone-field{
+  display:grid !important;
+  grid-template-columns:200px 1fr !important;
+  align-items:flex-start !important;
+}
+
+.additional-phone-field > label{
+  display: block !important;
+  margin-bottom: 10px !important;
+}
+
+.additional-phone-wrapper{
+  max-width: 550px !important;
+  width: 100% !important;
+}
+.additional-mobile-row{
+  display: grid !important;
+  grid-template-columns: 1fr 110px !important;
+  gap: 12px !important;
+  align-items: start !important;
+  width: 100% !important;
+}
+
+.additional-mobile-row input{
+  width: 100% !important;
+  height: 48px !important;
+}
+
+.additional-mobile-row .remove-btn{
+  width: 110px !important;
+  height: 48px !important;
+}

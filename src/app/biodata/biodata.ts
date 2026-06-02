@@ -537,11 +537,14 @@ addAdditionalMobile(): void {
   this.formData.additionalMobile.push('');
 
 }
-
 removeAdditionalMobile(index: number): void {
 
-  this.formData.additionalMobile.splice(index, 1);
+  if (this.formData.additionalMobile.length === 1) {
+    this.formData.additionalMobile[0] = '';
+    return;
+  }
 
+  this.formData.additionalMobile.splice(index, 1);
 }
   get tr() {
     return this.translations[this.currentLang];
