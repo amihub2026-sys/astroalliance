@@ -5,7 +5,7 @@ import { App } from '../app';
 import { supabase } from '../core/supabase.client';
 import { ActivatedRoute } from '@angular/router';
 import { SnackbarService } from '../shared/snackbar.service';
-
+declare var google: any;
 @Component({
   selector: 'app-biodata',
   standalone: true,
@@ -545,6 +545,124 @@ removeAdditionalMobile(index: number): void {
   get tr() {
     return this.translations[this.currentLang];
   }
+  isAdminTanglishEnabled(): boolean {
+  return (
+    this.isAdminCreated === true &&
+    localStorage.getItem('admin_tanglish_enabled') === '1'
+  );
+}
+async convertFieldToTamil(field: keyof typeof this.formDataTa): Promise<void> {
+
+ if (this.currentLang !== 'ta') return;
+
+  const text = this.formDataTa[field]?.trim();
+
+  if (!text) return;
+
+  const url =
+    'https://inputtools.google.com/request?text=' +
+    encodeURIComponent(text) +
+    '&itc=ta-t-i0-und&num=1&cp=0&cs=1&ie=utf-8&oe=utf-8&app=demopage';
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  const tamil = data?.[1]?.[0]?.[1]?.[0];
+
+if (tamil) {
+  this.formDataTa[field] = tamil;
+  (this.formData as any)[field] = tamil;
+  this.cdr.detectChanges();
+}
+}
+onSpaceConvert(
+  event: KeyboardEvent,
+  field: keyof typeof this.formDataTa
+): void {
+
+  if (event.code !== 'Space') return;
+
+  setTimeout(() => {
+    this.convertLastWordToTamil(field, event);
+  }, 0);
+}
+async convertLastWordToTamil(
+  field: keyof typeof this.formDataTa,
+  event?: KeyboardEvent
+): Promise<void> {
+
+  if (this.currentLang !== 'ta') return;
+
+  const input = event?.target as HTMLInputElement | HTMLTextAreaElement;
+  let value = input?.value || this.formDataTa[field] || '';
+
+  if (!value.trim()) return;
+
+  const cleanValue = value.trimEnd();
+  const lastSpaceIndex = cleanValue.lastIndexOf(' ');
+
+  const beforeText =
+    lastSpaceIndex >= 0 ? cleanValue.substring(0, lastSpaceIndex + 1) : '';
+
+  const lastWord =
+    lastSpaceIndex >= 0 ? cleanValue.substring(lastSpaceIndex + 1) : cleanValue;
+
+  if (!lastWord.trim()) return;
+
+  const res = await fetch(
+    'https://inputtools.google.com/request?text=' +
+      encodeURIComponent(lastWord) +
+      '&itc=ta-t-i0-und&num=1&cp=0&cs=1&ie=utf-8&oe=utf-8&app=demopage'
+  );
+
+  const data = await res.json();
+  const tamil = data?.[1]?.[0]?.[1]?.[0];
+
+  if (tamil) {
+    const finalValue = beforeText + tamil + ' ';
+
+    this.formDataTa[field] = finalValue;
+    (this.formData as any)[field] = finalValue;
+
+    if (input) {
+      input.value = finalValue;
+
+      setTimeout(() => {
+        input.focus();
+        input.setSelectionRange(finalValue.length, finalValue.length);
+      }, 0);
+    }
+
+    this.cdr.detectChanges();
+  }
+}
+// loadGoogleTamilTyping(): void {
+
+//   if (!this.isAdminTanglishEnabled()) return;
+
+//   if (typeof google === 'undefined') return;
+
+//   google.load('inputtools', '1', {
+//     callback: () => {
+//       const options = {
+//         sourceLanguage: 'en',
+//         destinationLanguage: ['ta'],
+//         transliterationEnabled: true
+//       };
+
+//       const control =
+//         new google.elements.transliteration.TransliterationControl(options);
+
+//       control.makeTransliteratable([
+//         'fullName',
+//         'fatherName',
+//         'motherName',
+//         'fatherOccupation',
+//         'motherOccupation'
+//       ]);
+//     }
+//   });
+// }
   readonly horoscopeValueMap: any = {
   rasi: {
     Mesham: 'மேஷம்',
@@ -725,10 +843,10 @@ onTamilInputChange(
 
   if (this.currentLang === 'ta') {
     this.formDataTa[field] = value;
+    (this.formData as any)[field] = value;
   } else {
     (this.formData as any)[field] = value;
   }
-
 }
 async prepareTamilValues(): Promise<void> {
   this.cdr.detectChanges();
@@ -1131,6 +1249,9 @@ await this.loadLagnamList();
   if (this.currentLang === 'ta') {
     await this.prepareTamilValues();
   }
+//   setTimeout(() => {
+//   this.loadGoogleTamilTyping();
+// }, 1000);
 }
   private getStoredLoggedInUser(): any | null {
     if (!this.isBrowser) return null;
