@@ -726,8 +726,16 @@ getTypedValue(field: keyof typeof this.formDataTa): string {
 
   return (this.formData as any)[field] || '';
 }
-tamilKeypress(event: KeyboardEvent): boolean {
-  return (window as any).convertThis(event);
+tamilKeypress(event: KeyboardEvent): void {
+  (window as any).convertThis(event);
+
+  setTimeout(() => {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+    this.cdr.detectChanges();
+  }, 0);
 }
 onTamilInputChange(
   field: keyof typeof this.formDataTa,
