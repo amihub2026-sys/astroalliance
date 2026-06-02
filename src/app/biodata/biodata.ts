@@ -636,33 +636,33 @@ async convertLastWordToTamil(
     this.cdr.detectChanges();
   }
 }
-// loadGoogleTamilTyping(): void {
+loadGoogleTamilTyping(): void {
 
-//   if (!this.isAdminTanglishEnabled()) return;
+  if (!this.isAdminTanglishEnabled()) return;
 
-//   if (typeof google === 'undefined') return;
+  if (typeof google === 'undefined') return;
 
-//   google.load('inputtools', '1', {
-//     callback: () => {
-//       const options = {
-//         sourceLanguage: 'en',
-//         destinationLanguage: ['ta'],
-//         transliterationEnabled: true
-//       };
+  google.load('inputtools', '1', {
+    callback: () => {
+      const options = {
+        sourceLanguage: 'en',
+        destinationLanguage: ['ta'],
+        transliterationEnabled: true
+      };
 
-//       const control =
-//         new google.elements.transliteration.TransliterationControl(options);
+      const control =
+        new google.elements.transliteration.TransliterationControl(options);
 
-//       control.makeTransliteratable([
-//         'fullName',
-//         'fatherName',
-//         'motherName',
-//         'fatherOccupation',
-//         'motherOccupation'
-//       ]);
-//     }
-//   });
-// }
+      control.makeTransliteratable([
+        'fullName',
+        'fatherName',
+        'motherName',
+        'fatherOccupation',
+        'motherOccupation'
+      ]);
+    }
+  });
+}
   readonly horoscopeValueMap: any = {
   rasi: {
     Mesham: 'மேஷம்',
@@ -1245,6 +1245,9 @@ await this.loadRasiList();
 await this.loadNakshatraList();
 await this.loadLagnamList();
   await this.loadExistingBiodata();
+  setTimeout(() => {
+  this.loadGoogleTamilTyping();
+}, 2000);
 
   if (this.currentLang === 'ta') {
     await this.prepareTamilValues();
