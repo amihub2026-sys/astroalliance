@@ -477,12 +477,13 @@ editProfile(profile: any, event?: Event): void {
     return;
   }
 
-  this.router.navigate(['/admin/create-biodata'], {
-    queryParams: {
-      edit: 'true',
-      id: profile.profile_id
-    }
-  });
+this.router.navigate(['/admin/create-biodata'], {
+  queryParams: {
+    edit: 'true',
+    id: profile.profile_id,
+    adminCreate: 'true'
+  }
+});
 }
 
 async approveProfile(profile: any, event?: Event): Promise<void> {
