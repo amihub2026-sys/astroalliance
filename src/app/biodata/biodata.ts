@@ -546,9 +546,14 @@ removeAdditionalMobile(index: number): void {
   get tr() {
     return this.translations[this.currentLang];
   }
-  isAdminTanglishEnabled(): boolean {
+ isAdminTanglishEnabled(): boolean {
+  if (!this.isBrowser) return false;
+
+  const isAdminPage =
+    this.route.snapshot.queryParamMap.get('adminCreate') === 'true';
+
   return (
-    this.isAdminCreated === true &&
+    isAdminPage &&
     localStorage.getItem('admin_tanglish_enabled') === '1'
   );
 }
@@ -727,13 +732,25 @@ getTypedValue(field: keyof typeof this.formDataTa): string {
   return (this.formData as any)[field] || '';
 }
 tamilKeypress(event: KeyboardEvent): void {
-  (window as any).convertThis(event);
+  if (!this.isAdminTanglishEnabled()) {
+    return;
+  }
+
+  if (this.currentLang !== 'ta') {
+    return;
+  }
+
+  const convertThis = (window as any).convertThis;
+
+  if (typeof convertThis !== 'function') {
+    return;
+  }
+
+  convertThis(event);
 
   setTimeout(() => {
     const input = event.target as HTMLInputElement | HTMLTextAreaElement;
-
     input.dispatchEvent(new Event('input', { bubbles: true }));
-
     this.cdr.detectChanges();
   }, 0);
 }
@@ -1123,9 +1140,12 @@ if (editId && editId !== 'new') {
    const isAdminCreatePage =
   this.route.snapshot.queryParamMap.get('adminCreate') === 'true';
 
-if (!editId && isAdminCreatePage) {
+if (isAdminCreatePage) {
 
-  this.currentUserId = adminCreatedUserId || null;
+  if (!editId) {
+    this.currentUserId = adminCreatedUserId || null;
+  }
+
   this.isAdminCreated = true;
 
 }
@@ -2603,7 +2623,36 @@ additional_image_urls: additionalImageUrls,
         is_published: true,
         updated_at: new Date().toISOString()
       };
+if (this.editProfileId) {
 
+  delete (payload as any).user_id;
+
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .update(payload)
+    .eq('profile_id', this.editProfileId)
+    .select();
+
+  console.log('ADMIN PROFILE UPDATE DATA:', data);
+  console.log('ADMIN PROFILE UPDATE ERROR:', error);
+
+  if (error) {
+    this.snackbar.error(error.message);
+    return;
+  }
+
+  this.snackbar.success(
+    this.currentLang === 'ta'
+      ? 'பயோடேட்டா வெற்றிகரமாக புதுப்பிக்கப்பட்டது'
+      : 'Biodata Updated Successfully'
+  );
+
+  setTimeout(() => {
+    window.location.href = '/admin/profiles';
+  }, 1000);
+
+  return;
+}
 const { data: existingProfile, error: existingError } = await supabase
   .from('user_profiles')
   .select('profile_id, user_id')
