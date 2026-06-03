@@ -17,20 +17,7 @@
   <div class="god-text">இறைவன் அமைத்தது</div>
 </div>
 
-<div class="photo-date-row">
 
-  <div class="print-photo-section" *ngIf="withPhoto">
-    <img
-      [src]="profile.profile_image_url || 'assets/default-avatar.png'"
-      alt="Profile Photo">
-  </div>
-
-  <div class="reg-date">
-    <strong>பதிவு தேதி :</strong>
-    {{ profile.created_at | date:'dd-MM-yyyy' }}
-  </div>
-
-</div>
 
 <div class="two-column" [class.with-photo]="withPhoto">
 
@@ -115,9 +102,17 @@
 
     <!-- RIGHT -->
     <div class="column">
-
-<p><strong>பதிவு எண் :</strong><span class="reg-no">{{ profile.profile_code || '-' }}</span></p>
-
+<div class="print-photo-section" *ngIf="withPhoto">
+  <img
+    [src]="profile.profile_image_url || 'assets/default-avatar.png'"
+    alt="Profile Photo">
+</div>
+<p class="reg-line">
+  <strong>பதிவு எண் :</strong>
+  <span>{{ profile.profile_code || '-' }}</span>
+  <strong>பதிவு தேதி :</strong>
+  <span>{{ profile.created_at | date:'dd-MM-yyyy' }}</span>
+</p>
 <p>
   <strong>இனம் / ஜாதி :</strong>
   <span>
