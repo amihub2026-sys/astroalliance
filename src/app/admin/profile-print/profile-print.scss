@@ -2,14 +2,17 @@
   display: block;
   background: #fff;
 }
-
 .print-page {
-  width: 100%;
+  width: 210mm;
   max-width: 210mm;
+  min-height: 297mm;
   margin: 0;
-  padding: 7mm 9mm;
-  border: 1px solid #111;
+ padding: 0;
+  border: 2px solid #111;
   box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
 }
 .print-header {
   display: grid;
@@ -39,24 +42,28 @@
 }
 
 .print-photo-section {
-  text-align: center;
-  margin: 4px 0 6px;
+  text-align: right;
+  margin: 0;
 }
 
 .print-photo-section img {
-  width: 70px;
-  height: 85px;
+  width: 110px;
+  height: 140px;
   object-fit: cover;
   border: 2px solid #008000;
+}
+.print-photo-section {
+  margin-right: 8px !important;
 }
 
 .two-column {
   display: flex;
-  gap: 22px;
+  gap: 4px;
   border-bottom: 2px solid #008000;
   padding-bottom: 8px;
-}
 
+  flex: 0 0 auto !important;
+}
 .column {
   width: 50%;
 }
@@ -221,33 +228,30 @@ h3 {
   padding-top: 0 !important;
 }
 @media print {
-  @page {
-    size: A4 portrait;
-    margin: 0;
-  }
+ @page {
+  size: A4 portrait;
+  margin: 0;
+}
 
   html,
   body {
     margin: 0 !important;
     padding: 0 !important;
-    background: #fff !important;
+    overflow: visible !important;
   }
 
-  .print-loading {
-    display: none !important;
+  .print-page {
+      width: 210mm !important;
+  max-width: 210mm !important;
+    height: auto !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 2mm !important;
+    border: 2px solid #111 !important;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
-
-.print-page {
-  width: 190mm !important;
-  max-width: 190mm !important;
-  height: auto !important;
-  min-height: 0 !important;
-  margin: 0 auto !important;
-  padding: 3mm 6mm !important;
-  overflow: hidden !important;
-  page-break-before: avoid !important;
-  page-break-after: avoid !important;
-}
 }
 .astro-details-row {
   display: grid;
@@ -278,19 +282,141 @@ h3 {
   display: inline-block;
 }
 .photo-date-row {
-  position: relative;
-  margin-bottom: 10px;
+  position: absolute;
+  top: 95px;
+  right: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 4px;
+  z-index: 10;
 }
 
 .reg-date {
-  position: absolute;
-  right: 20px;
-  top: 5px;
   color: #0000aa;
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
+  text-align: right;
+  margin-bottom: 4px;
 }
-
 .reg-date strong {
   color: #008000;
   font-weight: 900;
+}
+.chart-section {
+  margin-top: 6px !important;
+}
+/* FINAL FIX: keep labels in one line */
+.column p {
+  grid-template-columns: 220px minmax(0, 1fr) !important;
+  column-gap: 6px !important;
+}
+
+.column strong {
+  white-space: nowrap !important;
+  font-size: 12px !important;
+}
+.astro-details-row p {
+  grid-template-columns: 160px 1fr !important;
+}
+
+.astro-details-row strong {
+  white-space: nowrap !important;
+}
+
+.contact-section p {
+  grid-template-columns: 190px 1fr !important;
+}
+
+.contact-section strong {
+  white-space: nowrap !important;
+}
+
+/* reduce space between left and right columns */
+.two-column {
+  gap: 4px !important;
+}
+.column {
+  width: calc(50% - 2px) !important;
+}
+.column:last-child {
+  padding-right: 0 !important;
+}
+.photo-date-row,
+.reg-date {
+  display: none !important;
+}
+
+.reg-line {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+}
+
+.reg-line strong,
+.reg-line span {
+  white-space: nowrap !important;
+}
+
+.reg-line strong:nth-of-type(2) {
+  margin-left: 20px !important;
+}
+
+.print-photo-section {
+  float: right !important;
+margin-top: 30px !important;
+  margin-right: 8px !important;
+}
+
+.print-photo-section img {
+  width: 90px !important;
+  height: 115px !important;
+  object-fit: cover;
+}
+/* FINAL PRINT FIX */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 210mm !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .print-page {
+    width: 204mm !important;
+    max-width: 204mm !important;
+    min-height: 292mm !important;
+    height: auto !important;
+    margin: 2mm auto 0 auto !important;
+    padding: 2mm !important;
+    border: 2px solid #111 !important;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+}
+
+/* RIGHT COLUMN ALIGNMENT FIX */
+.column:last-child p {
+  grid-template-columns: 150px minmax(0, 1fr) !important;
+}
+
+.column:last-child p span {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+/* keep caste/gothram values in one line */
+.column:last-child p span {
+  white-space: nowrap !important;
 }
