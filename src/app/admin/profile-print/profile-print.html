@@ -69,9 +69,23 @@
 
 <p><strong>தாய் பெயர் :</strong><span>{{ v(profile.mother_name, profile.mother_name_ta) }}</span></p>
 
-<p><strong>திருமணமான சகோதரர்கள் :</strong><span>{{ profile.married_brothers || 0 }}</span></p>
+<p>
+  <strong>உடன் பிறப்பு :</strong>
+  <span>
+    ஆண் : {{ (profile.married_brothers || 0) + (profile.unmarried_brothers || 0) }}
+    &nbsp;&nbsp;
+    பெண் : {{ (profile.married_sisters || 0) + (profile.unmarried_sisters || 0) }}
+  </span>
+</p>
 
-<p><strong>திருமணமாகாத சகோதரர்கள் :</strong><span>{{ profile.unmarried_brothers || 0 }}</span></p>
+<p>
+  <strong>திருமணமானவர் :</strong>
+  <span>
+    ஆண் : {{ profile.married_brothers || 0 }}
+    &nbsp;&nbsp;
+    பெண் : {{ profile.married_sisters || 0 }}
+  </span>
+</p>
 <p *ngIf="profile.handicap_status">
   <strong>மாற்றுத்திறனாளி :</strong>
   <span>ஆம்</span>
@@ -108,13 +122,18 @@
     alt="Profile Photo">
 </div>
 <p class="reg-line">
-  <strong>பதிவு எண் :</strong>
-  <span>{{ profile.profile_code || '-' }}</span>
-  <strong>பதிவு தேதி :</strong>
-  <span>{{ profile.created_at | date:'dd-MM-yyyy' }}</span>
+  <span class="reg-item">
+    <strong>பதிவு எண் :</strong>
+    {{ profile.profile_code || '-' }}
+  </span>
+
+  <span class="reg-item">
+    <strong>பதிவு தேதி :</strong>
+    {{ profile.created_at | date:'dd-MM-yyyy' }}
+  </span>
 </p>
 <p>
-  <strong>இனம் / ஜாதி :</strong>
+  <strong>ஜாதி :</strong>
   <span>
     {{
       profile.mst_castes?.caste_name_ta ||
@@ -137,15 +156,12 @@
 
 <p><strong>சம்பளம் :</strong><span>{{ profile.salary_text || '-' }}</span></p>
 
-<p><strong>பணிபுரியும் இடம் :</strong><span>{{ v(profile.work_place, profile.work_place_ta) || '-' }}</span></p>
+<!-- <p><strong>பணிபுரியும் இடம் :</strong><span>{{ v(profile.work_place, profile.work_place_ta) || '-' }}</span></p> -->
 
 <p><strong>தந்தை தொழில் :</strong><span>{{ v(profile.father_occupation, profile.father_occupation_ta) }}</span></p>
 
 <p><strong>தாய் தொழில் :</strong><span>{{ v(profile.mother_occupation, profile.mother_occupation_ta) }}</span></p>
 
-<p><strong>திருமணமான சகோதரிகள் :</strong><span>{{ profile.married_sisters || 0 }}</span></p>
-
-<p><strong>திருமணமாகாத சகோதரிகள் :</strong><span>{{ profile.unmarried_sisters || 0 }}</span></p>
 
 <p><strong>பூர்வீகம் :</strong><span>{{ v(profile.poorvegam, profile.poorvegam_ta) }}</span></p>
 
