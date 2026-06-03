@@ -33,11 +33,33 @@ export class ProfilePrint implements OnInit {
   }
 
   async loadProfile(id: string): Promise<void> {
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('profile_id', id)
-      .maybeSingle();
+ const { data } = await supabase
+  .from('user_profiles')
+.select(`
+  *,
+  mst_colors (
+    color_name,
+    color_name_ta
+  ),
+  mst_kudumba_nilai (
+    nilai_name,
+    nilai_name_ta
+  ),
+  mst_marital_statuses (
+    status_name,
+    status_name_ta
+  ),
+  mst_religions (
+    religion_name,
+    religion_name_ta
+  ),
+  mst_castes (
+    caste_name,
+    caste_name_ta
+  )
+`)
+  .eq('profile_id', id)
+  .maybeSingle();
 
     this.zone.run(() => {
       this.profile = data;
@@ -64,7 +86,20 @@ console.log('lagnam_text_ta:', this.profile?.lagnam_text_ta);
 v(en: any, ta: any): string {
   return ta || en || '-';
 }
+formatBirthTime(time: string): string {
+  if (!time) return '-';
 
+  const parts = time.split(':');
+  let hour = Number(parts[0]);
+  const minute = parts[1] || '00';
+
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  return `${hour}:${minute} ${ampm}`;
+}
 formatThisaiIruppu(value: string): string {
   return (value || '')
     .replaceAll('வருடம்', 'வ')

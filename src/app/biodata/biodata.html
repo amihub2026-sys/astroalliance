@@ -241,7 +241,7 @@
 
 <div class="field" *ngIf="formData.maritalStatus === 'Second Marriage'">
   <label>
-    {{ currentLang === 'ta' ? 'இரண்டாம் திருமண காரணம்' : 'Marriage Type' }}
+    {{ currentLang === 'ta' ? 'மறுமணத்திற்கான காரணம்' : 'Marriage Type' }}
   </label>
 
   <select
@@ -585,47 +585,19 @@ formData.secondMarriageReason === 'Widowed'
     }}
   </label>
 
-  <select
-    [(ngModel)]="formData.color"
-    name="color"
-  >
+ <select [(ngModel)]="formData.colorId" name="colorId">
+  <option value="">
+    {{ currentLang === 'ta' ? 'நிறத்தை தேர்வு செய்யவும்' : 'Select Color' }}
+  </option>
 
-    <option value="">
-      {{ currentLang === 'ta'
-        ? 'நிறத்தை தேர்வு செய்யவும்'
-        : 'Select Color'
-      }}
-    </option>
-
-    <option value="Fair">
-      {{ currentLang === 'ta'
-        ? 'வெள்ளை'
-        : 'Fair'
-      }}
-    </option>
-
-    <option value="Wheatish">
-      {{ currentLang === 'ta'
-        ? 'கோதுமை நிறம்'
-        : 'Wheatish'
-      }}
-    </option>
-
-    <option value="Medium">
-      {{ currentLang === 'ta'
-        ? 'மாநிறம்'
-        : 'Medium'
-      }}
-    </option>
-
-    <option value="Dark">
-      {{ currentLang === 'ta'
-        ? 'கருப்பு'
-        : 'Dark'
-      }}
-    </option>
-
-  </select>
+  <option *ngFor="let color of colorList" [value]="color.color_id">
+    {{
+      currentLang === 'ta'
+        ? (color.color_name_ta || color.color_name)
+        : color.color_name
+    }}
+  </option>
+</select>
 
 </div>
 
@@ -896,26 +868,19 @@ formData.secondMarriageReason === 'Widowed'
     }}
   </label>
 
-  <select
-    [(ngModel)]="formData.kudumbaNilai"
-    name="kudumbaNilai"
-  >
+<select [(ngModel)]="formData.kudumbaNilaiId" name="kudumbaNilaiId">
+  <option value="">
+    {{ currentLang === 'ta' ? 'குடும்ப நிலையை தேர்வு செய்யவும்' : 'Select Kudumba Nilai' }}
+  </option>
 
-    <option value="">
-      {{ currentLang === 'ta'
-        ? 'குடும்ப நிலையை தேர்வு செய்யவும்'
-        : 'Select Kudumba Nilai'
-      }}
-    </option>
-
-    <option
-      *ngFor="let item of kudumbaNilaiOptions"
-      [value]="item.en"
-    >
-      {{ currentLang === 'ta' ? item.ta : item.en }}
-    </option>
-
-  </select>
+  <option *ngFor="let item of kudumbaNilaiList" [value]="item.kudumba_nilai_id">
+    {{
+      currentLang === 'ta'
+        ? (item.nilai_name_ta || item.nilai_name)
+        : item.nilai_name
+    }}
+  </option>
+</select>
 
 </div>
 

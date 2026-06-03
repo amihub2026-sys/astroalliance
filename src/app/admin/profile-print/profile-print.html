@@ -17,10 +17,19 @@
   <div class="god-text">இறைவன் அமைத்தது</div>
 </div>
 
-<div class="print-photo-section" *ngIf="withPhoto">
-  <img
-    [src]="profile.profile_image_url || 'assets/default-avatar.png'"
-    alt="Profile Photo">
+<div class="photo-date-row">
+
+  <div class="print-photo-section" *ngIf="withPhoto">
+    <img
+      [src]="profile.profile_image_url || 'assets/default-avatar.png'"
+      alt="Profile Photo">
+  </div>
+
+  <div class="reg-date">
+    <strong>பதிவு தேதி :</strong>
+    {{ profile.created_at | date:'dd-MM-yyyy' }}
+  </div>
+
 </div>
 
 <div class="two-column" [class.with-photo]="withPhoto">
@@ -28,17 +37,40 @@
     <!-- LEFT -->
     <div class="column">
 
-<p><strong>திருமண நிலை :</strong><span>{{ v(profile.marital_status_text, profile.marital_status_text_ta) }}</span></p>
+<p>
+  <strong>திருமண நிலை :</strong>
+  <span>
+    {{
+      profile.mst_marital_statuses?.status_name_ta ||
+      profile.marital_status_text_ta ||
+      profile.marital_status_text ||
+      '-'
+    }}
+  </span>
+</p>
 
-<p><strong>மதம் :</strong><span>{{ v(profile.religion_text, profile.religion_text_ta) }}</span></p>
+<p>
+  <strong>மதம் :</strong>
+  <span>
+    {{
+      profile.mst_religions?.religion_name_ta ||
+      profile.religion_text_ta ||
+      profile.religion_text ||
+      '-'
+    }}
+  </span>
+</p>
 
 <p><strong>உட்பிரிவு :</strong><span>{{ v(profile.sub_caste_text || profile.sub_caste, profile.sub_caste_text_ta || profile.sub_caste_ta) }}</span></p>
 
 <p><strong>பெயர் :</strong><span>{{ v(profile.full_name, profile.full_name_ta) }}</span></p>
 
-<p><strong>பிறந்த நேரம் :</strong><span>{{ profile.birth_time || '-' }}</span></p>
+<p><strong>பிறந்த நேரம் :</strong><span>{{ formatBirthTime(profile.birth_time) }}</span></p>
 
-<p><strong>நிறம் :</strong><span>{{ profile.color_text || '-' }}</span></p>
+<p>
+  <strong>நிறம் :</strong>
+  <span>{{ profile.mst_colors?.color_name_ta || profile.color_text || '-' }}</span>
+</p>
 
 <p><strong>படிப்பு :</strong><span>{{ v(profile.education_text, profile.education_text_ta) }}</span></p>
 
@@ -86,7 +118,17 @@
 
 <p><strong>பதிவு எண் :</strong><span class="reg-no">{{ profile.profile_code || '-' }}</span></p>
 
-<p><strong>இனம் / ஜாதி :</strong><span>{{ v(profile.caste_text, profile.caste_text_ta) }}</span></p>
+<p>
+  <strong>இனம் / ஜாதி :</strong>
+  <span>
+    {{
+      profile.mst_castes?.caste_name_ta ||
+      profile.caste_text_ta ||
+      profile.caste_text ||
+      '-'
+    }}
+  </span>
+</p>
 
 <p><strong>கோத்திரம் :</strong><span>{{ v(profile.gothram, profile.gothram_ta) }}</span></p>
 
@@ -116,8 +158,16 @@
 
 <p><strong>குலதெய்வம் :</strong><span>{{ v(profile.kuladeivam, profile.kuladeivam_ta) }}</span></p>
 
-<p><strong>சொத்துக்கள் :</strong><span>{{ v(profile.sothukal, profile.sothukal_ta) }}</span></p>
+<p>
+  <strong>குடும்ப நிலை :</strong>
+  <span>{{ profile.mst_kudumba_nilai?.nilai_name_ta || profile.kudumba_nilai || '-' }}</span>
+</p>
 <!-- Children Details (Only for Divorced / Widowed / Second Marriage) -->
+
+<p *ngIf="profile.second_marriage_reason || profile.second_marriage_reason_ta">
+ <strong>மறுமணத்திற்கான காரணம் :</strong>
+  <span>{{ v(profile.second_marriage_reason, profile.second_marriage_reason_ta) }}</span>
+</p>
 
 <p *ngIf="profile.children_status">
   <strong>குழந்தைகள் :</strong>
@@ -129,10 +179,7 @@
   <span>{{ profile.children_details }}</span>
 </p>
 
-<p *ngIf="profile.second_marriage_reason || profile.second_marriage_reason_ta">
-  <strong>இரண்டாம் திருமண காரணம் :</strong>
-  <span>{{ v(profile.second_marriage_reason, profile.second_marriage_reason_ta) }}</span>
-</p>
+
 
     </div>
 
@@ -239,10 +286,10 @@
   <span>{{ profile.mobile || '-' }}</span>
 </p>
 
-<!-- <p>
+<p>
   <strong>கூடுதல் கைபேசி :</strong>
   <span>{{ profile.additional_mobile?.[0] || '-' }}</span>
-</p> -->
+</p>
 
 <!-- <p>
   <strong>Email :</strong>

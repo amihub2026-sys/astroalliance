@@ -180,17 +180,17 @@ hr {
 
 .chart-cell {
   width: 70px !important;
-  height: 55px !important;
+  height: 48px !important;
 }
 
 .side-cell {
-  height: 110px !important;
+  height: 96px !important;
 }
 
 .chart-center {
   width: 140px !important;
-  height: 110px !important;
-  font-size: 30px !important;
+  height: 96px !important;
+  font-size: 28px !important;
 }
 
 h3 {
@@ -213,6 +213,12 @@ h3 {
   font-size: 12px !important;
   line-height: 1.25;
   color: #0000aa;
+}
+.contact-section {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 @media print {
   @page {
@@ -270,4 +276,21 @@ h3 {
 .reg-no {
   white-space: nowrap;
   display: inline-block;
+}
+.photo-date-row {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.reg-date {
+  position: absolute;
+  right: 20px;
+  top: 5px;
+  color: #0000aa;
+  font-size: 14px;
+}
+
+.reg-date strong {
+  color: #008000;
+  font-weight: 900;
 }
