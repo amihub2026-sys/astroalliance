@@ -325,6 +325,7 @@ mobile: '',
     email: '',
    height: '',
 weight: '',
+colorId: '',
 color: '',
 religion: '',
     caste: '',
@@ -378,6 +379,7 @@ sothukal: '',
 poorvegam: '',
 iruppidam: '',
 kuladeivam: '',
+kudumbaNilaiId: '',
 kudumbaNilai: '',
   };
 formDataTa = {
@@ -466,6 +468,8 @@ amsamChart: string[] = Array(12).fill('');
 religionList: any[] = [];
 genderList: any[] = [];
 maritalStatusList: any[] = [];
+colorList: any[] = [];
+kudumbaNilaiList: any[] = [];
   dhoshamDbList: any[] = [];
   rasiDbList: any[] = [];
 nakshatraDbList: any[] = [];
@@ -1157,6 +1161,8 @@ if (isAdminCreatePage) {
 await this.loadGenders();
 await this.loadReligions();
 await this.loadMaritalStatuses();
+await this.loadColors();
+await this.loadKudumbaNilai();
 await this.loadThisaiIruppu();
   await this.loadCastes();
   await this.loadCountries();
@@ -1295,15 +1301,11 @@ if (!data) {
       this.formData.dob = data.dob || '';
       this.formData.age = data.age ? String(data.age) : '';
       this.formData.maritalStatus = data.marital_status_text || '';
-      if (data.marital_status_text === 'Divorced') {
-  this.formData.maritalStatus = 'Second Marriage';
-  this.formData.secondMarriageReason = 'Divorced';
-}
+this.formData.maritalStatus =
+  data.marital_status_text || '';
 
-if (data.marital_status_text === 'Widowed') {
-  this.formData.maritalStatus = 'Second Marriage';
-  this.formData.secondMarriageReason = 'Widowed';
-}
+this.formData.secondMarriageReason =
+  data.second_marriage_reason || '';
       this.formData.mobile = data.mobile || '';
       this.formData.additionalMobile =
   Array.isArray(data.additional_mobile)
@@ -1312,7 +1314,8 @@ if (data.marital_status_text === 'Widowed') {
       this.formData.email = data.email || '';
       this.formData.height = data.height_text || (data.height_cm ? String(data.height_cm) : '');
       this.formData.weight = data.weight_text || (data.weight_kg ? String(data.weight_kg) : '');
-      this.formData.color = data.color_text || '';
+     this.formData.colorId = data.color_id || '';
+this.formData.color = data.color_text || '';
       this.formData.religion = data.religion_text || '';
       this.formData.caste = data.caste_text || '';
       this.formData.subCaste =
@@ -1394,7 +1397,10 @@ this.iruppidamSearch =
 this.formData.kuladeivam =
   data.kuladeivam || '';
 
-  this.formData.kudumbaNilai =
+  this.formData.kudumbaNilaiId =
+  data.kudumba_nilai_id || '';
+
+this.formData.kudumbaNilai =
   data.kudumba_nilai || '';
       this.formData.motherName = data.mother_name || '';
       this.formData.fatherOccupation = data.father_occupation_text || data.father_occupation || '';
@@ -2134,6 +2140,14 @@ const selectedNakshatra = this.nakshatraDbList.find(
 const selectedLagnam = this.lagnamDbList.find(
   (x: any) => x.lagnam_name === this.formData.lagnam
 );
+
+const selectedColor = this.colorList.find(
+  (x: any) => x.color_id === this.formData.colorId
+);
+
+const selectedKudumbaNilai = this.kudumbaNilaiList.find(
+  (x: any) => x.kudumba_nilai_id === this.formData.kudumbaNilaiId
+);
 this.isSaving = true;
 
 
@@ -2367,6 +2381,17 @@ console.log('PAYLOAD USER ID:', appUserId);
 
         marital_status_text: this.safeText(this.formData.maritalStatus),
 
+second_marriage_reason:
+  this.formData.secondMarriageReason || null,
+
+second_marriage_reason_ta:
+  this.formData.secondMarriageReason === 'Divorced'
+    ? 'விவாகரத்து'
+    : this.formData.secondMarriageReason === 'Widowed'
+      ? 'துணையை இழந்தவர்'
+      : null,
+
+
         mobile: this.safeText(this.formData.mobile || fallbackPhone),
         additional_mobile:
   this.formData.additionalMobile
@@ -2378,7 +2403,7 @@ console.log('PAYLOAD USER ID:', appUserId);
 
         weight_kg: this.safeNumber(this.formData.weight),
         weight_text: this.safeText(this.formData.weight),
-color_text: this.safeText(this.formData.color),
+
        religion_id: this.selectedReligionId || null,
 
      religion_text: this.safeText(
@@ -2404,7 +2429,12 @@ married_sisters:
 
 unmarried_sisters:
   this.safeNumber(this.formData.unmarriedSisters) || 0,
-kudumba_nilai: this.safeText(this.formData.kudumbaNilai),
+
+color_id: this.formData.colorId || null,
+color_text: selectedColor?.color_name || '',
+
+kudumba_nilai_id: this.formData.kudumbaNilaiId || null,
+kudumba_nilai: selectedKudumbaNilai?.nilai_name || '',
 
 handicap_status:
   this.formData.handicapStatus === 'Yes',
@@ -2762,6 +2792,26 @@ async loadCastes() {
   }
 
   this.allCastes = data || [];
+}
+async loadColors() {
+  const { data, error } = await supabase
+    .from('mst_colors')
+    .select('*');
+
+  console.log('COLORS', data);
+  console.log('COLORS ERROR', error);
+
+  this.colorList = data || [];
+}
+async loadKudumbaNilai() {
+  const { data, error } = await supabase
+    .from('mst_kudumba_nilai')
+    .select('*');
+
+  console.log('KUDUMBA', data);
+  console.log('KUDUMBA ERROR', error);
+
+  this.kudumbaNilaiList = data || [];
 }
 async loadReligions() {
 
