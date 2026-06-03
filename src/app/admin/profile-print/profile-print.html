@@ -6,17 +6,41 @@
 <div class="print-page" *ngIf="!isLoading && profile">
 
 <div class="print-header">
-  <div class="god-text">நல்ல குணமும்</div>
 
-  <div class="center-title">
-    <h1>Astro Alliance Matrimony</h1>
-    <p>astroalliance7@gmail.com</p>
-    <h4>Contact No: 9943315331</h4>
+  <div class="header-side">
+    <div class="side-text">நல்ல குருவும்</div>
+    <img src="assets/vinayagar.png" alt="Vinayagar">
   </div>
 
-  <div class="god-text">இறைவன் அமைத்தது</div>
-</div>
+  <div class="center-title">
 
+    <div class="om-text">உ</div>
+
+    <div class="sub-title">நல்ல துணையும்</div>
+
+   <h4 class="main-title">
+  ஆஸ்ட்ரோ அலையன்ஸ் திருமண தகவல் மையம்
+</h4>
+
+    <!-- <p class="website">
+      www.astroalliancematrimony.com
+    </p> -->
+
+    <p class="address">
+      31-EMG, கனரா வங்கிக்கு அருகில், தெப்பக்குளம்,
+      மதுரை - 2, தமிழ்நாடு, இந்தியா
+    </p>
+
+    <h4>Contact No: 9943315331</h4>
+
+  </div>
+
+  <div class="header-side">
+    <div class="side-text">இறைவன் அமைத்தது</div>
+    <img src="assets/vinayagar.png" alt="Vinayagar">
+  </div>
+
+</div>
 
 
 <div class="two-column" [class.with-photo]="withPhoto">
@@ -52,8 +76,15 @@
 
 <p><strong>பெயர் :</strong><span>{{ v(profile.full_name, profile.full_name_ta) }}</span></p>
 
-<p><strong>பிறந்த நேரம் :</strong><span>{{ formatBirthTime(profile.birth_time) }}</span></p>
-
+<p>
+  <strong>பிறந்த நேரம் :</strong>
+  <span>
+    {{ formatBirthTime(profile.birth_time) }}
+    <span *ngIf="profile.birth_place || profile.birth_place_ta">
+      - {{ v(profile.birth_place, profile.birth_place_ta) }}
+    </span>
+  </span>
+</p>
 <p>
   <strong>நிறம் :</strong>
   <span>{{ profile.mst_colors?.color_name_ta || profile.color_text || '-' }}</span>
@@ -63,7 +94,15 @@
 
 <p><strong>தொழில் :</strong><span>{{ v(profile.occupation_text, profile.occupation_text_ta) }}</span></p>
 
-<p><strong>நிறுவனத்தின் பெயர் :</strong><span>{{ v(profile.company_name, profile.company_name_ta) }}</span></p>
+<p>
+  <strong>நிறுவனத்தின் பெயர் :</strong>
+  <span>
+    {{ v(profile.company_name, profile.company_name_ta) }}
+    <span *ngIf="profile.work_place || profile.work_place_ta">
+      - {{ v(profile.work_place, profile.work_place_ta) }}
+    </span>
+  </span>
+</p>
 
 <p><strong>தந்தை பெயர் :</strong><span>{{ v(profile.father_name, profile.father_name_ta) }}</span></p>
 
@@ -146,13 +185,19 @@
 
 <p><strong>கோத்திரம் :</strong><span>{{ v(profile.gothram, profile.gothram_ta) }}</span></p>
 
-<p><strong>பிறந்த தேதி :</strong><span>{{ profile.dob || '-' }}</span></p>
+<p><strong>பிறந்த தேதி :</strong><span>{{ profile.dob | date:'dd-MM-yyyy' }}</span></p>
 
-<p><strong>பிறந்த இடம் :</strong><span>{{ v(profile.birth_place, profile.birth_place_ta) }}</span></p>
+<!-- <p><strong>பிறந்த இடம் :</strong><span>{{ v(profile.birth_place, profile.birth_place_ta) }}</span></p> -->
 
-<p><strong>உயரம் :</strong><span>{{ v(profile.height_text, profile.height_text_ta) }}</span></p>
-
-<p><strong>எடை :</strong><span>{{ v(profile.weight_text, profile.weight_text_ta) }}</span></p>
+<p>
+  <strong>உயரம் :</strong>
+  <span>
+    {{ v(profile.height_text, profile.height_text_ta) }}
+    / 
+    <strong>எடை :</strong>
+    {{ v(profile.weight_text, profile.weight_text_ta) }}
+  </span>
+</p>
 
 <p><strong>சம்பளம் :</strong><span>{{ profile.salary_text || '-' }}</span></p>
 
@@ -252,7 +297,9 @@
     </div>
 
   </div>
-
+<div class="chart-logo">
+  <img src="assets/kumbam.jpg" alt="Vinayagar">
+</div>
   <!-- AMSAM -->
 
   <div class="astro-chart">
@@ -307,5 +354,9 @@
   <span>{{ profile.email || '-' }}</span>
 </p> -->
 </div>
-
+<div class="print-footer-note">
+  குறிப்பு: மணமகள் வீட்டார்கள் தந்த விபரத்திற்கு உட்பட்டது வரன்.
+  எங்களுடைய சேவை தகைவு மட்டுமே. நாங்கள் எவ்விதமான கமிஷன்
+  அடிப்படையில் ஈடுபடமாட்டோம்.
+</div>
 </div>
