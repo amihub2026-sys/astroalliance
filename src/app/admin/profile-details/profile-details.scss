@@ -965,3 +965,125 @@ max-height:90px !important;
     overflow:hidden !important;
   }
 }
+/* MAKE PAGE LIKE EXISTING WEBSITE */
+
+
+.profile-card{
+  max-width:100% !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:18px 28px !important;
+  background:#fff !important;
+  border:none !important;
+  box-shadow:none !important;
+  display:block !important;
+}
+
+.two-side-layout{
+  display:block !important;
+  width:100% !important;
+}
+
+.left-profile-side{
+  width:100% !important;
+  background:#fff !important;
+  border:1px solid #e5e7eb !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.08) !important;
+  border-radius:4px !important;
+  overflow:hidden !important;
+}
+
+
+
+.tab-title{
+  background:linear-gradient(135deg,#b544c6,#9c27b0) !important;
+  color:#fff !important;
+  padding:14px 18px !important;
+  font-size:16px !important;
+  font-weight:500 !important;
+}
+
+.info-card{
+  background:#fff !important;
+  border:none !important;
+  padding:16px 18px !important;
+  box-shadow:none !important;
+}
+
+.info-card h3{
+  display:block !important;
+  color:#e91e63 !important;
+  font-size:20px !important;
+  font-weight:200 !important;
+  margin:0 0 15px 0 !important;
+  border-bottom:1px solid #f3c6d8 !important;
+  padding-bottom:10px !important;
+}
+
+.info-card p{
+  display:grid !important;
+  grid-template-columns:220px 1fr !important;
+  gap:12px !important;
+  margin:8px 0 !important;
+  font-size:15px !important;
+  line-height:1.5 !important;
+  align-items:start !important;
+}
+
+.info-card strong{
+  width:auto !important;
+  min-width:0 !important;
+  display:block !important;
+  color:#111 !important;
+  font-weight:600 !important;
+}
+.profile-tabs{
+  display:flex;
+  background:#3f51b5;
+  margin-bottom:20px;
+}
+
+.profile-tabs button{
+  border:none;
+  background:#3f51b5;
+  color:white;
+  padding:14px 32px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.profile-tabs button.active{
+  background:#2f43b5;
+  border:2px solid #111827;
+  border-bottom:3px solid #e91e63;
+}
+
+.two-side-layout{
+  display:block !important;
+}
+
+.left-profile-side,
+.right-profile-side{
+  width:100% !important;
+  overflow:hidden !important;
+}
+.info-card{
+  overflow-wrap:anywhere !important;
+  word-break:break-word !important;
+}
+
+/* FINAL LABEL FIX */
+
+.info-card p{
+  display:grid !important;
+  grid-template-columns:320px 1fr !important;
+  gap:10px !important;
+  margin:4px 0 !important;
+}
+
+.info-card strong{
+  white-space:nowrap !important;
+  overflow:visible !important;
+  text-overflow:unset !important;
+  font-weight:700 !important;
+}

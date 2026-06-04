@@ -27,6 +27,7 @@ export class ProfileDetails implements OnInit, OnChanges {
 //  pdfWithPhoto = false;
 // pdfWithAddress = true;
 showPrintOptions = false;
+activeTab: 'profile' | 'other' = 'profile';
 // pdfPhotoUrl = '/assets/default-avatar.png';
 get currentLang(): 'en' | 'ta' {
   if (typeof window === 'undefined') {
@@ -47,7 +48,66 @@ v(en: any, ta: any): string {
 
   return en || '-';
 }
+masterText(en: any, ta: any): string {
+  if (this.currentLang !== 'ta') {
+    return en || '-';
+  }
 
+  if (ta) {
+    return ta;
+  }
+
+  const map: any = {
+    Dindigul: 'திண்டுக்கல்',
+    Hindu: 'இந்து',
+    Viswakarma: 'விஸ்வகர்மா',
+    'First Marriage': 'முதல் திருமணம்',
+    'Second Marriage': 'இரண்டாம் திருமணம்',
+    'Middle Class': 'நடுத்தர வர்க்கம்',
+    Fair: 'வெள்ளை நிறம்'
+  };
+
+  return map[en] || en || '-';
+}
+yesNo(value: any): string {
+  if (value === true || value === 'Yes' || value === 'yes') {
+    return this.currentLang === 'ta' ? 'ஆம்' : 'Yes';
+  }
+
+  if (value === false || value === 'No' || value === 'no') {
+    return this.currentLang === 'ta' ? 'இல்லை' : 'No';
+  }
+
+  return '-';
+}
+
+isYes(value: any): boolean {
+  return value === true || value === 'Yes' || value === 'yes';
+}
+
+formatHeight(): string {
+  if (this.profile?.height_text) return this.v(this.profile.height_text, this.profile.height_text_ta);
+  if (this.profile?.height_cm) return `${this.profile.height_cm} cm`;
+  return '-';
+}
+
+formatWeight(): string {
+  if (this.profile?.weight_text) return this.v(this.profile.weight_text, this.profile.weight_text_ta);
+  if (this.profile?.weight_kg) return `${this.profile.weight_kg} kg`;
+  return '-';
+}
+
+formatSalary(): string {
+  if (this.profile?.salary_text || this.profile?.salary_text_ta) {
+    return this.v(this.profile.salary_text, this.profile.salary_text_ta);
+  }
+
+  if (this.profile?.salary_amount) {
+    return `${this.profile.salary_currency || 'INR'} ${this.profile.salary_amount}`;
+  }
+
+  return '-';
+}
 statusText(status: string): string {
   if (this.currentLang === 'en') {
     return status || 'Pending';
@@ -171,6 +231,7 @@ getAmsamChart(): string[] {
       .single();
 
     this.profile = error ? null : data;
+    console.log(this.profile);
     this.isLoading = false;
     this.cdr.detectChanges();
   }
