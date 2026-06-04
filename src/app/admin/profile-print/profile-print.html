@@ -3,6 +3,13 @@
 <p *ngIf="!isLoading && !profile">
   Profile not found
 </p>
+<button
+  class="mobile-pdf-btn"
+  type="button"
+  onclick="window.print()"
+  *ngIf="!isLoading && profile">
+  📄 Download PDF
+</button>
 <div class="print-page" *ngIf="!isLoading && profile">
 
 <div class="print-header">
@@ -173,7 +180,7 @@
     {{ profile.created_at | date:'dd-MM-yyyy' }}
   </span>
 </p>
-<p>
+
 <p><strong>உட்பிரிவு :</strong><span>{{ v(profile.sub_caste_text || profile.sub_caste, profile.sub_caste_text_ta || profile.sub_caste_ta) }}</span></p>
 
 

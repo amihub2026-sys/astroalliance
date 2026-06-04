@@ -677,3 +677,27 @@ h3 {
   width: 95px !important;
   height: auto !important;
 }
+
+.mobile-pdf-btn {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+
+  .mobile-pdf-btn {
+    display: block !important;
+    width: 90%;
+    margin: 18px auto;
+    padding: 13px 16px;
+    background: #008000;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .print-page {
+    display: none !important;
+  }
+}
