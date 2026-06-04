@@ -92,19 +92,19 @@
 <div class="print-options" *ngIf="showPrintOptions">
 
   <button type="button" (click)="goToPrint(false, true)">
-    Without Photo + Address
+    with Address + Without Photo 
   </button>
 
   <button type="button" (click)="goToPrint(true, true)">
-    With Photo + Address
+    with Address + With Photo 
   </button>
 
   <button type="button" (click)="goToPrint(false, false)">
-    Without Photo + Without Address
+    Without Address + Without Photo 
   </button>
 
   <button type="button" (click)="goToPrint(true, false)">
-    With Photo + Without Address
+   Without Address + With Photo 
   </button>
 
 </div>
@@ -114,8 +114,25 @@
   </div>
 
 </div>
+<div class="profile-tabs">
+  <button
+    type="button"
+    [class.active]="activeTab === 'profile'"
+    (click)="activeTab = 'profile'">
+    MY PROFILE
+  </button>
 
-    <div class="details-grid">
+  <button
+    type="button"
+    [class.active]="activeTab === 'other'"
+    (click)="activeTab = 'other'">
+    OTHER DETAILS
+  </button>
+</div>
+<div class="two-side-layout">
+
+ <div class="left-profile-side" *ngIf="activeTab === 'profile'">
+    <div class="tab-title">My Profile</div>
 
       <div class="info-card">
        <h3>{{ txt('Basic Details', 'அடிப்படை விவரங்கள்') }}</h3>
@@ -125,17 +142,17 @@
 </p>
        <p>
   <strong>{{ txt('City', 'நகரம்') }}:</strong>
- {{ v(profile.city_text, profile.city_text_ta) }}
+ {{ masterText(profile.city_text, profile.city_text_ta) }}
 </p>
 
 <p>
   <strong>{{ txt('Religion', 'மதம்') }}:</strong>
- {{ v(profile.religion_text, profile.religion_text_ta) }}
+{{ masterText(profile.religion_text, profile.religion_text_ta) }}
 </p>
 
 <p>
   <strong>{{ txt('Caste', 'சாதி') }}:</strong>
- {{ v(profile.caste_text, profile.caste_text_ta) }}
+{{ masterText(profile.caste_text, profile.caste_text_ta) }}
 </p>
 
 <p>
@@ -150,12 +167,81 @@
 
 <p>
   <strong>{{ txt('Color', 'நிறம்') }}:</strong>
-  {{ v(profile.color_text, profile.color_text_ta) }}
+ {{ masterText(profile.color_text, profile.color_text_ta) }}
 </p>
 
 <p>
   <strong>{{ txt('Sub Caste', 'உட்பிரிவு') }}:</strong>
   {{ v(profile.sub_caste_text, profile.sub_caste_text_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Marital Status', 'திருமண நிலை') }}:</strong>
+ {{ masterText(profile.marital_status_text, profile.marital_status_text_ta) }}
+</p>
+<p>
+  <strong>{{ txt('Age', 'வயது') }}:</strong>
+  {{ profile.age || '-' }}
+</p>
+
+<p>
+  <strong>{{ txt('Date of Birth', 'பிறந்த தேதி') }}:</strong>
+  {{ profile.dob || '-' }}
+</p>
+
+<p>
+  <strong>{{ txt('Height', 'உயரம்') }}:</strong>
+  {{ v(profile.height_text, profile.height_text_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Weight', 'எடை') }}:</strong>
+  {{ v(profile.weight_text, profile.weight_text_ta) }}
+</p>
+
+
+<p *ngIf="profile.second_marriage_reason">
+  <strong>{{ txt('Marriage Type', 'இரண்டாம் திருமண காரணம்') }}:</strong>
+  {{ profile.second_marriage_reason }}
+</p>
+
+<p>
+  <strong>{{ txt('Children', 'குழந்தைகள்') }}:</strong>
+{{ yesNo(profile.children_status) }}
+</p>
+
+<p *ngIf="profile.children_details">
+  <strong>{{ txt('Children Details', 'குழந்தைகள் விவரம்') }}:</strong>
+  {{ v(profile.children_details, profile.children_details_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Kalappu Thirumanam', 'கலப்பு திருமணம்') }}:</strong>
+ {{ yesNo(profile.kalappu_thirumanam) }}
+</p>
+
+<p *ngIf="profile.kalappu_thirumanam === 'Yes'">
+  <strong>{{ txt('Kalappu Details', 'கலப்பு திருமணம் விவரம்') }}:</strong>
+  {{ v(profile.kalappu_thirumanam_details, profile.kalappu_thirumanam_details_ta) }}
+</p>
+
+<p>
+  <strong>{{ txt('Handicap', 'மாற்றுத்திறனாளி') }}:</strong>
+{{ yesNo(profile.handicap_status) }}
+</p>
+
+<p *ngIf="profile.handicap_status === 'Yes'">
+  <strong>{{ txt('Handicap Details', 'விவரம்') }}:</strong>
+  {{ v(profile.handicap_details, profile.handicap_details_ta) }}
+</p>
+<p *ngIf="profile.children_status">
+  <strong>{{ txt('Children', 'குழந்தைகள்') }}:</strong>
+  {{ txt('Yes', 'ஆம்') }}
+</p>
+
+<p *ngIf="profile.children_details">
+  <strong>{{ txt('Children Details', 'குழந்தைகள் விவரம்') }}:</strong>
+  {{ v(profile.children_details, profile.children_details_ta) }}
 </p>
       </div>
 
@@ -176,7 +262,7 @@
 
 <p>
   <strong>{{ txt('Family Status', 'குடும்ப நிலை') }}:</strong>
-  {{ v(profile.family_status, profile.family_status_ta) }}
+ {{ masterText(profile.family_status, profile.family_status_ta) }}
 </p>
 <p>
   <strong>{{ txt('Father Occupation', 'தந்தை தொழில்') }}:</strong>
@@ -214,7 +300,7 @@
 
 <p>
   <strong>{{ txt('Kudumba Nilai', 'குடும்ப நிலை') }}:</strong>
-  {{ v(profile.kudumba_nilai, profile.kudumba_nilai_ta) }}
+  {{ masterText(profile.kudumba_nilai, profile.kudumba_nilai_ta) }}
 </p>
 
 <p>
@@ -274,77 +360,11 @@
   <strong>{{ txt('Work Place', 'பணியிடம்') }}:</strong>
   {{ v(profile.work_place, profile.work_place_ta) }}
 </p>
-<p>
-  <strong>{{ txt('Age', 'வயது') }}:</strong>
-  {{ profile.age || '-' }}
-</p>
 
-<p>
-  <strong>{{ txt('Date of Birth', 'பிறந்த தேதி') }}:</strong>
-  {{ profile.dob || '-' }}
-</p>
 
-<p>
-  <strong>{{ txt('Height', 'உயரம்') }}:</strong>
-  {{ v(profile.height_text, profile.height_text_ta) }}
-</p>
-
-<p>
-  <strong>{{ txt('Weight', 'எடை') }}:</strong>
-  {{ v(profile.weight_text, profile.weight_text_ta) }}
-</p>
-
-<p>
-  <strong>{{ txt('Marital Status', 'திருமண நிலை') }}:</strong>
-  {{ v(profile.marital_status_text, profile.marital_status_text_ta) }}
-</p>
-
-<p *ngIf="profile.second_marriage_reason">
-  <strong>{{ txt('Marriage Type', 'இரண்டாம் திருமண காரணம்') }}:</strong>
-  {{ profile.second_marriage_reason }}
-</p>
-
-<p>
-  <strong>{{ txt('Children', 'குழந்தைகள்') }}:</strong>
-  {{ profile.children_status || '-' }}
-</p>
-
-<p *ngIf="profile.children_details">
-  <strong>{{ txt('Children Details', 'குழந்தைகள் விவரம்') }}:</strong>
-  {{ v(profile.children_details, profile.children_details_ta) }}
-</p>
-
-<p>
-  <strong>{{ txt('Kalappu Thirumanam', 'கலப்பு திருமணம்') }}:</strong>
-  {{ profile.kalappu_thirumanam || '-' }}
-</p>
-
-<p *ngIf="profile.kalappu_thirumanam === 'Yes'">
-  <strong>{{ txt('Kalappu Details', 'கலப்பு திருமணம் விவரம்') }}:</strong>
-  {{ v(profile.kalappu_thirumanam_details, profile.kalappu_thirumanam_details_ta) }}
-</p>
-
-<p>
-  <strong>{{ txt('Handicap', 'மாற்றுத்திறனாளி') }}:</strong>
-  {{ profile.handicap_status || '-' }}
-</p>
-
-<p *ngIf="profile.handicap_status === 'Yes'">
-  <strong>{{ txt('Handicap Details', 'விவரம்') }}:</strong>
-  {{ v(profile.handicap_details, profile.handicap_details_ta) }}
-</p>
-<p *ngIf="profile.children_status">
-  <strong>{{ txt('Children', 'குழந்தைகள்') }}:</strong>
-  {{ txt('Yes', 'ஆம்') }}
-</p>
-
-<p *ngIf="profile.children_details">
-  <strong>{{ txt('Children Details', 'குழந்தைகள் விவரம்') }}:</strong>
-  {{ v(profile.children_details, profile.children_details_ta) }}
-</p>
 <p>
   <strong>{{ txt('Salary', 'சம்பளம்') }}:</strong>
- {{ profile.salary_text || '-' }}
+{{ formatSalary() }}
 </p>
 
 <p>
@@ -353,12 +373,17 @@
 </p>
 </div>
 
+  </div>
+
+<div class="right-profile-side" *ngIf="activeTab === 'other'">
+    <div class="tab-title">Other Details</div>
+
 <div class="info-card">
 <h3>{{ txt('Address Details', 'முகவரி விவரங்கள்') }}</h3>
 
 <p>
   <strong>{{ txt('City', 'நகரம்') }}:</strong>
- {{ v(profile.city_text, profile.city_text_ta) }}
+ {{ masterText(profile.city_text, profile.city_text_ta) }}
 </p>
 
 <p>
@@ -378,18 +403,6 @@
  {{ v(profile.address_line, profile.address_line_ta) }}
 </p>
 </div>
-
-    </div>
-
-<!-- <div class="info-card full-width-card">
-
-  <h3>{{ txt('About Me', 'என்னை பற்றி') }}</h3>
-
-  <p>
-    {{ v(profile.about_me, profile.about_me_ta) || '-' }}
-  </p>
-
-</div> -->
      <div class="info-card">
  <h3>{{ txt('Horoscope', 'ஜாதகம்') }}</h3>
 
@@ -584,8 +597,7 @@
 
 </div>
 </div>
-
-<div class="info-card full-width-card">
+<div class="info-card">
 
   <h3>{{ txt('Partner Expectation', 'துணை எதிர்பார்ப்பு') }}</h3>
 
@@ -594,6 +606,23 @@
   </p>
 
 </div>
+
+    </div>
+     
+
+</div>
+
+<!-- <div class="info-card full-width-card">
+
+  <h3>{{ txt('About Me', 'என்னை பற்றி') }}</h3>
+
+  <p>
+    {{ v(profile.about_me, profile.about_me_ta) || '-' }}
+  </p>
+
+</div> -->
+
+
 
 
   </div>
