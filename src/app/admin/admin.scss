@@ -746,3 +746,21 @@ gap: 10px;
     z-index: 100;
   }
 }
+@media print {
+  .admin-layout {
+    display: block !important;
+    background: #fff !important;
+  }
+
+  .sidebar,
+  .mobile-overlay,
+  .mobile-menu-btn {
+    display: none !important;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+}
