@@ -90,8 +90,7 @@
   <span>{{ profile.mst_colors?.color_name_ta || profile.color_text || '-' }}</span>
 </p>
 
-<p><strong>படிப்பு :</strong><span>{{ v(profile.education_text, profile.education_text_ta) }}</span></p>
-
+<p><strong>படிப்பு :</strong><span>{{ profile.education_text || '-' }}</span></p>
 <p><strong>தொழில் :</strong><span>{{ v(profile.occupation_text, profile.occupation_text_ta) }}</span></p>
 
 <p>
