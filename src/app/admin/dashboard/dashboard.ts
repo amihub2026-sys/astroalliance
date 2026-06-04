@@ -18,13 +18,17 @@ export class Dashboard implements OnInit {
 
   isLoading = true;
 
-  stats = {
-    totalProfiles: 0,
-    maleProfiles: 0,
-    femaleProfiles: 0,
-    activeSubscriptions: 0
-  };
+ stats = {
+  totalProfiles: 0,
+  maleProfiles: 0,
+  femaleProfiles: 0,
+  activeSubscriptions: 0,
 
+  todayRevenue: 0,
+  weekRevenue: 0,
+  monthRevenue: 0,
+  totalRevenue: 0
+};
   recentProfiles: any[] = [];
 constructor(
   private cd: ChangeDetectorRef,
@@ -107,7 +111,27 @@ cityText(value: string): string {
         .from('user_subscriptions')
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true);
+const now = new Date();
 
+const startOfToday = new Date(now);
+startOfToday.setHours(0, 0, 0, 0);
+
+const startOfWeek = new Date(now);
+startOfWeek.setDate(now.getDate() - now.getDay());
+startOfWeek.setHours(0, 0, 0, 0);
+
+const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+const { data: subscriptionRevenueData } = await supabase
+  .from('user_subscriptions')
+  .select(`
+    created_at,
+    is_active,
+    mst_plans (
+      price
+    )
+  `)
+  .eq('is_active', true);
       const { data: recentProfiles, error } = await supabase
         .from('user_profiles')
 .select(`
@@ -127,13 +151,33 @@ cityText(value: string): string {
       }
 
     this.ngZone.run(() => {
+const revenueList = subscriptionRevenueData || [];
 
-  this.stats = {
-    totalProfiles: totalProfiles || 0,
-    maleProfiles: maleProfiles || 0,
-    femaleProfiles: femaleProfiles || 0,
-    activeSubscriptions: activeSubscriptions || 0
-  };
+const getPrice = (item: any): number => {
+  return Number(item.mst_plans?.price || 0);
+};
+
+this.stats = {
+  totalProfiles: totalProfiles || 0,
+  maleProfiles: maleProfiles || 0,
+  femaleProfiles: femaleProfiles || 0,
+  activeSubscriptions: activeSubscriptions || 0,
+
+  todayRevenue: revenueList
+    .filter((item: any) => new Date(item.created_at) >= startOfToday)
+    .reduce((sum: number, item: any) => sum + getPrice(item), 0),
+
+  weekRevenue: revenueList
+    .filter((item: any) => new Date(item.created_at) >= startOfWeek)
+    .reduce((sum: number, item: any) => sum + getPrice(item), 0),
+
+  monthRevenue: revenueList
+    .filter((item: any) => new Date(item.created_at) >= startOfMonth)
+    .reduce((sum: number, item: any) => sum + getPrice(item), 0),
+
+  totalRevenue: revenueList
+    .reduce((sum: number, item: any) => sum + getPrice(item), 0)
+};
 
   this.recentProfiles = recentProfiles || [];
 

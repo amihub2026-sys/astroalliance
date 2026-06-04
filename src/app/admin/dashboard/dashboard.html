@@ -26,6 +26,26 @@
       <h2>{{ stats.activeSubscriptions }}</h2>
     </div>
 
+    <div class="stat-card blue">
+  <h3>{{ txt('Today Revenue', 'இன்றைய வருமானம்') }}</h3>
+  <h2>₹{{ stats.todayRevenue }}</h2>
+</div>
+
+<div class="stat-card orange">
+  <h3>{{ txt('This Week Revenue', 'இந்த வார வருமானம்') }}</h3>
+  <h2>₹{{ stats.weekRevenue }}</h2>
+</div>
+
+<div class="stat-card violet">
+  <h3>{{ txt('This Month Revenue', 'இந்த மாத வருமானம்') }}</h3>
+  <h2>₹{{ stats.monthRevenue }}</h2>
+</div>
+
+<div class="stat-card dark">
+  <h3>{{ txt('Total Revenue', 'மொத்த வருமானம்') }}</h3>
+  <h2>₹{{ stats.totalRevenue }}</h2>
+</div>
+
   </div>
 
   <div class="panel-card" *ngIf="!isLoading">

@@ -75,16 +75,9 @@
 <p><strong>உட்பிரிவு :</strong><span>{{ v(profile.sub_caste_text || profile.sub_caste, profile.sub_caste_text_ta || profile.sub_caste_ta) }}</span></p>
 
 <p><strong>பெயர் :</strong><span>{{ v(profile.full_name, profile.full_name_ta) }}</span></p>
+<p><strong>பிறந்த தேதி :</strong><span>{{ profile.dob | date:'dd-MM-yyyy' }}</span></p>
 
-<p>
-  <strong>பிறந்த நேரம் :</strong>
-  <span>
-    {{ formatBirthTime(profile.birth_time) }}
-    <span *ngIf="profile.birth_place || profile.birth_place_ta">
-      - {{ v(profile.birth_place, profile.birth_place_ta) }}
-    </span>
-  </span>
-</p>
+
 <p>
   <strong>நிறம் :</strong>
   <span>{{ profile.mst_colors?.color_name_ta || profile.color_text || '-' }}</span>
@@ -184,7 +177,15 @@
 
 <p><strong>கோத்திரம் :</strong><span>{{ v(profile.gothram, profile.gothram_ta) }}</span></p>
 
-<p><strong>பிறந்த தேதி :</strong><span>{{ profile.dob | date:'dd-MM-yyyy' }}</span></p>
+<p>
+  <strong>பிறந்த நேரம் :</strong>
+  <span>
+    {{ formatBirthTime(profile.birth_time) }}
+    <span *ngIf="profile.birth_place || profile.birth_place_ta">
+      - {{ v(profile.birth_place, profile.birth_place_ta) }}
+    </span>
+  </span>
+</p>
 
 <!-- <p><strong>பிறந்த இடம் :</strong><span>{{ v(profile.birth_place, profile.birth_place_ta) }}</span></p> -->
 
