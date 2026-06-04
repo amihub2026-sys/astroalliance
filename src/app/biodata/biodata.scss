@@ -1619,3 +1619,169 @@ background:#fff;
   width: 110px !important;
   height: 48px !important;
 }
+/* FINAL BIODATA MOBILE VIEW FIX */
+@media (max-width: 768px) {
+
+  .biodata-page {
+    padding: 8px !important;
+    overflow-x: hidden !important;
+  }
+
+  .biodata-container,
+  .biodata-layout,
+  .form-side {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .biodata-layout {
+    display: block !important;
+  }
+
+  .form-accordion {
+    border-radius: 14px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .form-accordion summary {
+    padding: 14px 16px !important;
+    font-size: 16px !important;
+  }
+
+  .section-card {
+    padding: 12px !important;
+    border-radius: 0 !important;
+  }
+
+  .form-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .field,
+  .additional-phone-field {
+    display: block !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  .field label {
+    display: block !important;
+    margin-bottom: 6px !important;
+    font-size: 14px !important;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100% !important;
+    height: 44px !important;
+    font-size: 15px !important;
+    border-radius: 8px !important;
+  }
+
+  .field textarea {
+    height: auto !important;
+    min-height: 95px !important;
+  }
+
+  .field-error {
+    margin-left: 0 !important;
+    white-space: normal !important;
+  }
+
+  .profile-upload-box {
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .profile-preview {
+    width: 130px !important;
+    height: 160px !important;
+    margin: auto !important;
+  }
+
+  .profile-actions,
+  .media-actions {
+    width: 100% !important;
+  }
+
+  .upload-btn,
+  .remove-btn,
+  .extract-btn,
+  .submit-btn,
+  .add-mobile-btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    border-radius: 10px !important;
+  }
+
+  .additional-mobile-row {
+    display: block !important;
+  }
+
+  .additional-mobile-row .remove-btn {
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+
+  .preview-side {
+    position: relative !important;
+    width: 100% !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin-top: 18px !important;
+  }
+
+  .preview-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .preview-full-content {
+    grid-template-columns: 1fr !important;
+  }
+
+  .chart-top-layout {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .chart-example {
+    width: 100% !important;
+  }
+
+  .double-chart-wrap {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .chart-box {
+    max-width: 100% !important;
+    gap: 4px !important;
+  }
+
+  .cell-input {
+    min-height: 58px !important;
+    font-size: 12px !important;
+  }
+
+  .chart-center-label {
+    font-size: 20px !important;
+  }
+
+  .thisai-iruppu-wrap {
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .submit-wrap {
+    position: sticky !important;
+    bottom: 0 !important;
+    background: #fff !important;
+    padding: 10px 0 !important;
+    z-index: 50 !important;
+  }
+}
