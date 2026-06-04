@@ -716,3 +716,33 @@ gap: 10px;
     min-width:70px;
   }
 }
+.mobile-menu-btn {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobile-menu-btn {
+    display: flex;
+    position: sticky;
+    top: 10px;
+    z-index: 1000;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 12px;
+    background: #ec4899;
+    color: #fff;
+    font-size: 22px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .mobile-overlay {
+    z-index: 90;
+  }
+
+  .sidebar {
+    z-index: 100;
+  }
+}
