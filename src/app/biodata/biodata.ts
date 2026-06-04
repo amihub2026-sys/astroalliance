@@ -1859,11 +1859,7 @@ if (
     return Math.round((filledCount / completionFields.length) * 100);
   }
 
-  private generateProfileCode(): string {
-    const year = new Date().getFullYear();
-    const random = Math.random().toString(36).slice(2, 8).toUpperCase();
-    return `AMI-${year}-${random}`;
-  }
+
 
 private async uploadProfileImage(file: File): Promise<string | null> {
 
@@ -2305,7 +2301,7 @@ console.log('ADMIN CREATED:', this.isAdminCreated);
         existingProfileCode = String(currentProfile.profile_code).trim();
       }
 
-      const resolvedProfileCode = existingProfileCode || this.generateProfileCode();
+      const resolvedProfileCode = existingProfileCode;
 
       let profileImageUrl =
         currentProfile?.profile_image_url || this.existingProfileImageUrl || null;
@@ -2366,7 +2362,7 @@ console.log('PAYLOAD USER ID:', appUserId);
 
       const payload = {
         user_id: appUserId,
-        profile_code: resolvedProfileCode,
+       
 
         full_name: this.safeText(this.formData.fullName),
 
@@ -2656,6 +2652,9 @@ additional_image_urls: additionalImageUrls,
         is_published: true,
         updated_at: new Date().toISOString()
       };
+      if (existingProfileCode) {
+  (payload as any).profile_code = existingProfileCode;
+}
 if (this.editProfileId) {
 
   delete (payload as any).user_id;
