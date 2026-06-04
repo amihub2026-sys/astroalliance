@@ -298,7 +298,7 @@ tbody tr:hover{
 
 .search-btn{
   width:100%;
-   min-width:180px;
+  min-width:0;
   height:48px;
   border:none;
   border-radius:14px;
@@ -410,4 +410,129 @@ table{
 .dob-col{
   width: 1%;
   white-space: nowrap;
+}
+/* FINAL MOBILE VIEW - ADMIN PROFILES PAGE */
+@media (max-width: 768px) {
+
+  .content-section {
+    padding: 10px !important;
+    overflow-x: hidden !important;
+  }
+
+  .section-header {
+    display: block !important;
+    margin-bottom: 12px !important;
+  }
+
+  .section-header h2 {
+    font-size: 22px !important;
+    line-height: 1.2 !important;
+  }
+
+  .section-header p {
+    font-size: 13px !important;
+  }
+
+  .refresh-btn {
+    width: 100% !important;
+    height: 44px !important;
+    margin-top: 10px !important;
+    border-radius: 12px !important;
+  }
+
+  .register-filter-card {
+    padding: 12px !important;
+    border-radius: 16px !important;
+    margin: 12px 0 !important;
+  }
+
+  .filter-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .filter-field {
+    width: 100% !important;
+  }
+
+  .filter-field input,
+  .filter-field select,
+  .search-btn {
+    width: 100% !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+  }
+
+  .panel-card {
+    padding: 8px !important;
+    border-radius: 14px !important;
+    margin-top: 12px !important;
+  }
+
+  .table-wrap {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  table {
+    min-width: 1500px !important;
+  }
+
+  thead th,
+  tbody td {
+    font-size: 11px !important;
+    padding: 7px !important;
+    white-space: nowrap !important;
+  }
+
+  .action-cell {
+    min-width: 330px !important;
+  }
+
+  .action-group {
+    flex-wrap: nowrap !important;
+    gap: 5px !important;
+  }
+
+  .action-group button {
+    padding: 6px 9px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+
+  .pagination {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .pagination button {
+    width: 100% !important;
+    height: 40px !important;
+  }
+
+  .pagination span {
+    font-size: 12px !important;
+  }
+}
+@media (max-width: 768px) {
+
+  .register-filter-card {
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .filter-field select {
+    width: 100% !important;
+    max-width: 100% !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background-image: none !important;
+  }
+
+  .filter-field {
+    overflow: hidden !important;
+  }
+
 }
