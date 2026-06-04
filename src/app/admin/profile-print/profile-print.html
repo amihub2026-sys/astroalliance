@@ -71,8 +71,18 @@
     }}
   </span>
 </p>
+<p>
+  <strong>ஜாதி :</strong>
+  <span>
+    {{
+      profile.mst_castes?.caste_name_ta ||
+      profile.caste_text_ta ||
+      profile.caste_text ||
+      '-'
+    }}
+  </span>
+</p>
 
-<p><strong>உட்பிரிவு :</strong><span>{{ v(profile.sub_caste_text || profile.sub_caste, profile.sub_caste_text_ta || profile.sub_caste_ta) }}</span></p>
 
 <p><strong>பெயர் :</strong><span>{{ v(profile.full_name, profile.full_name_ta) }}</span></p>
 <p><strong>பிறந்த தேதி :</strong><span>{{ profile.dob | date:'dd-MM-yyyy' }}</span></p>
@@ -84,7 +94,7 @@
 </p>
 
 <p><strong>படிப்பு :</strong><span>{{ profile.education_text || '-' }}</span></p>
-<p><strong>தொழில் :</strong><span>{{ v(profile.occupation_text, profile.occupation_text_ta) }}</span></p>
+
 
 <p>
   <strong>நிறுவனத்தின் பெயர் :</strong>
@@ -164,16 +174,8 @@
   </span>
 </p>
 <p>
-  <strong>ஜாதி :</strong>
-  <span>
-    {{
-      profile.mst_castes?.caste_name_ta ||
-      profile.caste_text_ta ||
-      profile.caste_text ||
-      '-'
-    }}
-  </span>
-</p>
+<p><strong>உட்பிரிவு :</strong><span>{{ v(profile.sub_caste_text || profile.sub_caste, profile.sub_caste_text_ta || profile.sub_caste_ta) }}</span></p>
+
 
 <p><strong>கோத்திரம் :</strong><span>{{ v(profile.gothram, profile.gothram_ta) }}</span></p>
 
@@ -198,11 +200,11 @@
     {{ v(profile.weight_text, profile.weight_text_ta) }}
   </span>
 </p>
+<p><strong>தொழில் :</strong><span>{{ v(profile.occupation_text, profile.occupation_text_ta) }}</span></p>
 
-<p><strong>சம்பளம் :</strong><span>{{ profile.salary_text || '-' }}</span></p>
 
 <!-- <p><strong>பணிபுரியும் இடம் :</strong><span>{{ v(profile.work_place, profile.work_place_ta) || '-' }}</span></p> -->
-
+<p><strong>சம்பளம் :</strong><span>{{ profile.salary_text || '-' }}</span></p>
 <p><strong>தந்தை தொழில் :</strong><span>{{ v(profile.father_occupation, profile.father_occupation_ta) }}</span></p>
 
 <p><strong>தாய் தொழில் :</strong><span>{{ v(profile.mother_occupation, profile.mother_occupation_ta) }}</span></p>
