@@ -589,10 +589,9 @@ private async makeLangText(
     const num = Number(value);
     return Number.isFinite(num) ? num : null;
   }
-
-  private hasRealProfileCode(id: string): boolean {
-    return /^AMI-/i.test(String(id || '').trim());
-  }
+private hasRealProfileCode(id: string): boolean {
+  return /^(AMI|AAM)-/i.test(String(id || '').trim());
+}
 
   private getLoggedInUserId(): string | null {
     if (!this.isBrowser) return null;
@@ -2139,6 +2138,7 @@ this.scrollFilterToStart();
   }
 
   async viewProfile(profile: ProfileItem): Promise<void> {
+      console.log('VIEW PROFILE CLICKED', profile);
     if (!profile?.id) {
      this.snackbar.error('Profile ID missing');
       return;
