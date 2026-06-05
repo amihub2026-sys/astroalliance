@@ -80,7 +80,11 @@
   <p *ngIf="isLoading">{{ txt('loading') }}</p>
 
   <div class="panel-card" *ngIf="!isLoading">
-    <div class="table-wrap">
+ <div class="top-scroll">
+  <div class="scroll-width"></div>
+</div>
+
+<div class="table-wrap" #tableWrap>
 
       <table>
         <thead>
@@ -170,7 +174,7 @@
           </tr>
         </tbody>
       </table>
-
+</div>
       <div class="pagination" *ngIf="filteredProfiles.length > 5">
         <button type="button" (click)="prevPage()" [disabled]="currentPage === 1">
           {{ txt('previous') }}
@@ -184,6 +188,6 @@
       </div>
 
     </div>
-  </div>
+ 
 
 </section>
