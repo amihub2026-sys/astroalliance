@@ -1,6 +1,9 @@
 import {
   Component,
-  OnInit,
+OnInit,
+AfterViewInit,
+ViewChild,
+ElementRef,
   inject,
   PLATFORM_ID,
   NgZone,
@@ -23,7 +26,7 @@ import { Router } from '@angular/router';@Component({
   templateUrl: './profiles.html',
   styleUrls: ['./profiles.scss']
 })
-export class Profiles implements OnInit {
+export class Profiles implements OnInit, AfterViewInit {
 private platformId = inject(PLATFORM_ID);
 private isBrowser = isPlatformBrowser(this.platformId);
 constructor(
@@ -33,7 +36,7 @@ constructor(
   private snackbar: SnackbarService
 ) {}
   isLoading = true;
-
+@ViewChild('tableWrap') tableWrap!: ElementRef<HTMLDivElement>;
   searchTerm = '';
 
   profileCodeFilter = '';
@@ -337,8 +340,12 @@ views_count: Number(plan?.contacts_used || 0)
 
   } finally {
     this.ngZone.run(() => {
-      this.isLoading = false;
-      this.cd.detectChanges();
+     this.isLoading = false;
+this.cd.detectChanges();
+
+setTimeout(() => {
+  this.syncTableScroll();
+}, 300);
     });
   }
 }
@@ -566,5 +573,31 @@ sanitizePhoneFilter(): void {
     (this.phoneFilter || '')
       .replace(/\D/g, '');
 
+}
+ngAfterViewInit(): void {
+  if (!this.isBrowser) return;
+
+  setTimeout(() => {
+    this.syncTableScroll();
+  }, 500);
+}
+syncTableScroll(): void {
+  if (!this.isBrowser) return;
+
+  const topScroll = document.querySelector('.top-scroll') as HTMLElement;
+  const scrollWidth = document.querySelector('.scroll-width') as HTMLElement;
+  const bottomScroll = this.tableWrap?.nativeElement;
+
+  if (!topScroll || !scrollWidth || !bottomScroll) return;
+
+  scrollWidth.style.width = bottomScroll.scrollWidth + 'px';
+
+  topScroll.onscroll = () => {
+    bottomScroll.scrollLeft = topScroll.scrollLeft;
+  };
+
+  bottomScroll.onscroll = () => {
+    topScroll.scrollLeft = bottomScroll.scrollLeft;
+  };
 }
 }
