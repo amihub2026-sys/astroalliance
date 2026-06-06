@@ -1844,3 +1844,32 @@ background:#fff;
     appearance: auto !important;
   }
 }
+.birth-time-wrap{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  position:relative;
+}
+
+.birth-time-input{
+  flex:1;
+  width:100%;
+}
+
+.real-time-picker{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+  width:1px;
+  height:1px;
+}
+
+.time-btn{
+  width:42px;
+  height:38px;
+  border:1px solid #d5d5d5;
+  background:#fff;
+  border-radius:2px;
+  cursor:pointer;
+}

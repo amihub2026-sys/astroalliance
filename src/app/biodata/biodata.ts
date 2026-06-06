@@ -517,7 +517,30 @@ formatDob(event: any) {
   this.formData.dob = value;
   this.onDobChange();
 }
+formatBirthTime(event: any): void {
+  let value = event.target.value.toUpperCase();
 
+  value = value.replace(/[^0-9APM: ]/g, '');
+
+  this.formData.birthTime = value;
+}
+
+onBirthTimePick(event: any): void {
+  const value = event.target.value;
+
+  if (!value) return;
+
+  const [hourStr, minute] = value.split(':');
+
+  let hour = Number(hourStr);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+
+  hour = hour % 12;
+  hour = hour ? hour : 12;
+
+  this.formData.birthTime =
+    `${hour.toString().padStart(2, '0')}:${minute} ${ampm}`;
+}
 onMobileDatePick(event: any) {
 
   const value = event.target.value;
