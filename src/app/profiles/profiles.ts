@@ -2280,20 +2280,20 @@ if (!alreadyUnlocked) {
     throw myProfileError;
   }
 
-  if (myProfile?.profile_id && profile.profileId) {
-    const { error: contactTakenError } = await supabase
-      .from('profile_views')
-      .upsert({
-        viewer_profile_id: myProfile.profile_id,
-        viewed_profile_id: profile.profileId,
-        contact_taken: true,
-        viewed_at: new Date().toISOString()
-      });
+if (myProfile?.profile_id && profile.profileId) {
+  const { error: contactTakenError } = await supabase
+    .from('profile_views')
+    .update({
+      contact_taken: true,
+      viewed_at: new Date().toISOString()
+    })
+    .eq('viewer_profile_id', myProfile.profile_id)
+    .eq('viewed_profile_id', profile.profileId);
 
-    if (contactTakenError) {
-      throw contactTakenError;
-    }
+  if (contactTakenError) {
+    throw contactTakenError;
   }
+}
 
 }   this.currentPlan.viewed = newViewedCount;
 
