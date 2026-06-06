@@ -584,6 +584,24 @@ private async makeLangText(
     return String(value || '').toLowerCase().trim();
   }
 
+  private normalizeGender(value: string | null | undefined): 'male' | 'female' | '' {
+  const gender = String(value || '').toLowerCase().trim();
+
+  if (gender === 'male' || gender === 'ஆண்') return 'male';
+  if (gender === 'female' || gender === 'பெண்') return 'female';
+
+  return '';
+}
+
+private isOppositeGender(profileGenderValue: string | null | undefined): boolean {
+  const myGender = this.normalizeGender(this.userGender);
+  const profileGender = this.normalizeGender(profileGenderValue);
+
+  if (!myGender || !profileGender) return false;
+
+  return myGender !== profileGender;
+}
+
   private toNullableNumber(value: unknown): number | null {
     if (value === null || value === undefined || value === '') return null;
     const num = Number(value);
@@ -927,28 +945,37 @@ nakshatra_text_ta,
 
       const rows = Array.isArray(data) ? data : [];
 
-      const filteredRows = rows
-        .filter((row: any) => {
-const loggedInUserId = String(this.getLoggedInUserId() || '').trim();
-const rowUserId = String(row.user_id || '').trim();
+    const filteredRows = rows
+  .filter((row: any) => {
 
-const loggedInName = String(this.userProfileName || '').toLowerCase().trim();
-const rowName = String(row.full_name || '').toLowerCase().trim();
+    const loggedInUserId = String(this.getLoggedInUserId() || '').trim();
+    const rowUserId = String(row.user_id || '').trim();
 
-if (
-  (loggedInUserId && rowUserId === loggedInUserId) ||
-  (loggedInName && rowName === loggedInName)
-) {
+    const loggedInName = String(this.userProfileName || '').toLowerCase().trim();
+    const rowName = String(row.full_name || '').toLowerCase().trim();
+
+    // Don't show own profile
+    if (
+      (loggedInUserId && rowUserId === loggedInUserId) ||
+      (loggedInName && rowName === loggedInName)
+    ) {
+      return false;
+    }
+
+    // ===== GENDER FILTER =====
+    if (!this.isOppositeGender(row.gender_text)) {
   return false;
 }
-          if (!row) return false;
+    // =========================
 
-          const status = String(row.profile_status || '').toLowerCase().trim();
-          if (status === 'draft') return false;
+    if (!row) return false;
 
-          const usableId = row.profile_id || '';
-          return !!usableId;
-        })
+    const status = String(row.profile_status || '').toLowerCase().trim();
+    if (status === 'draft') return false;
+
+    const usableId = row.profile_id || '';
+    return !!usableId;
+  });
 //         .map((row: any) => {
 //           const usableId = row.profile_code || row.user_id || row.profile_id || '';
 
