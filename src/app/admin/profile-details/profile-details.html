@@ -66,13 +66,7 @@
   {{ profile.profile_code }}
 </p>
 
-<div class="viewed-profile-codes" *ngIf="profileViewList.length">
-  <strong>Viewed Profile Codes :</strong>
 
-  <span *ngFor="let item of profileViewList">
-    {{ item.viewer?.profile_code || '-' }}
-  </span>
-</div>
 
     <span
       class="status"
@@ -684,10 +678,10 @@
   <div class="tab-title">Profile View Details</div>
 
   <div class="info-card">
-   <h3>This User Viewed Profiles</h3>
+  <h3>This User Contact Taken Profiles</h3>
 
     <p>
-      <strong>Total Views :</strong>
+      <strong>Total Contact Taken :</strong>
       {{ profileViewList.length }}
     </p>
 
