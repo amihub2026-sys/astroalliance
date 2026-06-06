@@ -311,10 +311,17 @@ if (viewError || !viewRows?.length) {
     `)
     .in('profile_id', viewerIds);
 
-  this.profileViewList = viewRows.map(row => ({
-    ...row,
-    viewer: viewers?.find(v => v.profile_id === row.viewed_profile_id) || null
-  }));
+ const uniqueRows = viewRows.filter(
+  (row, index, self) =>
+    index === self.findIndex(
+      r => r.viewed_profile_id === row.viewed_profile_id
+    )
+);
+
+this.profileViewList = uniqueRows.map(row => ({
+  ...row,
+  viewer: viewers?.find(v => v.profile_id === row.viewed_profile_id) || null
+}));
 }
   const planData = Array.isArray(subData?.mst_plans)
     ? subData.mst_plans[0]
