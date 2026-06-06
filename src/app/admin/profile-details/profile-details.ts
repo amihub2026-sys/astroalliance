@@ -284,8 +284,9 @@ async loadProfile(id: string): Promise<void> {
     .maybeSingle();
 const { data: viewRows, error: viewError } = await supabase
   .from('profile_views')
-  .select('view_id, viewed_at, viewer_profile_id, viewed_profile_id')
-.eq('viewer_profile_id', data.profile_id)
+  .select('view_id, viewed_at, viewer_profile_id, viewed_profile_id, contact_taken')
+  .eq('viewer_profile_id', data.profile_id)
+  .eq('contact_taken', true)
   .order('viewed_at', { ascending: false });
 
 console.log('OPENED PROFILE ID:', data.profile_id);
@@ -336,7 +337,7 @@ this.profileViewList = uniqueRows.map(row => ({
     limits: subData
       ? `${subData?.total_contacts_allowed || 0} contacts / ${planData?.profile_view_limit || 0} views`
       : '-',
-    views_count: Number(subData?.contacts_used || 0)
+    views_count: this.profileViewList.length
   };
 
   this.isLoading = false;
