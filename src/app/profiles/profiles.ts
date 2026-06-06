@@ -2270,24 +2270,27 @@ if (!alreadyUnlocked) {
     throw updateError;
   }
 
-  const { data: myProfile, error: myProfileError } = await supabase
-    .from('user_profiles')
-    .select('profile_id')
-    .eq('user_id', currentUserId)
-    .maybeSingle();
 
-  if (myProfileError) {
-    throw myProfileError;
-  }
+}  
 
-if (myProfile?.profile_id && profile.profileId) {
+const { data: myProfileForContact, error: myProfileForContactError } = await supabase
+  .from('user_profiles')
+  .select('profile_id')
+  .eq('user_id', currentUserId)
+  .maybeSingle();
+
+if (myProfileForContactError) {
+  throw myProfileForContactError;
+}
+
+if (myProfileForContact?.profile_id && profile.profileId) {
   const { error: contactTakenError } = await supabase
     .from('profile_views')
     .update({
       contact_taken: true,
       viewed_at: new Date().toISOString()
     })
-    .eq('viewer_profile_id', myProfile.profile_id)
+    .eq('viewer_profile_id', myProfileForContact.profile_id)
     .eq('viewed_profile_id', profile.profileId);
 
   if (contactTakenError) {
@@ -2295,7 +2298,7 @@ if (myProfile?.profile_id && profile.profileId) {
   }
 }
 
-}   this.currentPlan.viewed = newViewedCount;
+this.currentPlan.viewed = newViewedCount;
 
       if (expiredAfterView) {
         this.currentPlan.expired = true;
