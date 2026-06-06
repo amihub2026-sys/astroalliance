@@ -243,14 +243,30 @@
 <div class="field" [class.invalid]="isInvalid('birthTime')">
   <label>{{ tr.labels.birthTime }} <span class="optional">(Optional)</span></label>
 
-<div class="mobile-time-wrap">
+<div class="birth-time-wrap">
 
   <input
     class="birth-time-input"
-    type="time"
+    type="text"
     [(ngModel)]="formData.birthTime"
     name="birthTime"
+    placeholder="10:30 AM"
+    (input)="formatBirthTime($event)"
   >
+
+  <input
+    #birthTimePicker
+    type="time"
+    class="real-time-picker"
+    (change)="onBirthTimePick($event)"
+  >
+
+  <button
+    type="button"
+    class="time-btn"
+    (click)="birthTimePicker.showPicker()">
+    🕘
+  </button>
 
 </div>
 
