@@ -496,7 +496,42 @@ isOtherCountrySelected(): boolean {
 
   return country?.country_name?.toLowerCase() === 'other';
 }
+formatDob(event: any) {
 
+  let value = event.target.value.replace(/\D/g, '');
+
+  if (value.length > 2) {
+    value =
+      value.substring(0, 2) +
+      '-' +
+      value.substring(2);
+  }
+
+  if (value.length > 5) {
+    value =
+      value.substring(0, 5) +
+      '-' +
+      value.substring(5, 9);
+  }
+
+  this.formData.dob = value;
+  this.onDobChange();
+}
+
+onMobileDatePick(event: any) {
+
+  const value = event.target.value;
+
+  if (!value) return;
+
+  const [year, month, day] =
+    value.split('-');
+
+  this.formData.dob =
+    `${day}-${month}-${year}`;
+
+  this.onDobChange();
+}
 isOtherStateSelected(): boolean {
   const state = this.stateList.find(
     (s: any) => s.state_id === this.selectedStateId

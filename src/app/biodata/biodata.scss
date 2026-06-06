@@ -1785,3 +1785,62 @@ background:#fff;
     z-index: 50 !important;
   }
 }
+.desktop-dob{
+  display:block;
+}
+
+.mobile-dob-wrap{
+  display:none;
+}
+
+@media (max-width:768px){
+
+  .desktop-dob{
+    display:none !important;
+  }
+
+  .mobile-dob-wrap{
+    display:flex !important;
+    align-items:center;
+    gap:8px;
+    width:100%;
+  }
+
+  .mobile-dob{
+    flex:1;
+  }
+
+  .real-date-picker{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+    width:1px;
+    height:1px;
+  }
+
+  .calendar-btn{
+    width:42px;
+    height:38px;
+    border:1px solid #d5d5d5;
+    background:#fff;
+    cursor:pointer;
+    border-radius:2px;
+  }
+}
+.birth-time-input {
+  width: 100%;
+  height: 38px;
+  padding: 6px 10px;
+  border: 1px solid #d5d5d5;
+  border-radius: 2px;
+  background: #fff;
+  font-size: 14px;
+  color: #222;
+}
+
+@media (max-width: 768px) {
+  .birth-time-input {
+    -webkit-appearance: auto !important;
+    appearance: auto !important;
+  }
+}
