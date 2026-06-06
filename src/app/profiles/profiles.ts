@@ -2255,7 +2255,7 @@ if (!alreadyUnlocked) {
 }
 
     try {
-    if (!alreadyUnlocked) {
+   if (!alreadyUnlocked) {
 
   const { error: updateError } = await supabase
     .from('user_subscriptions')
@@ -2270,8 +2270,32 @@ if (!alreadyUnlocked) {
     throw updateError;
   }
 
-}
-      this.currentPlan.viewed = newViewedCount;
+  const { data: myProfile, error: myProfileError } = await supabase
+    .from('user_profiles')
+    .select('profile_id')
+    .eq('user_id', currentUserId)
+    .maybeSingle();
+
+  if (myProfileError) {
+    throw myProfileError;
+  }
+
+  if (myProfile?.profile_id && profile.profileId) {
+    const { error: contactTakenError } = await supabase
+      .from('profile_views')
+      .upsert({
+        viewer_profile_id: myProfile.profile_id,
+        viewed_profile_id: profile.profileId,
+        contact_taken: true,
+        viewed_at: new Date().toISOString()
+      });
+
+    if (contactTakenError) {
+      throw contactTakenError;
+    }
+  }
+
+}   this.currentPlan.viewed = newViewedCount;
 
       if (expiredAfterView) {
         this.currentPlan.expired = true;
