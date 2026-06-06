@@ -2058,6 +2058,23 @@ formData.secondMarriageReason === 'Widowed'
       ></textarea>
 
     </div>
+    <div class="field full-width no-caste-field">
+  <label>
+    {{ currentLang === 'ta' ? 'ஜாதி தடை இல்லை' : 'No Caste Restriction' }}
+  </label>
+
+  <label class="no-caste-check">
+    <input
+      type="checkbox"
+      [(ngModel)]="formData.noCastePreference"
+      name="noCastePreference"
+    >
+
+    <span>
+      {{ currentLang === 'ta' ? 'ஜாதி தடை இல்லை' : 'No caste preference' }}
+    </span>
+  </label>
+</div>
   </div>
 </div>
 

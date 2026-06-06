@@ -353,8 +353,9 @@ religion: '',
     birthTime: '',
     birthPlace: '',
     aboutMe: '',
-    partnerExpectation: '',
-    subCaste: '',
+   partnerExpectation: '',
+noCastePreference: false,
+subCaste: '',
 
 marriedBrothers: '',
 unmarriedBrothers: '',
@@ -1579,7 +1580,7 @@ this.formDataTa.address = data.address_line_ta || '';
 this.formDataTa.birthPlace = data.birth_place_ta || '';
       this.formData.aboutMe = data.about_me || '';
 this.formData.partnerExpectation = data.partner_expectation || '';
-
+this.formData.noCastePreference = data.no_caste_preference ?? false;
 this.formDataTa.aboutMe = data.about_me_ta || '';
 this.formDataTa.partnerExpectation = data.partner_expectation_ta || '';
 
@@ -2696,7 +2697,7 @@ iruppidam_ta: this.safeText(
 about_me: this.safeText(this.formData.aboutMe),
 
 partner_expectation: this.safeText(this.formData.partnerExpectation),
-
+no_caste_preference: this.formData.noCastePreference,
         rasi_chart: this.rasiChart,
         amsam_chart: this.amsamChart,
 

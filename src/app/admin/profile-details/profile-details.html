@@ -89,6 +89,15 @@
   Print
 </button>
 
+<div
+  class="no-caste-row"
+  *ngIf="profile.no_caste_preference">
+
+  <span class="no-caste-badge">
+    {{ txt('No Caste Restriction', 'ஜாதி தடை இல்லை') }}
+  </span>
+
+</div>
 <div class="print-options" *ngIf="showPrintOptions">
 
   <button type="button" (click)="goToPrint(false, true)">
