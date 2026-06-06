@@ -597,8 +597,14 @@ private isOppositeGender(profileGenderValue: string | null | undefined): boolean
   const myGender = this.normalizeGender(this.userGender);
   const profileGender = this.normalizeGender(profileGenderValue);
 
-  if (!myGender || !profileGender) return false;
+  // If login user has no gender, show ALL profiles
+  if (!myGender) return true;
 
+  // If profile gender is missing, don't hide it
+  if (!profileGender) return true;
+
+  // Male -> Female only
+  // Female -> Male only
   return myGender !== profileGender;
 }
 
@@ -2436,6 +2442,7 @@ this.userProfileName =
     ? (data?.full_name_ta || data?.full_name || '')
     : (data?.full_name || data?.full_name_ta || '');
       this.userProfileImage = data?.profile_image_url || '';
+      
  this.userGender = data?.gender_text || '';
 this.userCaste = data?.caste_text || '';
 this.userRasi = data?.rasi_text || '';
