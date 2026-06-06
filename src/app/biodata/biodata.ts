@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { App } from '../app';
 import { supabase } from '../core/supabase.client';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SnackbarService } from '../shared/snackbar.service';
 
 @Component({
@@ -18,7 +18,7 @@ export class Biodata implements OnInit {
   cdr = inject(ChangeDetectorRef);
   snackbar = inject(SnackbarService);
   route = inject(ActivatedRoute);
-
+router = inject(Router);
 editProfileId = '';
 
 isBrowser = typeof window !== 'undefined';
@@ -2756,12 +2756,11 @@ setTimeout(() => {
 if (this.isAdminCreated) {
   localStorage.removeItem('admin_created_user_id');
 
-setTimeout(() => {
-  window.location.href =
-    '/admin/create-biodata?adminCreate=true';
-}, 1200);
+  setTimeout(() => {
+    this.router.navigate(['/admin/profiles']);
+  }, 1200);
 
-return;
+  return;
 }
 
 this.isSubmitted = true;
