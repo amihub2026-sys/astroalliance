@@ -407,10 +407,7 @@ table{
 .status-icon.pending{
   color:#f59e0b;
 }
-.dob-col{
-  width: 1%;
-  white-space: nowrap;
-}
+
 /* FINAL MOBILE VIEW - ADMIN PROFILES PAGE */
 @media (max-width: 768px) {
 
@@ -537,7 +534,7 @@ table{
 
 }
 .panel-card{
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 .top-scroll{
@@ -579,12 +576,13 @@ tbody td{
   white-space: nowrap;
 }
 .scroll-width{
-  width: 3200px !important;
+  width: 3600px !important;
 }
 
 table{
-  min-width: 3200px !important;
-  width: 3200px !important;
+  min-width: 3600px !important;
+  width: 3600px !important;
+  table-layout: fixed !important;
 }
 
 thead th,
@@ -610,8 +608,8 @@ th:nth-child(12), td:nth-child(12){ min-width:180px; }
 th:nth-child(13), td:nth-child(13){ min-width:180px; }
 th:nth-child(14), td:nth-child(14){ min-width:220px; }
 th:nth-child(15), td:nth-child(15){ min-width:90px; }
-th:nth-child(16), td:nth-child(16){ min-width:160px; }
-th:nth-child(17), td:nth-child(17){ min-width:380px; }
+th:nth-child(16), td:nth-child(16){ width:320px; }
+th:nth-child(17), td:nth-child(17){ width:520px; }
 /* Table Header */
 thead th{
   font-weight: 800 !important;
@@ -670,4 +668,71 @@ td:nth-child(4){
   font-size: 15px !important;
   font-weight: 700 !important;
   padding: 10px 16px !important;
+}
+.whatsapp-btn{
+  border:none;
+  background:#22c55e;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.whatsapp-btn:hover{
+  background:#16a34a;
+}
+.match-share-btn{
+  border:none;
+  background:#6366f1;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap;
+  margin-left:8px;
+}
+
+.match-share-btn:hover{
+  background:#4f46e5;
+}
+.top-scroll,
+.table-wrap{
+  max-width: 100% !important;
+}
+
+thead th,
+tbody td{
+  box-sizing: border-box !important;
+}
+/* FIX COLUMN OVERLAP */
+table{
+  table-layout: fixed !important;
+}
+
+th:nth-child(4), td:nth-child(4){
+  width: 260px !important; /* Name */
+}
+
+th:nth-child(5), td:nth-child(5){
+  width: 90px !important; /* Age */
+}
+
+th:nth-child(6), td:nth-child(6){
+  width: 180px !important; /* DOB */
+}
+
+th:nth-child(7), td:nth-child(7){
+  width: 190px !important; /* Phone */
+}
+
+thead th,
+tbody td{
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }

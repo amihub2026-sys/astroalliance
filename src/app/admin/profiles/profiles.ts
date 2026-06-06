@@ -588,9 +588,12 @@ syncTableScroll(): void {
   const scrollWidth = document.querySelector('.scroll-width') as HTMLElement;
   const bottomScroll = this.tableWrap?.nativeElement;
 
-  if (!topScroll || !scrollWidth || !bottomScroll) return;
+  const table = bottomScroll?.querySelector('table') as HTMLElement;
 
-  scrollWidth.style.width = bottomScroll.scrollWidth + 'px';
+  if (!topScroll || !scrollWidth || !bottomScroll || !table) return;
+
+  // Use actual table width
+  scrollWidth.style.width = table.scrollWidth + 'px';
 
   topScroll.onscroll = () => {
     bottomScroll.scrollLeft = topScroll.scrollLeft;
@@ -599,5 +602,73 @@ syncTableScroll(): void {
   bottomScroll.onscroll = () => {
     topScroll.scrollLeft = bottomScroll.scrollLeft;
   };
+}
+shareWelcomeWhatsapp(profile: any, event?: Event): void {
+  event?.stopPropagation();
+
+  const profileLink =
+    `https://astroalliance.vercel.app/profile/${profile.profile_id}`;
+
+  const message = `
+ வணக்கம்
+
+ Astro Alliance Matrimony-க்கு உங்களை அன்புடன் வரவேற்கிறோம்.
+
+உங்கள் திருமண சுயவிவரம் வெற்றிகரமாக பதிவு செய்யப்பட்டுள்ளது.
+
+ சுயவிவர எண் : ${profile.profile_code || '-'}
+
+ பெயர் : ${profile.full_name || '-'}
+
+ உங்கள் சுயவிவரத்தை பார்க்க:
+${profileLink}
+
+உங்களுக்கு பொருத்தமான வாழ்க்கைத் துணையை கண்டுபிடிக்க எங்கள் மனமார்ந்த வாழ்த்துக்கள்.
+
+ உதவி தேவைப்பட்டால் எங்களை தொடர்பு கொள்ளவும்.
+
+ நன்றி
+Astro Alliance Matrimony
+`;
+const phone = String(profile.mobile || '')
+  .replace(/\D/g, '');
+
+const whatsappUrl =
+  `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`;
+
+window.open(whatsappUrl, '_blank');
+}
+shareProfileWhatsapp(profile: any, event?: Event): void {
+  event?.stopPropagation();
+
+  const profileLink =
+    `https://astroalliance.vercel.app/profiles?id=${profile.profile_id}`;
+
+  const message = `
+ வணக்கம்
+
+ Astro Alliance Matrimony மூலம் உங்களுக்கு பொருத்தமான சுயவிவரம் பகிரப்படுகிறது.
+
+ சுயவிவர எண் : ${profile.profile_code || '-'}
+
+ பெயர் : ${profile.full_name || '-'}
+
+ ஊர் : ${profile.city_text || '-'}
+
+ சுயவிவரத்தை பார்க்க:
+${profileLink}
+
+இந்த சுயவிவரம் உங்களுக்கு பொருத்தமாக இருந்தால், மேலும் தகவல்களுக்கு எங்களை தொடர்பு கொள்ளவும்.
+
+ நன்றி
+Astro Alliance Matrimony
+`;
+
+  const phone = String(profile.mobile || '').replace(/\D/g, '');
+
+  const whatsappUrl =
+    `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`;
+
+  window.open(whatsappUrl, '_blank');
 }
 }

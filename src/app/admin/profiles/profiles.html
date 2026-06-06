@@ -156,7 +156,21 @@
 <td>{{ dateText(profile.expired_date) }}</td>
 <td>{{ profile.limits || '-' }}</td>
 <td>{{ profile.views_count || 0 }}</td>
-<td>-</td>
+<td>
+  <button
+    class="whatsapp-btn"
+    type="button"
+    (click)="shareWelcomeWhatsapp(profile, $event)">
+    Welcome
+  </button>
+
+  <button
+    class="match-share-btn"
+    type="button"
+    (click)="shareProfileWhatsapp(profile, $event)">
+    Share Profile
+  </button>
+</td>
 
 <td class="action-cell">
   <div class="action-group">
@@ -170,7 +184,7 @@
 
 </tr>
           <tr *ngIf="filteredProfiles.length === 0">
-<td colspan="16" class="empty-row">            </td>
+<td colspan="17" class="empty-row">            </td>
           </tr>
         </tbody>
       </table>
