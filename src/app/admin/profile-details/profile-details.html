@@ -137,6 +137,19 @@
     (click)="activeTab = 'other'">
     OTHER DETAILS
   </button>
+
+  <button
+    type="button"
+    [class.active]="activeTab === 'package'"
+    (click)="activeTab = 'package'">
+    PACKAGE DETAILS
+  </button>
+  <button
+  type="button"
+  [class.active]="activeTab === 'views'"
+  (click)="activeTab = 'views'">
+  PROFILE VIEW DETAILS
+</button>
 </div>
 <div class="two-side-layout">
 
@@ -617,8 +630,80 @@
 </div>
 
     </div>
-     
+     <div class="right-profile-side" *ngIf="activeTab === 'package'">
 
+  <div class="tab-title">Package Details</div>
+
+  <div class="info-card">
+
+    <h3>{{ txt('Package Details', 'தொகுப்பு விவரங்கள்') }}</h3>
+
+    <p>
+      <strong>Package :</strong>
+      {{ profile.package_name || '-' }}
+    </p>
+
+    <p>
+      <strong>Payment Method :</strong>
+      {{ profile.payment_mode || '-' }}
+    </p>
+
+    <p>
+      <strong>Purchased Date :</strong>
+      {{ dateText(profile.purchased_date) }}
+    </p>
+
+    <p>
+      <strong>Expired Date :</strong>
+      {{ dateText(profile.expired_date) }}
+    </p>
+
+    <p>
+      <strong>Limits :</strong>
+      {{ profile.limits || '-' }}
+    </p>
+
+    <p>
+      <strong>Views :</strong>
+      {{ profile.views_count || 0 }}
+    </p>
+
+  </div>
+
+</div>
+<div class="right-profile-side" *ngIf="activeTab === 'views'">
+
+  <div class="tab-title">Profile View Details</div>
+
+  <div class="info-card">
+    <h3>Customer Viewed This Profile</h3>
+
+    <p>
+      <strong>Total Views :</strong>
+      {{ profileViewList.length }}
+    </p>
+
+    <div *ngIf="profileViewList.length === 0">
+      No profile views found
+    </div>
+
+    <div class="viewer-card" *ngFor="let item of profileViewList">
+      <img
+        [src]="item.viewer?.profile_image_url || 'assets/default-avatar.png'"
+        alt="Viewer">
+
+      <div>
+        <h4>{{ v(item.viewer?.full_name, item.viewer?.full_name_ta) }}</h4>
+        <p><strong>Profile ID :</strong> {{ item.viewer?.profile_code || '-' }}</p>
+        <p><strong>Mobile :</strong> {{ item.viewer?.mobile || '-' }}</p>
+        <p><strong>City :</strong> {{ v(item.viewer?.city_text, item.viewer?.city_text_ta) }}</p>
+        <p><strong>Viewed Date :</strong> {{ dateText(item.viewed_at) }}</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
 </div>
 
 <!-- <div class="info-card full-width-card">
