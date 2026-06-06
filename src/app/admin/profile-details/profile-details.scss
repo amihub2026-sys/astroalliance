@@ -1140,3 +1140,24 @@ max-height:90px !important;
   display:block !important;
   margin:4px 0 !important;
 }
+.viewed-profile-codes{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:10px 0 14px;
+  align-items:center;
+}
+
+.viewed-profile-codes strong{
+  color:#111;
+  font-size:15px;
+}
+
+.viewed-profile-codes span{
+  background:#eef2ff;
+  color:#3f51b5;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:14px;
+}

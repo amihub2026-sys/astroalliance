@@ -62,9 +62,17 @@
       {{ v(profile.full_name, profile.full_name_ta) }}
     </h2>
 
-    <p>
-      {{ profile.profile_code }}
-    </p>
+  <p>
+  {{ profile.profile_code }}
+</p>
+
+<div class="viewed-profile-codes" *ngIf="profileViewList.length">
+  <strong>Viewed Profile Codes :</strong>
+
+  <span *ngFor="let item of profileViewList">
+    {{ item.viewer?.profile_code || '-' }}
+  </span>
+</div>
 
     <span
       class="status"
