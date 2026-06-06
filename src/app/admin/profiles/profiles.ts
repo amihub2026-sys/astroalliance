@@ -37,6 +37,8 @@ constructor(
 ) {}
   isLoading = true;
 @ViewChild('tableWrap') tableWrap!: ElementRef<HTMLDivElement>;
+@ViewChild('topScroll') topScroll!: ElementRef<HTMLDivElement>;
+@ViewChild('scrollWidth') scrollWidth!: ElementRef<HTMLDivElement>;
   searchTerm = '';
 
   profileCodeFilter = '';
@@ -581,27 +583,36 @@ ngAfterViewInit(): void {
     this.syncTableScroll();
   }, 500);
 }
+private isSyncingScroll = false;
+
 syncTableScroll(): void {
   if (!this.isBrowser) return;
 
-  const topScroll = document.querySelector('.top-scroll') as HTMLElement;
-  const scrollWidth = document.querySelector('.scroll-width') as HTMLElement;
-  const bottomScroll = this.tableWrap?.nativeElement;
+  setTimeout(() => {
+    const table = this.tableWrap?.nativeElement?.querySelector('table') as HTMLElement;
 
-  const table = bottomScroll?.querySelector('table') as HTMLElement;
+    if (!table || !this.scrollWidth?.nativeElement) return;
 
-  if (!topScroll || !scrollWidth || !bottomScroll || !table) return;
+   this.scrollWidth.nativeElement.style.width = table.scrollWidth + 'px';
+  }, 100);
+}
 
-  // Use actual table width
-  scrollWidth.style.width = table.scrollWidth + 'px';
+onTopScroll(): void {
+  if (this.isSyncingScroll) return;
 
-  topScroll.onscroll = () => {
-    bottomScroll.scrollLeft = topScroll.scrollLeft;
-  };
+  this.isSyncingScroll = true;
+  this.tableWrap.nativeElement.scrollLeft =
+    this.topScroll.nativeElement.scrollLeft;
+  this.isSyncingScroll = false;
+}
 
-  bottomScroll.onscroll = () => {
-    topScroll.scrollLeft = bottomScroll.scrollLeft;
-  };
+onBottomScroll(): void {
+  if (this.isSyncingScroll) return;
+
+  this.isSyncingScroll = true;
+  this.topScroll.nativeElement.scrollLeft =
+    this.tableWrap.nativeElement.scrollLeft;
+  this.isSyncingScroll = false;
 }
 shareWelcomeWhatsapp(profile: any, event?: Event): void {
   event?.stopPropagation();

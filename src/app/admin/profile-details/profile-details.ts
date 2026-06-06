@@ -27,7 +27,9 @@ export class ProfileDetails implements OnInit, OnChanges {
 //  pdfWithPhoto = false;
 // pdfWithAddress = true;
 showPrintOptions = false;
-activeTab: 'profile' | 'other' = 'profile';
+activeTab: 'profile' | 'other' | 'package' | 'views' = 'profile';
+
+profileViewList: any[] = [];
 // pdfPhotoUrl = '/assets/default-avatar.png';
 get currentLang(): 'en' | 'ta' {
   if (typeof window === 'undefined') {
@@ -122,6 +124,27 @@ statusText(status: string): string {
   };
 
   return map[status || 'Pending'] || status;
+}
+dateText(date: string): string {
+
+  if (!date) {
+    return '-';
+  }
+
+  const d = new Date(date);
+
+  if (isNaN(d.getTime())) {
+    return '-';
+  }
+
+  return d.toLocaleDateString(
+    this.currentLang === 'ta' ? 'ta-IN' : 'en-IN',
+    {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }
+  );
 }
  constructor(
   private cdr: ChangeDetectorRef,
@@ -220,22 +243,89 @@ getAmsamChart(): string[] {
     await this.loadProfile(urlId);
   }
 
-  async loadProfile(id: string): Promise<void> {
-    this.isLoading = true;
-    this.cdr.detectChanges();
+async loadProfile(id: string): Promise<void> {
+  this.isLoading = true;
+  this.cdr.detectChanges();
 
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('profile_id', id)
-      .single();
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('profile_id', id)
+    .single();
 
-    this.profile = error ? null : data;
-    console.log(this.profile);
+  if (error || !data) {
+    this.profile = null;
     this.isLoading = false;
     this.cdr.detectChanges();
+    return;
   }
 
+  const { data: subData } = await supabase
+    .from('user_subscriptions')
+    .select(`
+      user_id,
+      profile_id,
+      payment_mode,
+      start_date,
+      end_date,
+      total_contacts_allowed,
+      contacts_used,
+      is_active,
+      mst_plans (
+        plan_name,
+        contact_limit,
+        profile_view_limit
+      )
+    `)
+    .or(`profile_id.eq.${data.profile_id},user_id.eq.${data.user_id}`)
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+const { data: viewData, error: viewError } = await supabase
+  .from('profile_views')
+  .select(`
+    view_id,
+    viewed_at,
+    viewer_profile_id,
+    viewer:user_profiles!fk_profile_views_viewer (
+      profile_id,
+      profile_code,
+      full_name,
+      full_name_ta,
+      mobile,
+      city_text,
+      city_text_ta,
+      profile_image_url
+    )
+  `)
+  .eq('viewed_profile_id', data.profile_id)
+  .order('viewed_at', { ascending: false });
+
+if (viewError) {
+  console.log('PROFILE VIEW ERROR:', viewError);
+}
+
+this.profileViewList = viewData || [];
+  const planData = Array.isArray(subData?.mst_plans)
+    ? subData.mst_plans[0]
+    : subData?.mst_plans;
+
+  this.profile = {
+    ...data,
+    package_name: planData?.plan_name || '-',
+    payment_mode: subData?.payment_mode || '-',
+    purchased_date: subData?.start_date || null,
+    expired_date: subData?.end_date || null,
+    limits: subData
+      ? `${subData?.total_contacts_allowed || 0} contacts / ${planData?.profile_view_limit || 0} views`
+      : '-',
+    views_count: Number(subData?.contacts_used || 0)
+  };
+
+  this.isLoading = false;
+  this.cdr.detectChanges();
+}
 
 goToPrint(withPhoto: boolean, withAddress: boolean): void {
   if (!this.profile?.profile_id) return;

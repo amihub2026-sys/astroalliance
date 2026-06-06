@@ -533,206 +533,166 @@ table{
   }
 
 }
+
+
+/* FINAL FIX - SCROLL FULL + BUTTONS ALIGN */
+.scroll-width{
+  width:2450px !important;
+  min-width:2450px !important;
+  height:1px !important;
+}
+
+table{
+  width:2450px !important;
+  min-width:2450px !important;
+  table-layout:fixed !important;
+  border-collapse:collapse !important;
+}
+
+th:nth-child(10),
+td:nth-child(10){
+  width:340px !important;
+  min-width:340px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+}
+
+th:nth-child(11),
+td:nth-child(11){
+  width:560px !important;
+  min-width:560px !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+}
+
+.whatsapp-btn{
+  margin-right:10px !important;
+}
+
+.match-share-btn{
+  margin-left:0 !important;
+}
+
+.action-cell{
+  min-width:560px !important;
+}
+
+.action-group{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  gap:8px !important;
+}
+
+.action-group button,
+.whatsapp-btn,
+.match-share-btn{
+  flex-shrink:0 !important;
+  white-space:nowrap !important;
+}
+/* ===== FINAL SCROLLBAR FIX ===== */
+
 .panel-card{
-  overflow: hidden !important;
+  overflow:hidden !important;
 }
 
 .top-scroll{
-  width: 100%;
-  height: 18px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  margin-bottom: 8px;
+  display:block;
+  width:100%;
+  height:20px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  margin-bottom:8px;
+  background:#f1f1f1;
 }
 
 .scroll-width{
-  width: 2200px;
-  height: 1px;
+  width:2450px;
+  height:1px;
 }
 
 .table-wrap{
-  width: 100% !important;
-  overflow-x: auto !important;
-  overflow-y: auto !important;
-  max-height: 620px;
-  -webkit-overflow-scrolling: touch;
+  width:100%;
+  overflow-x:auto;
+  overflow-y:auto;
+  max-height:620px;
 }
 
 table{
-  width: max-content !important;
-  min-width: 2200px !important;
-  border-collapse: collapse;
+  width:2800px !important;
+min-width:2800px !important;
+  table-layout:fixed;
+  border-collapse:collapse;
 }
+/* TABLE COLUMN WIDTH FIX */
+th:nth-child(1), td:nth-child(1){ width:90px !important; }
+th:nth-child(2), td:nth-child(2){ width:140px !important; }
+th:nth-child(3), td:nth-child(3){ width:100px !important; }
+th:nth-child(4), td:nth-child(4){ width:260px !important; }
+th:nth-child(5), td:nth-child(5){ width:90px !important; }
+th:nth-child(6), td:nth-child(6){ width:180px !important; }
+th:nth-child(7), td:nth-child(7){ width:190px !important; }
+th:nth-child(8), td:nth-child(8){ width:160px !important; }
+th:nth-child(9), td:nth-child(9){ width:190px !important; }
+th:nth-child(10), td:nth-child(10){ width:340px !important; }
+th:nth-child(11), td:nth-child(11){ width:560px !important; }
 
 thead th{
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #f5f5f5;
+  font-size:17px !important;
+  padding:18px 20px !important;
+  font-weight:800 !important;
 }
 
-thead th,
 tbody td{
-  white-space: nowrap;
-}
-.scroll-width{
-  width: 3600px !important;
-}
-
-table{
-  min-width: 3600px !important;
-  width: 3600px !important;
-  table-layout: fixed !important;
+  font-size:18px !important;
+  padding:18px 20px !important;
+  font-weight:700 !important;
 }
 
-thead th,
-tbody td{
-  padding: 14px 18px !important;
-  font-size: 13px !important;
-  white-space: nowrap !important;
+.action-group{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  gap:8px !important;
 }
 
-/* individual column sizes */
-th:nth-child(1), td:nth-child(1){ min-width:90px; }
-th:nth-child(2), td:nth-child(2){ min-width:120px; }
-th:nth-child(3), td:nth-child(3){ min-width:90px; }
-th:nth-child(4), td:nth-child(4){ min-width:260px; }
-th:nth-child(5), td:nth-child(5){ min-width:80px; }
-th:nth-child(6), td:nth-child(6){ min-width:140px; }
-th:nth-child(7), td:nth-child(7){ min-width:160px; }
-th:nth-child(8), td:nth-child(8){ min-width:140px; }
-th:nth-child(9), td:nth-child(9){ min-width:170px; }
-th:nth-child(10), td:nth-child(10){ min-width:160px; }
-th:nth-child(11), td:nth-child(11){ min-width:190px; }
-th:nth-child(12), td:nth-child(12){ min-width:180px; }
-th:nth-child(13), td:nth-child(13){ min-width:180px; }
-th:nth-child(14), td:nth-child(14){ min-width:220px; }
-th:nth-child(15), td:nth-child(15){ min-width:90px; }
-th:nth-child(16), td:nth-child(16){ width:320px; }
-th:nth-child(17), td:nth-child(17){ width:520px; }
-/* Table Header */
-thead th{
-  font-weight: 800 !important;
-  color: #0057d9;
-}
-
-/* Table Data */
-tbody td{
-  font-weight: 700 !important;
-  color: #333;
-}
-
-/* Name Column Extra Bold */
-td:nth-child(4){
-  font-weight: 800 !important;
-}
-
-/* User ID Bold */
-td:nth-child(2){
-  font-weight: 700 !important;
-}
-
-/* Phone Number Bold */
-td:nth-child(7){
-  font-weight: 700 !important;
-}
-/* Header */
-thead th{
-  font-size: 17px !important;
-  font-weight: 800 !important;
-  color: #0057d9;
-  padding: 18px 20px !important;
-}
-
-/* Data Rows */
-tbody td{
-  font-size: 18px !important;
-  font-weight: 700 !important;
-  color: #333;
-  padding: 18px 20px !important;
-}
-
-/* Name Column */
-td:nth-child(4){
-  font-size: 20px !important;
-  font-weight: 800 !important;
-}
-
-/* Status Icon */
-.status-icon{
-  font-size: 32px !important;
-}
-
-/* Action Buttons */
-.action-group button{
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  padding: 10px 16px !important;
+.action-group button,
+.whatsapp-btn,
+.match-share-btn{
+  flex-shrink:0 !important;
+  white-space:nowrap !important;
 }
 .whatsapp-btn{
-  border:none;
-  background:#22c55e;
-  color:#fff;
-  padding:10px 16px;
-  border-radius:10px;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer;
-  white-space:nowrap;
+  border:none !important;
+  background:#22c55e !important;
+  color:#fff !important;
+  padding:10px 16px !important;
+  border-radius:10px !important;
+  font-size:15px !important;
+  font-weight:800 !important;
+  cursor:pointer !important;
+  white-space:nowrap !important;
+  margin-right:10px !important;
 }
 
-.whatsapp-btn:hover{
-  background:#16a34a;
-}
 .match-share-btn{
-  border:none;
-  background:#6366f1;
-  color:#fff;
-  padding:10px 16px;
-  border-radius:10px;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer;
-  white-space:nowrap;
-  margin-left:8px;
+  border:none !important;
+  background:#6366f1 !important;
+  color:#fff !important;
+  padding:10px 16px !important;
+  border-radius:10px !important;
+  font-size:15px !important;
+  font-weight:800 !important;
+  cursor:pointer !important;
+  white-space:nowrap !important;
+}
+/* FINAL WIDTH SAME FOR TOP + TABLE */
+.scroll-width{
+  width:3200px !important;
+  min-width:3200px !important;
+  height:1px !important;
 }
 
-.match-share-btn:hover{
-  background:#4f46e5;
-}
-.top-scroll,
-.table-wrap{
-  max-width: 100% !important;
-}
-
-thead th,
-tbody td{
-  box-sizing: border-box !important;
-}
-/* FIX COLUMN OVERLAP */
 table{
-  table-layout: fixed !important;
-}
-
-th:nth-child(4), td:nth-child(4){
-  width: 260px !important; /* Name */
-}
-
-th:nth-child(5), td:nth-child(5){
-  width: 90px !important; /* Age */
-}
-
-th:nth-child(6), td:nth-child(6){
-  width: 180px !important; /* DOB */
-}
-
-th:nth-child(7), td:nth-child(7){
-  width: 190px !important; /* Phone */
-}
-
-thead th,
-tbody td{
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
+  width:3200px !important;
+  min-width:3200px !important;
+  table-layout:fixed !important;
 }
