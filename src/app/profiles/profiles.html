@@ -227,31 +227,7 @@
       </div>
     </div>
 
-    <div class="tm-dropdown" data-filter="gender">
-      <div class="tm-dropdown-box" (click)="toggleDropdown('gender', $event)">
-        <span>{{ filters.gender || tr.filters.gender }}</span>
-        <span class="arrow">⌄</span>
-      </div>
-
-      <div class="tm-dropdown-panel" *ngIf="openDropdown === 'gender'" (click)="$event.stopPropagation()">
-        <input
-          type="text"
-          class="tm-search-input"
-          [(ngModel)]="searchTerms.gender"
-          [placeholder]="'Search ' + tr.filters.gender"
-        />
-<div class="tm-option default-option" (click)="selectOption('gender', '')">
-  All Gender
-</div>
-        <div
-          class="tm-option"
-         *ngFor="let item of getFilteredLangOptions(genderOptions, searchTerms.gender)"
-(click)="selectOption('gender', getText(item))"
->
-  {{ getText(item) }}
-        </div>
-      </div>
-    </div>
+    
 
     <div class="tm-dropdown" data-filter="maritalStatus">
       <div class="tm-dropdown-box" (click)="toggleDropdown('maritalStatus', $event)">
