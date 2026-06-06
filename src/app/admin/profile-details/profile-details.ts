@@ -250,7 +250,7 @@ async loadProfile(id: string): Promise<void> {
   const { data, error } = await supabase
     .from('user_profiles')
     .select('*')
-    .eq('profile_id', id)
+    .or(`profile_id.eq.${id},profile_code.eq.${id}`)
     .single();
 
   if (error || !data) {
@@ -285,7 +285,7 @@ async loadProfile(id: string): Promise<void> {
 const { data: viewRows, error: viewError } = await supabase
   .from('profile_views')
   .select('view_id, viewed_at, viewer_profile_id, viewed_profile_id')
-  .eq('viewed_profile_id', data.profile_id)
+.eq('viewer_profile_id', data.profile_id)
   .order('viewed_at', { ascending: false });
 
 console.log('OPENED PROFILE ID:', data.profile_id);
@@ -295,7 +295,7 @@ console.log('VIEW ERROR:', viewError);
 if (viewError || !viewRows?.length) {
   this.profileViewList = [];
 } else {
-  const viewerIds = viewRows.map(v => v.viewer_profile_id);
+ const viewerIds = viewRows.map(v => v.viewed_profile_id);
 
   const { data: viewers } = await supabase
     .from('user_profiles')
@@ -313,7 +313,7 @@ if (viewError || !viewRows?.length) {
 
   this.profileViewList = viewRows.map(row => ({
     ...row,
-    viewer: viewers?.find(v => v.profile_id === row.viewer_profile_id) || null
+    viewer: viewers?.find(v => v.profile_id === row.viewed_profile_id) || null
   }));
 }
   const planData = Array.isArray(subData?.mst_plans)
