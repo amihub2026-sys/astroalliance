@@ -1873,3 +1873,22 @@ background:#fff;
   border-radius:2px;
   cursor:pointer;
 }
+.no-caste-check{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  cursor:pointer;
+  color:#333 !important;
+  font-size:14px !important;
+}
+
+.no-caste-check input{
+  width:18px !important;
+  height:18px !important;
+  cursor:pointer;
+}
+
+.no-caste-check span{
+  color:#333;
+  font-weight:500;
+}
