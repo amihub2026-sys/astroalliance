@@ -194,22 +194,65 @@
         <!-- DOB -->
 <div class="field" [class.invalid]="isInvalid('dob')">
   <label>{{ tr.labels.dob }} <span class="required">*</span></label>
-<input
-  type="date"
-  [(ngModel)]="formData.dob"
-  name="dob"
-  (change)="onDobChange()"
-  [class.invalid]="isInvalid('dob')"
-  [max]="maxDobDate"
-  [disabled]="!isAdminCreated && isEditMode"
->
+
+  <!-- DESKTOP -->
+  <input
+    class="desktop-dob"
+    type="date"
+    [(ngModel)]="formData.dob"
+    name="dob"
+    (change)="onDobChange()"
+    [max]="maxDobDate"
+    [disabled]="!isAdminCreated && isEditMode"
+  >
+
+  <!-- MOBILE -->
+  <div class="mobile-dob-wrap">
+
+    <input
+      class="mobile-dob"
+      type="text"
+      placeholder="dd-mm-yyyy"
+      [(ngModel)]="formData.dob"
+      name="dobMobile"
+      inputmode="numeric"
+      maxlength="10"
+      (input)="formatDob($event)"
+    >
+
+    <input
+      #mobileDatePicker
+      type="date"
+      class="real-date-picker"
+      [max]="maxDobDate"
+      (change)="onMobileDatePick($event)"
+    >
+
+    <button
+      type="button"
+      class="calendar-btn"
+      (click)="mobileDatePicker.showPicker()">
+      📅
+    </button>
+
+  </div>
+
   <small class="field-error" *ngIf="isInvalid('dob')">Required</small>
 </div>
          <!-- BIRTH TIME -->
 <div class="field" [class.invalid]="isInvalid('birthTime')">
   <label>{{ tr.labels.birthTime }} <span class="optional">(Optional)</span></label>
 
-  <input type="time" [(ngModel)]="formData.birthTime" name="birthTime">
+<div class="mobile-time-wrap">
+
+  <input
+    class="birth-time-input"
+    type="time"
+    [(ngModel)]="formData.birthTime"
+    name="birthTime"
+  >
+
+</div>
 
   <!-- <small class="field-error" *ngIf="isInvalid('birthTime')">Required</small> -->
 </div>
