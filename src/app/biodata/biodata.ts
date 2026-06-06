@@ -2647,7 +2647,7 @@ partner_expectation: this.safeText(this.formData.partnerExpectation),
         video_url: videoUrl || '',
 additional_image_urls: additionalImageUrls,
         completion_percentage: this.getCompletionPercentage(),
-       profile_status: 'Pending',
+      profile_status: this.isAdminCreated ? 'Approved' : 'Pending',
         is_verified: false,
         is_published: true,
         updated_at: new Date().toISOString()
