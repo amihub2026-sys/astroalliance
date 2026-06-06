@@ -282,13 +282,24 @@ async loadProfile(id: string): Promise<void> {
     .order('created_at', { ascending: false })
     .limit(1)
     .maybeSingle();
-const { data: viewData, error: viewError } = await supabase
+const { data: viewRows, error: viewError } = await supabase
   .from('profile_views')
-  .select(`
-    view_id,
-    viewed_at,
-    viewer_profile_id,
-    viewer:user_profiles!fk_profile_views_viewer (
+  .select('view_id, viewed_at, viewer_profile_id, viewed_profile_id')
+  .eq('viewed_profile_id', data.profile_id)
+  .order('viewed_at', { ascending: false });
+
+console.log('OPENED PROFILE ID:', data.profile_id);
+console.log('VIEW ROWS:', viewRows);
+console.log('VIEW ERROR:', viewError);
+
+if (viewError || !viewRows?.length) {
+  this.profileViewList = [];
+} else {
+  const viewerIds = viewRows.map(v => v.viewer_profile_id);
+
+  const { data: viewers } = await supabase
+    .from('user_profiles')
+    .select(`
       profile_id,
       profile_code,
       full_name,
@@ -297,16 +308,14 @@ const { data: viewData, error: viewError } = await supabase
       city_text,
       city_text_ta,
       profile_image_url
-    )
-  `)
-  .eq('viewed_profile_id', data.profile_id)
-  .order('viewed_at', { ascending: false });
+    `)
+    .in('profile_id', viewerIds);
 
-if (viewError) {
-  console.log('PROFILE VIEW ERROR:', viewError);
+  this.profileViewList = viewRows.map(row => ({
+    ...row,
+    viewer: viewers?.find(v => v.profile_id === row.viewer_profile_id) || null
+  }));
 }
-
-this.profileViewList = viewData || [];
   const planData = Array.isArray(subData?.mst_plans)
     ? subData.mst_plans[0]
     : subData?.mst_plans;
