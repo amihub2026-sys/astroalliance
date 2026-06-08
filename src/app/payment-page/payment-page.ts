@@ -214,6 +214,29 @@ async payNow(): Promise<void> {
     return;
   }
 
+  let unlockProfileId: any = null;
+  let unlockProfileCode: any = null;
+
+  if (this.profileId) {
+    const isProfileCode = String(this.profileId).includes('-');
+
+    const query = supabase
+      .from('user_profiles')
+      .select('profile_id, profile_code');
+
+    const { data: unlockProfile, error: unlockError } = isProfileCode
+      ? await query.eq('profile_code', this.profileId).maybeSingle()
+      : await query.eq('profile_id', this.profileId).maybeSingle();
+
+    if (unlockError) {
+      this.snackbar.error(unlockError.message);
+      return;
+    }
+
+    unlockProfileId = unlockProfile?.profile_id || null;
+    unlockProfileCode = unlockProfile?.profile_code || this.profileId;
+  }
+
   const today = new Date().toISOString().slice(0, 10);
   const endDate = this.addDays(today, this.getPlanDays(this.planName));
   const contactLimit = this.getPlanLimit(this.planName);
@@ -260,8 +283,8 @@ async payNow(): Promise<void> {
           is_active: true,
           payment_mode: 'Razorpay',
 
-          profile_id: this.profileId || profileData?.profile_id || null,
-          profile_code: profileData?.profile_code || null
+          profile_id: unlockProfileId || profileData?.profile_id || null,
+          profile_code: unlockProfileCode || profileData?.profile_code || null
         }
       ]);
 
@@ -279,7 +302,6 @@ async payNow(): Promise<void> {
     this.cdr.detectChanges();
   }
 }
-
   goBack(): void {
     if (this.isPaying) return;
 
