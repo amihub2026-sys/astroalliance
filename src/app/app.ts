@@ -146,7 +146,13 @@ this.showFooter =
   get t() {
     return this.translations[this.currentLang];
   }
+get profilesNavText(): string {
+  if (!this.isLoggedIn) {
+    return this.currentLang === 'ta' ? 'இலவச தேடல்' : 'Free Search';
+  }
 
+  return 'Find your match';
+}
   get isLoggedIn(): boolean {
     if (!this.isBrowser) return false;
 

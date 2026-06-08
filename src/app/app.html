@@ -55,7 +55,9 @@
 </div>
     <nav class="nav-links" [class.active]="menuOpen">
       <a routerLink="/" (click)="closeMenu()">{{ t.nav.home }}</a>
-      <a routerLink="/profiles" (click)="closeMenu()">{{ t.nav.profiles }}</a>
+      <a routerLink="/profiles" (click)="closeMenu()">
+  {{ profilesNavText }}
+</a>
       <a routerLink="/plans" (click)="closeMenu()">{{ t.nav.plans }}</a>
 
       <!-- NOT LOGGED IN -->
