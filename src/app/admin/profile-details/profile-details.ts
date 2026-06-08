@@ -289,10 +289,6 @@ const { data: viewRows, error: viewError } = await supabase
   .eq('contact_taken', true)
   .order('viewed_at', { ascending: false });
 
-console.log('OPENED PROFILE ID:', data.profile_id);
-console.log('VIEW ROWS:', viewRows);
-console.log('VIEW ERROR:', viewError);
-
 if (viewError || !viewRows?.length) {
   this.profileViewList = [];
 } else {
@@ -337,7 +333,7 @@ this.profileViewList = uniqueRows.map(row => ({
     limits: subData
       ? `${subData?.total_contacts_allowed || 0} contacts / ${planData?.profile_view_limit || 0} views`
       : '-',
-    views_count: this.profileViewList.length
+    views_count: subData?.contacts_used || 0
   };
 
   this.isLoading = false;
