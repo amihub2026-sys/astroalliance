@@ -163,119 +163,122 @@ if (parsed?.user_id) {
     return d.toISOString().slice(0, 10);
   }
 
-  async payNow(): Promise<void> {
-    if (this.isPaying) return;
+async payNow(): Promise<void> {
+  if (this.isPaying) return;
 
-    const userId = this.getLoggedInUserId();
-    const { data: profileData } = await supabase
-  .from('user_profiles')
-  .select('profile_id, profile_code')
-  .eq('user_id', userId)
-  .maybeSingle();
+  const userId = this.getLoggedInUserId();
 
-    if (!userId) {
-      this.snackbar.error('Please login first');
-      this.router.navigate(['/login'], {
-        queryParams: {
-          from: 'payment',
-          profileId: this.profileId,
-          profileName: this.profileName
+  if (!userId) {
+    this.snackbar.error('Please login first');
+    this.router.navigate(['/login'], {
+      queryParams: {
+        from: 'payment',
+        profileId: this.profileId,
+        profileName: this.profileName
+      }
+    });
+    return;
+  }
+
+  const { data: profileData, error: profileError } = await supabase
+    .from('user_profiles')
+    .select('profile_id, profile_code')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (profileError) {
+    this.snackbar.error(profileError.message);
+    return;
+  }
+
+  const { data: appUser, error: appUserError } = await supabase
+    .from('app_users')
+    .select('user_id')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (appUserError) {
+    this.snackbar.error(appUserError.message);
+    return;
+  }
+
+  if (!appUser) {
+    this.snackbar.error('User account not found. Please logout and login again.');
+    return;
+  }
+
+  const dbPlan = this.getDbPlanByName(this.planName);
+
+  if (!dbPlan?.plan_id) {
+    this.snackbar.error(`Plan not found in database: ${this.planName}`);
+    return;
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const endDate = this.addDays(today, this.getPlanDays(this.planName));
+  const contactLimit = this.getPlanLimit(this.planName);
+
+  this.isPaying = true;
+  this.cdr.detectChanges();
+
+  try {
+    const { data: existingSubscriptions, error: existingError } = await supabase
+      .from('user_subscriptions')
+      .select('subscription_id, is_active')
+      .eq('user_id', userId);
+
+    if (existingError) throw existingError;
+
+    const activeIds = (existingSubscriptions || [])
+      .filter((s: any) => s?.is_active === true)
+      .map((s: any) => s.subscription_id)
+      .filter(Boolean);
+
+    if (activeIds.length > 0) {
+      const { error: deactivateError } = await supabase
+        .from('user_subscriptions')
+        .update({
+          is_active: false,
+          updated_at: new Date().toISOString()
+        })
+        .in('subscription_id', activeIds);
+
+      if (deactivateError) throw deactivateError;
+    }
+
+    const { error: insertError } = await supabase
+      .from('user_subscriptions')
+      .insert([
+        {
+          user_id: userId,
+          plan_id: dbPlan.plan_id,
+          subscription_status_id: null,
+          start_date: today,
+          end_date: endDate,
+          contacts_used: 0,
+          total_contacts_allowed: contactLimit,
+          is_active: true,
+          payment_mode: 'Razorpay',
+
+          profile_id: this.profileId || profileData?.profile_id || null,
+          profile_code: profileData?.profile_code || null
         }
-      });
-      return;
-    }
-const { data: appUser, error: appUserError } = await supabase
-  .from('app_users')
-  .select('user_id')
-  .eq('user_id', userId)
-  .maybeSingle();
+      ]);
 
-if (appUserError) {
-  this.snackbar.error(appUserError.message);
-  return;
-}
+    if (insertError) throw insertError;
 
-if (!appUser) {
-  this.snackbar.error('User account not found. Please logout and login again.');
-  return;
-}
-    const dbPlan = this.getDbPlanByName(this.planName);
+    this.paymentSuccess = true;
+    this.isPaying = false;
 
-    if (!dbPlan?.plan_id) {
-      this.snackbar.error(`Plan not found in database: ${this.planName}`);
-      return;
-    }
-
-    const today = new Date().toISOString().slice(0, 10);
-    const endDate = this.addDays(today, this.getPlanDays(this.planName));
-    const contactLimit = this.getPlanLimit(this.planName);
-
-    this.isPaying = true;
+    this.snackbar.success('Payment completed successfully');
     this.cdr.detectChanges();
 
-    try {
-      const { data: existingSubscriptions, error: existingError } = await supabase
-        .from('user_subscriptions')
-        .select(`
-          subscription_id,
-          is_active
-        `)
-        .eq('user_id', userId);
-
-      if (existingError) throw existingError;
-
-      const activeIds = (existingSubscriptions || [])
-        .filter((s: any) => s?.is_active === true)
-        .map((s: any) => s.subscription_id)
-        .filter(Boolean);
-
-      if (activeIds.length > 0) {
-        const { error: deactivateError } = await supabase
-          .from('user_subscriptions')
-          .update({
-            is_active: false,
-            updated_at: new Date().toISOString()
-          })
-          .in('subscription_id', activeIds);
-
-        if (deactivateError) throw deactivateError;
-      }
-
-      const { error: insertError } = await supabase
-        .from('user_subscriptions')
-        .insert([
-        {
-  user_id: userId,
-  plan_id: dbPlan.plan_id,
-  subscription_status_id: null,
-  start_date: today,
-  end_date: endDate,
-  contacts_used: 0,
-  total_contacts_allowed: contactLimit,
-  is_active: true,
-
-  payment_mode: 'Razorpay',
-
-profile_id: this.profileId || profileData?.profile_id || null,
-profile_code: profileData?.profile_code || null
-}
-        ]);
-
-      if (insertError) throw insertError;
-
-      this.paymentSuccess = true;
-this.isPaying = false;
-
-this.snackbar.success('Payment completed successfully');
-
-this.cdr.detectChanges();
-    } catch (error: any) {
-      
-     this.snackbar.error(error?.message || 'Payment failed');
-      this.isPaying = false;
-      this.cdr.detectChanges();
-    }
+  } catch (error: any) {
+    this.snackbar.error(error?.message || 'Payment failed');
+    this.isPaying = false;
+    this.cdr.detectChanges();
   }
+}
 
   goBack(): void {
     if (this.isPaying) return;
