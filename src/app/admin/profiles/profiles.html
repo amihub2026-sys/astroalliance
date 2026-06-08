@@ -98,12 +98,12 @@
   <th>Phone No</th>
   <th>City</th>
   <th>Reg Date</th>
-  <!-- <th>Package</th>
+  <th>Package</th>
   <th>Payment Method</th>
   <th>Purchased Date</th>
   <th>Expired Date</th>
   <th>Limits</th>
-  <th>Views</th> -->
+  <th>Views</th>
   <th>Whatsapp Share</th>
 <th style="min-width:340px;">Action</th></tr>
         </thead>
@@ -150,12 +150,12 @@
 <td>{{ cityText(profile.city_text) }}</td>
 <td>{{ dateText(profile.created_at) }}</td>
 
-<!-- <td>{{ profile.package_name || '-' }}</td>
+<td>{{ profile.package_name || '-' }}</td>
 <td>{{ profile.payment_mode || '-' }}</td>
 <td>{{ dateText(profile.purchased_date) }}</td>
 <td>{{ dateText(profile.expired_date) }}</td>
 <td>{{ profile.limits || '-' }}</td>
-<td>{{ profile.views_count || 0 }}</td> -->
+<td>{{ profile.views_count || 0 }}</td>
 <td>
   <button
     class="whatsapp-btn"
@@ -184,7 +184,8 @@
 
 </tr>
           <tr *ngIf="filteredProfiles.length === 0">
-<td colspan="11" class="empty-row">          </td>
+  <td colspan="17" class="empty-row">
+     </td>
           </tr>
         </tbody>
       </table>

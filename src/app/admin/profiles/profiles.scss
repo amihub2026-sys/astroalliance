@@ -396,7 +396,7 @@ table{
 }
 
 .status-icon{
-  font-size:20px;
+  font-size:32px !important;
   font-weight:bold;
 }
 
@@ -623,76 +623,144 @@ min-width:2800px !important;
   table-layout:fixed;
   border-collapse:collapse;
 }
-/* TABLE COLUMN WIDTH FIX */
-th:nth-child(1), td:nth-child(1){ width:90px !important; }
-th:nth-child(2), td:nth-child(2){ width:140px !important; }
-th:nth-child(3), td:nth-child(3){ width:100px !important; }
-th:nth-child(4), td:nth-child(4){ width:260px !important; }
-th:nth-child(5), td:nth-child(5){ width:90px !important; }
-th:nth-child(6), td:nth-child(6){ width:180px !important; }
-th:nth-child(7), td:nth-child(7){ width:190px !important; }
-th:nth-child(8), td:nth-child(8){ width:160px !important; }
-th:nth-child(9), td:nth-child(9){ width:190px !important; }
-th:nth-child(10), td:nth-child(10){ width:340px !important; }
-th:nth-child(11), td:nth-child(11){ width:560px !important; }
+/* ===== PROPER TABLE ALIGNMENT FIX ===== */
+
+.panel-card {
+  overflow: hidden !important;
+}
+
+.top-scroll {
+  width: 100%;
+  height: 18px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-bottom: 8px;
+  background: #f1f1f1;
+}
+
+.scroll-width {
+  width: 2850px !important;
+  min-width: 2850px !important;
+  height: 1px !important;
+}
+
+.table-wrap {
+  width: 100%;
+  max-height: 620px;
+  overflow: auto;
+}
+
+table {
+  width: 2850px !important;
+  min-width: 2850px !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
 
 thead th{
-  font-size:17px !important;
-  padding:18px 20px !important;
+  vertical-align: middle !important;
+  text-align: left !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+
+  font-size:22px !important;
   font-weight:800 !important;
+  padding:20px !important;
 }
 
 tbody td{
-  font-size:18px !important;
-  padding:18px 20px !important;
-  font-weight:700 !important;
+  vertical-align: middle !important;
+  text-align: left !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+
+  font-size:20px !important;
+  font-weight:600 !important;
+  padding:20px !important;
 }
 
-.action-group{
-  display:flex !important;
-  flex-wrap:nowrap !important;
-  gap:8px !important;
+/* 17 COLUMN WIDTHS */
+th:nth-child(1), td:nth-child(1) { width: 90px !important; text-align:center !important; }
+th:nth-child(2), td:nth-child(2) { width: 130px !important; }
+th:nth-child(3), td:nth-child(3) { width: 90px !important; text-align:center !important; }
+th:nth-child(4), td:nth-child(4) { width: 220px !important; }
+th:nth-child(5), td:nth-child(5) { width: 80px !important; }
+th:nth-child(6), td:nth-child(6) { width: 140px !important; }
+th:nth-child(7), td:nth-child(7) { width: 150px !important; }
+th:nth-child(8), td:nth-child(8) { width: 160px !important; }
+th:nth-child(9), td:nth-child(9) { width: 150px !important; }
+th:nth-child(10), td:nth-child(10) { width: 170px !important; }
+th:nth-child(11), td:nth-child(11) { width: 170px !important; }
+th:nth-child(12), td:nth-child(12) { width: 140px !important; }
+th:nth-child(13), td:nth-child(13) { width: 140px !important; }
+th:nth-child(14), td:nth-child(14) { width: 150px !important; }
+th:nth-child(15), td:nth-child(15) { width: 90px !important; text-align:center !important; }
+th:nth-child(16), td:nth-child(16) { width: 170px !important; }
+th:nth-child(17), td:nth-child(17) { width: 300px !important; }
+
+/* BUTTON ALIGNMENT */
+/* BUTTON ALIGNMENT - 2 COLUMN */
+.action-cell {
+  width: 280px !important;
 }
 
-.action-group button,
+.action-group {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  width: 260px !important;
+}
+
+.action-group button {
+  width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  padding: 10px 12px !important;
+  font-size: 16px !important;
+}
+
+.delete-btn {
+  grid-column: 1 / span 2 !important;
+}
+
 .whatsapp-btn,
-.match-share-btn{
-  flex-shrink:0 !important;
-  white-space:nowrap !important;
+.match-share-btn {
+  display: block !important;
+  width: 130px !important;
+  margin: 4px 0 !important;
+  white-space: nowrap !important;
 }
+
+/* EMPTY ROW FIX */
+.empty-row {
+  text-align: center;
+  padding: 20px;
+}
+/* FINAL BUTTON SIZE + COLOR FIX */
+
 .whatsapp-btn{
   border:none !important;
   background:#22c55e !important;
   color:#fff !important;
-  padding:10px 16px !important;
-  border-radius:10px !important;
-  font-size:15px !important;
+  width:150px !important;
+  padding:10px 14px !important;
+  border-radius:8px !important;
+  font-size:16px !important;
   font-weight:800 !important;
   cursor:pointer !important;
-  white-space:nowrap !important;
-  margin-right:10px !important;
+  margin-bottom:6px !important;
 }
 
 .match-share-btn{
   border:none !important;
   background:#6366f1 !important;
   color:#fff !important;
-  padding:10px 16px !important;
-  border-radius:10px !important;
-  font-size:15px !important;
+  width:150px !important;
+  padding:10px 14px !important;
+  border-radius:8px !important;
+  font-size:16px !important;
   font-weight:800 !important;
   cursor:pointer !important;
-  white-space:nowrap !important;
-}
-/* FINAL WIDTH SAME FOR TOP + TABLE */
-.scroll-width{
-  width:3200px !important;
-  min-width:3200px !important;
-  height:1px !important;
-}
-
-table{
-  width:3200px !important;
-  min-width:3200px !important;
-  table-layout:fixed !important;
 }
