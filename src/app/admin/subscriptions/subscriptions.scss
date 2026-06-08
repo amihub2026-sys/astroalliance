@@ -60,9 +60,9 @@
   overflow-x:auto;
 }
 
-table{
-  width:100%;
-  min-width:1400px;
+table {
+  width: 2200px;
+  min-width: 2200px;
   border-collapse:collapse;
   background:#fff;
   border:1px solid #f3c4d7;
@@ -235,4 +235,60 @@ td small {
     width: 120px;
   }
 
+}
+.table-scroll-top {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-bottom: 8px;
+  height: 20px;
+}
+.table-scroll-width {
+  width: 2200px;
+  height: 1px;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Better scrollbar */
+.table-scroll-top::-webkit-scrollbar,
+.table-wrap::-webkit-scrollbar {
+  height: 10px;
+}
+
+.table-scroll-top::-webkit-scrollbar-track,
+.table-wrap::-webkit-scrollbar-track {
+  background: #fce7f3;
+  border-radius: 20px;
+}
+
+.table-scroll-top::-webkit-scrollbar-thumb,
+.table-wrap::-webkit-scrollbar-thumb {
+  background: #e91e63;
+  border-radius: 20px;
+}
+
+.table-scroll-top::-webkit-scrollbar-thumb:hover,
+.table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #c2185b;
+}
+.panel-card {
+  overflow: hidden;
+}
+
+.table-scroll-top,
+.table-wrap {
+  display: block;
+  max-width: 100%;
+}
+
+.table-scroll-top {
+  padding: 0;
+}
+
+.table-wrap {
+  padding: 0;
 }

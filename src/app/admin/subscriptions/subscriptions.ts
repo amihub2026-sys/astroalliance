@@ -22,6 +22,7 @@ export class Subscriptions implements OnInit {
   currentPage = 1;
 
 itemsPerPage = 5;
+
 constructor(
   private ngZone: NgZone,
   private cd: ChangeDetectorRef
@@ -52,6 +53,7 @@ txt(en: string, ta: string): string {
   async ngOnInit(): Promise<void> {
     await this.loadSubscriptions();
   }
+
 async loadSubscriptions(): Promise<void> {
   try {
 
