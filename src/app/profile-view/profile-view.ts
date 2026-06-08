@@ -863,14 +863,17 @@ if (
   ) {
 
     await supabase
-      .from('profile_views')
-      .insert({
-        viewer_profile_id:
-          viewerProfile.profile_id,
-
-        viewed_profile_id:
-          data.profile_id
-      });
+  .from('profile_views')
+  .upsert(
+    {
+      viewer_profile_id: viewerProfile.profile_id,
+      viewed_profile_id: data.profile_id,
+      viewed_at: new Date().toISOString()
+    },
+    {
+      onConflict: 'viewer_profile_id,viewed_profile_id'
+    }
+  );
 
   }
 }
@@ -878,10 +881,6 @@ if (
 if (this.currentLang === 'ta') {
   await this.translateProfileValuesToTamil();
 }
-
-await this.loadAstroMatch();
-
-await this.checkInterest();
 
 await this.loadAstroMatch();
 await this.checkInterest();
@@ -941,18 +940,18 @@ isYes(value: any): boolean {
     this.router.navigate(['/profiles']);
   }
 
-  goToPlans(): void {
-    if (!this.profile) return;
+goToPlans(): void {
+  if (!this.profile || !this.loadedProfileRow) return;
 
-    this.router.navigate(['/plans'], {
-      queryParams: {
-        from: 'profiles',
-        profileId: this.profile.id,
-        profileName: this.getText(this.profile.fullName)
-      }
-    });
-  }
-
+  this.router.navigate(['/plans'], {
+    queryParams: {
+      from: 'profiles',
+      profileId: this.loadedProfileRow.profile_id,
+      profileCode: this.loadedProfileRow.profile_code,
+      profileName: this.getText(this.profile.fullName)
+    }
+  });
+}
   async sendInterest(): Promise<void> {
     if (!this.profile) return;
 
