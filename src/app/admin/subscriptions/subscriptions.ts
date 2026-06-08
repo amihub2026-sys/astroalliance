@@ -68,9 +68,11 @@ async loadSubscriptions(): Promise<void> {
           duration_months,
           profile_view_limit
         ),
-        user_profiles (
-          profile_code
-        )
+       user_profiles (
+  profile_code,
+  full_name,
+  full_name_ta
+)
       `)
       .order('created_at', { ascending: false });
 
@@ -142,7 +144,8 @@ prevPage(): void {
 String(item.profile_code || item.user_profiles?.profile_code || '').toLowerCase().includes(term) ||
 String(item.payment_mode || '').toLowerCase().includes(term) ||
       String(item.mst_plans?.plan_name || '').toLowerCase().includes(term) ||
-      String(item.mst_plans?.plan_code || '').toLowerCase().includes(term)
+    String(item.user_profiles?.full_name || '').toLowerCase().includes(term) ||
+String(item.user_profiles?.full_name_ta || '').toLowerCase().includes(term)
     );
   }
 
