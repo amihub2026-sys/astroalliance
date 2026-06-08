@@ -44,7 +44,7 @@
 
     <th>{{ txt('Plan', 'திட்டம்') }}</th>
 
-    <th>{{ txt('Plan Code', 'திட்ட குறியீடு') }}</th>
+    <th>{{ txt('Name', 'பெயர்') }}</th>
 
     <th>{{ txt('Price', 'விலை') }}</th>
 
@@ -83,9 +83,9 @@
     {{ item.mst_plans?.plan_name || '-' }}
   </td>
 
-  <td>
-    {{ item.mst_plans?.plan_code || '-' }}
-  </td>
+ <td>
+  {{ item.user_profiles?.full_name || '-' }}
+</td>
 
   <td>
     ₹{{ item.mst_plans?.price || 0 }}
