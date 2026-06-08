@@ -23,7 +23,7 @@
   <div class="search-card">
     <input
       type="text"
-      placeholder="Search by user id, plan name, plan code..."
+     placeholder="Search by profile id, payment mode, plan name, plan code..."
       [(ngModel)]="searchTerm"
 (ngModelChange)="currentPage = 1">
   </div>
@@ -37,7 +37,7 @@
 
   <tr>
 
-    <th>{{ txt('User ID', 'பயனர் ID') }}</th>
+    
     <th>{{ txt('Profile ID', 'சுயவிவர ID') }}</th>
 
 <th>{{ txt('Payment Mode', 'கட்டண முறை') }}</th>
@@ -53,12 +53,11 @@
     <th>{{ txt('Start Date', 'தொடக்க தேதி') }}</th>
 
     <th>{{ txt('End Date', 'முடிவு தேதி') }}</th>
+<th>{{ txt('Total Contacts', 'மொத்த தொடர்புகள்') }}</th>
 
-    <th>{{ txt('Contacts Used', 'பயன்படுத்திய தொடர்புகள்') }}</th>
+<th>{{ txt('Contacts Used', 'பயன்படுத்திய தொடர்புகள்') }}</th>
 
-    <th>{{ txt('Total Contacts', 'மொத்த தொடர்புகள்') }}</th>
-
-    <th>{{ txt('Profile Views', 'சுயவிவர பார்வைகள்') }}</th>
+<th>{{ txt('Remaining Contacts', 'மீதமுள்ள தொடர்புகள்') }}</th>
 
     <th>{{ txt('Status', 'நிலை') }}</th>
 
@@ -71,9 +70,7 @@
         <tbody>
 <tr *ngFor="let item of paginatedSubscriptions">
 
-<td class="user-id">
-  {{ item.user_id || '-' }}
-</td>
+
 <td>
 {{ item.profile_code || item.user_profiles?.profile_code || '-' }}
 </td>
@@ -106,19 +103,17 @@
   <td>
     {{ item.end_date | date:'mediumDate' }}
   </td>
+<td>
+  {{ item.total_contacts_allowed || 0 }}
+</td>
 
-  <td>
-    {{ item.contacts_used || 0 }}
-  </td>
+<td>
+  {{ item.contacts_used || 0 }}
+</td>
 
-  <td>
-    {{ item.total_contacts_allowed || 0 }}
-  </td>
-
-  <td>
-    {{ item.mst_plans?.profile_view_limit || 0 }}
-  </td>
-
+<td>
+  {{ (item.total_contacts_allowed || 0) - (item.contacts_used || 0) }}
+</td>
   <td>
 
     <span
@@ -154,7 +149,7 @@
 </tr>
 
           <tr *ngIf="filteredSubscriptions.length === 0">
-       <td colspan="14" class="empty-row">
+      <td colspan="13" class="empty-row">
               No subscriptions found
             </td>
           </tr>

@@ -138,7 +138,7 @@ prevPage(): void {
     if (!term) return this.subscriptions;
 
     return this.subscriptions.filter(item =>
-     String(item.user_id || '').toLowerCase().includes(term) ||
+    
 String(item.profile_code || item.user_profiles?.profile_code || '').toLowerCase().includes(term) ||
 String(item.payment_mode || '').toLowerCase().includes(term) ||
       String(item.mst_plans?.plan_name || '').toLowerCase().includes(term) ||
