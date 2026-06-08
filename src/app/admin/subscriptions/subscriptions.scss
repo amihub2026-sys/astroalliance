@@ -114,10 +114,7 @@ tbody tr:hover{
   min-width:110px;
   padding:10px 14px;
 }
-th:nth-child(1),
-td:nth-child(1){
-  min-width:220px;
-}
+
 
 th:nth-child(2),
 td:nth-child(2){
@@ -148,9 +145,7 @@ th:nth-child(14),
 td:nth-child(14){
   min-width:130px;
 }
-.user-id{
-  word-break:break-all;
-}
+
 td small {
   display: block;
   color: #94a3b8;
