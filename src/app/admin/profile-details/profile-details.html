@@ -1,10 +1,11 @@
 <div class="details-page">
 
- <a routerLink="/admin/profiles" class="back-btn">
+<a class="back-btn" (click)="goBack()">
   {{ txt('← Back to Profiles', '← சுயவிவரங்களுக்கு திரும்பு') }}
 </a>
 
 <p *ngIf="isLoading">
+
   {{ txt('Loading profile...', 'சுயவிவரம் ஏற்றப்படுகிறது...') }}
 </p>
 
