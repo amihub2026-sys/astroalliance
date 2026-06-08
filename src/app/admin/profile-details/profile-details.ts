@@ -8,14 +8,14 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { supabase } from '../../core/supabase.client';
 
 
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './profile-details.html',
   styleUrls: ['./profile-details.scss']
 })
@@ -240,7 +240,15 @@ getAmsamChart(): string[] {
       return;
     }
 
-    await this.loadProfile(urlId);
+   await this.loadProfile(urlId);
+
+const params = new URLSearchParams(window.location.search);
+const tab = params.get('tab');
+
+if (tab === 'views') {
+  this.activeTab = 'views';
+  this.cdr.detectChanges();
+}
   }
 
 async loadProfile(id: string): Promise<void> {
@@ -340,10 +348,31 @@ this.profileViewList = uniqueRows.map(row => ({
   this.cdr.detectChanges();
 }
 openViewedProfile(profileId: string): void {
-  if (!profileId) return;
-  this.router.navigate(['/admin/profile', profileId]);
-}
+  if (!profileId || !this.profile?.profile_id) return;
 
+  this.router.navigate(['/admin/profile', profileId], {
+    queryParams: {
+      fromProfile: this.profile.profile_id,
+      fromTab: 'views'
+    }
+  });
+}
+goBack(): void {
+  const params = new URLSearchParams(window.location.search);
+  const fromProfile = params.get('fromProfile');
+  const fromTab = params.get('fromTab');
+
+  if (fromProfile) {
+    this.router.navigate(['/admin/profile', fromProfile], {
+      queryParams: {
+        tab: fromTab || 'profile'
+      }
+    });
+    return;
+  }
+
+  this.router.navigate(['/admin/profiles']);
+}
 goToPrint(withPhoto: boolean, withAddress: boolean): void {
   if (!this.profile?.profile_id) return;
 
