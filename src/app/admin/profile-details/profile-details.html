@@ -689,7 +689,10 @@
       No profile views found
     </div>
 
-    <div class="viewer-card" *ngFor="let item of profileViewList">
+ <div
+  class="viewer-card"
+  *ngFor="let item of profileViewList"
+  (click)="openViewedProfile(item.viewed_profile_id)">
       <img
         [src]="item.viewer?.profile_image_url || 'assets/default-avatar.png'"
         alt="Viewer">

@@ -339,6 +339,10 @@ this.profileViewList = uniqueRows.map(row => ({
   this.isLoading = false;
   this.cdr.detectChanges();
 }
+openViewedProfile(profileId: string): void {
+  if (!profileId) return;
+  this.router.navigate(['/admin/profile', profileId]);
+}
 
 goToPrint(withPhoto: boolean, withAddress: boolean): void {
   if (!this.profile?.profile_id) return;
