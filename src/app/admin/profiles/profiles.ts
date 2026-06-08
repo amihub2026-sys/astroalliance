@@ -619,27 +619,21 @@ shareWelcomeWhatsapp(profile: any, event?: Event): void {
 
   const profileLink =
     `https://astroalliance.vercel.app/profile/${profile.profile_id}`;
-
-  const message = `
- வணக்கம்
-
- Astro Alliance Matrimony-க்கு உங்களை அன்புடன் வரவேற்கிறோம்.
-
-உங்கள் திருமண சுயவிவரம் வெற்றிகரமாக பதிவு செய்யப்பட்டுள்ளது.
-
- சுயவிவர எண் : ${profile.profile_code || '-'}
-
- பெயர் : ${profile.full_name || '-'}
-
- உங்கள் சுயவிவரத்தை பார்க்க:
-${profileLink}
-
+const message = `
+வணக்கம்
+Astro Alliance Matrimony-க்கு உங்களை அன்புடன் வரவேற்கிறோம்.
+உங்கள் திருமண ப்ரொபைல் வெற்றிகரமாக பதிவு செய்யப்பட்டுள்ளது.
+ப்ரொபைல் எண் : ${profile.profile_code || '-'}
+பெயர் : ${profile.full_name || '-'}
+கைபேசி எண் : ${profile.mobile || '-'}
+பிறந்த தேதி : ${profile.dob || '-'}
 உங்களுக்கு பொருத்தமான வாழ்க்கைத் துணையை கண்டுபிடிக்க எங்கள் மனமார்ந்த வாழ்த்துக்கள்.
-
- உதவி தேவைப்பட்டால் எங்களை தொடர்பு கொள்ளவும்.
-
- நன்றி
+உங்கள் ப்ரொபைல் பார்க்க:
+${profileLink}
+உதவி தேவைப்பட்டால் எங்களை தொடர்பு கொள்ளவும்.
+நன்றி
 Astro Alliance Matrimony
+98421 34672, 99433 15331
 `;
 const phone = String(profile.mobile || '')
   .replace(/\D/g, '');
@@ -657,22 +651,14 @@ shareProfileWhatsapp(profile: any, event?: Event): void {
 
   const message = `
  வணக்கம்
-
- Astro Alliance Matrimony மூலம் உங்களுக்கு பொருத்தமான சுயவிவரம் பகிரப்படுகிறது.
-
- சுயவிவர எண் : ${profile.profile_code || '-'}
-
- பெயர் : ${profile.full_name || '-'}
-
- ஊர் : ${profile.city_text || '-'}
-
- சுயவிவரத்தை பார்க்க:
+Astro Alliance Matrimony மூலம் உங்களுக்கு பொருத்தமான ப்ரொபைல்ஸ் பகிரப்படுகிறது.
+ப்ரொபைல் எண் : ${profile.profile_code || '-'}
+பெயர் : ${profile.full_name || '-'}
+இந்த ப்ரொபைல்ஸ் உங்களுக்கு பொருத்தமாக இருந்தால், மேலும் தகவல்களுக்கு எங்களை தொடர்பு கொள்ளவும்.
+ப்ரொபைல் பார்க்க:
 ${profileLink}
-
-இந்த சுயவிவரம் உங்களுக்கு பொருத்தமாக இருந்தால், மேலும் தகவல்களுக்கு எங்களை தொடர்பு கொள்ளவும்.
-
- நன்றி
-Astro Alliance Matrimony
+நன்றி
+Astro Alliance Matrimony - 98421 34672,99433 15331
 `;
 
   const phone = String(profile.mobile || '').replace(/\D/g, '');
