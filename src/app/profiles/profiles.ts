@@ -2286,12 +2286,17 @@ if (myProfileForContactError) {
 if (myProfileForContact?.profile_id && profile.profileId) {
   const { error: contactTakenError } = await supabase
     .from('profile_views')
-    .update({
-      contact_taken: true,
-      viewed_at: new Date().toISOString()
-    })
-    .eq('viewer_profile_id', myProfileForContact.profile_id)
-    .eq('viewed_profile_id', profile.profileId);
+    .upsert(
+      {
+        viewer_profile_id: myProfileForContact.profile_id,
+        viewed_profile_id: profile.profileId,
+        contact_taken: true,
+        viewed_at: new Date().toISOString()
+      },
+      {
+        onConflict: 'viewer_profile_id,viewed_profile_id'
+      }
+    );
 
   if (contactTakenError) {
     throw contactTakenError;
