@@ -63,7 +63,7 @@ sentInterestTotal = 0;
         register: 'Register',
         location: 'Madurai, Tamil Nadu',
         phone: '+91 90421 11424',
-        email: 'support@thirumagal.com',
+        email: 'astroalliance7@gmail.com',
         copyright: '© 2026 Astro Alliance. All Rights Reserved.'
       }
     },
@@ -79,7 +79,7 @@ sentInterestTotal = 0;
         logout: 'வெளியேறு'
       },
       footer: {
-        aboutTitle: 'திருமகள் ❤ மேட்ரிமோனி',
+        aboutTitle: 'ஆஸ்ட்ரோ அலையன்ஸ் ❤ மேட்ரிமோனி',
         aboutText:
           'குடும்பங்களும் தனிநபர்களும் உண்மையான மற்றும் அர்த்தமுள்ள வாழ்க்கைத் துணையை கண்டுபிடிக்க உதவும் நம்பகமான திருமண தளம்.',
         quickLinks: 'விரைவு இணைப்புகள்',
@@ -93,8 +93,8 @@ sentInterestTotal = 0;
         register: 'பதிவு',
         location: 'மதுரை, தமிழ்நாடு',
         phone: '+91 90421 11424',
-        email: 'support@thirumagal.com',
-        copyright: '© 2026 திருமகள் மேட்ரிமோனி. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.'
+        email: 'astroalliance',
+        copyright: '© 2026 ஆஸ்ட்ரோ அலையன்ஸ் மேட்ரிமோனி. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.'
       }
     }
   };
