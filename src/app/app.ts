@@ -148,10 +148,14 @@ this.showFooter =
   }
 get profilesNavText(): string {
   if (!this.isLoggedIn) {
-    return this.currentLang === 'ta' ? 'இலவச தேடல்' : 'Free Search';
+    return this.currentLang === 'ta'
+      ? 'இலவச தேடல்'
+      : 'Free Search';
   }
 
-  return 'Find your match';
+  return this.currentLang === 'ta'
+    ? 'பைண்ட் யுவர் மேட்ச்'
+    : 'Find your match';
 }
   get isLoggedIn(): boolean {
     if (!this.isBrowser) return false;
