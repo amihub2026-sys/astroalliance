@@ -694,9 +694,25 @@
       </p> -->
 
       <h2 style="margin-top: 24px;">{{ currentLang === 'ta' ? 'துணை எதிர்பார்ப்பு' : 'Partner Expectation' }}</h2>
+      
       <p class="about-text">
        {{ getText(p.partnerExpectation) || (currentLang === 'ta' ? 'துணை எதிர்பார்ப்பு சேர்க்கப்படவில்லை.' : 'No partner expectation added yet.') }}
       </p>
+      <div class="detail-list" style="margin-top: 14px;">
+  <div>
+    <span>
+      {{ currentLang === 'ta' ? 'ஜாதி தடை இல்லை' : 'No Caste Restriction' }}
+    </span>
+
+    <strong>
+      {{
+        p.noCastePreference
+          ? (currentLang === 'ta' ? 'ஆம்' : 'Yes')
+          : (currentLang === 'ta' ? 'இல்லை' : 'No')
+      }}
+    </strong>
+  </div>
+</div>
     </div>
 
    <div class="detail-card" *ngIf="p.horoscopeImage">

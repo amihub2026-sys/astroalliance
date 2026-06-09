@@ -75,7 +75,7 @@ sothukal: LangText;
 kuladeivam: LangText;
   about: LangText;
   partnerExpectation: LangText;
-
+noCastePreference: boolean;
   rasiChart: string[];
   amsamChart: string[];
 }
@@ -655,6 +655,10 @@ partnerExpectation: {
   en: row.partner_expectation || '',
   ta: row.partner_expectation_ta || row.partner_expectation || ''
 },
+noCastePreference:
+  row.no_caste_preference === true ||
+  row.no_caste_preference === 'true' ||
+  row.no_caste_preference === 'Yes',
 
       rasiChart: this.toChartArray(row.rasi_chart),
       amsamChart: this.toChartArray(row.amsam_chart)
