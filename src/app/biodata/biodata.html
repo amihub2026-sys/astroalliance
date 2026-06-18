@@ -723,13 +723,12 @@ formData.secondMarriageReason === 'Widowed'
 <input
   *ngIf="formData.caste === 'Other'"
   type="text"
-  [(ngModel)]="formData.subCaste"
+[ngModel]="formData.otherCaste"
+(ngModelChange)="formData.otherCaste = $event"
+  (keypress)="tamilKeypress($event)"
   name="otherCaste"
-  [placeholder]="currentLang === 'ta'
-    ? 'ஜாதியை உள்ளிடவும்'
-    : 'Enter caste'"
+  [placeholder]="currentLang === 'ta' ? 'ஜாதியை உள்ளிடவும்' : 'Enter caste'"
 >
-
   <small class="field-error" *ngIf="isInvalid('caste')">Required</small>
 </div>
 
@@ -1135,15 +1134,14 @@ formData.secondMarriageReason === 'Widowed'
     </option>
   </select>
 
-  <input
-    *ngIf="formData.education === 'Other'"
-    type="text"
-    [(ngModel)]="formData.otherEducation"
-    name="otherEducation"
-    [placeholder]="currentLang === 'ta'
-      ? 'கல்வியை உள்ளிடவும்'
-      : 'Enter education'"
-  >
+ <input
+  *ngIf="formData.education === 'Other'"
+  type="text"
+  [(ngModel)]="formData.otherEducation"
+  (keypress)="tamilKeypress($event)"
+  name="otherEducation"
+  [placeholder]="currentLang === 'ta' ? 'கல்வியை உள்ளிடவும்' : 'Enter education'"
+>
 
   <small class="field-error" *ngIf="isInvalid('education')">Required</small>
 </div>
@@ -1293,14 +1291,14 @@ formData.secondMarriageReason === 'Widowed'
       }}
     </option>
   </select>
-
-  <input
-    *ngIf="isOtherCountrySelected()"
-    type="text"
-    [(ngModel)]="formData.country"
-    name="otherCountry"
-    [placeholder]="currentLang === 'ta' ? 'நாட்டை உள்ளிடவும்' : 'Enter country'"
-  >
+<input
+  *ngIf="isOtherCountrySelected()"
+  type="text"
+  [(ngModel)]="formData.country"
+  name="otherCountry"
+  (keypress)="tamilKeypress($event)"
+  [placeholder]="currentLang === 'ta' ? 'நாட்டை உள்ளிடவும்' : 'Enter country'"
+>
 
   <small class="field-error" *ngIf="isInvalid('country')">Required</small>
 </div>
@@ -1329,13 +1327,14 @@ formData.secondMarriageReason === 'Widowed'
     </option>
   </select>
 
-  <input
-    *ngIf="isOtherStateSelected() || isOtherCountrySelected()"
-    type="text"
-    [(ngModel)]="formData.state"
-    name="otherState"
-    [placeholder]="currentLang === 'ta' ? 'மாநிலத்தை உள்ளிடவும்' : 'Enter state'"
-  >
+<input
+  *ngIf="isOtherStateSelected() || isOtherCountrySelected()"
+  type="text"
+  [(ngModel)]="formData.state"
+  name="otherState"
+  (keypress)="tamilKeypress($event)"
+  [placeholder]="currentLang === 'ta' ? 'மாநிலத்தை உள்ளிடவும்' : 'Enter state'"
+>
 
   <small class="field-error" *ngIf="isInvalid('state')">Required</small>
 </div>
@@ -1364,13 +1363,14 @@ formData.secondMarriageReason === 'Widowed'
     </option>
   </select>
 
-  <input
-    *ngIf="isOtherCitySelected() || isOtherStateSelected() || isOtherCountrySelected()"
-    type="text"
-    [(ngModel)]="formData.city"
-    name="otherCity"
-    [placeholder]="currentLang === 'ta' ? 'மாவட்டத்தை உள்ளிடவும்' : 'Enter city'"
-  >
+<input
+  *ngIf="isOtherCitySelected() || isOtherStateSelected() || isOtherCountrySelected()"
+  type="text"
+  [(ngModel)]="formData.city"
+  name="otherCity"
+  (keypress)="tamilKeypress($event)"
+  [placeholder]="currentLang === 'ta' ? 'மாவட்டத்தை உள்ளிடவும்' : 'Enter city'"
+>
 
   <small class="field-error" *ngIf="isInvalid('city')">Required</small>
 </div>
