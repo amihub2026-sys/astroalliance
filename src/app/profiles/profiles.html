@@ -5,7 +5,7 @@
     <p class="subtitle">{{ tr.header.subtitle }}</p>
   </div>
 
-  <div class="profile-tabs">
+<div class="profile-tabs">
     <button
       [class.active]="activeTab === 'browse'"
       (click)="setTab('browse')"
@@ -30,7 +30,8 @@
     >
       {{ tr.tabs.likedMe }} ({{ likedMeProfiles.length }})
     </button>
-  </div>
+
+</div>
 
 <div
   class="plan-status-card"
@@ -426,13 +427,6 @@
 
   </div>
 
-
-
-
-
-
-
-
 <div
   class="geo-hint"
   *ngIf="activeTab === 'browse' && filters.radius && geoLocationReady">
@@ -503,8 +497,7 @@
   </div>
 </div>
 
-
-  <div class="matches-layout" *ngIf="activeTab === 'browse' && !isLoading && filteredProfiles.length > 0">
+<div class="matches-layout" *ngIf="activeTab === 'browse' && !isLoading && filteredProfiles.length > 0">
 
 <div
   class="match-sidebar"
@@ -1019,4 +1012,5 @@
     </div>
     
   </div>
+
 </section>
