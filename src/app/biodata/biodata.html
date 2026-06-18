@@ -987,97 +987,40 @@ formData.secondMarriageReason === 'Widowed'
 <!-- POORVEGAM -->
 
 <div class="field poorvegam-field">
-
-  <label>
-    {{ currentLang === 'ta'
-      ? 'பூர்வீகம்'
-      : 'Poorvegam'
-    }}
-  </label>
+  <label>{{ currentLang === 'ta' ? 'பூர்வீகம்' : 'Poorvegam' }}</label>
 
   <div class="poorvegam-select-wrap">
-
     <input
       type="text"
-
       [(ngModel)]="poorvegamSearch"
-
       name="poorvegamSearch"
-
-    [placeholder]="
-  currentLang === 'ta'
-    ? 'மாவட்டத்தை உள்ளிடவும்'
-    : 'Enter district'
-"
+      [placeholder]="currentLang === 'ta' ? 'மாவட்டத்தை உள்ளிடவும்' : 'Enter district'"
       autocomplete="off"
-
       (focus)="showPoorvegamDropdown = true"
-
       (blur)="showPoorvegamDropdown = false"
-
       (input)="onPoorvegamSearchChange()"
     >
 
-    <div
-      class="poorvegam-dropdown"
-      *ngIf="showPoorvegamDropdown"
-    >
-
+    <div class="poorvegam-dropdown" *ngIf="showPoorvegamDropdown">
       <div
         class="poorvegam-option"
-
-        *ngFor="
-          let city of filteredPoorvegamList
-        "
-
+        *ngFor="let city of filteredPoorvegamList"
         (mousedown)="selectPoorvegam(city)"
       >
-
-        {{
-          currentLang === 'ta'
-
-            ? (
-                city.city_name_ta ||
-                city.city_name
-              )
-
-            : city.city_name
-        }}
-
+        {{ currentLang === 'ta' ? (city.city_name_ta || city.city_name) : city.city_name }}
       </div>
-
     </div>
-
   </div>
 
-  <input
-    *ngIf="
-      poorvegamSearch === 'Other'
-      || formData.poorvegam === 'Other'
-    "
-
-    type="text"
-
-    [ngModel]="
-      formData.poorvegam === 'Other'
-        ? ''
-        : formData.poorvegam
-    "
-
-    (ngModelChange)="
-      formData.poorvegam = $event;
-      formDataTa.poorvegam = $event
-    "
-(keypress)="tamilKeypress($event)"
-    name="otherPoorvegam"
-
-    [placeholder]="
-      currentLang === 'ta'
-        ? 'பூர்வீகத்தை உள்ளிடவும்'
-        : 'Enter Poorvegam'
-    "
-  >
-
+<input
+  *ngIf="isOtherPoorvegam"
+  type="text"
+  name="otherPoorvegam"
+  [ngModel]="getTypedValue('poorvegam')"
+  (ngModelChange)="onTamilInputChange('poorvegam', $event)"
+  (keypress)="tamilKeypress($event)"
+  [placeholder]="currentLang === 'ta' ? 'பூர்வீகத்தை உள்ளிடவும்' : 'Enter Poorvegam'"
+>
 </div>
 
 <!-- IRUPPIDAM -->
@@ -1110,6 +1053,7 @@ formData.secondMarriageReason === 'Widowed'
     class="iruppidam-dropdown"
     *ngIf="showIruppidamDropdown"
   >
+  
     <div
       class="iruppidam-option"
       *ngFor="let city of filteredIruppidamList"
@@ -1121,6 +1065,14 @@ formData.secondMarriageReason === 'Widowed'
           : city.city_name
       }}
     </div>
+    <div class="field" *ngIf="isOtherIruppidam">
+  <input
+    type="text"
+    [(ngModel)]="formData.iruppidam"
+    (ngModelChange)="formDataTa.iruppidam = $event"
+    placeholder="Enter Iruppidam"
+  />
+</div>
 
     <div
       class="iruppidam-option"
@@ -1131,12 +1083,12 @@ formData.secondMarriageReason === 'Widowed'
   </div>
 
 </div>
-
 <input
-  *ngIf="formData.iruppidam === 'Other'"
+  *ngIf="isOtherIruppidam"
   type="text"
   name="otherIruppidam"
-  [(ngModel)]="formData.iruppidam"
+  [ngModel]="getTypedValue('iruppidam')"
+  (ngModelChange)="onTamilInputChange('iruppidam', $event)"
   (keypress)="tamilKeypress($event)"
   [placeholder]="currentLang === 'ta' ? 'இருப்பிடம் உள்ளிடவும்' : 'Enter Iruppidam'"
 />
@@ -1222,15 +1174,19 @@ formData.secondMarriageReason === 'Widowed'
 
   </select>
 
-  <input
-    *ngIf="formData.job === 'Other'"
-    type="text"
-    [(ngModel)]="formData.otherProfession"
-    name="otherProfession"
-    [placeholder]="currentLang === 'ta'
-      ? 'தொழிலை உள்ளிடவும்'
-      : 'Enter profession'"
-  >
+<input
+  *ngIf="formData.job === 'Other'"
+  type="text"
+  [ngModel]="currentLang === 'ta' ? formDataTa.job : formData.otherProfession"
+  (ngModelChange)="
+    currentLang === 'ta'
+      ? formDataTa.job = $event
+      : formData.otherProfession = $event
+  "
+  (keypress)="tamilKeypress($event)"
+  name="otherProfession"
+  [placeholder]="currentLang === 'ta' ? 'தொழிலை உள்ளிடவும்' : 'Enter profession'"
+>
 
   <!-- <small class="field-error" *ngIf="isInvalid('job')">
     Required
