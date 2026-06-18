@@ -1084,13 +1084,20 @@ nakshatra: await this.makeLangText(
   row.nakshatra_text,
   row.nakshatra_text_ta || row.nakshatra_text
 ),
-
 location: await this.makeLangText(
   row.city_text || row.location_text,
-  row.city_text || row.location_text
+  this.getTamilFromOptions(this.cityOptions, row.city_text || row.location_text)
 ),
-city: await this.makeLangText(row.city_text, row.city_text),
-state: await this.makeLangText(row.state_text, row.state_text),
+
+city: await this.makeLangText(
+  row.city_text,
+  this.getTamilFromOptions(this.cityOptions, row.city_text)
+),
+
+state: await this.makeLangText(
+  row.state_text,
+  this.getTamilFromOptions(this.stateOptions, row.state_text)
+),
 
 education: await this.makeLangText(
   row.education_text || '-',
@@ -1141,10 +1148,12 @@ private getTamilProfileValue(
       Female: 'பெண்'
     },
 
-   maritalStatus: {
+  maritalStatus: {
+  'First Marriage': 'முதல் திருமணம்',
+  'Second Marriage': 'மறுமணம்',
   Unmarried: 'திருமணம் ஆகாதவர்',
-  Divorced: 'விவாகரத்து',
-  Widowed: 'விதவை'
+  Divorced: 'மறுமணம்',
+  Widowed: 'துணையை இழந்தவர்'
 },
     religion: {
       Hindu: 'இந்து',
@@ -1173,6 +1182,21 @@ profession: {
 
   return map[type]?.[text] || text;
 }
+
+private getTamilFromOptions(
+  options: LangText[],
+  value: string | null | undefined
+): string {
+  const text = String(value || '').toLowerCase().trim();
+
+  const found = options.find(item =>
+    String(item.en || '').toLowerCase().trim() === text ||
+    String(item.ta || '').toLowerCase().trim() === text
+  );
+
+  return found?.ta || String(value || '').trim();
+}
+
   async loadShortlistedMeFromSupabase(): Promise<void> {
     const userId = this.getLoggedInUserId();
 
