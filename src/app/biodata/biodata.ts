@@ -32,11 +32,14 @@ maxDobDate = new Date().toISOString().split('T')[0];
 poorvegamSearch = '';
 showPoorvegamDropdown = false;
 filteredPoorvegamList: any[] = [];
+isOtherPoorvegam = false;
 
 iruppidamSearch = '';
 showIruppidamDropdown = false;
 filteredIruppidamList: any[] = [];
-  isLoadingProfile = false;
+isOtherIruppidam = false;   
+
+isLoadingProfile = false;
 submitted = false;
 fieldErrors: Record<string, boolean> = {};
 
@@ -612,16 +615,8 @@ removeAdditionalMobile(index: number): void {
   get tr() {
     return this.translations[this.currentLang];
   }
- isAdminTanglishEnabled(): boolean {
-  if (!this.isBrowser) return false;
-
-  const isAdminPage =
-    this.route.snapshot.queryParamMap.get('adminCreate') === 'true';
-
-  return (
-    isAdminPage &&
-    localStorage.getItem('admin_tanglish_enabled') === '1'
-  );
+isAdminTanglishEnabled(): boolean {
+  return true;
 }
 
   readonly horoscopeValueMap: any = {
@@ -798,9 +793,9 @@ getTypedValue(field: keyof typeof this.formDataTa): string {
   return (this.formData as any)[field] || '';
 }
 tamilKeypress(event: KeyboardEvent): void {
-  if (!this.isAdminTanglishEnabled()) {
-    return;
-  }
+  // if (!this.isAdminTanglishEnabled()) {
+  //   return;
+  // }
 
   if (this.currentLang !== 'ta') {
     return;
@@ -3242,13 +3237,21 @@ onPoorvegamSearchChange(): void {
 }
 
 selectPoorvegam(city: any): void {
-  this.poorvegamSearch =
-    this.currentLang === 'ta'
-      ? (city.city_name_ta || city.city_name)
-      : city.city_name;
+  if (city.city_name === 'Other') {
+    this.isOtherPoorvegam = true;
+    this.poorvegamSearch = this.currentLang === 'ta' ? 'மற்றவை' : 'Other';
+    this.formData.poorvegam = '';
+    this.formDataTa.poorvegam = '';
+  } else {
+    this.isOtherPoorvegam = false;
+    this.poorvegamSearch =
+      this.currentLang === 'ta'
+        ? (city.city_name_ta || city.city_name)
+        : city.city_name;
 
-  this.formData.poorvegam = city.city_name;
-  this.formDataTa.poorvegam = city.city_name_ta || city.city_name;
+    this.formData.poorvegam = city.city_name;
+    this.formDataTa.poorvegam = city.city_name_ta || city.city_name;
+  }
 
   this.showPoorvegamDropdown = false;
 }
@@ -3268,14 +3271,33 @@ onIruppidamSearchChange(): void {
 }
 
 selectIruppidam(city: any): void {
-  this.iruppidamSearch =
-    this.currentLang === 'ta'
-      ? (city.city_name_ta || city.city_name)
-      : city.city_name;
+if (
+  city.city_name === 'Other' ||
+  city.city_name_ta === 'மற்றவை'
+) {
+  this.isOtherIruppidam = true;
 
-  this.formData.iruppidam = city.city_name;
-  this.formDataTa.iruppidam = city.city_name_ta || city.city_name;
+  this.iruppidamSearch = '';
+
+  this.formData.iruppidam = '';
+  this.formDataTa.iruppidam = '';
 
   this.showIruppidamDropdown = false;
+  return;
+}
+
+this.isOtherIruppidam = false;
+
+this.iruppidamSearch =
+  this.currentLang === 'ta'
+    ? (city.city_name_ta || city.city_name)
+    : city.city_name;
+
+this.formData.iruppidam = city.city_name;
+this.formDataTa.iruppidam =
+  city.city_name_ta || city.city_name;
+
+this.showIruppidamDropdown = false;
+
 }
 }
