@@ -77,3 +77,14 @@
   border-color: #ec407a !important;
   box-shadow: 0 0 0 4px rgba(236, 64, 122, 0.12) !important;
 }
+@media print {
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  app-root,
+  app-profile-print {
+    display: block !important;
+  }
+}
