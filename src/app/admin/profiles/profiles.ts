@@ -49,9 +49,9 @@ religionFilter = '';
 casteFilter = '';
 genderFilter = '';
 
-cityOptions: string[] = [];
-religionOptions: string[] = [];
-casteOptions: string[] = [];
+cityOptions: any[] = [];
+religionOptions: any[] = [];
+casteOptions: any[] = [];
 
   statusFilter = 'All';
 
@@ -333,9 +333,7 @@ views_count: Number(plan?.contacts_used || 0)
       };
     });
 
-    this.cityOptions = [...new Set(this.profiles.map(p => p.city_text).filter(Boolean))];
-    this.religionOptions = [...new Set(this.profiles.map(p => p.religion_text).filter(Boolean))];
-    this.casteOptions = [...new Set(this.profiles.map(p => p.caste_text).filter(Boolean))];
+await this.loadFilterOptions();
 
   } catch (err) {
 
@@ -350,6 +348,31 @@ setTimeout(() => {
 }, 300);
     });
   }
+}
+
+
+async loadFilterOptions(): Promise<void> {
+  const { data: cityData } = await supabase
+    .from('mst_cities')
+    .select('city_name, city_name_ta')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+
+  this.cityOptions = cityData || [];
+
+const { data: religionData } = await supabase
+  .from('mst_religions')
+  .select('religion_name, religion_name_ta')
+  .order('religion_id', { ascending: true });
+
+this.religionOptions = religionData || [];
+
+const { data: casteData } = await supabase
+  .from('mst_castes')
+  .select('caste_name, caste_name_ta')
+  .order('caste_name', { ascending: true });
+
+this.casteOptions = casteData || [];
 }
 
 async refresh(): Promise<void> {

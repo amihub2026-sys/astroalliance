@@ -14,65 +14,92 @@
   <div class="register-filter-card">
     <div class="filter-grid">
 
-      <div class="filter-field">
-        <label>AA ID</label>
-<input
-  type="text"
-  placeholder="AA ID"
-  [(ngModel)]="profileCodeFilter"
-  (ngModelChange)="resetPage()">      </div>
+<div class="filter-field">
+  <label>{{ currentLang === 'ta' ? 'ஏஏ ஐடி' : 'AA ID' }}</label>
+  <input
+    type="text"
+    [placeholder]="currentLang === 'ta' ? 'ஏஏ ஐடி' : 'AA ID'"
+    [(ngModel)]="profileCodeFilter"
+    (ngModelChange)="resetPage()">
+</div>
 
-      <div class="filter-field">
-        <label>Name</label>
-<input
-  type="text"
-  placeholder="Name"
-  [(ngModel)]="nameFilter"
-  (ngModelChange)="resetPage()">      </div>
+<div class="filter-field">
+  <label>{{ currentLang === 'ta' ? 'பெயர்' : 'Name' }}</label>
+  <input
+    type="text"
+    [placeholder]="currentLang === 'ta' ? 'பெயர்' : 'Name'"
+    [(ngModel)]="nameFilter"
+    (ngModelChange)="resetPage()">
+</div>
 
-      <div class="filter-field">
-        <label>Phone</label>
-<input
-  type="text"
-  placeholder="Phone"
-  [(ngModel)]="phoneFilter"
-  (input)="sanitizePhoneFilter()"
-  (ngModelChange)="resetPage()">
- </div>
+<div class="filter-field">
+  <label>{{ currentLang === 'ta' ? 'தொலைபேசி' : 'Phone' }}</label>
+  <input
+    type="text"
+    [placeholder]="currentLang === 'ta' ? 'தொலைபேசி' : 'Phone'"
+    [(ngModel)]="phoneFilter"
+    (input)="sanitizePhoneFilter()"
+    (ngModelChange)="resetPage()">
+</div>
 
-      <div class="filter-field">
-        <label>City</label>
-        <select [(ngModel)]="cityFilter" (ngModelChange)="resetPage()">
-          <option value="">select city</option>
-          <option *ngFor="let city of cityOptions" [value]="city">{{ city }}</option>
-        </select>
-      </div>
+<div class="filter-field">
+  <label>{{ currentLang === 'ta' ? 'நகரம்' : 'City' }}</label>
+<select [(ngModel)]="cityFilter" (ngModelChange)="resetPage()">
+  <option value="">
+    {{ currentLang === 'ta'
+      ? 'நகரத்தை தேர்ந்தெடுக்கவும்'
+      : 'Select City' }}
+  </option>
 
-      <div class="filter-field">
-        <select [(ngModel)]="religionFilter" (ngModelChange)="resetPage()">
-          <option value="">select religion</option>
-          <option *ngFor="let religion of religionOptions" [value]="religion">{{ religion }}</option>
-        </select>
-      </div>
+<option *ngFor="let city of cityOptions" [value]="city.city_name">
+  {{ currentLang === 'ta' ? (city.city_name_ta || city.city_name) : city.city_name }}
+</option>
+</select>
+</div>
 
-      <div class="filter-field">
-        <select [(ngModel)]="casteFilter" (ngModelChange)="resetPage()">
-          <option value="">select caste</option>
-          <option *ngFor="let caste of casteOptions" [value]="caste">{{ caste }}</option>
-        </select>
-      </div>
+<div class="filter-field">
+  <label>{{ currentLang === 'ta' ? 'மதம்' : 'Religion' }}</label>
+  <select [(ngModel)]="religionFilter" (ngModelChange)="resetPage()">
+    <option value="">
+      {{ currentLang === 'ta' ? 'மதத்தை தேர்ந்தெடுக்கவும்' : 'select religion' }}
+    </option>
+<option *ngFor="let religion of religionOptions" [value]="religion.religion_name">
+  {{ currentLang === 'ta' ? (religion.religion_name_ta || religion.religion_name) : religion.religion_name }}
+</option>
+  </select>
+</div>
 
-      <div class="filter-field">
-        <select [(ngModel)]="genderFilter" (ngModelChange)="resetPage()">
-          <option value="">select gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
-      </div>
+<div class="filter-field">
+  <label>{{ currentLang === 'ta' ? 'ஜாதி' : 'Caste' }}</label>
+<select [(ngModel)]="casteFilter" (ngModelChange)="resetPage()">
+  <option value="">
+    {{ currentLang === 'ta' ? 'ஜாதியை தேர்ந்தெடுக்கவும்' : 'Select Caste' }}
+  </option>
 
-      <button class="search-btn" type="button" (click)="resetPage()">
-        SEARCH
-      </button>
+<option *ngFor="let caste of casteOptions" [value]="caste.caste_name">
+  {{ currentLang === 'ta' ? (caste.caste_name_ta || caste.caste_name) : caste.caste_name }}
+</option>
+</select>
+</div>
+
+<div class="filter-field">
+  <label>{{ currentLang === 'ta' ? 'பாலினம்' : 'Gender' }}</label>
+  <select [(ngModel)]="genderFilter" (ngModelChange)="resetPage()">
+    <option value="">
+      {{ currentLang === 'ta' ? 'பாலினத்தை தேர்ந்தெடுக்கவும்' : 'select gender' }}
+    </option>
+    <option value="Male">
+      {{ currentLang === 'ta' ? 'ஆண்' : 'Male' }}
+    </option>
+    <option value="Female">
+      {{ currentLang === 'ta' ? 'பெண்' : 'Female' }}
+    </option>
+  </select>
+</div>
+
+<button class="search-btn" type="button" (click)="resetPage()">
+  {{ currentLang === 'ta' ? 'தேடு' : 'SEARCH' }}
+</button>
 
     </div>
   </div>
