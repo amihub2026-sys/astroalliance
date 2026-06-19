@@ -290,21 +290,30 @@ if (age < 18) {
   localStorage.setItem('admin_name', admin.admin_name);
   localStorage.setItem('admin_phone', admin.phone_number);
   localStorage.setItem('admin_id', admin.admin_id);
+this.snackbar.success(this.tr.alerts.adminLoginSuccess);
 
-  this.snackbar.success(this.tr.alerts.adminLoginSuccess);
-
+setTimeout(() => {
   this.router.navigate(['/admin']);
+}, 1000);
 }
 private stopLoading(): void {
   this.isLoading = false;
   this.cdr.detectChanges();
 }
 async onLogin() {
-  if (!this.phone.trim() || !this.dob) {
-    this.stopLoading();
-    this.snackbar.error(this.tr.alerts.fillAll);
-    return;
-  }
+const cleanPhone = this.normalizePhone(this.phone);
+
+if (!cleanPhone || cleanPhone.length !== 10) {
+  this.stopLoading();
+  this.snackbar.error('Please enter a valid 10 digit mobile number');
+  return;
+}
+
+if (!this.dob) {
+  this.stopLoading();
+  this.snackbar.error('Please enter your date of birth');
+  return;
+}
 const dobForAge =
   this.dob.includes('-') &&
   this.dob.split('-')[0].length === 2
@@ -312,6 +321,12 @@ const dobForAge =
     : this.dob;
 
 const birthDate = new Date(dobForAge);
+
+if (isNaN(birthDate.getTime())) {
+  this.stopLoading();
+  this.snackbar.error('Please enter a valid date of birth');
+  return;
+}
 
 const today = new Date();
 
@@ -352,7 +367,7 @@ if (age < 18) {
       return;
     }
 
-    const cleanPhone = this.normalizePhone(this.phone);
+ 
     const cleanDob =
   this.dob.includes('-') &&
   this.dob.split('-')[0].length === 2
@@ -380,7 +395,7 @@ if (age < 18) {
 
       if (!profile) {
         this.stopLoading();
-        this.snackbar.error(this.tr.alerts.dobMismatch);
+        this.snackbar.error('Invalid mobile number or date of birth');
         return;
       }
 
@@ -411,7 +426,7 @@ if (age < 18) {
 setTimeout(() => {
   this.stopLoading();
   this.router.navigate(['/profiles']);
-}, 300);
+}, 1000);
 
 return;
     }
@@ -436,9 +451,9 @@ return;
  this.stopLoading();
 
   if (userExists) {
-    this.snackbar.error(this.tr.alerts.dobMismatch);
+   this.snackbar.error('Invalid mobile number or date of birth');
   } else {
-    this.snackbar.error(this.tr.alerts.userNotFound);
+    this.snackbar.error('Invalid mobile number or date of birth');
   }
 
   return;
@@ -466,7 +481,7 @@ this.snackbar.success(this.tr.alerts.loginSuccess);
 setTimeout(() => {
   this.stopLoading();
   this.router.navigate(['/profiles']);
-}, 300);
+}, 1000);
 
 return;
   } catch (error: any) {

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { App } from '../app';
 import { supabase } from '../core/supabase.client';
+import { SnackbarService } from '../shared/snackbar.service';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,10 @@ import { supabase } from '../core/supabase.client';
 export class Register {
   app = inject(App);
 
-constructor(private router: Router) {
+constructor(
+  private router: Router,
+  private snackbar: SnackbarService
+) {
   this.loadReligions();
 }
 
@@ -402,11 +406,11 @@ async loadReligions(): Promise<void> {
   !this.dob ||
   !this.religion.trim()
 ) {
-  alert(this.tr.alerts.fillAll);
+       this.snackbar.error(this.tr.alerts.fillAll);
   return;
 }
     if (!this.acceptedTerms) {
-      alert(this.tr.alerts.acceptTerms);
+      this.snackbar.error(this.tr.alerts.acceptTerms);
       return;
     }
 
@@ -416,14 +420,14 @@ async loadReligions(): Promise<void> {
     // }
 
    if (!this.age || this.age < 18) {
-  alert('Age must be 18 or above');
+ this.snackbar.error('Age must be 18 or above');
   return;
 }
 
     const phoneRegex = /^[0-9]{10}$/;
 
     if (!phoneRegex.test(this.phone.trim())) {
-      alert(this.tr.alerts.phoneInvalid);
+   this.snackbar.error(this.tr.alerts.phoneInvalid);
       return;
     }
 
@@ -526,35 +530,37 @@ const fullName = this.getFullName();
 );
       localStorage.setItem('app_user_phone', cleanPhone);
 
-    alert(this.tr.alerts.registerSuccess);
+ this.snackbar.success(this.tr.alerts.registerSuccess);
 
-// ADMIN FLOW
-if (
-  this.router.url.includes('create-user')
-) {
+setTimeout(() => {
 
-  localStorage.setItem(
-    'admin_created_user_id',
-    appUser.user_id
-  );
+  // ADMIN FLOW
+  if (this.router.url.includes('create-user')) {
 
-  this.router.navigate([
-    '/admin/create-biodata'
-  ]);
+    localStorage.setItem(
+      'admin_created_user_id',
+      appUser.user_id
+    );
 
-}
+    this.router.navigate([
+      '/admin/create-biodata'
+    ]);
 
-// NORMAL USER FLOW
-else {
+  }
 
-  this.router.navigate([
-    '/biodata'
-  ]);
+  // NORMAL USER FLOW
+  else {
 
-}
+    this.router.navigate([
+      '/biodata'
+    ]);
+
+  }
+
+}, 1000);
+
     } catch (error: any) {
-     
-      alert(error?.message || this.tr.alerts.somethingWrong);
+     this.snackbar.error(error?.message || this.tr.alerts.somethingWrong);
     } finally {
       this.isLoading = false;
     }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SnackbarService, SnackbarType } from '../snackbar.service';
@@ -18,19 +18,30 @@ export class SnackbarComponent implements OnInit, OnDestroy {
   private sub?: Subscription;
   private timer?: any;
 
-  constructor(private snackbarService: SnackbarService) {}
+  constructor(
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
+  ) {}
 
   ngOnInit(): void {
     this.sub = this.snackbarService.snackbar$.subscribe((data) => {
+      clearTimeout(this.timer);
 
       this.message = data.message;
       this.type = data.type;
       this.visible = true;
+      this.cdr.detectChanges();
 
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => {
-        this.visible = false;
-      }, 3000);
+      this.zone.runOutsideAngular(() => {
+        this.timer = setTimeout(() => {
+          this.zone.run(() => {
+            this.visible = false;
+            this.message = '';
+            this.cdr.detectChanges();
+          });
+        }, 3000);
+      });
     });
   }
 

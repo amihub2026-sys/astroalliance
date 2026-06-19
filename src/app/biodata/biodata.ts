@@ -1305,6 +1305,10 @@ if (!userId && !this.editProfileId) {
 
   this.isLoadingProfile = false;
 
+  this.snackbar.error(this.tr.alerts.loginRequired);
+
+  this.router.navigate(['/login']);
+
   return;
 
 }
@@ -2805,9 +2809,7 @@ const successMessage = this.isEditMode
 this.isSaving = false;
 this.cdr.detectChanges();
 
-setTimeout(() => {
-  this.snackbar.success(successMessage);
-}, 0);
+this.snackbar.success(successMessage);
 if (this.isAdminCreated) {
   localStorage.removeItem('admin_created_user_id');
 
