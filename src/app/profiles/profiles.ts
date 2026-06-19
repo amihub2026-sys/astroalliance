@@ -2353,42 +2353,54 @@ instantLike(event: MouseEvent, profile: ProfileItem): void {
   event.preventDefault();
   event.stopPropagation();
 
+  console.log('❤️ HEART BUTTON CLICKED');
+  console.log(profile);
+
   this.likeProfile(profile);
 }
+
+
+
 async likeProfile(profile: ProfileItem): Promise<void> {
+  console.log('➡️ likeProfile called:', profile);
+
   const userId = this.getLoggedInUserId();
 
   if (!userId) {
-    this.snackbar.error('Please login first');
+    this.snackbar.error('Please login to add your favourite profile');
     return;
   }
 
   const oldLiked = profile.liked;
-  const targetProfileId = String(profile.profileId);
+  const targetProfileId = String(profile.profileId || '').trim();
 
-  // FAST UI UPDATE FIRST
-  profile.liked = !oldLiked;
-
-  if (profile.liked) {
-    this.likedProfileIdSet.add(targetProfileId);
-  } else {
-    this.likedProfileIdSet.delete(targetProfileId);
+  if (!targetProfileId) {
+    this.snackbar.error('Target profile id missing');
+    return;
   }
-
-  this.likedProfilesCount = this.likedProfileIdSet.size;
-  this.cdr.detectChanges();
 
   try {
     const { data: myProfile, error: myProfileError } = await supabase
       .from('user_profiles')
       .select('profile_id')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (myProfileError) throw myProfileError;
-    if (!myProfile?.profile_id) throw new Error('My profile not found');
 
-    const myProfileId = String(myProfile.profile_id);
+    const myProfileId = String(myProfile?.profile_id || '').trim();
+
+    if (!myProfileId) {
+      this.snackbar.error('Please create your profile to add favourites');
+      return;
+    }
+
+    if (myProfileId === targetProfileId) {
+      this.snackbar.error('You cannot like your own profile');
+      return;
+    }
+
+    profile.liked = !oldLiked;
 
     if (profile.liked) {
       const { error } = await supabase
@@ -2396,12 +2408,16 @@ async likeProfile(profile: ProfileItem): Promise<void> {
         .upsert(
           {
             from_profile_id: myProfileId,
-            to_profile_id: targetProfileId
+            to_profile_id: targetProfileId,
+            created_at: new Date().toISOString()
           },
-          { onConflict: 'from_profile_id,to_profile_id' }
+          {
+            onConflict: 'from_profile_id,to_profile_id'
+          }
         );
 
       if (error) throw error;
+      this.likedProfileIdSet.add(targetProfileId);
     } else {
       const { error } = await supabase
         .from('profile_likes')
@@ -2410,27 +2426,33 @@ async likeProfile(profile: ProfileItem): Promise<void> {
         .eq('to_profile_id', targetProfileId);
 
       if (error) throw error;
-    }
-
-    await this.loadLikedProfiles();
-
-  } catch (err: any) {
-    // rollback if failed
-    profile.liked = oldLiked;
-
-    if (oldLiked) {
-      this.likedProfileIdSet.add(targetProfileId);
-    } else {
       this.likedProfileIdSet.delete(targetProfileId);
     }
+
+    this.profiles = this.profiles.map(item =>
+      item.profileId === targetProfileId
+        ? { ...item, liked: profile.liked }
+        : item
+    );
 
     this.likedProfilesCount = this.likedProfileIdSet.size;
     this.cdr.detectChanges();
 
-    console.error('LIKE ERROR:', err);
+  } catch (err: any) {
+    console.error('❌ LIKE ERROR:', err);
+
+    profile.liked = oldLiked;
+    this.likedProfilesCount = this.likedProfileIdSet.size;
+    this.cdr.detectChanges();
+
     this.snackbar.error(err?.message || 'Failed to update like');
   }
 }
+
+
+
+
+
   async sendInterest(profile: ProfileItem): Promise<void> {
     const userId = this.getLoggedInUserId();
 
