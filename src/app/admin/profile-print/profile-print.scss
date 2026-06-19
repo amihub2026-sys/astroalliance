@@ -421,35 +421,7 @@ h3 {
   margin-bottom: 5px !important;
   line-height: 1.25 !important;
 }
-/* FINAL PRINT FIX */
-@media print {
-  @page {
-    size: A4 portrait;
-    margin: 0;
-  }
 
-  html,
-  body {
-    width: 210mm !important;
-    height: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
-
-  .print-page {
-    width: 204mm !important;
-    max-width: 204mm !important;
-    min-height: 292mm !important;
-    height: auto !important;
-    margin: 2mm auto 0 auto !important;
-    padding: 2mm !important;
-   border: none !important;
-    box-sizing: border-box !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-  }
-}
 
 /* ALL FIELDS LIKE EXPECTATION STYLE */
 .column p {
@@ -534,8 +506,10 @@ h3 {
   padding-bottom: 4px !important;
 }
 
-.print-page {
-  overflow: visible !important;
+@media screen {
+  .print-page {
+    overflow: visible !important;
+  }
 }
 /* FINAL FIELD SPACE FIX */
 
@@ -601,7 +575,7 @@ h3 {
   color: #0000aa !important;
 }
 .print-footer-note {
-  margin-top: auto;
+  margin-top: 6px !important;
   border-top: 2px solid #008000;
   padding-top: 4px;
 
