@@ -156,22 +156,32 @@
         </div>
 
         <div class="form-grid">
-         <div class="field" [class.invalid]="isInvalid('fullName')">
-  <label>{{ tr.labels.fullName }} <span class="required">*</span></label>
-<input
-  id="fullName"
-  type="text"
-  (keypress)="tamilKeypress($event)"
-  [ngModel]="currentLang === 'ta'
-    ? (formDataTa.fullName || formData.fullName)
-    : formData.fullName"
-  (ngModelChange)="onTamilInputChange('fullName', $event)"
-  
-  name="fullName"
-  [placeholder]="tr.placeholders.fullName">
-            <small class="field-error" *ngIf="isInvalid('fullName')">Required</small>
-          </div>
+        <div class="field" [class.invalid]="isInvalid('fullName')">
+  <label>Full Name <span class="required">*</span></label>
 
+  <input
+    id="fullName"
+    type="text"
+    [(ngModel)]="formData.fullName"
+    (ngModelChange)="onFullNameChange($event)"
+    name="fullName"
+    placeholder="Enter full name"
+  >
+
+  <small class="field-error" *ngIf="isInvalid('fullName')">Required</small>
+</div>
+
+<div class="field">
+  <label>Tamil Name</label>
+
+  <input
+    type="text"
+    [(ngModel)]="formDataTa.fullName"
+    (ngModelChange)="onTamilNameChange($event)"
+    name="fullNameTa"
+    placeholder="தமிழ் பெயர்"
+  >
+</div>
          <div class="field" [class.invalid]="isInvalid('gender')">
   <label>{{ tr.labels.gender }} <span class="required">*</span></label>
             <select [(ngModel)]="formData.gender" name="gender">
@@ -780,29 +790,53 @@ formData.secondMarriageReason === 'Widowed'
         </div>
 
         <div class="form-grid">
-        <div class="field" [class.invalid]="isInvalid('fatherName')">
-  <label>{{ tr.labels.fatherName }} </label>
- <input
-  type="text"
-  [ngModel]="getTypedValue('fatherName')"
- (ngModelChange)="onTamilInputChange('fatherName', $event)"
-(keypress)="tamilKeypress($event)"
-  name="fatherName"
-  [placeholder]="tr.placeholders.fatherName">
+       <div class="field" [class.invalid]="isInvalid('fatherName')">
+  <label>{{ tr.labels.fatherName }}</label>
 
+  <input
+    type="text"
+    [(ngModel)]="formData.fatherName"
+    (ngModelChange)="onFatherNameChange($event)"
+    name="fatherName"
+    [placeholder]="tr.placeholders.fatherName"
+  >
+</div>
+
+<div class="field">
+  <label>{{ currentLang === 'ta' ? 'தந்தை பெயர் தமிழ்' : 'Father Name Tamil' }}</label>
+
+  <input
+    type="text"
+    [(ngModel)]="formDataTa.fatherName"
+    (ngModelChange)="onTamilFatherNameChange($event)"
+    name="fatherNameTa"
+    placeholder="தந்தை பெயர்"
+  >
 </div>
 
          <!-- MOTHER NAME -->
 <div class="field" [class.invalid]="isInvalid('motherName')">
   <label>{{ tr.labels.motherName }}</label>
- <input
-  type="text"
-  [ngModel]="getTypedValue('motherName')"
- (ngModelChange)="onTamilInputChange('motherName', $event)"
-(keypress)="tamilKeypress($event)"
-  name="motherName"
-  [placeholder]="tr.placeholders.motherName">
 
+  <input
+    type="text"
+    [(ngModel)]="formData.motherName"
+    (ngModelChange)="onMotherNameChange($event)"
+    name="motherName"
+    [placeholder]="tr.placeholders.motherName"
+  >
+</div>
+
+<div class="field">
+  <label>{{ currentLang === 'ta' ? 'தாய் பெயர் தமிழ்' : 'Mother Name Tamil' }}</label>
+
+  <input
+    type="text"
+    [(ngModel)]="formDataTa.motherName"
+    (ngModelChange)="onTamilMotherNameChange($event)"
+    name="motherNameTa"
+    placeholder="தாய் பெயர்"
+  >
 </div>
 
        <!-- FATHER OCCUPATION -->
