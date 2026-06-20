@@ -6,9 +6,9 @@
   width: 210mm;
   max-width: 210mm;
   min-height: 297mm;
-  margin: 0;
- padding: 0;
-border: none;
+  margin: 0 auto;
+  padding: 4mm;
+  border: 2px solid #008000;
   box-sizing: border-box;
 
   display: flex;
@@ -227,29 +227,33 @@ h3 {
   padding-top: 0 !important;
 }
 @media print {
- @page {
-  size: A4 portrait;
-  margin: 0;
-}
+  @page {
+    size: A4 portrait;
+    margin: 5mm;
+  }
 
   html,
   body {
     margin: 0 !important;
     padding: 0 !important;
     overflow: visible !important;
+    background: #fff !important;
   }
 
   .print-page {
-      width: 210mm !important;
-  max-width: 210mm !important;
-    height: auto !important;
-    min-height: auto !important;
-    margin: 0 !important;
-    padding: 2mm !important;
-    border: none !important;
+    width: 200mm !important;
+    max-width: 200mm !important;
+    min-height: 287mm !important;
+    margin: 0 auto !important;
+    padding: 4mm !important;
+    border: 2px solid #008000 !important;
     box-sizing: border-box !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
+    overflow: hidden !important;
+  }
+
+  .mobile-pdf-btn,
+  .print-loading {
+    display: none !important;
   }
 }
 .astro-details-row {
