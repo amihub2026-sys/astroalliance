@@ -42,6 +42,9 @@ isOtherIruppidam = false;
 isLoadingProfile = false;
 submitted = false;
 fieldErrors: Record<string, boolean> = {};
+private nameTranslateTimer: any;
+private fatherNameTranslateTimer: any;
+private motherNameTranslateTimer: any;
 
 isInvalid(field: string): boolean {
   return this.submitted && !!this.fieldErrors[field];
@@ -319,6 +322,9 @@ childrenDetails: 'குழந்தைகள் விவரம்',
   formData = {
     additionalMobile: [''],
     fullName: '',
+    nameTaManuallyEdited: false, 
+    fatherNameTaManuallyEdited: false,
+motherNameTaManuallyEdited: false,
     gender: '',
     dob: '',
     age: '',
@@ -855,8 +861,8 @@ const convert = async (taValue: string, enValue: string) => {
 
 };
 
-  this.formData.fullName =
-  this.formDataTa.fullName || this.formData.fullName;
+  // this.formData.fullName =
+  // this.formDataTa.fullName || this.formData.fullName;
   this.formData.fatherName = await convert(this.formDataTa.fatherName, this.formData.fatherName);
   this.formData.motherName = await convert(this.formDataTa.motherName, this.formData.motherName);
   this.formData.fatherOccupation = await convert(this.formDataTa.fatherOccupation, this.formData.fatherOccupation);
@@ -990,6 +996,102 @@ this.formDataTa.kudumbaNilai =
     this.formDataTa.kalappuThirumanamDetails
   );
 }
+async onFullNameChange(value: string) {
+  this.formData.fullName = value;
+
+  if (this.formData.nameTaManuallyEdited) return;
+
+  clearTimeout(this.nameTranslateTimer);
+
+  this.nameTranslateTimer = setTimeout(async () => {
+    this.formDataTa.fullName = await this.googleTamilInput(value);
+    this.cdr.detectChanges();
+  }, 400);
+}
+async googleTamilInput(text: string): Promise<string> {
+  if (!text || !text.trim()) return '';
+
+  try {
+    const url =
+      'https://inputtools.google.com/request' +
+      '?text=' + encodeURIComponent(text) +
+      '&itc=ta-t-i0-und' +
+      '&num=1';
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    return data?.[1]?.[0]?.[1]?.[0] || text;
+  } catch (error) {
+    return text;
+  }
+}
+transliterateTamilName(value: string): string {
+  if (!value) return '';
+
+  const words = value.toLowerCase().trim().split(/\s+/);
+
+  const nameMap: Record<string, string> = {
+    harish: 'ஹரிஷ்',
+    nath: 'நாத்',
+    kumar: 'குமார்',
+    suresh: 'சுரேஷ்',
+    ramesh: 'ரமேஷ்',
+    raj: 'ராஜ்',
+    priya: 'பிரியா',
+    divya: 'திவ்யா',
+    sathish: 'சதீஷ்',
+    ganesh: 'கணேஷ்',
+    karthik: 'கார்த்திக்'
+  };
+
+  return words
+    .map(word => nameMap[word] || word)
+    .join(' ');
+}
+
+onTamilNameChange(value: string) {
+  this.formDataTa.fullName = value;
+  this.formData.nameTaManuallyEdited = true;
+}
+
+async onFatherNameChange(value: string) {
+  this.formData.fatherName = value;
+
+  if (this.formData.fatherNameTaManuallyEdited) return;
+
+  clearTimeout(this.fatherNameTranslateTimer);
+
+  this.fatherNameTranslateTimer = setTimeout(async () => {
+    this.formDataTa.fatherName = await this.googleTamilInput(value);
+    this.cdr.detectChanges();
+  }, 400);
+}
+
+onTamilFatherNameChange(value: string) {
+  this.formDataTa.fatherName = value;
+  this.formData.fatherNameTaManuallyEdited = true;
+}
+
+async onMotherNameChange(value: string) {
+  this.formData.motherName = value;
+
+  if (this.formData.motherNameTaManuallyEdited) return;
+
+  clearTimeout(this.motherNameTranslateTimer);
+
+  this.motherNameTranslateTimer = setTimeout(async () => {
+    this.formDataTa.motherName = await this.googleTamilInput(value);
+    this.cdr.detectChanges();
+  }, 400);
+}
+
+onTamilMotherNameChange(value: string) {
+  this.formDataTa.motherName = value;
+  this.formData.motherNameTaManuallyEdited = true;
+}
+
+
 onChartInput(
   type: 'rasi' | 'amsam',
   index: number,
