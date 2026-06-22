@@ -276,7 +276,7 @@
   }}
 </button>
       <!-- <button class="secondary-btn" *ngIf="unlocked" type="button">Chat Now</button> -->
-      <button class="locked-btn" *ngIf="!unlocked" type="button" (click)="goToPlans()">
+      <button class="locked-btn" *ngIf="!unlocked" type="button" (click)="goToLoginOrRegister()">
         {{ currentLang === 'ta' ? 'முழு சுயவிவரம் திறக்கவும்' : 'Unlock Full Profile' }}
       </button>
     </div>
@@ -560,14 +560,14 @@
   {{ currentLang === 'ta' ? 'நிறுவனம்' : 'Company' }}
 </span>
 <strong *ngIf="unlocked">{{ getText(p.company) || '-' }}</strong>
-  <strong *ngIf="!unlocked" class="premium-heart" (click)="goToPlans()">
+  <strong *ngIf="!unlocked" class="premium-heart" (click)="goToLoginOrRegister()">
   💖
 </strong>
 </div>
 <div>
   <span>{{ currentLang === 'ta' ? 'பணியிடம்' : 'Work Place' }}</span>
   <strong *ngIf="unlocked">{{ getText(p.workPlace) || '-' }}</strong>
-  <strong *ngIf="!unlocked" class="premium-heart" (click)="goToPlans()">💖</strong>
+  <strong *ngIf="!unlocked" class="premium-heart" (click)="goToLoginOrRegister()">💖</strong>
 </div>
           <div><span>
   {{ currentLang === 'ta' ? 'சம்பளம்' : 'Salary' }}
@@ -602,7 +602,7 @@
     ? 'முழு முகவரி விவரங்களை பார்க்க உங்கள் திட்டத்தை மேம்படுத்தவும்.'
     : 'Upgrade your plan to view full address details securely.'
 }}</p>
-  <button class="unlock-premium-btn" (click)="goToPlans()">
+  <button class="unlock-premium-btn" (click)="goToLoginOrRegister()">
     {{ currentLang === 'ta' ? 'இப்போது திறக்கவும்' : 'Unlock Now' }}
   </button>
 </div>
@@ -639,7 +639,7 @@
     ? 'தொலைபேசி எண் மற்றும் மின்னஞ்சலை பார்க்க திட்டத்தை மேம்படுத்தவும்.'
     : 'Upgrade to view phone number and email instantly.'
 }}</p>
-  <button class="unlock-premium-btn" (click)="goToPlans()">
+  <button class="unlock-premium-btn" (click)="goToLoginOrRegister()">
     {{ currentLang === 'ta' ? 'திட்டங்களை பார்க்க' : 'View Plans' }}
   </button>
 </div>
@@ -754,7 +754,7 @@
     ? 'ஜாதகத்தை பார்க்க மேம்படுத்தவும்.'
     : 'Upgrade to view horoscope.'
 }}</p>
-    <button class="unlock-premium-btn" (click)="goToPlans()">
+    <button class="unlock-premium-btn" (click)="goToLoginOrRegister()">
       {{ currentLang === 'ta' ? 'இப்போது திறக்கவும்' : 'Unlock Now' }}
     </button>
   </div>
@@ -822,7 +822,7 @@
     ? 'பிரீமியம் உறுப்பினர்கள் முழு ஜாதக கட்டங்களையும் பொருத்தத்தையும் பார்க்கலாம்.'
     : 'Premium members can view full horoscope charts and compatibility.'
 }}</p>
-  <button class="unlock-premium-btn" (click)="goToPlans()">
+  <button class="unlock-premium-btn" (click)="goToLoginOrRegister()">
     {{ currentLang === 'ta' ? 'ஜாதகத்தை திறக்கவும்' : 'Unlock Horoscope' }}
   </button>
 </div>
