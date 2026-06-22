@@ -352,13 +352,17 @@ setTimeout(() => {
 
 
 async loadFilterOptions(): Promise<void> {
-  const { data: cityData } = await supabase
-    .from('mst_cities')
-    .select('city_name, city_name_ta')
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true });
+const TN_STATE_ID = 'cf6b16ed-7a55-4e52-ab9c-647c00494559';
 
-  this.cityOptions = cityData || [];
+const { data: cityData } = await supabase
+  .from('mst_cities')
+  .select('city_name, city_name_ta, sort_order')
+  .eq('state_id', TN_STATE_ID)
+  .eq('is_active', true)
+  .order('sort_order', { ascending: true })
+  .order('city_name', { ascending: true });
+
+this.cityOptions = cityData || [];
 
 const { data: religionData } = await supabase
   .from('mst_religions')
