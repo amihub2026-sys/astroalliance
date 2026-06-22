@@ -19,6 +19,9 @@ export class Biodata implements OnInit {
   snackbar = inject(SnackbarService);
   route = inject(ActivatedRoute);
 router = inject(Router);
+
+
+
 editProfileId = '';
 
 isBrowser = typeof window !== 'undefined';
@@ -51,6 +54,10 @@ isInvalid(field: string): boolean {
 }
   private currentUserId: string | null = null;
 isAdminCreated = false;
+
+isAdminBiodataMode(): boolean {
+  return this.isAdminCreated || !!this.editProfileId;
+}
   private existingProfileImageUrl: string | null = null;
   private existingVideoUrl: string | null = null;
   private existingHoroscopeFileUrl: string | null = null;
@@ -799,20 +806,52 @@ getTypedValue(field: keyof typeof this.formDataTa): string {
 
   return (this.formData as any)[field] || '';
 }
-tamilKeypress(event: KeyboardEvent): void {
-  // if (!this.isAdminTanglishEnabled()) {
-  //   return;
-  // }
 
-  if (this.currentLang !== 'ta') {
-    return;
+toTitleCase(value: string): string {
+  return value
+    .trim()
+    .split(/\s+/)
+    .map(word =>
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    )
+    .join(' ');
+}
+
+setEnglishFromTanglish(
+  field: 'fullName' | 'fatherName' | 'motherName',
+  event: any
+): void {
+  if (!this.isAdminBiodataMode()) return;
+
+  const value = event.target.value || '';
+  (this.formData as any)[field] = this.toTitleCase(value);
+}
+
+
+captureEnglishName(
+  field: 'fullName' | 'fatherName' | 'motherName',
+  event: KeyboardEvent
+): void {
+  if (!this.isAdminBiodataMode()) return;
+
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  if (event.key.length === 1) {
+    value += event.key;
   }
 
+  if (event.key === 'Backspace') {
+    value = value.slice(0, -1);
+  }
+
+  (this.formData as any)[field] = value.toUpperCase();
+}
+
+tamilKeypress(event: KeyboardEvent): void {
   const convertThis = (window as any).convertThis;
 
-  if (typeof convertThis !== 'function') {
-    return;
-  }
+  if (typeof convertThis !== 'function') return;
 
   convertThis(event);
 
@@ -826,13 +865,7 @@ onTamilInputChange(
   field: keyof typeof this.formDataTa,
   value: string
 ): void {
-
-  if (this.currentLang === 'ta') {
-    this.formDataTa[field] = value;
-    (this.formData as any)[field] = value;
-  } else {
-    (this.formData as any)[field] = value;
-  }
+  this.formDataTa[field] = value;
 }
 async prepareTamilValues(): Promise<void> {
   this.cdr.detectChanges();
@@ -851,20 +884,13 @@ getTamilEducationName(value: string): string {
 async prepareEnglishValues(): Promise<void> {
 
 const convert = async (taValue: string, enValue: string) => {
-
-  if (!taValue || !taValue.trim()) {
-    return enValue;
-  }
-
-  // do not translate english names
-  return taValue;
-
+  return enValue || '';
 };
 
   // this.formData.fullName =
   // this.formDataTa.fullName || this.formData.fullName;
-  this.formData.fatherName = await convert(this.formDataTa.fatherName, this.formData.fatherName);
-  this.formData.motherName = await convert(this.formDataTa.motherName, this.formData.motherName);
+  // this.formData.fatherName = await convert(this.formDataTa.fatherName, this.formData.fatherName);
+  // this.formData.motherName = await convert(this.formDataTa.motherName, this.formData.motherName);
   this.formData.fatherOccupation = await convert(this.formDataTa.fatherOccupation, this.formData.fatherOccupation);
   this.formData.motherOccupation = await convert(this.formDataTa.motherOccupation, this.formData.motherOccupation);
   this.formData.siblings = await convert(this.formDataTa.siblings, this.formData.siblings);
@@ -999,6 +1025,8 @@ this.formDataTa.kudumbaNilai =
 async onFullNameChange(value: string) {
   this.formData.fullName = value;
 
+  if (this.isAdminBiodataMode()) return;
+
   if (this.formData.nameTaManuallyEdited) return;
 
   clearTimeout(this.nameTranslateTimer);
@@ -1026,37 +1054,145 @@ async googleTamilInput(text: string): Promise<string> {
     return text;
   }
 }
-transliterateTamilName(value: string): string {
-  if (!value) return '';
+async googleEnglishInput(text: string): Promise<string> {
+  if (!text || !text.trim()) return '';
 
-  const words = value.toLowerCase().trim().split(/\s+/);
+  try {
+    const { data, error } = await supabase.functions.invoke(
+      'translate-text',
+      {
+        body: {
+          text,
+          target: 'en'
+        }
+      }
+    );
 
-  const nameMap: Record<string, string> = {
-    harish: 'ஹரிஷ்',
-    nath: 'நாத்',
-    kumar: 'குமார்',
-    suresh: 'சுரேஷ்',
-    ramesh: 'ரமேஷ்',
-    raj: 'ராஜ்',
-    priya: 'பிரியா',
-    divya: 'திவ்யா',
-    sathish: 'சதீஷ்',
-    ganesh: 'கணேஷ்',
-    karthik: 'கார்த்திக்'
+    if (error) return text;
+
+    return data?.translatedText || text;
+  } catch {
+    return text;
+  }
+}
+
+tamilToEnglishName(value: string): string {
+  if (!value || !value.trim()) return '';
+
+  const vowels: Record<string, string> = {
+    'அ': 'a', 'ஆ': 'aa', 'இ': 'i', 'ஈ': 'ee',
+    'உ': 'u', 'ஊ': 'oo', 'எ': 'e', 'ஏ': 'e',
+    'ஐ': 'ai', 'ஒ': 'o', 'ஓ': 'o', 'ஔ': 'au'
   };
 
-  return words
-    .map(word => nameMap[word] || word)
+  const consonants: Record<string, string> = {
+    'க்': 'k', 'ங்': 'ng', 'ச்': 'ch', 'ஞ்': 'nj',
+    'ட்': 't', 'ண்': 'n', 'த்': 'th', 'ந்': 'n',
+    'ப்': 'p', 'ம்': 'm', 'ய்': 'y', 'ர்': 'r',
+    'ல்': 'l', 'வ்': 'v', 'ழ்': 'zh', 'ள்': 'l',
+    'ற்': 'r', 'ன்': 'n',
+
+    'க': 'ka', 'ங': 'nga', 'ச': 'sa', 'ஞ': 'nja',
+    'ட': 'ta', 'ண': 'na', 'த': 'tha', 'ந': 'na',
+    'ப': 'pa', 'ம': 'ma', 'ய': 'ya', 'ர': 'ra',
+    'ல': 'la', 'வ': 'va', 'ழ': 'zha', 'ள': 'la',
+    'ற': 'ra', 'ன': 'na',
+
+    'ஜ': 'ja', 'ஷ': 'sha', 'ஸ': 'sa', 'ஹ': 'ha'
+  };
+
+  const signs: Record<string, string> = {
+    'ா': 'a', 'ி': 'i', 'ீ': 'ee', 'ு': 'u', 'ூ': 'oo',
+    'ெ': 'e', 'ே': 'e', 'ை': 'ai', 'ொ': 'o', 'ோ': 'o',
+    'ௌ': 'au', '்': ''
+  };
+
+  const base: Record<string, string> = {
+    'க': 'k', 'ங': 'ng', 'ச': 'ch', 'ஞ': 'nj',
+    'ட': 't', 'ண': 'n', 'த': 'th', 'ந': 'n',
+    'ப': 'p', 'ம': 'm', 'ய': 'y', 'ர': 'r',
+    'ல': 'l', 'வ': 'v', 'ழ': 'zh', 'ள': 'l',
+    'ற': 'r', 'ன': 'n',
+    'ஜ': 'j', 'ஷ': 'sh', 'ஸ': 's', 'ஹ': 'h'
+  };
+
+  const convertWord = (word: string): string => {
+    let out = '';
+
+    for (let i = 0; i < word.length; i++) {
+      const ch = word[i];
+      const next = word[i + 1];
+
+      if (vowels[ch]) {
+        out += vowels[ch];
+        continue;
+      }
+
+      if (base[ch]) {
+        if (next && signs[next] !== undefined) {
+          out += base[ch] + signs[next];
+          i++;
+        } else {
+          out += consonants[ch] || base[ch];
+        }
+        continue;
+      }
+
+      out += ch;
+    }
+
+    return out;
+  };
+
+  return value
+    .trim()
+    .split(/\s+/)
+    .map(word => this.toTitleCase(convertWord(word)))
     .join(' ');
+}
+
+async transliterateTamilName(value: string): Promise<string> {
+  if (!value || !value.trim()) {
+    return '';
+  }
+
+  return await this.googleTamilInput(value);
+}
+
+onTamilNameInput(event: Event) {
+  setTimeout(() => {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    this.formDataTa.fullName = value;
+
+    clearTimeout(this.nameTranslateTimer);
+
+    this.nameTranslateTimer = setTimeout(() => {
+      this.formData.fullName = this.tamilToEnglishName(value);
+      this.cdr.detectChanges();
+    }, 100);
+  }, 0);
 }
 
 onTamilNameChange(value: string) {
   this.formDataTa.fullName = value;
   this.formData.nameTaManuallyEdited = true;
+
+  if (!this.isAdminBiodataMode()) return;
+
+  clearTimeout(this.nameTranslateTimer);
+
+  this.nameTranslateTimer = setTimeout(() => {
+    this.formData.fullName = this.tamilToEnglishName(value);
+    this.cdr.detectChanges();
+  }, 300);
 }
 
 async onFatherNameChange(value: string) {
   this.formData.fatherName = value;
+
+  if (this.isAdminBiodataMode()) return;
 
   if (this.formData.fatherNameTaManuallyEdited) return;
 
@@ -1068,13 +1204,33 @@ async onFatherNameChange(value: string) {
   }, 400);
 }
 
+onTamilFatherNameInput(event: Event) {
+  setTimeout(() => {
+    const value = (event.target as HTMLInputElement).value;
+    this.onTamilFatherNameChange(value);
+  }, 0);
+}
+
 onTamilFatherNameChange(value: string) {
   this.formDataTa.fatherName = value;
   this.formData.fatherNameTaManuallyEdited = true;
+
+  if (!this.isAdminBiodataMode()) return;
+
+  clearTimeout(this.fatherNameTranslateTimer);
+
+  this.fatherNameTranslateTimer = setTimeout(() => {
+    this.formData.fatherName = this.tamilToEnglishName(value);
+    this.cdr.detectChanges();
+  }, 300);
 }
+
+
 
 async onMotherNameChange(value: string) {
   this.formData.motherName = value;
+
+  if (this.isAdminBiodataMode()) return;
 
   if (this.formData.motherNameTaManuallyEdited) return;
 
@@ -1085,12 +1241,26 @@ async onMotherNameChange(value: string) {
     this.cdr.detectChanges();
   }, 400);
 }
+onTamilMotherNameInput(event: Event) {
+  setTimeout(() => {
+    const value = (event.target as HTMLInputElement).value;
+    this.onTamilMotherNameChange(value);
+  }, 0);
+}
 
 onTamilMotherNameChange(value: string) {
   this.formDataTa.motherName = value;
   this.formData.motherNameTaManuallyEdited = true;
-}
 
+  if (!this.isAdminBiodataMode()) return;
+
+  clearTimeout(this.motherNameTranslateTimer);
+
+  this.motherNameTranslateTimer = setTimeout(() => {
+    this.formData.motherName = this.tamilToEnglishName(value);
+    this.cdr.detectChanges();
+  }, 300);
+}
 
 onChartInput(
   type: 'rasi' | 'amsam',
@@ -1511,7 +1681,7 @@ this.formData.childrenStatus =
 this.formData.childrenDetails =
   data.children_details || '';
 this.formDataTa.childrenDetails =
-  data.children_details || '';
+  data.children_details_ta || '';
 this.formData.kalappuThirumanam =
   data.kalappu_thirumanam ? 'Yes' : 'No';
 
@@ -2309,7 +2479,9 @@ this.isSaving = true;
 
 
 
-await this.prepareEnglishValues();
+if (!this.isAdminBiodataMode()) {
+  await this.prepareEnglishValues();
+}
    try {
 
         if (this.currentLang === 'en') {
