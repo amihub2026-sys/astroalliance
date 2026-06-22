@@ -943,8 +943,8 @@ nakshatra_text_ta,
   profile_status,
   updated_at
 `)
- .eq('profile_status', 'Approved')
-  .eq('is_published', true)
+.in('profile_status', ['Approved', 'approved'])
+.eq('is_published', true)
   .order('updated_at', { ascending: false });
 
       if (error) throw error;
@@ -2218,17 +2218,17 @@ this.scrollFilterToStart();
 
     const currentUserId = this.getLoggedInUserId();
 
-    if (!currentUserId) {
-      this.snackbar.error(this.tr.alerts.loginRequired);
-      this.router.navigate(['/login'], {
-        queryParams: {
-          from: 'profiles',
-          profileId: profile.id,
-          profileName: this.getText(profile.name)
-        }
-      });
-      return;
+if (!currentUserId) {
+  this.router.navigate(['/profile-view'], {
+    queryParams: {
+      unlocked: false,
+      profileId: String(profile.id).trim(),
+      profileName: this.getText(profile.name),
+      from: 'free-search'
     }
+  });
+  return;
+}
 
     await this.loadCurrentPlanFromSupabase();
 

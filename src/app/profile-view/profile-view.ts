@@ -213,7 +213,9 @@ showPrevPhoto() {
 
 
     await this.loadProfile();
-    (window as any).activeProfileViewComponent = this;
+   if (typeof window !== 'undefined') {
+  (window as any).activeProfileViewComponent = this;
+}
   }
 
 private asLangText(value: string | null | undefined): LangText {
@@ -975,7 +977,7 @@ isYes(value: any): boolean {
 goToPlans(): void {
   if (!this.profile || !this.loadedProfileRow) return;
 
-  this.router.navigate(['/plans'], {
+  this.router.navigate(['/plans'], { 
     queryParams: {
       from: 'profiles',
       profileId: this.loadedProfileRow.profile_id,
@@ -983,6 +985,30 @@ goToPlans(): void {
       profileName: this.getText(this.profile.fullName)
     }
   });
+}
+
+
+goToLoginOrRegister(): void {
+  const loggedInUser = this.getStoredLoggedInUser();
+
+  if (!loggedInUser?.user_id) {
+    this.snackbar.error(
+      this.currentLang === 'ta'
+        ? 'முதலில் லாகின் செய்யவும் அல்லது ரிஜிஸ்டர் செய்யவும்'
+        : 'Please login or register first'
+    );
+
+    this.router.navigate(['/login'], {
+      queryParams: {
+        from: 'profile-view',
+        profileId: this.selectedProfileId
+      }
+    });
+
+    return;
+  }
+
+  this.goToPlans();
 }
   async sendInterest(): Promise<void> {
     if (!this.profile) return;

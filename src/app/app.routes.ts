@@ -24,7 +24,7 @@ export const routes: Routes = [
 
   { path: 'plans', component: Plans, canActivate: [authGuard] },
   { path: 'biodata', component: Biodata, canActivate: [authGuard] },
-  { path: 'profile-view', component: ProfileView, canActivate: [authGuard] },
+  { path: 'profile-view', component: ProfileView },
   { path: 'my-biodata', component: MyBiodataComponent, canActivate: [authGuard] },
   { path: 'payment', component: PaymentPage, canActivate: [authGuard] },
   { path: 'terms', component: Terms },
