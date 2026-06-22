@@ -386,7 +386,18 @@ if (age < 18) {
     if (appUser?.user_id) {
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
-        .select('profile_id, user_id, full_name, dob, mobile, email, profile_image_url')
+        .select(`
+  profile_id,
+  user_id,
+  full_name,
+  dob,
+  mobile,
+  email,
+  profile_image_url,
+  gender_text,
+  profile_status,
+  is_published
+`)
         .eq('user_id', appUser.user_id)
         .eq('dob', cleanDob)
         .maybeSingle();
@@ -398,6 +409,26 @@ if (age < 18) {
         this.snackbar.error('Invalid mobile number or date of birth');
         return;
       }
+
+
+const profileStatus = String(profile.profile_status || '').trim().toLowerCase();
+const gender = String(profile.gender_text || '').trim().toLowerCase();
+
+const isMale =
+  gender === 'male' ||
+  gender === 'ஆண்';
+
+if (isMale && profileStatus !== 'approved') {
+  this.stopLoading();
+
+this.snackbar.error(
+  this.currentLang === 'ta'
+    ? 'உங்கள் சுயவிவரம் சரிபார்ப்பிற்காக காத்திருக்கிறது. தயவுசெய்து சரிபார்ப்பு முடியும் வரை காத்திருக்கவும்.'
+    : 'Your profile is waiting for verification. Please wait until it is verified.'
+);
+
+  return;
+}
 
       this.clearOldLoginStorage();
 
@@ -433,7 +464,18 @@ return;
 
     const { data: legacyProfile, error: legacyProfileError } = await supabase
       .from('user_profiles')
-      .select('profile_id, user_id, full_name, dob, mobile, email, profile_image_url')
+      .select(`
+  profile_id,
+  user_id,
+  full_name,
+  dob,
+  mobile,
+  email,
+  profile_image_url,
+  gender_text,
+  profile_status,
+  is_published
+`)
       .eq('mobile', cleanPhone)
       .eq('dob', cleanDob)
       .maybeSingle();
@@ -456,6 +498,26 @@ return;
     this.snackbar.error('Invalid mobile number or date of birth');
   }
 
+  return;
+}
+
+const legacyProfileStatus = String(legacyProfile.profile_status || '')
+  .trim()
+  .toLowerCase();
+
+const legacyGender = String(legacyProfile.gender_text || '')
+  .trim()
+  .toLowerCase();
+
+const legacyIsMale =
+  legacyGender === 'male' ||
+  legacyGender === 'ஆண்';
+
+if (legacyIsMale && legacyProfileStatus !== 'approved') {
+  this.stopLoading();
+  this.snackbar.error(
+      'Your profile is waiting for verification. Please wait until it is verified.'
+  );
   return;
 }
 
