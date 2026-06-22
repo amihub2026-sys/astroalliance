@@ -175,7 +175,30 @@
         </div>
       </div>
     </div>
+<div class="tm-dropdown" data-filter="gender" *ngIf="!isLoggedIn">
+  <div class="tm-dropdown-box" (click)="toggleDropdown('gender', $event)">
+    <span>{{ filters.gender || 'Gender' }}</span>
+    <span class="arrow">⌄</span>
+  </div>
 
+  <div
+    class="tm-dropdown-panel"
+    *ngIf="openDropdown === 'gender'"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="tm-option default-option" (click)="selectOption('gender', '')">
+      All Gender
+    </div>
+
+    <div class="tm-option" (click)="selectOption('gender', 'Male')">
+      Male
+    </div>
+
+    <div class="tm-option" (click)="selectOption('gender', 'Female')">
+      Female
+    </div>
+  </div>
+</div>
     <div class="tm-dropdown" data-filter="religion">
       <div class="tm-dropdown-box" (click)="toggleDropdown('religion', $event)">
         <span>{{ filters.religion || tr.filters.religion }}</span>
