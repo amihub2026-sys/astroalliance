@@ -156,32 +156,64 @@
         </div>
 
         <div class="form-grid">
-        <div class="field" [class.invalid]="isInvalid('fullName')">
-  <label>Full Name <span class="required">*</span></label>
 
-  <input
-    id="fullName"
-    type="text"
-    [(ngModel)]="formData.fullName"
-    (ngModelChange)="onFullNameChange($event)"
-    name="fullName"
-    placeholder="Enter full name"
-  >
 
-  <small class="field-error" *ngIf="isInvalid('fullName')">Required</small>
-</div>
+    <ng-container *ngIf="isAdminBiodataMode(); else normalNameFields">
 
-<div class="field">
-  <label>Tamil Name</label>
+  <div class="field">
+    <label>Tamil Name</label>
+ <input
+  type="text"
+  [ngModel]="formDataTa.fullName"
+  (keypress)="tamilKeypress($event)"
+  (input)="onTamilNameInput($event)"
+  name="fullNameTa"
+  placeholder="தமிழ் பெயர்"
+>
+  </div>
 
-  <input
-    type="text"
-    [(ngModel)]="formDataTa.fullName"
-    (ngModelChange)="onTamilNameChange($event)"
-    name="fullNameTa"
-    placeholder="தமிழ் பெயர்"
-  >
-</div>
+  <div class="field" [class.invalid]="isInvalid('fullName')">
+    <label>Full Name <span class="required">*</span></label>
+    <input
+      type="text"
+      [(ngModel)]="formData.fullName"
+      name="fullName"
+      placeholder="English name auto fill"
+    >
+    <small class="field-error" *ngIf="isInvalid('fullName')">Required</small>
+  </div>
+
+</ng-container>
+
+<ng-template #normalNameFields>
+
+  <div class="field" [class.invalid]="isInvalid('fullName')">
+    <label>Full Name <span class="required">*</span></label>
+    <input
+      type="text"
+      [(ngModel)]="formData.fullName"
+      (ngModelChange)="onFullNameChange($event)"
+      name="fullName"
+      placeholder="Enter full name"
+    >
+    <small class="field-error" *ngIf="isInvalid('fullName')">Required</small>
+  </div>
+
+  <div class="field">
+    <label>Tamil Name</label>
+    <input
+      type="text"
+    [ngModel]="formDataTa.fullName"
+(keypress)="tamilKeypress($event)"
+(input)="onTamilNameInput($event)"
+      name="fullNameTa"
+      placeholder="தமிழ் பெயர்"
+    >
+  </div>
+
+</ng-template>
+
+
          <div class="field" [class.invalid]="isInvalid('gender')">
   <label>{{ tr.labels.gender }} <span class="required">*</span></label>
             <select [(ngModel)]="formData.gender" name="gender">
@@ -790,54 +822,102 @@ formData.secondMarriageReason === 'Widowed'
         </div>
 
         <div class="form-grid">
-       <div class="field" [class.invalid]="isInvalid('fatherName')">
-  <label>{{ tr.labels.fatherName }}</label>
 
+      <ng-container *ngIf="isAdminBiodataMode(); else normalParentFields">
+
+  <div class="field">
+    <label>Father Name Tamil</label>
+   <input
+  type="text"
+  [(ngModel)]="formDataTa.fatherName"
+  (keypress)="tamilKeypress($event)"
+  (input)="onTamilFatherNameInput($event)"
+  name="fatherNameTa"
+  placeholder="தந்தை பெயர்"
+/>
+  </div>
+
+  <div class="field" [class.invalid]="isInvalid('fatherName')">
+    <label>Father Name</label>
+    <input
+      type="text"
+      [(ngModel)]="formData.fatherName"
+      name="fatherName"
+      placeholder="Father name auto fill"
+    
+    >
+  </div>
+
+  <div class="field">
+    <label>Mother Name Tamil</label>
   <input
-    type="text"
-    [(ngModel)]="formData.fatherName"
-    (ngModelChange)="onFatherNameChange($event)"
-    name="fatherName"
-    [placeholder]="tr.placeholders.fatherName"
-  >
-</div>
+  type="text"
+  [(ngModel)]="formDataTa.motherName"
+  (keypress)="tamilKeypress($event)"
+  (input)="onTamilMotherNameInput($event)"
+  name="motherNameTa"
+  placeholder="தாய் பெயர்"
+/>
+  </div>
 
-<div class="field">
-  <label>{{ currentLang === 'ta' ? 'தந்தை பெயர் தமிழ்' : 'Father Name Tamil' }}</label>
+  <div class="field" [class.invalid]="isInvalid('motherName')">
+    <label>Mother Name</label>
+    <input
+      type="text"
+      [(ngModel)]="formData.motherName"
+      name="motherName"
+      placeholder="Mother name auto fill"
+    >
+  </div>
+</ng-container>
+<ng-template #normalParentFields>
+  <div class="field" [class.invalid]="isInvalid('fatherName')">
+    <label>{{ tr.labels.fatherName }}</label>
+    <input
+      type="text"
+      [(ngModel)]="formData.fatherName"
+      (ngModelChange)="onFatherNameChange($event)"
+      name="fatherName"
+      [placeholder]="tr.placeholders.fatherName"
+    >
+  </div>
+  <div class="field">
+    <label>{{ currentLang === 'ta' ? 'தந்தை பெயர் தமிழ்' : 'Father Name Tamil' }}</label>
+ <input
+  type="text"
+  [(ngModel)]="formDataTa.fatherName"
+  (keypress)="tamilKeypress($event)"
+  (input)="onTamilFatherNameInput($event)"
+  name="fatherNameTa"
+  placeholder="தந்தை பெயர்"
+/>
+  </div>
+  <div class="field" [class.invalid]="isInvalid('motherName')">
+    <label>{{ tr.labels.motherName }}</label>
+    <input
+      type="text"
+      [(ngModel)]="formData.motherName"
+      (ngModelChange)="onMotherNameChange($event)"
+      name="motherName"
+      [placeholder]="tr.placeholders.motherName"
+    >
+  </div>
+  <div class="field">
+    <label>{{ currentLang === 'ta' ? 'தாய் பெயர் தமிழ்' : 'Mother Name Tamil' }}</label>
+    <input
+  type="text"
+  [(ngModel)]="formDataTa.motherName"
+  (keypress)="tamilKeypress($event)"
+  (input)="onTamilMotherNameInput($event)"
+  name="motherNameTa"
+  placeholder="தாய் பெயர்"
+/>
+  </div>
 
-  <input
-    type="text"
-    [(ngModel)]="formDataTa.fatherName"
-    (ngModelChange)="onTamilFatherNameChange($event)"
-    name="fatherNameTa"
-    placeholder="தந்தை பெயர்"
-  >
-</div>
+</ng-template>
 
-         <!-- MOTHER NAME -->
-<div class="field" [class.invalid]="isInvalid('motherName')">
-  <label>{{ tr.labels.motherName }}</label>
 
-  <input
-    type="text"
-    [(ngModel)]="formData.motherName"
-    (ngModelChange)="onMotherNameChange($event)"
-    name="motherName"
-    [placeholder]="tr.placeholders.motherName"
-  >
-</div>
 
-<div class="field">
-  <label>{{ currentLang === 'ta' ? 'தாய் பெயர் தமிழ்' : 'Mother Name Tamil' }}</label>
-
-  <input
-    type="text"
-    [(ngModel)]="formDataTa.motherName"
-    (ngModelChange)="onTamilMotherNameChange($event)"
-    name="motherNameTa"
-    placeholder="தாய் பெயர்"
-  >
-</div>
 
        <!-- FATHER OCCUPATION -->
 <div class="field" [class.invalid]="isInvalid('fatherOccupation')">
