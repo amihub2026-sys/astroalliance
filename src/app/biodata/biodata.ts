@@ -2002,164 +2002,205 @@ this.formDataTa.partnerExpectation = data.partner_expectation_ta || '';
   }
 
 async extractHoroscopeData(): Promise<void> {
-
   if (!this.selectedHoroscopeFile) {
-
     this.snackbar.error(this.tr.alerts.uploadHoroscopeFirst);
-
     return;
-
   }
 
   this.isExtracting = true;
 
   try {
+    const uploadData = new FormData();
+    uploadData.append('file', this.selectedHoroscopeFile);
 
-    const formData = new FormData();
+    const response = await fetch('http://localhost:5000/api/horoscope/extract', {
+      method: 'POST',
+      body: uploadData
+    });
 
-    formData.append(
-      'file',
-      this.selectedHoroscopeFile
-    );
+    const result = await response.json();
 
-    const { data, error } =
-      await supabase.functions.invoke(
-        'horoscope-autofill',
-        {
-          body: formData,
-        }
-      );
-
-
-    if (error) {
-
-    
-
-      this.snackbar.error(this.tr.alerts.horoscopeFailed);
-
+    if (!response.ok || !result.success) {
+      this.snackbar.error(result.message || this.tr.alerts.horoscopeFailed);
       return;
-
     }
 
-    const extractedText =
-      data?.ParsedResults?.[0]?.ParsedText || '';
+    const d = result.data || {};
 
+console.log('RASI CHART:', d.rasiChart);
+console.log('AMSAM CHART:', d.amsamChart);
+console.log('FULL OCR:', JSON.stringify(d, null, 2));
 
-    const text =
-      extractedText.toLowerCase();
-
-    // AUTO DETECT RASI
-    for (const rasi of this.rasiDbList.map((x: any) => x.rasi_name)) {
-
-      if (
-        text.includes(rasi.toLowerCase())
-      ) {
-
-        this.formData.rasi = rasi;
-
-        break;
-
-      }
-
-    }
-
-    // AUTO DETECT NAKSHATRA
-    for (const star of this.nakshatraDbList.map((x: any) => x.nakshatra_name)) {
-
-      if (
-        text.includes(star.toLowerCase())
-      ) {
-
-        this.formData.nakshatra = star;
-
-        break;
-
-      }
-
-    }
-
-    // AUTO DETECT LAGNAM
-   for (const lag of this.lagnamDbList.map((x: any) => x.lagnam_name)) {
-
-      if (
-        text.includes(lag.toLowerCase())
-      ) {
-
-        this.formData.lagnam = lag;
-
-        break;
-
-      }
-
-    }
-
-    // GENDER
-  // GENDER
-if (text.includes('female')) {
-  const female = this.genderList.find(
-    (x: any) => x.gender_name?.toLowerCase() === 'female'
-  );
-
-  this.formData.gender = female?.gender_name || '';
-} 
-else if (text.includes('male')) {
-  const male = this.genderList.find(
-    (x: any) => x.gender_name?.toLowerCase() === 'male'
-  );
-
-  this.formData.gender = male?.gender_name || '';
+if (Array.isArray(d.rasiChart) && d.rasiChart.length === 12) {
+  this.rasiChart = d.rasiChart.map((x: any) => String(x || ''));
 }
 
-   // DHOSHAM
-if (
-  text.includes('dhosham') ||
-  text.includes('dosham')
-) {
-  const dhosham = this.dhoshamDbList.find(
-    (x: any) => x.dhosham_name?.toLowerCase().includes('dhosham')
-  );
+if (Array.isArray(d.amsamChart) && d.amsamChart.length === 12) {
+  this.amsamChart = d.amsamChart.map((x: any) => String(x || ''));
+}    
 
-  this.formData.dhosham = dhosham?.dhosham_name || '';
-}
+this.rasiChart = [...this.rasiChart];
+this.amsamChart = [...this.amsamChart];
+this.cdr.detectChanges();
 
-    // DEFAULT VALUES
-    this.formData.birthPlace =
-      this.formData.birthPlace || 'Madurai';
+    this.formDataTa.fullName = d.fullName || '';
+    this.formData.fullName = d.fullName ? this.tamilToEnglishName(d.fullName) : this.formData.fullName;
 
-    this.formData.birthTime =
-      this.formData.birthTime || '06:30';
+    this.formData.gender = d.gender || this.formData.gender;
+    this.formData.maritalStatus = d.maritalStatus || this.formData.maritalStatus;
+ 
 
-    // SAMPLE CHART AUTO FILL
-    this.rasiChart = [
-      '1', '', '4', '',
-      '7', '', '2', '',
-      '5', '', '', '9'
-    ];
+this.formData.secondMarriageReason =
+  d.secondMarriageReason || this.formData.secondMarriageReason;
 
-    this.amsamChart = [
-      '', '3', '', '6',
-      '', '8', '', '1',
-      '', '', '10', ''
-    ];
+this.formData.childrenStatus =
+  d.childrenStatus || this.formData.childrenStatus;
 
+this.formData.childrenDetails =
+  d.childrenDetails || this.formData.childrenDetails;
+
+this.formDataTa.childrenDetails =
+  d.childrenDetails || this.formDataTa.childrenDetails;
+
+    this.formData.dob = d.dob || this.formData.dob;
     this.onDobChange();
 
+    this.formData.birthTime = d.birthTime || this.formData.birthTime;
+
+    this.formData.mobile = d.mobile || this.formData.mobile;
+    this.formData.additionalMobile =
+      Array.isArray(d.additionalMobile) && d.additionalMobile.length
+        ? d.additionalMobile
+        : this.formData.additionalMobile;
+
+    this.formData.religion = d.religion || this.formData.religion;
+
+    const religion = this.religionList.find(
+      (r: any) =>
+        r.religion_name === d.religion ||
+        r.religion_name_ta === d.religion
+    );
+
+    if (religion) {
+      this.selectedReligionId = religion.religion_id;
+      this.casteList = this.allCastes.filter(
+        (c: any) => c.religion_id === this.selectedReligionId
+      );
+    }
+
+    const extractedCaste = String(d.caste || '').trim();
+
+    const matchedCaste = this.casteList.find(
+      (c: any) =>
+        String(c.caste_name || '').trim() === extractedCaste ||
+        String(c.caste_name_ta || '').trim() === extractedCaste
+    );
+
+    if (matchedCaste) {
+      this.formData.caste = matchedCaste.caste_name;
+    } else if (extractedCaste) {
+      this.formData.caste = 'Other';
+      this.formData.otherCaste = extractedCaste;
+    }
+
+    this.formData.subCaste = d.subCaste || this.formData.subCaste;
+    this.formDataTa.subCaste = d.subCaste || this.formDataTa.subCaste;
+
+    this.formDataTa.fatherName = d.fatherName || '';
+    this.formData.fatherName = d.fatherName ? this.tamilToEnglishName(d.fatherName) : this.formData.fatherName;
+
+    this.formDataTa.motherName = d.motherName || '';
+    this.formData.motherName = d.motherName ? this.tamilToEnglishName(d.motherName) : this.formData.motherName;
+
+    this.formData.fatherOccupation = d.fatherOccupation || this.formData.fatherOccupation;
+    this.formDataTa.fatherOccupation = d.fatherOccupation || this.formDataTa.fatherOccupation;
+
+    this.formData.motherOccupation = d.motherOccupation || this.formData.motherOccupation;
+    this.formDataTa.motherOccupation = d.motherOccupation || this.formDataTa.motherOccupation;
+
+    this.formData.height = d.height || this.formData.height;
+    this.formData.color = d.color || this.formData.color;
+
+   const extractedEducation = String(d.education || '').trim();
+
+const matchedEducation = this.educationList.find(
+  (e: any) =>
+    String(e.education_name || '').trim().toLowerCase() === extractedEducation.toLowerCase() ||
+    String(e.education_name_ta || '').trim() === extractedEducation
+);
+
+if (matchedEducation) {
+  this.formData.education = matchedEducation.education_name;
+  this.formData.otherEducation = '';
+} else if (extractedEducation) {
+  this.formData.education = 'Other';
+  this.formData.otherEducation = extractedEducation;
+}
+    this.formData.job = d.job || this.formData.job;
+    this.formDataTa.job = d.job || this.formDataTa.job;
+
+    this.formData.salary = d.salary || this.formData.salary;
+    this.formDataTa.salary = d.salary || this.formDataTa.salary;
+
+    this.formData.unmarriedBrothers = d.unmarriedBrothers || this.formData.unmarriedBrothers;
+    this.formData.unmarriedSisters = d.unmarriedSisters || this.formData.unmarriedSisters;
+    this.formData.marriedBrothers = d.marriedBrothers || this.formData.marriedBrothers;
+    this.formData.marriedSisters = d.marriedSisters || this.formData.marriedSisters;
+
+    this.formData.workPlace = d.workPlace || this.formData.workPlace;
+    this.formDataTa.workPlace = d.workPlace || this.formDataTa.workPlace;
+
+    this.formData.poorvegam = d.poorvegam || this.formData.poorvegam;
+    this.formDataTa.poorvegam = d.poorvegam || this.formDataTa.poorvegam;
+this.formData.thisai = d.thisai || this.formData.thisai;
+this.formDataTa.thisai = d.thisai || this.formDataTa.thisai;
+
+this.formData.thisaiIruppu = d.thisaiIruppu || this.formData.thisaiIruppu;
+this.formDataTa.thisaiIruppu = d.thisaiIruppu || this.formDataTa.thisaiIruppu;
+
+    this.poorvegamSearch = d.poorvegam || this.poorvegamSearch;
+
+    this.formData.iruppidam = d.iruppidam || this.formData.iruppidam;
+    this.formDataTa.iruppidam = d.iruppidam || this.formDataTa.iruppidam;
+    this.iruppidamSearch = d.iruppidam || this.iruppidamSearch;
+
+    this.formData.kuladeivam = d.kuladeivam || this.formData.kuladeivam;
+    this.formDataTa.kuladeivam = d.kuladeivam || this.formDataTa.kuladeivam;
+
+    this.formData.sothukal = d.sothukal || this.formData.sothukal;
+    this.formDataTa.sothukal = d.sothukal || this.formDataTa.sothukal;
+
+    this.formData.partnerExpectation = d.partnerExpectation || this.formData.partnerExpectation;
+    this.formDataTa.partnerExpectation = d.partnerExpectation || this.formDataTa.partnerExpectation;
+
+    this.formData.address = d.address || this.formData.address;
+    this.formDataTa.address = d.address || this.formDataTa.address;
+
+    const rasi = this.rasiDbList.find(
+      (x: any) => x.rasi_name === d.rasi || x.rasi_name_ta === d.rasi
+    );
+    this.formData.rasi = rasi?.rasi_name || d.rasi || this.formData.rasi;
+
+    const nakshatra = this.nakshatraDbList.find(
+      (x: any) => x.nakshatra_name === d.nakshatra || x.nakshatra_name_ta === d.nakshatra
+    );
+    this.formData.nakshatra = nakshatra?.nakshatra_name || d.nakshatra || this.formData.nakshatra;
+
+    const lagnam = this.lagnamDbList.find(
+      (x: any) => x.lagnam_name === d.lagnam || x.lagnam_name_ta === d.lagnam
+    );
+    this.formData.lagnam = lagnam?.lagnam_name || d.lagnam || this.formData.lagnam;
+
+    this.formData.paatham = d.paatham || this.formData.paatham;
+    this.formDataTa.paatham = d.paatham || this.formDataTa.paatham;
+
     this.snackbar.success(this.tr.alerts.horoscopeFilled);
-
   } catch (error) {
-
-   
-
     this.snackbar.error(this.tr.alerts.horoscopeFailed);
-
   } finally {
-
     this.isExtracting = false;
-
     this.cdr.detectChanges();
-
   }
-
 }
 
   private getCompletionPercentage(): number {
