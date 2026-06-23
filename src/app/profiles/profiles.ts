@@ -969,7 +969,7 @@ nakshatra_text_ta,
     }
 
     // ===== GENDER FILTER =====
-    if (!this.isOppositeGender(row.gender_text)) {
+  if (this.isLoggedIn && !this.isOppositeGender(row.gender_text)) {
   return false;
 }
     // =========================
