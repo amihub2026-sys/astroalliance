@@ -2055,8 +2055,8 @@ formData.secondMarriageReason === 'Widowed'
         </div>
       </div>
 </details>
-      <!-- HOROSCOPE UPLOAD -->
-      <div class="section-card">
+     <!-- HOROSCOPE UPLOAD -->
+<div class="section-card" *ngIf="isAdminBiodataMode()">
         <div class="section-title-wrap">
           <h2>{{ tr.sections.horoscopeUpload }}</h2>
           <p>{{ tr.sections.horoscopeUploadSub }}</p>
@@ -2075,14 +2075,15 @@ formData.secondMarriageReason === 'Widowed'
 
             </label>
 
-            <button
-              type="button"
-              class="extract-btn"
-              (click)="extractHoroscopeData()"
-              [disabled]="isExtracting"
-            >
-              {{ isExtracting ? tr.labels.extracting : tr.labels.autoFill }}
-            </button>
+<button
+  *ngIf="isAdminBiodataMode()"
+  type="button"
+  class="extract-btn"
+  (click)="extractHoroscopeData()"
+  [disabled]="isExtracting"
+>
+  {{ isExtracting ? tr.labels.extracting : tr.labels.autoFill }}
+</button>
 
             <div class="file-note" *ngIf="selectedHoroscopeFile">
               {{ tr.labels.selected }}: {{ selectedHoroscopeFile.name }}
