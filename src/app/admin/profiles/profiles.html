@@ -137,24 +137,20 @@
 
         <tbody>
           <tr *ngFor="let profile of paginatedProfiles" class="clickable-row">
-  <td class="status-cell">
+<td class="status-cell">
 
   <span
-    *ngIf="profile.profile_status === 'Approved'"
+    *ngIf="getStatus(profile) === 'approved'"
     class="status-icon approved"
     title="Approved">
-
     ✔
-
   </span>
 
   <span
-    *ngIf="!profile.profile_status || profile.profile_status === 'Pending'"
+    *ngIf="getStatus(profile) === 'pending'"
     class="status-icon pending"
     title="Pending">
-
     ⏳
-
   </span>
 
 </td>
@@ -204,6 +200,12 @@
     <button class="view-btn" type="button" (click)="viewProfile(profile, $event)">View</button>
 <button class="edit-btn" type="button" (click)="editProfile(profile, $event)">Edit</button>
 <button class="approve-btn" type="button" (click)="approveProfile(profile, $event)">Approve</button>
+<button
+  class="disapprove-btn"
+  type="button"
+  (click)="disapproveProfile(profile, $event)">
+  Disapprove
+</button>
 <button class="package-btn" type="button" (click)="addPackage(profile, $event)">Add Package</button>
 <button class="delete-btn" type="button" (click)="deleteProfile(profile, $event)">Delete</button>
   </div>

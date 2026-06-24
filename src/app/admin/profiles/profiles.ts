@@ -239,7 +239,17 @@ dateText(date: string): string {
 async ngOnInit(): Promise<void> {
   await this.loadProfiles();
 }
+getStatus(profile: any): string {
+  const status = String(profile?.profile_status || 'pending')
+    .trim()
+    .toLowerCase();
 
+  if (status === 'draft') {
+    return 'pending';
+  }
+
+  return status;
+}
 async loadProfiles(): Promise<void> {
   this.ngZone.run(() => {
     this.isLoading = true;
@@ -291,25 +301,21 @@ if (subsError) {
 this.userPlans = subsData || [];
 
    this.profiles = (data || [])
-  .sort((a: any, b: any) => {
+.sort((a: any, b: any) => {
 
-    const aPending =
-      (a.profile_status || 'Pending') === 'Pending';
+  const aPending = this.getStatus(a) === 'pending';
+  const bPending = this.getStatus(b) === 'pending';
 
-    const bPending =
-      (b.profile_status || 'Pending') === 'Pending';
+  if (aPending && !bPending) return -1;
+  if (!aPending && bPending) return 1;
 
-    if (aPending && !bPending) return -1;
-    if (!aPending && bPending) return 1;
+  return String(b.profile_code || '').localeCompare(
+    String(a.profile_code || ''),
+    undefined,
+    { numeric: true }
+  );
 
-    return new Date(
-      b.updated_at || b.created_at
-    ).getTime() -
-    new Date(
-      a.updated_at || a.created_at
-    ).getTime();
-
-  })
+})
   .map(profile => {
 const plan = this.userPlans?.find((p: any) =>
   p.user_id === profile.user_id ||
@@ -540,6 +546,26 @@ async approveProfile(profile: any, event?: Event): Promise<void> {
 
   profile.profile_status = 'Approved';
   this.snackbar.success('Profile approved successfully');
+  await this.loadProfiles();
+}
+
+async disapproveProfile(profile: any, event?: Event): Promise<void> {
+  event?.stopPropagation();
+
+  const { error } = await supabase
+    .from('user_profiles')
+    .update({
+      profile_status: 'Pending'
+    })
+    .eq('profile_id', profile.profile_id);
+
+  if (error) {
+    this.snackbar.error(error.message);
+    return;
+  }
+
+  profile.profile_status = 'Pending';
+  this.snackbar.success('Profile disapproved successfully');
   await this.loadProfiles();
 }
 
