@@ -831,7 +831,7 @@ th:nth-child(17), td:nth-child(17) { width: 250px !important; }
 }
 
 .delete-btn {
-  grid-column: 1 / span 2 !important;
+  grid-column: auto !important;
 }
 
 .whatsapp-btn,
@@ -839,4 +839,8 @@ th:nth-child(17), td:nth-child(17) { width: 250px !important; }
   width: 125px !important;
   font-size: 14px !important;
   padding: 8px 8px !important;
+}
+.disapprove-btn {
+  background: #f59e0b;
+  color: #fff;
 }
