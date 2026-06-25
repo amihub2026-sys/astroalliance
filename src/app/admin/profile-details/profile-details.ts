@@ -374,10 +374,10 @@ goBack(): void {
   this.router.navigate(['/admin/profiles']);
 }
 goToPrint(withPhoto: boolean, withAddress: boolean): void {
-  if (!this.profile?.profile_id) return;
+  if (!this.profile?.profile_code) return;
 
   this.router.navigate(
-    ['/admin/profile-print', this.profile.profile_id],
+    ['/admin/profile-print', this.profile.profile_code],
     {
       queryParams: {
         photo: withPhoto ? '1' : '0',
