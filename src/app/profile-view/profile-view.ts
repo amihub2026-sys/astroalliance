@@ -744,7 +744,6 @@ async loadAstroMatch(): Promise<void> {
 
     if (!this.hasRequiredAstroData(myProfile)) {
       console.log('MY PROFILE ASTRO DATA MISSING', myProfile);
-      this.snackbar.error('Please update your DOB, Birth Time and Birth Place');
       return;
     }
 
