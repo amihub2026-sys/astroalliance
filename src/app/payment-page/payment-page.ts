@@ -288,14 +288,37 @@ async payNow(): Promise<void> {
         }
       ]);
 
-    if (insertError) throw insertError;
+  if (insertError) throw insertError;
 
-    this.paymentSuccess = true;
-    this.isPaying = false;
+const paidAmount = Number(
+  String(this.planPrice || '').replace(/[^0-9]/g, '')
+);
 
-    this.snackbar.success('Payment completed successfully');
-    this.cdr.detectChanges();
+if (paidAmount === 500) {
+  await supabase
+    .from('user_profiles')
+    .update({
+      profile_status: 'Pending',
+      is_published: false,
+      updated_at: new Date().toISOString()
+    })
+    .eq('user_id', userId);
 
+  localStorage.removeItem('registration_fee_pending');
+  localStorage.setItem('plan_under_verification', 'true');
+} else {
+  localStorage.removeItem('registration_fee_pending');
+  localStorage.removeItem('plan_under_verification');
+}
+
+this.paymentSuccess = true;
+this.isPaying = false;
+
+this.snackbar.success('Payment completed successfully');
+
+this.cdr.detectChanges();
+
+return;
   } catch (error: any) {
     this.snackbar.error(error?.message || 'Payment failed');
     this.isPaying = false;

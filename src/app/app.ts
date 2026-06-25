@@ -6,6 +6,8 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { SnackbarComponent } from './shared/snackbar/snackbar';
+import { SnackbarService } from './shared/snackbar.service';
+import { UserFlowService } from './core/services/user-flow';
 
 type Language = 'en' | 'ta';
 
@@ -24,6 +26,8 @@ imports: [
 export class App {
     private platformId = inject(PLATFORM_ID);
   private router = inject(Router);
+  private snackbar = inject(SnackbarService);
+  private flow = inject(UserFlowService);
   private isBrowser = isPlatformBrowser(this.platformId);
 showFooter = true;
 isAdminPage = false;
@@ -100,51 +104,73 @@ sentInterestTotal = 0;
     }
   };
 
+
+
 constructor() {
   if (this.isBrowser) {
+
     const savedLang = localStorage.getItem('tm_language') as Language | null;
 
     if (savedLang === 'en' || savedLang === 'ta') {
       this.currentLang = savedLang;
     }
 
-    this.loadInterestNotificationCount();
+this.loadInterestNotificationCount();
+this.initUserFlow();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
 
-this.router.events.subscribe((event) => {
-  if (event instanceof NavigationEnd) {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
 
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
+        if (event.urlAfterRedirects.includes('/received-interests')) {
+          this.markReceivedInterestsSeen();
+        }
+
+        if (event.urlAfterRedirects.includes('/sent-interests')) {
+          this.markSentInterestsSeen();
+        }
+
+        const currentUrl = event.urlAfterRedirects;
+        this.isAdminPage = currentUrl.includes('/admin');
+
+        this.showFooter =
+          !this.isAdminPage &&
+          (currentUrl === '/' || currentUrl.includes('/plans'));
+      }
     });
 
-    if (event.urlAfterRedirects.includes('/received-interests')) {
-      this.markReceivedInterestsSeen();
-    }
-
-    if (event.urlAfterRedirects.includes('/sent-interests')) {
-      this.markSentInterestsSeen();
-    }
-   const currentUrl = event.urlAfterRedirects;
-   this.isAdminPage =
-  currentUrl.includes('/admin');
-
-  
-
-this.showFooter =
-  !this.isAdminPage &&
-  (
-    currentUrl === '/' ||
-    currentUrl.includes('/plans')
-  );
-  }
-
-});
   }
 }
+async initUserFlow(): Promise<void> {
 
+  const userId = localStorage.getItem('app_user_id');
+
+  if (!userId) {
+    return;
+  }
+  await this.flow.syncFromServer();
+
+  const { supabase } = await import('./core/supabase.client');
+
+  const { data } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (!data) {
+    return;
+  }
+
+
+
+}
   get t() {
+    
     return this.translations[this.currentLang];
   }
 get profilesNavText(): string {
@@ -229,19 +255,121 @@ async changeLanguage(lang: Language): Promise<void> {
 
   this.closeMenu();
 }
-  // ✅ NEW FUNCTION (DOUBLE CLICK FIX)
-  goToPage(path: string): void {
-    if (this.isNavigating) return;
+async blockIfUnderVerification(path: string): Promise<boolean> {
 
-    this.isNavigating = true;
-    this.closeMenu();
-
-    this.router.navigate([path]).finally(() => {
-      setTimeout(() => {
-        this.isNavigating = false;
-      }, 600);
-    });
+  // GUEST: all pages allowed
+  if (!this.isBrowser || !this.isLoggedIn) {
+    return false;
   }
+
+  const rawUser = localStorage.getItem('matrimony_user');
+
+  let userId = localStorage.getItem('app_user_id') || '';
+  let gender = '';
+
+  if (rawUser) {
+    try {
+      const parsed = JSON.parse(rawUser);
+      userId = userId || parsed?.user_id || '';
+      gender = String(parsed?.gender || '').toLowerCase();
+    } catch {}
+  }
+
+  if (!userId) return false;
+
+  const { supabase } = await import('./core/supabase.client');
+
+  const { data: profile } = await supabase
+    .from('user_profiles')
+.select('profile_status, gender_text')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  const dbGender = String(profile?.gender_text || gender || '').toLowerCase();
+  const status = String(profile?.profile_status || '').toLowerCase();
+
+  const isMale = dbGender === 'male' || dbGender === 'ஆண்';
+  const isFemale = dbGender === 'female' || dbGender === 'பெண்';
+
+  // FEMALE: all pages allowed
+  if (isFemale) {
+    return false;
+  }
+
+  // Not male means don't block
+  if (!isMale) {
+    return false;
+  }
+const isBiodataCompleted =
+  status === 'pending' ||
+  status === 'approved';
+
+  // MALE: biodata not completed
+  if (!isBiodataCompleted) {
+    if (path !== '/biodata') {
+      this.closeMenu();
+      this.snackbar.error('Complete biodata to access other page');
+      this.router.navigate(['/biodata']);
+      return true;
+    }
+
+    return false;
+  }
+
+  const { data: activePlan } = await supabase
+    .from('user_subscriptions')
+    .select('is_active, total_contacts_allowed, contacts_used')
+    .eq('user_id', userId)
+    .eq('is_active', true)
+    .maybeSingle();
+
+  // MALE: biodata completed but payment not done
+  if (!activePlan) {
+    if (path !== '/plans') {
+      this.closeMenu();
+      this.snackbar.error('Pay registration amount to access other page');
+      this.router.navigate(['/plans']);
+      return true;
+    }
+
+    return false;
+  }
+
+  // MALE: paid but admin not approved
+  if (activePlan && status !== 'approved') {
+    if (path !== '/') {
+      this.closeMenu();
+      this.snackbar.error(
+        'Please wait for admin approval. For more details contact 9943315331'
+      );
+      this.router.navigate(['/']);
+      return true;
+    }
+
+    return false;
+  }
+
+  return false;
+}
+  // ✅ NEW FUNCTION (DOUBLE CLICK FIX)
+async goToPage(path: string): Promise<void> {
+
+  if (await this.blockIfUnderVerification(path)) {
+    return;
+  }
+
+  if (this.isNavigating) return;
+
+  this.isNavigating = true;
+
+  this.closeMenu();
+
+  this.router.navigate([path]).finally(() => {
+    setTimeout(() => {
+      this.isNavigating = false;
+    }, 600);
+  });
+}
 async loadInterestNotificationCount(): Promise<void> {
 
   if (!this.isBrowser || !this.isLoggedIn) return;
