@@ -288,9 +288,13 @@
 }
 
 .success-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+}
+.success-actions .secondary-btn {
+  width: 280px;
 }
 
 @media (max-width: 900px) {

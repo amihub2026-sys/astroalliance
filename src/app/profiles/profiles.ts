@@ -2216,17 +2216,11 @@ this.scrollFilterToStart();
       }
     }
 
-    const currentUserId = this.getLoggedInUserId();
+const currentUserId = this.getLoggedInUserId();
 
 if (!currentUserId) {
-  this.router.navigate(['/profile-view'], {
-    queryParams: {
-      unlocked: false,
-      profileId: String(profile.id).trim(),
-      profileName: this.getText(profile.name),
-      from: 'free-search'
-    }
-  });
+  this.snackbar.error(this.tr.alerts.loginRequired);
+  this.router.navigate(['/login']);
   return;
 }
 
