@@ -216,7 +216,10 @@
 
          <div class="field" [class.invalid]="isInvalid('gender')">
   <label>{{ tr.labels.gender }} <span class="required">*</span></label>
-            <select [(ngModel)]="formData.gender" name="gender">
+            <select
+  [(ngModel)]="formData.gender"
+  name="gender"
+  [disabled]="isRegisterFieldLocked('gender')">
               <option value="">{{ tr.labels.selectGender }}</option>
 <option
   *ngFor="let g of genderList"
@@ -709,6 +712,7 @@ formData.secondMarriageReason === 'Widowed'
   <select
     [(ngModel)]="selectedReligionId"
     name="religionId"
+     [disabled]="isRegisterFieldLocked('religion')"
     (change)="onReligionChange()">
 
    <option value="">
