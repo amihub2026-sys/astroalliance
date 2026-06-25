@@ -1534,7 +1534,31 @@ await this.loadLagnamList();
       return null;
     }
   }
+isRegisterFieldLocked(field: string): boolean {
 
+  if (this.isAdminBiodataMode()) {
+    return false;
+  }
+
+  const loggedInUser = this.getStoredLoggedInUser();
+
+  if (!loggedInUser) {
+    return false;
+  }
+
+  const lockedFields = [
+    'fullName',
+    'mobile',
+    'email',
+    'dob',
+    'age',
+    'gender',
+    'religion',
+    'location'
+  ];
+
+  return lockedFields.includes(field);
+}
   private getAdminCreatedUserId(): string {
   if (!this.isBrowser) return '';
   return localStorage.getItem('admin_created_user_id') || '';

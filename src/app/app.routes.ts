@@ -22,7 +22,10 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'profiles', component: Profiles },
 
-  { path: 'plans', component: Plans, canActivate: [authGuard] },
+{
+  path: 'plans',
+  component: Plans
+},
   { path: 'biodata', component: Biodata, canActivate: [authGuard] },
   { path: 'profile-view', component: ProfileView },
   { path: 'my-biodata', component: MyBiodataComponent, canActivate: [authGuard] },
