@@ -137,7 +137,7 @@ export const routes: Routes = [
       .then(m => m.ProfileDetails)
 },
 {
-  path: 'profile-print/:id',
+  path: 'profile-print/:code',
   loadComponent: () =>
     import('./admin/profile-print/profile-print')
       .then(m => m.ProfilePrint)

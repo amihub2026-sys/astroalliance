@@ -13,7 +13,7 @@ import { supabase } from '../../core/supabase.client';
 export class ProfilePrint implements OnInit {
   profile: any = null;
   isLoading = true;
-
+  today = new Date();
   withPhoto = false;
   withAddress = true;
 
@@ -23,16 +23,16 @@ export class ProfilePrint implements OnInit {
     private zone: NgZone
   ) {}
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id') || '';
+ngOnInit(): void {
+  const code = this.route.snapshot.paramMap.get('code') || '';
 
-    this.withPhoto = this.route.snapshot.queryParamMap.get('photo') === '1';
-   this.withAddress = this.route.snapshot.queryParamMap.get('address') === '1';
+  this.withPhoto = this.route.snapshot.queryParamMap.get('photo') === '1';
+  this.withAddress = this.route.snapshot.queryParamMap.get('address') === '1';
 
-    this.loadProfile(id);
-  }
+  this.loadProfile(code);
+}
 
-  async loadProfile(id: string): Promise<void> {
+  async loadProfile(code: string): Promise<void> {
  const { data } = await supabase
   .from('user_profiles')
 .select(`
@@ -58,7 +58,7 @@ export class ProfilePrint implements OnInit {
     caste_name_ta
   )
 `)
-  .eq('profile_id', id)
+  .eq('profile_code', code)
   .maybeSingle();
 
     this.zone.run(() => {
