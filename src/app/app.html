@@ -4,7 +4,7 @@
   *ngIf="!isAdminPage">
     <div class="logo-section">
 
-  <a routerLink="/" class="logo" (click)="closeMenu()">
+<a href="javascript:void(0)" class="logo" (click)="goToPage('/')">
 
     <img
       src="assets/malogo.png"
@@ -54,11 +54,13 @@
   (click)="closeMenu()">
 </div>
     <nav class="nav-links" [class.active]="menuOpen">
-      <a routerLink="/" (click)="closeMenu()">{{ t.nav.home }}</a>
-      <a routerLink="/profiles" (click)="closeMenu()">
+<a href="javascript:void(0)" (click)="goToPage('/')">
+  {{ t.nav.home }}
+</a>
+     <a href="javascript:void(0)" (click)="goToPage('/profiles')">
   {{ profilesNavText }}
 </a>
-      <a routerLink="/plans" (click)="closeMenu()">{{ t.nav.plans }}</a>
+     <a href="javascript:void(0)" (click)="goToPage('/plans')">{{ t.nav.plans }}</a>
 
       <!-- NOT LOGGED IN -->
       <a *ngIf="!isLoggedIn" routerLink="/login" (click)="closeMenu()">
@@ -70,12 +72,12 @@
       </a>
 
       <!-- LOGGED IN -->
-      <a
-        *ngIf="isLoggedIn"
-        routerLink="/biodata"
-        (click)="closeMenu()"
-        class="highlight-btn"
-      >
+     <a
+  *ngIf="isLoggedIn"
+  href="javascript:void(0)"
+  (click)="goToPage('/biodata')"
+  class="highlight-btn"
+>
         {{ t.nav.biodata }}
       </a>
 
@@ -184,51 +186,51 @@
 
       <h3>{{ t.footer.quickLinks }}</h3>
 
-      <ul class="footer-links">
+   <ul class="footer-links">
 
-        <li>
-          <a routerLink="/">
-            {{ t.footer.home }}
-          </a>
-        </li>
+  <li>
+    <a href="javascript:void(0)" (click)="goToPage('/')">
+      {{ t.footer.home }}
+    </a>
+  </li>
 
-        <li>
-          <a routerLink="/profiles">
-            {{ t.footer.profiles }}
-          </a>
-        </li>
+  <li>
+    <a href="javascript:void(0)" (click)="goToPage('/profiles')">
+      {{ t.footer.profiles }}
+    </a>
+  </li>
 
-        <li>
-          <a routerLink="/plans">
-            {{ t.footer.plans }}
-          </a>
-        </li>
+  <li>
+    <a href="javascript:void(0)" (click)="goToPage('/plans')">
+      {{ t.footer.plans }}
+    </a>
+  </li>
 
-        <li>
-          <a routerLink="/terms">
-            {{ t.footer.terms }}
-          </a>
-        </li>
+  <li>
+    <a href="javascript:void(0)" (click)="goToPage('/terms')">
+      {{ t.footer.terms }}
+    </a>
+  </li>
 
-        <li *ngIf="!isLoggedIn">
-          <a routerLink="/login">
-            {{ t.footer.login }}
-          </a>
-        </li>
+  <li *ngIf="!isLoggedIn">
+    <a href="javascript:void(0)" (click)="goToPage('/login')">
+      {{ t.footer.login }}
+    </a>
+  </li>
 
-        <li *ngIf="!isLoggedIn">
-          <a routerLink="/register">
-            {{ t.footer.register }}
-          </a>
-        </li>
+  <li *ngIf="!isLoggedIn">
+    <a href="javascript:void(0)" (click)="goToPage('/register')">
+      {{ t.footer.register }}
+    </a>
+  </li>
 
-        <li *ngIf="isLoggedIn">
-          <a routerLink="/biodata">
-            {{ t.nav.biodata }}
-          </a>
-        </li>
+  <li *ngIf="isLoggedIn">
+    <a href="javascript:void(0)" (click)="goToPage('/biodata')">
+      {{ t.nav.biodata }}
+    </a>
+  </li>
 
-      </ul>
+</ul>
 
     </div>
 

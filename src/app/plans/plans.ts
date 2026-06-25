@@ -46,6 +46,8 @@ export class Plans implements OnInit {
   selectedPlanName = '';
   isSavingPlan = false;
   isLoadingDbPlans = false;
+  registrationFeePending = false;
+registrationFeePlanAmount = 500;
 
   dbPlans: DbPlanRow[] = [];
 
@@ -115,17 +117,17 @@ plans: any[] = [];
     });
   }
 
- async ngOnInit(): Promise<void> {
-
+async ngOnInit(): Promise<void> {
   if (!this.isBrowser) return;
 
+  this.registrationFeePending =
+    localStorage.getItem('registration_fee_pending') === 'true';
+
   setTimeout(() => {
-
     this.loadDbPlans();
-
   }, 300);
-
 }
+
   get currentLang(): 'en' | 'ta' {
     return this.app.currentLang;
   }
@@ -185,46 +187,54 @@ this.plans = [];
       const rows = Array.isArray(data) ? data : [];
       this.dbPlans = rows.filter((row: any) => row?.is_active === true);
 
-      this.plans = this.dbPlans.map((plan: any) => ({
+     this.plans = this.dbPlans.map((plan: any) => {
+  const price = Number(plan.price || 0);
 
-  code: plan.plan_code,
+  return {
+    code: plan.plan_code,
 
-  name: {
-    en: plan.plan_name,
-    ta: plan.plan_name
-  },
+    name: {
+      en: plan.plan_name,
+      ta: plan.plan_name
+    },
 
-  price: `₹${plan.price || 0}`,
+    priceAmount: price,
+disabled:
+  this.registrationFeePending
+    ? price !== 500
+    : false,
 
-  duration: {
-    en: `/ ${plan.duration_months || 0} Months`,
-    ta: `/ ${plan.duration_months || 0} மாதங்கள்`
-  },
+    price: `₹${price}`,
 
-  validity: {
-    en: `Validity: ${plan.duration_months || 0} Months`,
-    ta: `செல்லுபடியாகும் காலம்: ${plan.duration_months || 0} மாதங்கள்`
-  },
+    duration: {
+      en: `/ ${plan.duration_months || 0} Months`,
+      ta: `/ ${plan.duration_months || 0} மாதங்கள்`
+    },
 
-  popular: plan.plan_code === 'TM_CLASSIC',
+    validity: {
+      en: `Validity: ${plan.duration_months || 0} Months`,
+      ta: `செல்லுபடியாகும் காலம்: ${plan.duration_months || 0} மாதங்கள்`
+    },
 
-  features: {
-    en: [
-      `View up to ${plan.contact_limit || 0} contacts`,
-      `Profile views ${plan.profile_view_limit || 0}`,
-      'Premium visibility',
-      'Priority support'
-    ],
+    popular: price === 500,
 
-    ta: [
-      `${plan.contact_limit || 0} தொடர்புகள் வரை பார்க்கலாம்`,
-      `சுயவிவர பார்வைகள் ${plan.profile_view_limit || 0}`,
-      'பிரீமியம் காட்சிப்படுத்தல்',
-      'முன்னுரிமை உதவி'
-    ]
-  }
+    features: {
+      en: [
+        `View up to ${plan.contact_limit || 0} contacts`,
+        `Profile views ${plan.profile_view_limit || 0}`,
+        price === 500 ? 'Registration fee' : 'Premium visibility',
+        'Priority support'
+      ],
 
-}));
+      ta: [
+        `${plan.contact_limit || 0} தொடர்புகள் வரை பார்க்கலாம்`,
+        `சுயவிவர பார்வைகள் ${plan.profile_view_limit || 0}`,
+        price === 500 ? 'பதிவு கட்டணம்' : 'பிரீமியம் காட்சிப்படுத்தல்',
+        'முன்னுரிமை உதவி'
+      ]
+    }
+  };
+});
 this.cdr.detectChanges();
     } catch (error) {
      
@@ -309,8 +319,13 @@ this.cdr.detectChanges();
     return d.toISOString().slice(0, 10);
   }
 
-  selectPlan(plan: any) {
-    if (this.isSavingPlan) return;
+ selectPlan(plan: any) {
+  if (plan.disabled) {
+    this.snackbar.error('First pay ₹500 registration fee');
+    return;
+  }
+
+  if (this.isSavingPlan) return;
 
     const userId = this.getLoggedInUserId();
 

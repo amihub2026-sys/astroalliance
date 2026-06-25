@@ -300,6 +300,15 @@
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 24px 54px rgba(245, 158, 11, 0.22);
 }
+.disabled-plan {
+  opacity: 0.45;
+  filter: grayscale(1);
+  pointer-events: none;
+}
+
+.disabled-plan button {
+  cursor: not-allowed;
+}
 
 .tag {
   position: absolute;

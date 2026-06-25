@@ -549,13 +549,19 @@ setTimeout(() => {
   }
 
   // NORMAL USER FLOW
-  else {
+// NORMAL USER FLOW
+else {
 
-    this.router.navigate([
-      '/biodata'
-    ]);
+  localStorage.setItem(
+    'biodata_pending',
+    'true'
+  );
 
-  }
+  this.router.navigate([
+    '/biodata'
+  ]);
+
+}
 
 }, 1000);
 

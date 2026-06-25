@@ -67,12 +67,13 @@
       </div>
 
       <div class="plans-grid">
-        <div
-          class="plan-card"
-          *ngFor="let plan of plans; let i = index"
-          [ngClass]="'plan-' + i"
-          [class.popular]="plan.popular"
-        >
+      <div
+  class="plan-card"
+  *ngFor="let plan of plans; let i = index"
+  [ngClass]="'plan-' + i"
+  [class.popular]="plan.popular"
+  [class.disabled-plan]="plan.disabled"
+>
           <div class="plan-glow"></div>
 
           <span class="tag" *ngIf="plan.popular">
@@ -102,7 +103,10 @@
             </li>
           </ul>
 
-          <button class="choose-btn" type="button" (click)="selectPlan(plan)">
+         <button
+  class="choose-btn"
+  (click)="selectPlan(plan)"
+  [disabled]="plan.disabled">
             {{ tr.labels.choosePlan }}
           </button>
         </div>

@@ -5,6 +5,7 @@ import { App } from '../app';
 import { supabase } from '../core/supabase.client';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SnackbarService } from '../shared/snackbar.service';
+import { UserFlowService } from '../core/services/user-flow';
 
 @Component({
   selector: 'app-biodata',
@@ -14,6 +15,9 @@ import { SnackbarService } from '../shared/snackbar.service';
   styleUrls: ['./biodata.scss']
 })
 export class Biodata implements OnInit {
+    constructor(
+    private flow: UserFlowService
+  ) {}
   app = inject(App);
   cdr = inject(ChangeDetectorRef);
   snackbar = inject(SnackbarService);
@@ -48,6 +52,7 @@ fieldErrors: Record<string, boolean> = {};
 private nameTranslateTimer: any;
 private fatherNameTranslateTimer: any;
 private motherNameTranslateTimer: any;
+
 
 isInvalid(field: string): boolean {
   return this.submitted && !!this.fieldErrors[field];
@@ -631,6 +636,14 @@ removeAdditionalMobile(index: number): void {
   }
 isAdminTanglishEnabled(): boolean {
   return true;
+}
+allowEnglishAddress(event: any): void {
+  let value = event.target.value;
+
+  value = value.replace(/[^A-Za-z0-9\s,./\-#]/g, '');
+
+  this.formData.address = value;
+  event.target.value = value;
 }
 
   readonly horoscopeValueMap: any = {
@@ -2655,7 +2668,7 @@ console.log('ADMIN CREATED:', this.isAdminCreated);
 
       const { data: currentProfile, error: currentProfileError } = await supabase
         .from('user_profiles')
-      .select('profile_code, profile_image_url, video_url, horoscope_file_url, additional_image_urls, latitude, longitude')
+.select('profile_code, profile_status, profile_image_url, video_url, horoscope_file_url, additional_image_urls, latitude, longitude')
        .eq(
   this.editProfileId
     ? 'profile_id'
@@ -2668,6 +2681,7 @@ console.log('ADMIN CREATED:', this.isAdminCreated);
       if (currentProfileError) {
         throw currentProfileError;
       }
+      const isBiodataUpdate = !!currentProfile;
 
       let existingProfileCode: string | null = null;
 
@@ -3021,7 +3035,7 @@ no_caste_preference: this.formData.noCastePreference,
         video_url: videoUrl || '',
 additional_image_urls: additionalImageUrls,
         completion_percentage: this.getCompletionPercentage(),
-      profile_status: this.isAdminCreated ? 'Approved' : 'Pending',
+profile_status: this.isAdminCreated ? 'approved' : 'pending',
         is_verified: false,
         is_published: true,
         updated_at: new Date().toISOString()
@@ -3073,8 +3087,8 @@ const { data: existingProfile, error: existingError } = await supabase
         return;
       }
 
-if (existingProfile) {
 
+if (existingProfile) {
   const { data, error } = await supabase
     .from('user_profiles')
     .update(payload)
@@ -3134,13 +3148,38 @@ if (this.isAdminCreated) {
 
   return;
 }
-
 this.isSubmitted = true;
 
-setTimeout(async () => {
-  await this.loadExistingBiodata();
-}, 1200);
+localStorage.removeItem('biodata_pending');
 
+this.flow.setState({
+  biodata_completed: true
+});
+
+this.flow.setMode('NORMAL');
+
+const gender = String(this.formData.gender || '').toLowerCase();
+
+const { data: activePlan } = await supabase
+  .from('user_subscriptions')
+  .select('is_active, contacts_used, total_contacts_allowed')
+  .eq('user_id', appUserId)
+  .eq('is_active', true)
+  .maybeSingle();
+
+if (gender === 'male' || gender === 'ஆண்') {
+  if (activePlan) {
+    this.router.navigate(['/']);
+  } else {
+    localStorage.setItem('registration_fee_pending', 'true');
+    this.router.navigate(['/plans']);
+  }
+
+  return;
+}
+
+this.router.navigate(['/']);
+return;
     } catch (error: any) {
       
       this.snackbar.error(error?.message || 'Something went wrong while saving biodata');
