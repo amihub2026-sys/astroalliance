@@ -1716,7 +1716,10 @@ if (matchesLocation && radiusFilter !== null && radiusFilter > 0) {
         return true;
       }
     if (this.sidebarFilter === 'star') {
+      
   return this.isRasiNakshatraMatch(profile);
+
+  
 }
 
       return true;
@@ -1739,7 +1742,7 @@ if (matchesLocation && radiusFilter !== null && radiusFilter > 0) {
           distanceKm
         };
       })
-     .sort((a, b) => {
+.sort((a, b) => {
   const myCaste = this.normalizeText(this.userCaste);
 
   const casteA = this.normalizeText(this.getText(a.caste));
@@ -1756,6 +1759,7 @@ if (matchesLocation && radiusFilter !== null && radiusFilter > 0) {
 
   const aDistance = a.distanceKm ?? Number.MAX_SAFE_INTEGER;
   const bDistance = b.distanceKm ?? Number.MAX_SAFE_INTEGER;
+
   return aDistance - bDistance;
 });
   }
