@@ -504,6 +504,20 @@ calculateAge(dob: string): number | string {
 
   return age;
 }
+getProfileImage(profile: any): string {
+  if (profile?.profile_image_url) {
+    return profile.profile_image_url;
+  }
+
+  const gender = String(profile?.gender_text || '').toLowerCase();
+
+  if (gender === 'male' || gender === 'ஆண்') {
+    return 'assets/mat-02.jpg';
+  }
+
+  return 'assets/mat-03.jpg';
+}
+
 
 viewProfile(profile: any, event?: Event): void {
   event?.stopPropagation();

@@ -1516,8 +1516,8 @@ formData.secondMarriageReason === 'Widowed'
 
 
          <!-- NAKSHATRA -->
-<div class="field">
-  <label>{{ tr.labels.nakshatra }} </label>
+<div class="field" [class.invalid]="isInvalid('nakshatra')">
+  <label>{{ tr.labels.nakshatra }} <span class="required">*</span></label>
 
   <select [(ngModel)]="formData.nakshatra" name="nakshatra">
     <option value="">{{ tr.labels.selectNakshatra }}</option>
@@ -1531,6 +1531,10 @@ formData.secondMarriageReason === 'Widowed'
   }}
 </option>
   </select>
+  <div class="error" *ngIf="isInvalid('nakshatra')">
+    
+  {{ tr.labels.required }}
+</div>
 
 </div>
 
@@ -1556,8 +1560,8 @@ formData.secondMarriageReason === 'Widowed'
 </div>
 
      <!-- RASI -->
-<div class="field">
-  <label>{{ tr.labels.rasi }}</label>
+<div class="field" [class.invalid]="isInvalid('rasi')">
+  <label>{{ tr.labels.rasi }} <span class="required">*</span></label>
   <select [(ngModel)]="formData.rasi" name="rasi">
     <option value="">{{ tr.labels.selectRasi }}</option>
 <option
@@ -1570,6 +1574,9 @@ formData.secondMarriageReason === 'Widowed'
   }}
 </option>
   </select>
+  <div class="error" *ngIf="isInvalid('rasi')">
+  {{ tr.labels.required }}
+</div>
 
 </div>
 

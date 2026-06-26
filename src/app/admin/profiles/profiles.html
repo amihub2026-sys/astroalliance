@@ -158,10 +158,9 @@
 
 <td>
   <img
-    *ngIf="profile.profile_image_url"
-    [src]="profile.profile_image_url"
-    style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
-  <span *ngIf="!profile.profile_image_url">-</span>
+    [src]="getProfileImage(profile)"
+    style="width:36px;height:36px;border-radius:50%;object-fit:cover;"
+    alt="Profile">
 </td>
 
 <td>{{ currentLang === 'ta' ? (profile.full_name_ta || profile.full_name) : profile.full_name }}</td>

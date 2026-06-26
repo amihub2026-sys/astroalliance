@@ -191,9 +191,10 @@ if (age < 18) {
   this.dob = '';
 
   this.snackbar.error(
-    'Age must be 18 or above'
-  );
-
+  this.currentLang === 'ta'
+    ? '18 வயது அல்லது அதற்கு மேல் இருக்க வேண்டும்.'
+    : 'Age must be 18 or above'
+);
 }
 
 }
@@ -305,13 +306,21 @@ const cleanPhone = this.normalizePhone(this.phone);
 
 if (!cleanPhone || cleanPhone.length !== 10) {
   this.stopLoading();
-  this.snackbar.error('Please enter a valid 10 digit mobile number');
+this.snackbar.error(
+  this.currentLang === 'ta'
+    ? 'சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.'
+    : 'Please enter a valid 10 digit mobile number.'
+);
   return;
 }
 
 if (!this.dob) {
   this.stopLoading();
-  this.snackbar.error('Please enter your date of birth');
+this.snackbar.error(
+  this.currentLang === 'ta'
+    ? 'பிறந்த தேதியை உள்ளிடவும்.'
+    : 'Please enter your date of birth.'
+);
   return;
 }
 const dobForAge =
@@ -324,7 +333,11 @@ const birthDate = new Date(dobForAge);
 
 if (isNaN(birthDate.getTime())) {
   this.stopLoading();
-  this.snackbar.error('Please enter a valid date of birth');
+this.snackbar.error(
+  this.currentLang === 'ta'
+    ? 'சரியான பிறந்த தேதியை உள்ளிடவும்.'
+    : 'Please enter a valid date of birth.'
+);
   return;
 }
 
@@ -353,9 +366,10 @@ if (age < 18) {
   this.stopLoading();
 
   this.snackbar.error(
-    'Age must be 18 or above'
-  );
-
+  this.currentLang === 'ta'
+    ? '18 வயது அல்லது அதற்கு மேல் இருக்க வேண்டும்.'
+    : 'Age must be 18 or above'
+);
   return;
 }
   this.isLoading = true;
@@ -406,7 +420,11 @@ if (age < 18) {
 
       if (!profile) {
         this.stopLoading();
-        this.snackbar.error('Invalid mobile number or date of birth');
+this.snackbar.error(
+  this.currentLang === 'ta'
+    ? 'மொபைல் எண் அல்லது பிறந்த தேதி தவறாக உள்ளது.'
+    : 'Invalid mobile number or date of birth.'
+);
         return;
       }
 
@@ -493,9 +511,17 @@ return;
  this.stopLoading();
 
   if (userExists) {
-   this.snackbar.error('Invalid mobile number or date of birth');
+this.snackbar.error(
+  this.currentLang === 'ta'
+    ? 'மொபைல் எண் அல்லது பிறந்த தேதி தவறாக உள்ளது.'
+    : 'Invalid mobile number or date of birth.'
+);
   } else {
-    this.snackbar.error('Invalid mobile number or date of birth');
+this.snackbar.error(
+  this.currentLang === 'ta'
+    ? 'மொபைல் எண் அல்லது பிறந்த தேதி தவறாக உள்ளது.'
+    : 'Invalid mobile number or date of birth.'
+);
   }
 
   return;
@@ -516,8 +542,10 @@ const legacyIsMale =
 if (legacyIsMale && legacyProfileStatus !== 'approved') {
   this.stopLoading();
   this.snackbar.error(
-      'Your profile is waiting for verification. Please wait until it is verified.'
-  );
+  this.currentLang === 'ta'
+    ? 'உங்கள் சுயவிவரம் சரிபார்ப்பிற்காக காத்திருக்கிறது. தயவுசெய்து சரிபார்ப்பு முடியும் வரை காத்திருக்கவும்.'
+    : 'Your profile is waiting for verification. Please wait until it is verified.'
+);
   return;
 }
 
