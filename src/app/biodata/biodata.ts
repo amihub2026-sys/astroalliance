@@ -2421,6 +2421,7 @@ const v = (en: any, ta?: any) => {
     // { key: 'job', label: this.tr.labels.occupation, value: this.formData.job === 'Other' ? this.formData.otherProfession : this.formData.job },
     // { key: 'company', label: this.tr.labels.company, value: v(this.formData.company, this.formDataTa.company) },
     // { key: 'salary', label: this.tr.labels.salary, value: v(this.formData.salary, this.formDataTa.salary) },
+    
     { key: 'address', label: this.tr.labels.address, value: v(this.formData.address, this.formDataTa.address) },
 {
   key: 'country',
@@ -2450,8 +2451,8 @@ const v = (en: any, ta?: any) => {
       : this.selectedCityId
 },
     // { key: 'horoscopeFile', label: this.tr.sections.horoscopeUpload, value: this.selectedHoroscopeFile || this.existingHoroscopeFileUrl },
-    // { key: 'rasi', label: this.tr.labels.rasi, value: this.formData.rasi },
-    // { key: 'nakshatra', label: this.tr.labels.nakshatra, value: this.formData.nakshatra },
+    { key: 'rasi', label: this.tr.labels.rasi, value: this.formData.rasi },
+    { key: 'nakshatra', label: this.tr.labels.nakshatra, value: this.formData.nakshatra },
     // { key: 'lagnam', label: this.tr.labels.lagnam, value: this.formData.lagnam },
     // { key: 'birthTime', label: this.tr.labels.birthTime, value: this.formData.birthTime },
     // { key: 'birthPlace', label: this.tr.labels.birthPlace, value: v(this.formData.birthPlace, this.formDataTa.birthPlace) }
