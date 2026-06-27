@@ -39,6 +39,7 @@
             <th>Religion</th>
             <th>Caste Name</th>
             <th>Tamil Name</th>
+            <th>Profile Count</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -51,12 +52,19 @@
             <td>{{ item.caste_code }}</td>
 
             <td>
-              {{ item.mst_religions?.religion_name }}
+              {{ item.religion_name }}
             </td>
 
             <td>{{ item.caste_name }}</td>
 
             <td>{{ item.caste_name_ta }}</td>
+
+
+                        <td>
+  <span class="count-badge">
+    {{ item.profile_count }}
+  </span>
+</td>
 
             <td>
               <span
@@ -85,6 +93,9 @@
               </button>
 
             </td>
+          
+
+
 
           </tr>
 
