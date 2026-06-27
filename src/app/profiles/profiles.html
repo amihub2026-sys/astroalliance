@@ -246,7 +246,7 @@
         *ngFor="let item of getFilteredCasteOptions()"
 (click)="selectOption('caste', getText(item))"
 >
-  {{ getText(item) }}
+  {{ getText(item) }} {{ item.profile_count }}
         </div>
       </div>
     </div>

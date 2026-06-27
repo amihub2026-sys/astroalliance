@@ -75,7 +75,10 @@ maritalStatusOptions: LangText[] = [];
 stateOptions: LangText[] = [];
 cityOptions: (LangText & { state: string })[] = [];
 religionOptions: LangText[] = [];
-casteOptions: (LangText & { religion: string })[] = [];
+casteOptions: (LangText & {
+  religion: string;
+  profile_count: number;
+})[] = [];
 genderOptions: LangText[] = [];
 professionOptions: LangText[] = [];
 casteMap: Record<string, string> = {};
@@ -1858,26 +1861,31 @@ if (!maritalError) {
       .filter((x: LangText) => x.en);
   }
 
-  const { data: casteData, error: casteError } = await supabase
-   .from('mst_castes')
-.select(`
+const { data: casteData, error: casteError } = await supabase
+  .from('caste_profile_count')
+  .select(`
+  caste_id,
+  caste_code,
   caste_name,
   caste_name_ta,
-  mst_religions (
-    religion_name
-  )
+  religion_name,
+  profile_count,
+  is_active,
+  sort_order
 `)
+
     .eq('is_active', true)
     .order('sort_order', { ascending: true });
 
   if (!casteError) {
- this.casteOptions = (casteData || [])
+this.casteOptions = (casteData || [])
   .map((x: any) => ({
     en: String(x.caste_name || '').trim(),
     ta: String(x.caste_name_ta || x.caste_name || '').trim(),
-    religion: String(x.mst_religions?.religion_name || '').toLowerCase().trim()
+    religion: String(x.religion_name || '').toLowerCase().trim(),
+    profile_count: Number(x.profile_count || 0)   
   }))
-  .filter((x: LangText & { religion: string }) => x.en);
+  .filter((x: any) => x.en);
 
     this.casteMap = {};
 
@@ -1920,7 +1928,10 @@ if (!professionError) {
 }
   this.cdr.detectChanges();
 }
-getFilteredCasteOptions(): (LangText & { religion: string })[] {
+getFilteredCasteOptions(): (LangText & {
+  religion: string;
+  profile_count: number;
+})[]{
   const search = String(this.searchTerms.caste || '').toLowerCase().trim();
   const selectedReligion = String(this.filters.religion || '').toLowerCase().trim();
 

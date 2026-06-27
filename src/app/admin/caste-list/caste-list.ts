@@ -73,13 +73,10 @@ constructor(
     this.isLoading = true;
 
     const { data, error } = await supabase
-      .from('mst_castes')
-      .select(`
-        *,
-        mst_religions (
-          religion_name
-        )
-      `)
+        .from('caste_profile_count')
+
+
+      .select(`*`)
       .order('sort_order', { ascending: true });
 
   this.ngZone.run(() => {
