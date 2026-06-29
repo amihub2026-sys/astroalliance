@@ -1375,7 +1375,12 @@ formData.secondMarriageReason === 'Widowed'
           <div class="field full-width" [class.invalid]="isInvalid('address')">
   <label>{{ tr.labels.address }} <span class="required">*</span></label>
 <textarea
-  [(ngModel)]="formData.address"
+  [ngModel]="currentLang === 'ta' ? formDataTa.address : formData.address"
+  (ngModelChange)="
+    currentLang === 'ta'
+      ? formDataTa.address = $event
+      : formData.address = $event
+  "
   (keypress)="currentLang === 'ta' ? tamilKeypress($event) : null"
   name="address"
   rows="4"
