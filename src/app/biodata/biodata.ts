@@ -1929,24 +1929,39 @@ this.formDataTa.partnerExpectation = data.partner_expectation_ta || '';
     }
   }
 
-  onDobChange(): void {
-    if (!this.formData.dob) {
-      this.formData.age = '';
-      return;
-    }
-
-    const birthDate = new Date(this.formData.dob);
-    const today = new Date();
-
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-
-    this.formData.age = age > 0 ? age.toString() : '';
+onDobChange(): void {
+  if (!this.formData.dob) {
+    this.formData.age = '';
+    return;
   }
+
+  const birthDate = new Date(this.formData.dob);
+  const today = new Date();
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+  // Admin page only
+ if (this.isAdminCreated && age < 18) {
+    alert('Minimum age should be 18 years.');
+
+    this.formData.dob = '';
+    this.formData.age = '';
+    return;
+  }
+
+
+  this.formData.age = age.toString();
+}
+
+
+
 
   onProfileImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;

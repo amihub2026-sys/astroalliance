@@ -1374,9 +1374,9 @@ formData.secondMarriageReason === 'Widowed'
         <div class="form-grid">
           <div class="field full-width" [class.invalid]="isInvalid('address')">
   <label>{{ tr.labels.address }} <span class="required">*</span></label>
- <textarea
+<textarea
   [(ngModel)]="formData.address"
-  (input)="allowEnglishAddress($event)"
+  (keypress)="currentLang === 'ta' ? tamilKeypress($event) : null"
   name="address"
   rows="4"
   [placeholder]="tr.placeholders.address">
@@ -1488,15 +1488,14 @@ formData.secondMarriageReason === 'Widowed'
   (keypress)="tamilKeypress($event)"
   [placeholder]="currentLang === 'ta' ? 'மாவட்டத்தை உள்ளிடவும்' : 'Enter city'"
 >
-
   <small class="field-error" *ngIf="isInvalid('city')">Required</small>
 </div>
-
-
-<!-- iruppidam-field -->
-
         </div>
       </div>
+
+
+
+
 </details>
  <!-- HOROSCOPE DETAILS + CHART -->
 
@@ -2308,8 +2307,6 @@ formData.secondMarriageReason === 'Widowed'
     </div>
 
   </div>
-
-  <!-- ADDRESS -->
 
 <!-- ADDRESS -->
 
