@@ -593,14 +593,18 @@ isOtherCitySelected(): boolean {
 
   return city?.city_name?.toLowerCase() === 'other';
 }
-
 onCityChange(): void {
-
   const city = this.cityList.find(
     (c: any) => c.city_id === this.selectedCityId
   );
 
-  this.formData.city = city?.city_name || '';
+  if (!city) return;
+
+  if (city.city_name?.toLowerCase() === 'other') {
+    return; // don't overwrite Palakkad
+  }
+
+  this.formData.city = city.city_name;
 }
 educationList: any[] = [];
 filteredEducationList: any[] = [];
@@ -1811,10 +1815,24 @@ this.cityList = this.allCities.filter(
 );
 
 const city = this.allCities.find(
-  (c: any) => c.city_name === data.city_text || c.city_name_ta === data.city_text
+  (c: any) =>
+    c.state_id === this.selectedStateId &&
+    (
+      String(c.city_name || '').trim().toLowerCase() === String(data.city_text || '').trim().toLowerCase() ||
+      String(c.city_name_ta || '').trim() === String(data.city_text || '').trim()
+    )
 );
 
-this.selectedCityId = city?.city_id || '';
+if (city) {
+  this.selectedCityId = city.city_id;
+} else {
+  const otherCity = this.cityList.find(
+    (c: any) => String(c.city_name || '').trim().toLowerCase() === 'other'
+  );
+
+  this.selectedCityId = otherCity?.city_id || '';
+  this.formData.city = data.city_text || '';
+}
       this.formData.rasi = data.rasi_text || '';
       this.formData.nakshatra = data.nakshatra_text || '';
       this.formData.lagnam = data.lagnam_text || '';
@@ -2509,7 +2527,10 @@ if (missingField) {
     (x: any) => x.city_id === this.selectedCityId
   );
 
- if (selectedCity) {
+if (
+  selectedCity &&
+  String(selectedCity.city_name || '').trim().toLowerCase() !== 'other'
+) {
   this.formData.city = selectedCity.city_name || '';
 }
 const selectedGender = this.genderList.find(
@@ -2969,12 +2990,22 @@ address_line: this.safeText(this.formData.address),
             .join(', ')
         ),
 
-        city_id: this.selectedCityId || null,
-
-      city_text: this.safeText(
-  this.cityList.find(
-    (c: any) => c.city_id === this.selectedCityId
-  )?.city_name || this.formData.city
+      city_id:
+  this.isOtherCitySelected() ||
+  this.isOtherStateSelected() ||
+  this.isOtherCountrySelected()
+    ? null
+    : this.selectedCityId || null,
+city_text: this.safeText(
+  this.isOtherCitySelected() ||
+  this.isOtherStateSelected() ||
+  this.isOtherCountrySelected()
+    ? this.formData.city
+    : (
+        this.cityList.find(
+          (c: any) => c.city_id === this.selectedCityId
+        )?.city_name || this.formData.city
+      )
 ),
 
 state_id: this.selectedStateId || null,

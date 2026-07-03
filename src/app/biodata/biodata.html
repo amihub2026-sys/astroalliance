@@ -1418,7 +1418,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [(ngModel)]="formData.country"
   name="otherCountry"
-  (keypress)="tamilKeypress($event)"
+ (keypress)="currentLang === 'ta' ? tamilKeypress($event) : null"
   [placeholder]="currentLang === 'ta' ? 'நாட்டை உள்ளிடவும்' : 'Enter country'"
 >
 
@@ -1454,7 +1454,7 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [(ngModel)]="formData.state"
   name="otherState"
-  (keypress)="tamilKeypress($event)"
+  (keypress)="currentLang === 'ta' ? tamilKeypress($event) : null"
   [placeholder]="currentLang === 'ta' ? 'மாநிலத்தை உள்ளிடவும்' : 'Enter state'"
 >
 
@@ -1490,8 +1490,8 @@ formData.secondMarriageReason === 'Widowed'
   type="text"
   [(ngModel)]="formData.city"
   name="otherCity"
-  (keypress)="tamilKeypress($event)"
-  [placeholder]="currentLang === 'ta' ? 'மாவட்டத்தை உள்ளிடவும்' : 'Enter city'"
+  (keypress)="currentLang === 'ta' ? tamilKeypress($event) : null"
+  [placeholder]="currentLang === 'ta' ? 'மாவட்டத்தை உள்ளிடவும்' : 'Enter district'"
 >
   <small class="field-error" *ngIf="isInvalid('city')">Required</small>
 </div>
