@@ -52,6 +52,7 @@ genderFilter = '';
 cityOptions: any[] = [];
 religionOptions: any[] = [];
 casteOptions: any[] = [];
+allCities: any[] = [];
 
   statusFilter = 'All';
 
@@ -204,21 +205,19 @@ maritalText(value: string): string {
 
 cityText(value: string): string {
 
+  if (!value) return '-';
+
   if (this.currentLang === 'en') {
-    return value || '-';
+    return value;
   }
 
-  const map: any = {
-    Other: 'மற்றவை',
-    Madurai: 'மதுரை',
-    Chennai: 'சென்னை',
-    Coimbatore: 'கோயம்புத்தூர்',
-    Trichy: 'திருச்சி',
-    Salem: 'சேலம்',
-    'Abu Dhabi': 'அபுதாபி'
-  };
+  const city = this.allCities.find(
+    (c: any) =>
+      String(c.city_name).trim().toLowerCase() ===
+      String(value).trim().toLowerCase()
+  );
 
-  return map[value] || value || '-';
+  return city?.city_name_ta || value;
 }
 
 dateText(date: string): string {
@@ -369,6 +368,7 @@ const { data: cityData } = await supabase
   .order('city_name', { ascending: true });
 
 this.cityOptions = cityData || [];
+this.allCities = cityData || [];
 
 const { data: religionData } = await supabase
   .from('mst_religions')
